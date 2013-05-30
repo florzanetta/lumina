@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina{% endblock %}</title>
+</head>
+<body>
+
+<p>
+    <a href="{% url 'home' %}">Home</a>
+    ::
+    <a href="{% url 'logout' %}">Salir</a>
+</p>
+
+{% block content %}
+{% endblock content %}
+
+</body>
+</html>

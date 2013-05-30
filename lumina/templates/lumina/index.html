@@ -1,20 +1,25 @@
+{% extends "lumina/base.html" %}
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Lumina Home</title>
+<title>{% block title %}Lumina Home{% endblock %}</title>
 </head>
 <body>
 
-<h1>Images for {{ user }}</h1>
+{% block content %}
 
-<ul>
-{% for image in images %}
-    <li>{{ image }}</li>
-{% empty %}
-    <li>No images...</li>
-{% endfor %}
-</ul>
+	<h1>Images for {{ user }}</h1>
+	
+	<ul>
+	{% for image in images %}
+	    <li>{{ image }}</li>
+	{% empty %}
+	    <li>No images...</li>
+	{% endfor %}
+	</ul>
+
+{% endblock content %}
 
 </body>
 </html>
