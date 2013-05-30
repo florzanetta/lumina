@@ -5,13 +5,14 @@ from django.conf.urls import patterns, include, url
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
+    #
+    # Lumina
+    #
     url(r'^$', 'lumina.views.home', name='home'),
-    # url(r'^lumina/', include('lumina.foo.urls')),
 
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
+    #
+    # Other
+    #
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
 )
