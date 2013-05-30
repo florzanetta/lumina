@@ -32,6 +32,14 @@ And to install the dependencies:
 
     $ pip install -r requirements.txt 
 
+Setup of database
+-----------------
+
+By default, a Sqlite on '~/lumina.sqlite' will be used. To create it, run:
+
+    $ python manage.py syncdb
+    $ python manage.py migrate lumina
+
 
 Licence
 -------
