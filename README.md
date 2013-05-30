@@ -16,6 +16,23 @@ We believe this will add substancial value to the operations of labs as well as 
 a differentiating factor to offer to their customers.
 
 
+Virtualenv
+----------
+
+We use Python 2.7 (required by Django) and virtualenv. To generate the virtualenv,
+in the root directory of the working copy, execute:
+
+    $ virtualenv -p python2.7 virtualenv
+
+To activate the virtualenv:
+
+    $ . virtualenv/bin/activate
+
+And to install the dependencies:
+
+    $ pip install -r requirements.txt 
+
+
 Licence
 -------
 

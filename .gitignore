@@ -42,3 +42,5 @@ nosetests.xml
 *.synctex.gz
 *.toc
 *.aux
+
+/virtualenv
