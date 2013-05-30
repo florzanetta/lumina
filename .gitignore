@@ -33,8 +33,9 @@ nosetests.xml
 
 # Mr Developer
 .mr.developer.cfg
-.project
-.pydevproject
+/.project
+/.pydevproject
+/.settings
 
 # Latex
 *.log
