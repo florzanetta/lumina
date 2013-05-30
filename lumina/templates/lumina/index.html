@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Lumina Home</title>
+</head>
+<body>
+
+<h1>Images for {{ user }}</h1>
+
+<ul>
+{% for image in images %}
+    <li>{{ image }}</li>
+{% empty %}
+    <li>No images...</li>
+{% endfor %}
+</ul>
+
+</body>
+</html>

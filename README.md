@@ -41,6 +41,13 @@ By default, a Sqlite on '~/lumina.sqlite' will be used. To create it, run:
     $ python manage.py migrate lumina
 
 
+Defaults settings
+-----------------
+
+    DATABASES['NAME'] = os.path.expanduser('~/lumina.sqlite')
+    MEDIA_ROOT = os.path.expanduser('~/lumina/uploads/')
+
+
 Licence
 -------
 
