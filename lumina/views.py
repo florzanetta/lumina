@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.http.response import HttpResponse
 from django.contrib.auth.decorators import login_required
 
@@ -27,6 +28,15 @@ def image_thumb(request, image_id):
 #===============================================================================
 
 class AlbumListView(ListView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/#django.views.generic.list.ListView @IgnorePep8
+    model = Album
+
+    def get_queryset(self):
+        return Album.objects.for_user(self.request.user)
+
+
+class AlbumDetailView(DetailView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/#django.views.generic.detail.DetailView @IgnorePep8
     model = Album
 
     def get_queryset(self):
@@ -38,6 +48,7 @@ class AlbumListView(ListView):
 #===============================================================================
 
 class ImageListView(ListView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/#django.views.generic.list.ListView @IgnorePep8
     model = Image
 
     def get_queryset(self):

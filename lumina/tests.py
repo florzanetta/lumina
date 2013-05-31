@@ -30,7 +30,8 @@ MEDIA_ROOT_FOR_TESTING = os.path.join(os.path.split(
 
 class PilUtilsTest(TestCase):
 
-    #https://docs.djangoproject.com/en/1.5/topics/testing/overview/#overriding-settings
+    # https://docs.djangoproject.com/en/1.5/topics/testing/overview/#overriding-settings
+    # http://mock.readthedocs.org/en/latest/mock.html#mock.Mock
     @override_settings(MEDIA_ROOT=MEDIA_ROOT_FOR_TESTING)
     def test_generate_thumbnail(self):
         # Create mock

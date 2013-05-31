@@ -1,0 +1,28 @@
+{% extends "lumina/base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina - Album: {{ object.name }}{% endblock %}</title>
+</head>
+<body>
+
+{% block content %}
+
+    <h1>Album: '{{ object.name }}'</h1>
+
+    <table class="table">
+        {% for image in object.image_set.all %}
+            <tr>
+                <td width="20%"><img src="{% url 'image_thumb' image.pk %}"></td>
+                <td width="80%"><a href="{% url 'image_detail' image.pk %}">{{ image }}</a></td>
+            </tr>
+        {% empty %}
+            <tr><td>El album no contienen imagenes...</td></tr>
+        {% endfor %}
+    </table>
+    
+{% endblock content %}
+
+</body>
+</html>

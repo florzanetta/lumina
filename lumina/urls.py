@@ -3,7 +3,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 
 from lumina.views import ImageCreateView, ImageUpdateView, ImageListView,\
-    AlbumListView
+    AlbumListView, AlbumDetailView
 
 # Uncomment the next two lines to enable the admin:
 admin.autodiscover()
@@ -16,6 +16,8 @@ urlpatterns = patterns('',
     #===========================================================================
     url(r'^album/list/$', login_required(AlbumListView.as_view()),
         name='album_list'),
+    url(r'^album/detail/(?P<pk>\d+)/$', login_required(AlbumDetailView.as_view()),
+        name='album_detail'),
 
     #===========================================================================
     # Image
@@ -25,7 +27,7 @@ urlpatterns = patterns('',
     url(r'^image/add/$', login_required(ImageCreateView.as_view()),
         name='image_add'),
     url(r'^image/view/(?P<pk>\d+)/$', login_required(ImageUpdateView.as_view()),
-        name='image_detail'),
+        name='image_detail'), # TODO: rename to 'image_edit'
     url(r'^image/(\d+)/thumb/$', 'lumina.views.image_thumb',
         name='image_thumb'),
 
