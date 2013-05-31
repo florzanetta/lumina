@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 
 class ImageManager(models.Manager):
@@ -18,3 +19,6 @@ class Image(models.Model):
 
     def __unicode__(self):
         return u"Image {0}".format(self.image.url)
+
+    def get_absolute_url(self):
+        return reverse('image_detail', kwargs={'pk': self.pk})

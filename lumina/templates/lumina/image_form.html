@@ -1,0 +1,21 @@
+{% extends "lumina/base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina - Agregar imagen{% endblock %}</title>
+</head>
+<body>
+
+{% block content %}
+
+    <h1>Agregar/Editar imagen</h1>
+    <form action="." method="post" enctype="multipart/form-data">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Agregar">
+    </form>
+
+{% endblock content %}
+
+</body>
+</html>
