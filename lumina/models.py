@@ -3,15 +3,19 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 
+class ForUserManagerMixin():
+
+    def for_user(self, user):
+        """Filter objects by user"""
+        return self.filter(user=user)
+
+
 #===============================================================================
 # Album
 #===============================================================================
 
-class AlbumManager(models.Manager):
-
-    def for_user(self, user):
-        """Returns all the albums for the user"""
-        return self.filter(user=user)
+class AlbumManager(models.Manager, ForUserManagerMixin):
+    pass
 
 
 class Album(models.Model):
@@ -25,14 +29,31 @@ class Album(models.Model):
 
 
 #===============================================================================
+# SharedAlbum
+#===============================================================================
+
+class SharedAlbumManager(models.Manager, ForUserManagerMixin):
+    pass
+
+
+class SharedAlbum(models.Model):
+    shared_with = models.CharField(max_length=300)
+    user = models.ForeignKey(User)
+    album = models.ForeignKey(Album, null=True)
+    random_hash = models.CharField(max_length=36, unique=True) # len(uuid4) = 36
+
+    objects = SharedAlbumManager()
+
+    def __unicode__(self):
+        return u"Shared Album {0}".format(self.album.name)
+
+
+#===============================================================================
 # Image
 #===============================================================================
 
-class ImageManager(models.Manager):
-    
-    def for_user(self, user):
-        """Returns all the images for the user"""
-        return self.filter(user=user)
+class ImageManager(models.Manager, ForUserManagerMixin):
+    pass
 
 
 class Image(models.Model):
