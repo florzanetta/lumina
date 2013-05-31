@@ -7,7 +7,7 @@ from django.views.generic.list import ListView
 from django.http.response import HttpResponse
 from django.contrib.auth.decorators import login_required
 
-from lumina.models import Image
+from lumina.models import Image, Album
 from lumina.pil_utils import generate_thumbnail
 
 
@@ -21,6 +21,21 @@ def image_thumb(request, image_id):
     image = Image.objects.for_user(request.user).get(pk=image_id)
     return HttpResponse(generate_thumbnail(image), content_type='image/jpg')
 
+
+#===============================================================================
+# Album
+#===============================================================================
+
+class AlbumListView(ListView):
+    model = Album
+
+    def get_queryset(self):
+        return Album.objects.for_user(self.request.user)
+
+
+#===============================================================================
+# Image
+#===============================================================================
 
 class ImageListView(ListView):
     model = Image

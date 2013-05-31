@@ -1,0 +1,27 @@
+{% extends "lumina/base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina - Album list{% endblock %}</title>
+</head>
+<body>
+
+{% block content %}
+
+	<h1>Albumes para '{{ user }}'</h1>
+
+    <table class="table">
+		{% for album in object_list %}
+            <tr>
+                <td><a href="{ ** % url 'album_detail' album.pk % ** }">{{ album.name }}</a></td>
+            </tr>
+		{% empty %}
+		    <tr><td>No album...</td></tr>
+		{% endfor %}
+    </table>
+    
+{% endblock content %}
+
+</body>
+</html>
