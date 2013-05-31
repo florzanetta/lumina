@@ -13,7 +13,7 @@
 	
 	<ul>
 	{% for image in images %}
-	    <li>{{ image }}</li>
+	    <li><a href="{% url 'image_detail' image.pk %}">{{ image }}</a></li>
 	{% empty %}
 	    <li>No images...</li>
 	{% endfor %}
