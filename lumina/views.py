@@ -18,7 +18,7 @@ def home(request):
 
 @login_required
 def image_thumb(request, image_id):
-    image = Image.objects.all_from_user(request.user).get(pk=image_id)
+    image = Image.objects.for_user(request.user).get(pk=image_id)
     return HttpResponse(generate_thumbnail(image), content_type='image/jpg')
 
 
@@ -26,7 +26,7 @@ class ImageListView(ListView):
     model = Image
 
     def get_queryset(self):
-        return Image.objects.all_from_user(self.request.user)
+        return Image.objects.for_user(self.request.user)
 
 
 class ImageCreateView(CreateView):

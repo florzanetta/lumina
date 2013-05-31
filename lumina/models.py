@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 
 class ImageManager(models.Manager):
     
-    def all_from_user(self, user):
+    def for_user(self, user):
         """Returns all the images for the user"""
         return self.filter(user=user)
 
