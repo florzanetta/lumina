@@ -40,6 +40,14 @@ By default, a Sqlite on '~/lumina.sqlite' will be used. To create it, run:
     $ python manage.py syncdb
     $ python manage.py migrate lumina
 
+To apply the migrations, run:
+
+    $ python manage.py migrate lumina
+
+To generate migrations automatically from model changes:
+
+    $ python manage.py schemamigration lumina --auto
+
 
 Defaults settings
 -----------------
