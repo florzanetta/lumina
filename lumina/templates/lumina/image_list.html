@@ -9,16 +9,16 @@
 
 {% block content %}
 
-	<h1>Images for {{ user }}</h1>
-	
-	<ul>
-	{% for image in object_list %}
-	    <li><a href="{% url 'image_detail' image.pk %}">{{ image }}</a></li>
-	{% empty %}
-	    <li>No images...</li>
-	{% endfor %}
-	</ul>
+	<h1>Imagenes para '{{ user }}'</h1>
 
+    <table class="table">
+		{% for image in object_list %}
+		    <tr><td><a href="{% url 'image_detail' image.pk %}">{{ image }}</a></td></tr>
+		{% empty %}
+		    <tr><td>No images...</td></tr>
+		{% endfor %}
+    </table>
+    
 {% endblock content %}
 
 </body>

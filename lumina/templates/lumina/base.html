@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>{% block title %}Lumina{% endblock %}</title>
+    <title>{% block title %}Lumina{% endblock %}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 </head>
 <body>
 
-<p>
-    <a href="{% url 'home' %}">Home</a>
-    ::
-    <a href="{% url 'image_list' %}">Lista de imagenes</a>
-    ::
-    <a href="{% url 'image_add' %}">Agregar imagen</a>
-    ::
-    <a href="{% url 'logout' %}">Salir</a>
-</p>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li class="active"><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'image_list' %}">Lista de imagenes</a></li>
+          <li><a href="{% url 'image_add' %}">Agregar imagen</a></li>
+          <li><a href="{% url 'logout' %}">Salir</a></li>
+        </ul>
+        <h3 class="muted">Lumina</h3>
+      </div>
 
+    <hr/>
+ 
 {% block content %}
 {% endblock content %}
 
+    </div>
+<script src="/static/jquery-1.9.1.min.js"></script>
+<script src="/static/bootstrap/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -26,3 +26,8 @@ class ImageCreateView(CreateView):
 
 class ImageUpdateView(UpdateView):
     model = Image
+
+    #    def get_context_data(self, **kwargs):
+    #        context = super(ImageUpdateView, self).get_context_data(**kwargs)
+    #        context.update({'menu_image_update_flag': 'active'})
+    #        return context

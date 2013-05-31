@@ -1,3 +1,4 @@
+{% extends "lumina/base.html" %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,6 +6,8 @@
 <title>Lumina Login</title>
 </head>
 <body>
+
+{% block content %}
 
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
@@ -26,6 +29,8 @@
 <input type="submit" value="login" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
+
+{% endblock content %}
 
 </body>
 </html>
