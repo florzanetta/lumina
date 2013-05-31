@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     # Lumina
     #
     url(r'^$', 'lumina.views.home', name='home'),
+    url(r'^images/list/$', 'lumina.views.images_list', name='images_list'),
 
     #
     # Other

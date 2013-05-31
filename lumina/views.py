@@ -6,10 +6,15 @@ from django.contrib.auth.decorators import login_required
 from lumina.models import Image
 
 
-@login_required
 def home(request):
+    return render_to_response('lumina/index.html', {},
+        context_instance=RequestContext(request))
+
+
+@login_required
+def images_list(request):
     ctx = {
         'images': Image.objects.all_from_user(request.user),
     }
-    return render_to_response('lumina/index.html', ctx,
+    return render_to_response('lumina/images_list.html', ctx,
         context_instance=RequestContext(request))
