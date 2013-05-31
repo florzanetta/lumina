@@ -6,7 +6,8 @@ from django.core.files.storage import default_storage
 
 def generate_thumbnail(image):
     """
-    Generates a thumbnail from a `models.Image`
+    Generates a thumbnail from a `models.Image`.
+    Returns the bytes of the thumbnail.
     """
     img = PilImage.open(default_storage.path(image.image.path))
     img.thumbnail((100, 100,), PilImage.ANTIALIAS)
