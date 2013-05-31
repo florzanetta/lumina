@@ -48,6 +48,18 @@ Defaults settings
     MEDIA_ROOT = os.path.expanduser('~/lumina/uploads/')
 
 
+Testing
+-------
+
+To execute the tests, run:
+
+    $ python manage.py test lumina
+
+or:
+
+    $ python manage.py test lumina -v 2
+
+
 Licence
 -------
 
