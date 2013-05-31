@@ -12,7 +12,7 @@
 	<h1>Images for {{ user }}</h1>
 	
 	<ul>
-	{% for image in images %}
+	{% for image in object_list %}
 	    <li><a href="{% url 'image_detail' image.pk %}">{{ image }}</a></li>
 	{% empty %}
 	    <li>No images...</li>
