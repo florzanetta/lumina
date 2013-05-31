@@ -19,6 +19,8 @@ urlpatterns = patterns('',
         name='image_add'),
     url(r'^image/view/(?P<pk>\d+)/$', login_required(ImageUpdateView.as_view()),
         name='image_detail'),
+    url(r'^image/(\d+)/thumb/$', 'lumina.views.image_thumb',
+        name='image_thumb'),
 
     #
     # Other

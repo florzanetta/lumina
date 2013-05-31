@@ -13,6 +13,7 @@ class ImageManager(models.Manager):
 class Image(models.Model):
     image = models.FileField(upload_to='images/%Y/%m/%d', max_length=300)
     # See: https://docs.djangoproject.com/en/1.5/ref/models/fields/#filefield
+    # See: https://docs.djangoproject.com/en/1.5/topics/files/
     user = models.ForeignKey(User)
 
     objects = ImageManager()
