@@ -9,7 +9,12 @@
 
 {% block content %}
 
-    <h2>Bienvenido!</h2>
+    {% if user.is_authenticated %}
+        <h2>Bienvenido, {{ user.username }}!</h2>
+    {% else %}
+        <h2>Bienvenido!</h2>
+        <h3>Debes iniciar sesión...</h3>
+    {% endif %}
 
 {% endblock content %}
 
