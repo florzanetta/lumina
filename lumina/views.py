@@ -11,6 +11,11 @@ from django.contrib.auth.decorators import login_required
 from lumina.models import Image, Album
 from lumina.pil_utils import generate_thumbnail
 
+#
+# List of generic CBV:
+#  - https://docs.djangoproject.com/en/1.5/ref/class-based-views/
+#
+
 
 def home(request):
     return render_to_response('lumina/index.html', {},
@@ -56,11 +61,12 @@ class ImageListView(ListView):
 
 
 class ImageCreateView(CreateView):
-    # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
     model = Image
 
 
 class ImageUpdateView(UpdateView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = Image
 
     #    def get_context_data(self, **kwargs):

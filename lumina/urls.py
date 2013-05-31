@@ -26,8 +26,8 @@ urlpatterns = patterns('',
         name='image_list'),
     url(r'^image/add/$', login_required(ImageCreateView.as_view()),
         name='image_add'),
-    url(r'^image/view/(?P<pk>\d+)/$', login_required(ImageUpdateView.as_view()),
-        name='image_detail'), # TODO: rename to 'image_edit'
+    url(r'^image/edit/(?P<pk>\d+)/$', login_required(ImageUpdateView.as_view()),
+        name='image_edit'),
     url(r'^image/(\d+)/thumb/$', 'lumina.views.image_thumb',
         name='image_thumb'),
 

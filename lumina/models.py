@@ -48,4 +48,4 @@ class Image(models.Model):
         return u"Image {0}".format(self.image.url)
 
     def get_absolute_url(self):
-        return reverse('image_detail', kwargs={'pk': self.pk})
+        return reverse('image_edit', kwargs={'pk': self.pk})
