@@ -7,6 +7,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from lumina.models import Image, Album
 from lumina.pil_utils import generate_thumbnail
@@ -66,7 +67,9 @@ class AlbumCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        return super(AlbumCreateView, self).form_valid(form)
+        ret = super(AlbumCreateView, self).form_valid(form)
+        messages.success(self.request, 'El album fue creado correctamente')
+        return ret
 
 
 class AlbumUpdateView(UpdateView):
@@ -75,6 +78,11 @@ class AlbumUpdateView(UpdateView):
     model = Album
     form_class = AlbumUpdateForm
     template_name = 'lumina/album_update_form.html'
+
+    def form_valid(self, form):
+        ret = super(AlbumUpdateView, self).form_valid(form)
+        messages.success(self.request, 'El album fue actualizado correctamente')
+        return ret
 
 
 #===============================================================================
@@ -98,7 +106,9 @@ class ImageCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        return super(ImageCreateView, self).form_valid(form)
+        ret = super(ImageCreateView, self).form_valid(form)
+        messages.success(self.request, 'La imagen fue creada correctamente')
+        return ret
 
     def get_initial(self):
         initial = super(ImageCreateView, self).get_initial()
@@ -119,3 +129,8 @@ class ImageUpdateView(UpdateView):
     #        context = super(ImageUpdateView, self).get_context_data(**kwargs)
     #        context.update({'menu_image_update_flag': 'active'})
     #        return context
+
+    def form_valid(self, form):
+        ret = super(ImageUpdateView, self).form_valid(form)
+        messages.success(self.request, 'La imagen fue actualizada correctamente')
+        return ret
