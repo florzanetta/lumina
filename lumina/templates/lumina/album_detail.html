@@ -21,9 +21,10 @@
             <tr><td>El album no contienen imagenes...</td></tr>
         {% endfor %}
     </table>
-    
+
+    <a href="{% url 'album_update' object.pk %}" class="btn btn-large">Actualizar album</a>
     <a href="{% url 'image_create' %}?id_album={{ object.pk }}" class="btn btn-large">Agregar imagen</a>
-    
+
 {% endblock content %}
 
 </body>

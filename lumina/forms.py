@@ -19,6 +19,8 @@ class AlbumCreateForm(forms.ModelForm):
         model = Album
         exclude = ('user',)
 
+AlbumUpdateForm = AlbumCreateForm
+
 
 #===============================================================================
 # Image

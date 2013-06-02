@@ -10,7 +10,8 @@ from django.contrib.auth.decorators import login_required
 
 from lumina.models import Image, Album
 from lumina.pil_utils import generate_thumbnail
-from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm
+from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm,\
+    AlbumUpdateForm
 
 #
 # List of generic CBV:
@@ -66,6 +67,14 @@ class AlbumCreateView(CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super(AlbumCreateView, self).form_valid(form)
+
+
+class AlbumUpdateView(UpdateView):
+
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
+    model = Album
+    form_class = AlbumUpdateForm
+    template_name = 'lumina/album_update_form.html'
 
 
 #===============================================================================
