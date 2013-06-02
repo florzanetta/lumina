@@ -74,9 +74,12 @@ class ImageManager(models.Manager, ForUserManagerMixin):
 
 
 class Image(models.Model):
-    image = models.FileField(upload_to='images/%Y/%m/%d', max_length=300)
     # See: https://docs.djangoproject.com/en/1.5/ref/models/fields/#filefield
     # See: https://docs.djangoproject.com/en/1.5/topics/files/
+    image = models.FileField(upload_to='images/%Y/%m/%d', max_length=300)
+    size = models.PositiveIntegerField()
+    original_filename = models.CharField(max_length=128)
+    content_type = models.CharField(max_length=64)
     user = models.ForeignKey(User)
     album = models.ForeignKey(Album, null=True)
 

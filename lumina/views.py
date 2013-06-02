@@ -204,24 +204,24 @@ class ImageCreateView(CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
 
-        # TODO: add user's filename (the filename the file had in the user's computer)
-        #    We should take the name BEFORE calling `form_valid()`
         #    *** before super().form_valid()
         #    (Pdb) form.instance.image.name
         #    u'estado-del-arte.odt'
         #    *** after super().form_valid()
         #    (Pdb) form.instance.image.name
         #    u'images/2013/06/02/estado-del-arte_2.odt'
+        form.instance.original_filename = form.instance.image.name
 
-        # TODO: add file size
         #    *** befor and after super().form_valid() this works
         #    (Pdb) form.instance.image.size
         #    77052
+        form.instance.size = form.instance.image.size
 
-        # TODO: add user's content type
+        # FIXME: is NOT safe to trust the content type reported by the user
         #    *** befor super().form_valid() this works
         #    (Pdb) form.files['image'].content_type
         #    u'application/vnd.oasis.opendocument.text'
+        form.instance.content_type = form.files['image'].content_type
 
         ret = super(ImageCreateView, self).form_valid(form)
         messages.success(self.request, 'La imagen fue creada correctamente')

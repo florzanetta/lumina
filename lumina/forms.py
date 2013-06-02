@@ -41,11 +41,11 @@ class ImageCreateForm(forms.ModelForm):
 
     class Meta:
         model = Image
-        exclude = ('user',)
+        exclude = ('user', 'size', 'original_filename', 'content_type',)
 
 
 class ImageUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Image
-        exclude = ('user', 'image')
+        exclude = ('user', 'image', 'size', 'original_filename', 'content_type',)

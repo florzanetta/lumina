@@ -17,8 +17,11 @@
 					class="media-object" src="{% url 'image_thumb_64x64' image.pk %}">
 	            </a>
 				<div class="media-body">
-					<h4 class="media-heading"><a
-					   href="{% url 'image_update' image.pk %}">{{ image.image.url }}</a></h4>
+					<p class="media-heading"><a
+					   href="{% url 'image_update' image.pk %}">{{ image.original_filename }}</a></p>
+                      <small>{{ image.size|filesizeformat }}</small>
+                      -
+                      <small class="muted">{{ image.content_type }}</small>
 				</div>
 			</li>
 		</ul>
