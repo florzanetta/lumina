@@ -203,8 +203,35 @@ class ImageCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+
+        # TODO: add user's filename (the filename the file had in the user's computer)
+        #    We should take the name BEFORE calling `form_valid()`
+        #    *** before super().form_valid()
+        #    (Pdb) form.instance.image.name
+        #    u'estado-del-arte.odt'
+        #    *** after super().form_valid()
+        #    (Pdb) form.instance.image.name
+        #    u'images/2013/06/02/estado-del-arte_2.odt'
+
+        # TODO: add file size
+        #    *** befor and after super().form_valid() this works
+        #    (Pdb) form.instance.image.size
+        #    77052
+
+        # TODO: add user's content type
+        #    *** befor super().form_valid() this works
+        #    (Pdb) form.files['image'].content_type
+        #    u'application/vnd.oasis.opendocument.text'
+
         ret = super(ImageCreateView, self).form_valid(form)
         messages.success(self.request, 'La imagen fue creada correctamente')
+
+        #    *** after super().form_valid() `form.instance.image.name` has the
+        #        filename from the filesystem, which WILL BE DIFFERENT from the
+        #        original filename on the user's computer
+        #    (Pdb) form.instance.image.name
+        #    u'images/2013/06/02/estado-del-arte_2.odt'
+
         return ret
 
     def get_initial(self):
