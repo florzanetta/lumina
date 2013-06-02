@@ -9,8 +9,15 @@ from django import forms
 from lumina.models import Image
 
 
-class ImageForm(forms.ModelForm):
+class ImageCreateForm(forms.ModelForm):
 
     class Meta:
         model = Image
         exclude = ('user',)
+
+
+class ImageUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Image
+        exclude = ('user', 'image')
