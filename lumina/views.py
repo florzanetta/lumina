@@ -8,16 +8,22 @@ from django.views.generic.detail import DetailView
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.servers.basehttp import FileWrapper
 
-from lumina.models import Image, Album
+from lumina.models import Image, Album, SharedAlbum
 from lumina.pil_utils import generate_thumbnail
-from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm,\
+from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
     AlbumUpdateForm
+from django.core.files.storage import default_storage
+import mimetypes
+import os
 
 #
 # List of generic CBV:
 #  - https://docs.djangoproject.com/en/1.5/ref/class-based-views/
 #
+
+# TODO: send cache headers
 
 
 def home(request):
@@ -25,19 +31,64 @@ def home(request):
         context_instance=RequestContext(request))
 
 
-@login_required
-def image_thumb_64x64(request, image_id):
-    return image_thumb(request, image_id, 64)
-
-
-@login_required
-def image_thumb(request, image_id, max_size=None):
-    image = Image.objects.for_user(request.user).get(pk=image_id)
+def _image_thumb(request, image, max_size=None):
     try:
         thumb = generate_thumbnail(image, max_size)
         return HttpResponse(thumb, content_type='image/jpg')
     except IOError:
         return HttpResponseRedirect('/static/unknown-icon-64x64.png')
+
+
+@login_required
+def image_thumb_64x64(request, image_id):
+    image = Image.objects.for_user(request.user).get(pk=image_id)
+    return _image_thumb(request, image, 64)
+
+
+@login_required
+def image_thumb(request, image_id, max_size=None):
+    image = Image.objects.for_user(request.user).get(pk=image_id)
+    return _image_thumb(request, image, 64)
+
+
+#===============================================================================
+# SharedAlbum
+#===============================================================================
+
+def shared_album_view(request, random_hash):
+    shared_album = SharedAlbum.objects.get(random_hash=random_hash)
+    return render_to_response('lumina/sharedalbum_view.html', {'object': shared_album, },
+        context_instance=RequestContext(request))
+
+
+def shared_album_image_thumb_64x64(request, random_hash, image_id):
+    shared_album = SharedAlbum.objects.get(random_hash=random_hash)
+    return _image_thumb(request, shared_album.get_image_from_album(image_id), 64)
+
+
+def shared_album_image_download(request, random_hash, image_id):
+    shared_album = SharedAlbum.objects.get(random_hash=random_hash)
+    image = shared_album.get_image_from_album(image_id)
+    full_filename = default_storage.path(image.image.path)
+    filename_to_user = os.path.basename(full_filename)
+    filesize = os.path.getsize(full_filename)
+    content_type = mimetypes.guess_type(full_filename)[0]
+
+    #    with open(full_filename) as f:
+    #        fw = FileWrapper(f)
+    #        response = HttpResponse(fw, content_type=content_type)
+    #        response['Content-Length'] = filesize
+    #        response['Content-Disposition'] = 'attachment; filename="{0}"'.format(
+    #            filename_to_user)
+    #        return response
+
+    with open(full_filename) as f:
+        file_contents = f.read()
+    response = HttpResponse(file_contents, content_type=content_type)
+    response['Content-Length'] = filesize
+    response['Content-Disposition'] = 'attachment; filename="{0}"'.format(
+        filename_to_user)
+    return response
 
 
 #===============================================================================

@@ -1,0 +1,35 @@
+{% extends "lumina/base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina - Album: {{ object.album.name }}{% endblock %}</title>
+</head>
+<body>
+
+{% block content %}
+
+    <h4>Album '{{ object.album.name }}'</h4>
+
+    <hr>
+
+    <h5>Imágenes del album:</h5>
+    {% for image in object.album.image_set.all %}
+        <ul class="media-list">
+            <li class="media"><a class="pull-left" href="javascript:void(0);"><img class="media-object"
+                    src="{% url 'shared_album_image_thumb_64x64' object.random_hash image.pk %}">
+                </a>
+                <div class="media-body">
+                    <h6 class="media-heading"><a
+                       href="{% url 'shared_album_image_download' object.random_hash image.pk %}">{{ image.image.url }}</a></h6>
+                </div>
+            </li>
+        </ul>
+    {% empty %}
+        <p>No hay imagenes en el album</p>
+    {% endfor %}
+
+{% endblock content %}
+
+</body>
+</html>

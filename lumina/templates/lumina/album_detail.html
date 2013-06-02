@@ -9,16 +9,19 @@
 
 {% block content %}
 
-    <h3>Album: '{{ object.name }}'</h3>
+    <h4>Album '{{ object.name }}'</h4>
 
+    <hr>
+
+    <h5>Imágenes del album:</h5>
     {% for image in object.image_set.all %}
         <ul class="media-list">
             <li class="media"><a class="pull-left" href="{% url 'image_update' image.pk %}"><img
                     class="media-object" src="{% url 'image_thumb_64x64' image.pk %}">
                 </a>
                 <div class="media-body">
-                    <h4 class="media-heading"><a
-                       href="{% url 'image_update' image.pk %}">{{ image.image.url }}</a></h4>
+                    <h6 class="media-heading"><a
+                       href="{% url 'image_update' image.pk %}">{{ image.image.url }}</a></h6>
                 </div>
             </li>
         </ul>
@@ -26,8 +29,27 @@
         <p>No hay imagenes...</p>
     {% endfor %}
 
-    <a href="{% url 'album_update' object.pk %}" class="btn btn-large">Actualizar album</a>
-    <a href="{% url 'image_create' %}?id_album={{ object.pk }}" class="btn btn-large">Agregar imagen</a>
+    <hr>
+
+    <h5>Compartido:</h5>
+
+    <table class="table">
+	    {% for sharedalbum in object.sharedalbum_set.all %}
+	        <tr>
+               <td width="5%"><a href="{% url 'shared_album_view' sharedalbum.random_hash %}">Link</a></td>
+	           <td width="95%">{{ sharedalbum.shared_with }}</td>
+	        </tr>
+	    {% empty %}
+            <tr><td>El album no ha sido compartido</td></tr>
+	    {% endfor %}
+    </table>
+
+    <hr>
+
+    <p>
+	    <a href="{% url 'album_update' object.pk %}" class="btn btn-large">Actualizar album</a>
+	    <a href="{% url 'image_create' %}?id_album={{ object.pk }}" class="btn btn-large">Agregar imagen</a>
+    </p>
 
 {% endblock content %}
 

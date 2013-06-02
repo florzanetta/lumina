@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.core.exceptions import PermissionDenied
 
 
 class ForUserManagerMixin():
@@ -50,6 +51,18 @@ class SharedAlbum(models.Model):
 
     def __unicode__(self):
         return u"Shared Album {0} with {1}".format(self.album.name, self.shared_with)
+
+    def get_image_from_album(self, image_id):
+        """
+        Returns the image with 'id' = 'image_id' only
+        if the image is part of the shared album.
+        """
+        image = Image.objects.get(pk=image_id)
+        if self.album == image.album:
+            return image
+        else:
+            raise(PermissionDenied("The Image {0} doesn't belong to the SharedAlbum {1}".format(
+                image_id, self.id)))
 
 
 #===============================================================================

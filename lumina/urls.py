@@ -8,6 +8,8 @@ from lumina.views import ImageCreateView, ImageUpdateView, ImageListView,\
 # Uncomment the next two lines to enable the admin:
 admin.autodiscover()
 
+# TODO: See: http://django-braces.readthedocs.org/en/latest/index.html#loginrequiredmixin
+
 urlpatterns = patterns('',
     url(r'^$', 'lumina.views.home', name='home'),
 
@@ -22,6 +24,17 @@ urlpatterns = patterns('',
         name='album_create'),
     url(r'^album/update/(?P<pk>\d+)/$', login_required(AlbumUpdateView.as_view()),
         name='album_update'),
+
+    #===========================================================================
+    # Album
+    #===========================================================================
+    url(r'^shared/album/view/(?P<random_hash>[a-f0-9-]{36})/$',
+        'lumina.views.shared_album_view', name='shared_album_view'),
+    url(r'^shared/album/view/(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
+        'lumina.views.shared_album_image_thumb_64x64', name='shared_album_image_thumb_64x64'),
+    url(r'^shared/album/download/(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
+        'lumina.views.shared_album_image_download', name='shared_album_image_download'),
+
 
     #===========================================================================
     # Image
