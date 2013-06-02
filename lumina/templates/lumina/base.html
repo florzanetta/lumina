@@ -25,7 +25,7 @@
 								<li><a href="{% url 'shared_album_create' %}">Compartir album</a></li>
 								<li><a href="{% url 'image_list' %}">Lista de imagenes</a></li>
 								<li><a href="{% url 'image_create' %}">Agregar imagen</a></li>
-								{% if user.is_staff %}
+								{% if user.is_staff or user.is_superuser %}
 										<li class="active"><a href="{% url 'admin:lumina_album_changelist' %}" target="_blank">Album</a></li>
 										<li class="active"><a href="{% url 'admin:lumina_image_changelist' %}" target="_blank">Image</a></li>
 										<li class="active"><a href="{% url 'admin:lumina_sharedalbum_changelist' %}" target="_blank">Shared</a></li>

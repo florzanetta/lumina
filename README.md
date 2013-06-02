@@ -48,6 +48,10 @@ To generate migrations automatically from model changes:
 
     $ python manage.py schemamigration lumina --auto
 
+
+Reset of the database and uploads
+---------------------------------
+
 To reset the data (delete uploads, reset database and create an 'admin', user to login
 with username 'admin' and password 'admin'):
 
@@ -88,7 +92,7 @@ To generate **fixtures**, run:
 
     $ python manage.py dumpdata --format=json --indent=4 --natural auth.User > lumina/fixtures/admin_user.json
 
-(remember to execute this with a **CLEAN** database).
+(remember to execute this with a **CLEAN** database: see *Reset of the database and uploads*).
 
 Licence
 -------
