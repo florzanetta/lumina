@@ -15,16 +15,7 @@
 
     <h5>Imágenes del album:</h5>
     {% for image in object.image_set.all %}
-        <ul class="media-list">
-            <li class="media"><a class="pull-left" href="{% url 'image_update' image.pk %}"><img
-                    class="media-object" src="{% url 'image_thumb_64x64' image.pk %}">
-                </a>
-                <div class="media-body">
-                    <h6 class="media-heading"><a
-                       href="{% url 'image_update' image.pk %}">{{ image.image.url }}</a></h6>
-                </div>
-            </li>
-        </ul>
+        {% include 'lumina/include/image.html' with image=image only %}
     {% empty %}
         <p>No hay imagenes...</p>
     {% endfor %}
