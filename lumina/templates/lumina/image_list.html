@@ -9,19 +9,23 @@
 
 {% block content %}
 
-	<h1>Imagenes para '{{ user }}'</h1>
+	<h3>Imagenes para '{{ user }}'</h3>
 
-    <table class="table">
-		{% for image in object_list %}
-            <tr>
-                <td width="20%"><img src="{% url 'image_thumb' image.pk %}"></td>
-                <td width="80%"><a href="{% url 'image_edit' image.pk %}">{{ image }}</a></td>
-            </tr>
-		{% empty %}
-		    <tr><td>No images...</td></tr>
-		{% endfor %}
-    </table>
-    
+	{% for image in object_list %}
+		<ul class="media-list">
+			<li class="media"><a class="pull-left" href="{% url 'image_edit' image.pk %}"><img
+					class="media-object" src="{% url 'image_thumb_64x64' image.pk %}">
+	            </a>
+				<div class="media-body">
+					<h4 class="media-heading"><a
+					   href="{% url 'image_edit' image.pk %}">{{ image.image.url }}</a></h4>
+				</div>
+			</li>
+		</ul>
+	{% empty %}
+		<p>No hay imagenes...</p>
+	{% endfor %}
+
 {% endblock content %}
 
 </body>

@@ -9,19 +9,24 @@
 
 {% block content %}
 
-	<h1>Albumes para '{{ user }}'</h1>
+	<h3>Albumes para '{{ user }}'</h3>
 
-    <table class="table">
-		{% for album in object_list %}
-            <tr>
-                <td><a href="{% url 'album_detail' album.pk %}">{{ album.name }}</a>
-                    ({{ album.image_set.count }} imagen{{ album.image_set.count|pluralize:",es" }})</td>
-            </tr>
-		{% empty %}
-		    <tr><td>No album...</td></tr>
-		{% endfor %}
-    </table>
-    
+	{% for album in object_list %}
+        <ul class="media-list">
+            <li class="media"><a class="pull-left" href="{% url 'album_detail' album.pk %}"><img
+                    class="media-object" src="/static/album-icon-64x64.png">
+                </a>
+                <div class="media-body">
+                    <h4 class="media-heading"><a
+                        href="{% url 'album_detail' album.pk %}">{{ album.name }}</a></h4>
+                    <p>{{ album.image_set.count }} imagen{{ album.image_set.count|pluralize:",es" }}</p>
+                </div>
+            </li>
+        </ul>
+	{% empty %}
+	   <p>No hay albumes...</p>
+	{% endfor %}
+
 {% endblock content %}
 
 </body>

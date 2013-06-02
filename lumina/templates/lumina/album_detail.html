@@ -9,7 +9,7 @@
 
 {% block content %}
 
-    <h1>Album: '{{ object.name }}'</h1>
+    <h3>Album: '{{ object.name }}'</h3>
 
     <table class="table">
         {% for image in object.image_set.all %}
