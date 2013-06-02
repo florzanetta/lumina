@@ -25,19 +25,14 @@ def home(request):
 
 @login_required
 def image_thumb_64x64(request, image_id):
-    image = Image.objects.for_user(request.user).get(pk=image_id)
-    try:
-        thumb = generate_thumbnail(image, max_size=64)
-        return HttpResponse(thumb, content_type='image/jpg')
-    except IOError:
-        return HttpResponseRedirect('/static/album-icon-64x64.png')
+    return image_thumb(request, image_id, 64)
 
 
 @login_required
-def image_thumb(request, image_id):
+def image_thumb(request, image_id, max_size=None):
     image = Image.objects.for_user(request.user).get(pk=image_id)
     try:
-        thumb = generate_thumbnail(image)
+        thumb = generate_thumbnail(image, max_size)
         return HttpResponse(thumb, content_type='image/jpg')
     except IOError:
         return HttpResponseRedirect('/static/album-icon-64x64.png')
