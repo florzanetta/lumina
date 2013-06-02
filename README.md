@@ -48,6 +48,14 @@ To generate migrations automatically from model changes:
 
     $ python manage.py schemamigration lumina --auto
 
+To reset the data (delete uploads, reset database and create an 'admin', user to login
+with username 'admin' and password 'admin'):
+
+    $ rm -rf ~/lumina.sqlite ~/lumina/uploads
+    $ python manage.py syncdb --noinput
+    $ python manage.py migrate
+    $ python manage.py loaddata admin_user.json
+
 
 Defaults settings
 -----------------
