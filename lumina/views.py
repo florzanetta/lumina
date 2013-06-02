@@ -80,6 +80,14 @@ class ImageCreateView(CreateView):
         form.instance.user = self.request.user
         return super(ImageCreateView, self).form_valid(form)
 
+    def get_initial(self):
+        initial = super(ImageCreateView, self).get_initial()
+        if 'id_album' in self.request.GET:
+            initial.update({
+                'album': self.request.GET['id_album'],
+            })
+        return initial
+
 
 class ImageUpdateView(UpdateView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview

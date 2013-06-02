@@ -22,6 +22,8 @@
         {% endfor %}
     </table>
     
+    <a href="{% url 'image_create' %}?id_album={{ object.pk }}" class="btn btn-large">Agregar imagen</a>
+    
 {% endblock content %}
 
 </body>
