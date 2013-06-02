@@ -67,6 +67,11 @@ or:
 
     $ python manage.py test lumina -v 2
 
+To check code coverage, run:
+
+    $ coverage run --source='.' --omit='virtualenv/*' manage.py test lumina
+    $ coverage report
+
 
 Licence
 -------
