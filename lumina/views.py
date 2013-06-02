@@ -75,6 +75,7 @@ class ImageCreateView(CreateView):
     # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
     model = Image
     form_class = ImageCreateForm
+    template_name = 'lumina/image_create_form.html'
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -93,6 +94,7 @@ class ImageUpdateView(UpdateView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = Image
     form_class = ImageUpdateForm
+    template_name = 'lumina/image_update_form.html'
 
     #    def get_context_data(self, **kwargs):
     #        context = super(ImageUpdateView, self).get_context_data(**kwargs)

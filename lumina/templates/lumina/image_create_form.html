@@ -9,13 +9,13 @@
 
 {% block content %}
 
-    <h3>Agregar/Editar imagen</h3>
+    <h3>Agregar imagen</h3>
     <form action="." method="post" enctype="multipart/form-data">{% csrf_token %}
 	    <table class="table">
 	        {{ form.as_table }}
 	        <tr>
                <td> </td>
-	           <td><input type="submit" value="Agregar / Actualizar" class="btn btn-primary"></td>
+	           <td><input type="submit" value="Agregar" class="btn btn-primary"></td>
 	        </tr>
 		</table>
     </form>
