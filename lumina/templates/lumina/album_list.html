@@ -19,7 +19,13 @@
                 <div class="media-body">
                     <h4 class="media-heading"><a
                         href="{% url 'album_detail' album.pk %}">{{ album.name }}</a></h4>
-                    <p>{{ album.image_set.count }} imagen{{ album.image_set.count|pluralize:",es" }}</p>
+                    <div>
+                        <small>
+                            {{ album.image_set.count }} imagen{{ album.image_set.count|pluralize:",es" }}
+                            -
+                            Compartido con {{ album.sharedalbum_set.count }} persona{{ album.sharedalbum_set.count|pluralize:",s" }}
+                           </small>
+                       </div>
                 </div>
             </li>
         </ul>
