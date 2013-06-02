@@ -87,6 +87,9 @@ PRIVATE_URLS = [
 class PermissoinsTests(TestCase):
     fixtures = ['admin_user.json', 'admin-and-juan-albums.json']
 
+    def _login(self, username):
+        self.assertTrue(self.client.login(username=username, password=username))
+
     def test_required_fixtures(self):
         u_admin = User.objects.get(username='admin')
         u_juan = User.objects.get(username='juan')
@@ -106,14 +109,19 @@ class PermissoinsTests(TestCase):
             response = self.client.get(redirect_to)
             self.assertTemplateUsed(response, 'registration/login.html')
 
+    def test_only_users_albums_are_shown(self):
+        self._login('admin')
+        response = self.client.get(reverse('shared_album_create'))
+        self.assertTemplateUsed(response, 'lumina/sharedalbum_create_form.html')
+        self.assertContains(response, ADMIN_ALBUM_UUID)
+        self.assertNotContains(response, JUAN_ALBUM_UUID)
+
     def test_shared_album(self):
         # TODO: implement this
         pass
 
     def test_private_album(self):
-        # Login
-        self.assertTrue(
-            self.client.login(username='admin', password='admin'))
+        self._login('admin')
 
         # View list of albums
         response = self.client.get(reverse('album_list'))

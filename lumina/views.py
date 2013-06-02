@@ -149,6 +149,11 @@ class SharedAlbumCreateView(CreateView):
     def get_success_url(self):
         return reverse('album_detail', args=[self.object.album.pk])
 
+    def get_context_data(self, **kwargs):
+        context = super(SharedAlbumCreateView, self).get_context_data(**kwargs)
+        context['form'].fields['album'].queryset = Album.objects.for_user(self.request.user)
+        return context
+
 
 #===============================================================================
 # Album
