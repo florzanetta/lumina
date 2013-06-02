@@ -36,7 +36,7 @@ def image_thumb(request, image_id, max_size=None):
         thumb = generate_thumbnail(image, max_size)
         return HttpResponse(thumb, content_type='image/jpg')
     except IOError:
-        return HttpResponseRedirect('/static/album-icon-64x64.png')
+        return HttpResponseRedirect('/static/unknown-icon-64x64.png')
 
 
 #===============================================================================
