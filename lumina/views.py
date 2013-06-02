@@ -23,6 +23,13 @@ def home(request):
 
 
 @login_required
+def image_thumb_64x64(request, image_id):
+    image = Image.objects.for_user(request.user).get(pk=image_id)
+    return HttpResponse(generate_thumbnail(image, max_size=64),
+        content_type='image/jpg')
+
+
+@login_required
 def image_thumb(request, image_id):
     image = Image.objects.for_user(request.user).get(pk=image_id)
     return HttpResponse(generate_thumbnail(image), content_type='image/jpg')

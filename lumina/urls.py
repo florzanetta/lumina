@@ -30,6 +30,8 @@ urlpatterns = patterns('',
         name='image_edit'),
     url(r'^image/(\d+)/thumb/$', 'lumina.views.image_thumb',
         name='image_thumb'),
+    url(r'^image/(\d+)/thumb/64x64/$', 'lumina.views.image_thumb_64x64',
+        name='image_thumb_64x64'),
 
     #
     # Other
