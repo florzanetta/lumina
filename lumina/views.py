@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 
 from lumina.models import Image, Album
 from lumina.pil_utils import generate_thumbnail
+from lumina.forms import ImageForm
 
 #
 # List of generic CBV:
@@ -69,12 +70,19 @@ class ImageListView(ListView):
 
 class ImageCreateView(CreateView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
+    # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
     model = Image
+    form_class = ImageForm
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(ImageCreateView, self).form_valid(form)
 
 
 class ImageUpdateView(UpdateView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = Image
+    form_class = ImageForm
 
     #    def get_context_data(self, **kwargs):
     #        context = super(ImageUpdateView, self).get_context_data(**kwargs)
