@@ -32,7 +32,15 @@ from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
 
 
 def home(request):
-    return render_to_response('lumina/index.html', {},
+    if request.user.is_authenticated():
+        ctx = {
+            'album_count': Album.objects.for_user(request.user).count(),
+            'image_count': Image.objects.for_user(request.user).count(),
+            'sharedalbum_count': SharedAlbum.objects.for_user(request.user).count(),
+        }
+    else:
+        ctx = {}
+    return render_to_response('lumina/index.html', ctx,
         context_instance=RequestContext(request))
 
 
