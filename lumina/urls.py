@@ -4,7 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
 from lumina.views import ImageCreateView, ImageUpdateView, ImageListView,\
-    AlbumListView, AlbumDetailView, AlbumCreateView, AlbumUpdateView
+    AlbumListView, AlbumDetailView, AlbumCreateView, AlbumUpdateView,\
+    SharedAlbumAnonymousView
 
 # Uncomment the next two lines to enable the admin:
 admin.autodiscover()
@@ -22,28 +23,38 @@ urlpatterns = patterns('',
             login_required(
                 AlbumListView.as_view())),
         name='album_list'),
+
     url(r'^album/detail/(?P<pk>\d+)/$',
         cache_control(private=True)(
             login_required(AlbumDetailView.as_view())),
         name='album_detail'),
+
     url(r'^album/create/$',
         cache_control(private=True)(
             login_required(AlbumCreateView.as_view())),
         name='album_create'),
+
     url(r'^album/update/(?P<pk>\d+)/$',
         cache_control(private=True)(
             login_required(AlbumUpdateView.as_view())),
         name='album_update'),
 
     #===========================================================================
-    # Album
+    # SharedAlbum
     #===========================================================================
-    url(r'^shared/album/view/(?P<random_hash>[a-f0-9-]{36})/$',
-        'lumina.views.shared_album_view', name='shared_album_view'),
-    url(r'^shared/album/view/(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
-        'lumina.views.shared_album_image_thumb_64x64', name='shared_album_image_thumb_64x64'),
-    url(r'^shared/album/download/(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
-        'lumina.views.shared_album_image_download', name='shared_album_image_download'),
+    url(r'^shared/album/anonymous/view/(?P<random_hash>[a-f0-9-]{36})/$',
+        # 'lumina.views.shared_album_view',
+        cache_control(private=True)(
+            SharedAlbumAnonymousView.as_view()),
+        name='shared_album_view'),
+
+    url(r'^shared/album/anonymous/view/(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
+        'lumina.views.shared_album_image_thumb_64x64',
+        name='shared_album_image_thumb_64x64'),
+
+    url(r'^shared/album/anonymous/download/(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
+        'lumina.views.shared_album_image_download',
+        name='shared_album_image_download'),
 
 
     #===========================================================================

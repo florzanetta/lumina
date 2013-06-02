@@ -60,11 +60,12 @@ def image_thumb(request, image_id, max_size=None):
 # SharedAlbum
 #===============================================================================
 
-@cache_control(private=True)
-def shared_album_view(request, random_hash):
-    shared_album = SharedAlbum.objects.get(random_hash=random_hash)
-    return render_to_response('lumina/sharedalbum_view.html', {'object': shared_album, },
-        context_instance=RequestContext(request))
+class SharedAlbumAnonymousView(DetailView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/#django.views.generic.detail.DetailView @IgnorePep8
+    model = SharedAlbum
+    slug_url_kwarg = 'random_hash'
+    slug_field = 'random_hash'
+    template_name = 'lumina/sharedalbum_anonymous_view.html'
 
 
 @cache_control(private=True)
