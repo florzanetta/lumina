@@ -1,6 +1,5 @@
 # Create your views here.
 
-import mimetypes
 import os
 import uuid
 
