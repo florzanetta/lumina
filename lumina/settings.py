@@ -1,8 +1,6 @@
 # Django settings for lumina project.
 import os
 
-from django.contrib.messages import constants as message_constants
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 

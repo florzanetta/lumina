@@ -13,7 +13,10 @@
         <h2>Bienvenido, {{ user.username }}!</h2>
     {% else %}
         <h2>Bienvenido!</h2>
-        <h3>Debes iniciar sesión...</h3>
+        <p>
+            Debes <a href="{% url 'django.contrib.auth.views.login' %}?next=/">iniciar sesión</a>
+            para poder utilizar el sistema...
+        </p>
     {% endif %}
 
 {% endblock content %}
