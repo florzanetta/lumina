@@ -162,11 +162,3 @@ LOGGING = {
         },
     }
 }
-
-MESSAGE_TAGS = {
-    message_constants.DEBUG: 'muted',
-    message_constants.INFO: 'text-info',
-    message_constants.SUCCESS: 'text-success',
-    message_constants.WARNING: 'text-warning',
-    message_constants.ERROR: 'text-error',
-}
