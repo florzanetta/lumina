@@ -86,7 +86,15 @@ class Image(models.Model):
     objects = ImageManager()
 
     def __unicode__(self):
-        return u"Image {0}".format(self.image.url)
+        return u"Image {0}".format(self.original_filename)
 
     def get_absolute_url(self):
         return reverse('image_update', kwargs={'pk': self.pk})
+
+    def set_content_type(self, content_type):
+        """Set content_type, truncating if it's too large"""
+        self.content_type = content_type[0:64]
+
+    def set_original_filename(self, filename):
+        """Set original filename, truncating if it's too large"""
+        self.original_filename = filename[0:128]

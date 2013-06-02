@@ -223,7 +223,7 @@ class ImageCreateView(CreateView):
         #    *** after super().form_valid()
         #    (Pdb) form.instance.image.name
         #    u'images/2013/06/02/estado-del-arte_2.odt'
-        form.instance.original_filename = form.instance.image.name
+        form.instance.set_original_filename(form.instance.image.name)
 
         #    *** befor and after super().form_valid() this works
         #    (Pdb) form.instance.image.size
@@ -234,7 +234,7 @@ class ImageCreateView(CreateView):
         #    *** befor super().form_valid() this works
         #    (Pdb) form.files['image'].content_type
         #    u'application/vnd.oasis.opendocument.text'
-        form.instance.content_type = form.files['image'].content_type
+        form.instance.set_content_type(form.files['image'].content_type)
 
         ret = super(ImageCreateView, self).form_valid(form)
         messages.success(self.request, 'La imagen fue creada correctamente')
