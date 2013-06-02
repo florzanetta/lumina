@@ -133,6 +133,30 @@ class LuminaSeleniumTests(LiveServerTestCase):
                 dumped_objects[key] = value
         return dumped_objects
 
+    def _assert_user_in_dump_of_objects(self, dump_of_objects, username, key='user'):
+        """
+        Asserts that dump of objects has a reference to user equals to `username`.
+        To assert that user is AnonymousUser, use `username=None`.
+
+        Examples:
+        _assert_user_in_dump_of_objects(objs, None) -> Assert anonymous
+        _assert_user_in_dump_of_objects(objs, 'admin') -> Assert default 'admin'
+        _assert_user_in_dump_of_objects(objs, 'admin', key='logged_in_user')
+        """
+        self.assertIn(key, dump_of_objects,
+            "Dump of objects doesn't contains 'user' key.")
+        user = dump_of_objects[key]
+        if username is None:
+            self.assertEqual(user, 'AnonymousUser')
+        else:
+            self.assertNotEqual(user, 'AnonymousUser',
+                "Dump of objects has reference to 'AnonymousUser'")
+            try:
+                self.assertEqual(user[0]['fields']['username'], username)
+            except:
+                print dump_of_objects
+                raise
+
     def _go_home(self):
         """Goes to the home page and return _get_dump_of_objects()"""
         self.selenium.get('%s%s' % (self.live_server_url, '/'))
@@ -156,7 +180,7 @@ class LuminaSeleniumTests(LiveServerTestCase):
     def test_login(self):
         # Go home
         objs = self._go_home()
-        self.assertEqual(objs['user'], 'AnonymousUser')
+        self._assert_user_in_dump_of_objects(objs, None)
         # Go to album list
         self.selenium.get('%s%s' % (self.live_server_url, '/album/list/'))
         self._wait_until_render_done()
@@ -166,6 +190,14 @@ class LuminaSeleniumTests(LiveServerTestCase):
         self.selenium.find_element_by_id("id_password").send_keys('admin')
         self.selenium.find_element_by_id('submit_button').click()
         self._wait_until_render_done()
+        # Check login went well
+        objs = self._get_dump_of_objects()
+        self._assert_user_in_dump_of_objects(objs, 'admin')
         # Get list of albums
         objs = self._get_dump_of_objects()
         self.assertEqual(objs['object_list'], [])
+        # Logout and check
+        self.selenium.get('%s%s' % (self.live_server_url, '/accounts/logout/'))
+        self._wait_until_render_done()
+        objs = self._get_dump_of_objects()
+        self._assert_user_in_dump_of_objects(objs, None)
