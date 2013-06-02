@@ -6,8 +6,23 @@ Created on Jun 1, 2013
 
 from django import forms
 
-from lumina.models import Image
+from lumina.models import Image, Album
 
+
+#===============================================================================
+# Album
+#===============================================================================
+
+class AlbumCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = Album
+        exclude = ('user',)
+
+
+#===============================================================================
+# Image
+#===============================================================================
 
 class ImageCreateForm(forms.ModelForm):
 

@@ -27,6 +27,9 @@ class Album(models.Model):
     def __unicode__(self):
         return u"Album {0}".format(self.name)
 
+    def get_absolute_url(self):
+        return reverse('album_detail', kwargs={'pk': self.pk})
+
 
 #===============================================================================
 # SharedAlbum
