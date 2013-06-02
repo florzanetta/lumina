@@ -69,18 +69,26 @@ urlpatterns = patterns('',
         cache_control(private=True)(
             login_required(ImageListView.as_view())),
         name='image_list'),
+
     url(r'^image/create/$',
         cache_control(private=True)(
             login_required(ImageCreateView.as_view())),
         name='image_create'),
+
     url(r'^image/update/(?P<pk>\d+)/$',
         cache_control(private=True)(
             login_required(ImageUpdateView.as_view())),
         name='image_update'),
+
     url(r'^image/(\d+)/thumb/$', 'lumina.views.image_thumb',
         name='image_thumb'),
+
     url(r'^image/(\d+)/thumb/64x64/$', 'lumina.views.image_thumb_64x64',
         name='image_thumb_64x64'),
+
+    url(r'^image/(\d+)/download/$',
+        'lumina.views.image_download',
+        name='image_download'),
 
     #
     # Other

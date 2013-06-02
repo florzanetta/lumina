@@ -52,6 +52,33 @@ def _image_thumb(request, image, max_size=None):
         return HttpResponseRedirect('/static/unknown-icon-64x64.png')
 
 
+def _image_download(request, image):
+    """Sends the original uploaded file to the user"""
+    full_filename = default_storage.path(image.image.path)
+    filename_to_user = image.original_filename
+    filesize = os.path.getsize(full_filename)
+    # content_type = mimetypes.guess_type(full_filename)[0]
+    content_type = image.content_type
+
+    # TODO: send in chunks to avoid loading the file in memory
+    # from django.core.servers.basehttp import FileWrapper
+    #    with open(full_filename) as f:
+    #        fw = FileWrapper(f)
+    #        response = HttpResponse(fw, content_type=content_type)
+    #        response['Content-Length'] = filesize
+    #        response['Content-Disposition'] = 'attachment; filename="{0}"'.format(
+    #            filename_to_user)
+    #        return response
+
+    with open(full_filename) as f:
+        file_contents = f.read()
+    response = HttpResponse(file_contents, content_type=content_type)
+    response['Content-Length'] = filesize
+    response['Content-Disposition'] = 'attachment; filename="{0}"'.format(
+        filename_to_user)
+    return response
+
+
 @login_required
 @cache_control(private=True)
 def image_thumb_64x64(request, image_id):
@@ -64,6 +91,13 @@ def image_thumb_64x64(request, image_id):
 def image_thumb(request, image_id, max_size=None):
     image = Image.objects.for_user(request.user).get(pk=image_id)
     return _image_thumb(request, image, 64)
+
+
+@login_required
+@cache_control(private=True)
+def image_download(request, image_id):
+    image = Image.objects.for_user(request.user).get(pk=image_id)
+    return _image_download(request, image)
 
 
 #===============================================================================
@@ -88,27 +122,7 @@ def shared_album_image_thumb_64x64(request, random_hash, image_id):
 def shared_album_image_download(request, random_hash, image_id):
     shared_album = SharedAlbum.objects.get(random_hash=random_hash)
     image = shared_album.get_image_from_album(image_id)
-    full_filename = default_storage.path(image.image.path)
-    filename_to_user = os.path.basename(full_filename)
-    filesize = os.path.getsize(full_filename)
-    content_type = mimetypes.guess_type(full_filename)[0]
-
-    # from django.core.servers.basehttp import FileWrapper
-    #    with open(full_filename) as f:
-    #        fw = FileWrapper(f)
-    #        response = HttpResponse(fw, content_type=content_type)
-    #        response['Content-Length'] = filesize
-    #        response['Content-Disposition'] = 'attachment; filename="{0}"'.format(
-    #            filename_to_user)
-    #        return response
-
-    with open(full_filename) as f:
-        file_contents = f.read()
-    response = HttpResponse(file_contents, content_type=content_type)
-    response['Content-Length'] = filesize
-    response['Content-Disposition'] = 'attachment; filename="{0}"'.format(
-        filename_to_user)
-    return response
+    return _image_download(request, image)
 
 
 class SharedAlbumCreateView(CreateView):
