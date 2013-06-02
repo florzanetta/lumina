@@ -2,6 +2,7 @@
 
 import mimetypes
 import os
+import uuid
 
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
@@ -13,11 +14,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.files.storage import default_storage
 from django.views.decorators.cache import cache_control
+from django.core.urlresolvers import reverse
 
 from lumina.models import Image, Album, SharedAlbum
 from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
-    AlbumUpdateForm
+    AlbumUpdateForm, SharedAlbumCreateForm
 
 
 #
@@ -99,6 +101,32 @@ def shared_album_image_download(request, random_hash, image_id):
     response['Content-Disposition'] = 'attachment; filename="{0}"'.format(
         filename_to_user)
     return response
+
+
+class SharedAlbumCreateView(CreateView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
+    # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
+    model = SharedAlbum
+    form_class = SharedAlbumCreateForm
+    template_name = 'lumina/sharedalbum_create_form.html'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.random_hash = str(uuid.uuid4())
+        ret = super(SharedAlbumCreateView, self).form_valid(form)
+        messages.success(self.request, 'El album fue compartido correctamente')
+        return ret
+
+    def get_initial(self):
+        initial = super(SharedAlbumCreateView, self).get_initial()
+        if 'id_album' in self.request.GET:
+            initial.update({
+                'album': self.request.GET['id_album'],
+            })
+        return initial
+
+    def get_success_url(self):
+        return reverse('album_detail', args=[self.object.album.pk])
 
 
 #===============================================================================
