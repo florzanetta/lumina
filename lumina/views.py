@@ -281,3 +281,8 @@ class ImageUpdateView(UpdateView):
         ret = super(ImageUpdateView, self).form_valid(form)
         messages.success(self.request, 'La imagen fue actualizada correctamente')
         return ret
+
+    def get_context_data(self, **kwargs):
+        context = super(ImageUpdateView, self).get_context_data(**kwargs)
+        context['form'].fields['album'].queryset = Album.objects.for_user(self.request.user)
+        return context

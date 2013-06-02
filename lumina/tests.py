@@ -70,8 +70,11 @@ class PilUtilsTest(TestCase):
 
 ADMIN_ALBUM_UUID = "1d300055-7b06-498d-bb33-43e263c6c95e"
 ADMIN_ALBUM_ID = 1
+ADMIN_IMAGE_ID = 1
+
 JUAN_ALBUM_UUID = "16436663-7ae0-4902-888d-e1c4da976c25"
 JUAN_ALBUM_ID = 2
+JUAN_IMAGE_ID = 2
 
 PRIVATE_URLS = [
     reverse('album_list'),
@@ -85,18 +88,20 @@ PRIVATE_URLS = [
 
 
 class PermissoinsTests(TestCase):
-    fixtures = ['admin_user.json', 'admin-and-juan-albums.json']
+    fixtures = ['admin_user.json', 'admin-and-juan-albums.json', 'admin-and-juan-images.json']
 
     def _login(self, username):
         self.assertTrue(self.client.login(username=username, password=username))
 
-    def test_required_fixtures(self):
+    def test_required_fixtures_admin(self):
         u_admin = User.objects.get(username='admin')
+        self.assertEqual(Album.objects.get(pk=ADMIN_ALBUM_ID).user, u_admin)
+        self.assertEqual(Image.objects.get(pk=ADMIN_IMAGE_ID).user, u_admin)
+
+    def test_required_fixtures_juan(self):
         u_juan = User.objects.get(username='juan')
-        self.assertEqual(Album.objects.get(pk=ADMIN_ALBUM_ID).user,
-            u_admin)
-        self.assertEqual(Album.objects.get(pk=JUAN_ALBUM_ID).user,
-            u_juan)
+        self.assertEqual(Album.objects.get(pk=JUAN_ALBUM_ID).user, u_juan)
+        self.assertEqual(Image.objects.get(pk=JUAN_IMAGE_ID).user, u_juan)
 
     def test_login_on_privates_views(self):
         response = self.client.get(reverse('home'))
@@ -109,6 +114,7 @@ class PermissoinsTests(TestCase):
             response = self.client.get(redirect_to)
             self.assertTemplateUsed(response, 'registration/login.html')
 
+    @override_settings(MEDIA_ROOT=MEDIA_ROOT_FOR_TESTING)
     def test_only_users_albums_are_shown(self):
         self._login('admin')
         # Create album
@@ -120,6 +126,12 @@ class PermissoinsTests(TestCase):
         # Create image
         response = self.client.get(reverse('image_create'))
         self.assertTemplateUsed(response, 'lumina/image_create_form.html')
+        self.assertContains(response, ADMIN_ALBUM_UUID)
+        self.assertNotContains(response, JUAN_ALBUM_UUID)
+
+        # Update image
+        response = self.client.get(reverse('image_update', args=[ADMIN_IMAGE_ID]))
+        self.assertTemplateUsed(response, 'lumina/image_update_form.html')
         self.assertContains(response, ADMIN_ALBUM_UUID)
         self.assertNotContains(response, JUAN_ALBUM_UUID)
 
