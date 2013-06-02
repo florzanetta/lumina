@@ -34,6 +34,12 @@
 	   <p>No hay albumes...</p>
 	{% endfor %}
 
+    <hr>
+
+    <p>
+        <a href="{% url 'album_create' %}" class="btn btn-primary">Agregar album</a>
+    </p>
+
     {% dump_objects user object_list %}
 
 {% endblock content %}
