@@ -1,4 +1,5 @@
 {% extends "lumina/base.html" %}
+{% load lumina_extras %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,6 +19,8 @@
             para poder utilizar el sistema...
         </p>
     {% endif %}
+
+    <pre>{% dump_objects user %}</pre>
 
 {% endblock content %}
 

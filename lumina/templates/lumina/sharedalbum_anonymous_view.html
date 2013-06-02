@@ -1,4 +1,5 @@
 {% extends "lumina/base.html" %}
+{% load lumina_extras %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,6 +15,7 @@
     <hr>
 
     <h5>Imágenes del album:</h5>
+    {% with all_the_images=object.album.image_set.all %}
     {% for image in object.album.image_set.all %}
         <ul class="media-list">
             <li class="media"><a class="pull-left" href="javascript:void(0);"><img class="media-object"
@@ -28,6 +30,10 @@
     {% empty %}
         <p>No hay imagenes en el album</p>
     {% endfor %}
+
+    <pre>{% dump_objects object object.album all_the_images %}</pre>
+
+    {% endwith %}
 
 {% endblock content %}
 
