@@ -111,8 +111,15 @@ class PermissoinsTests(TestCase):
 
     def test_only_users_albums_are_shown(self):
         self._login('admin')
+        # Create album
         response = self.client.get(reverse('shared_album_create'))
         self.assertTemplateUsed(response, 'lumina/sharedalbum_create_form.html')
+        self.assertContains(response, ADMIN_ALBUM_UUID)
+        self.assertNotContains(response, JUAN_ALBUM_UUID)
+
+        # Create image
+        response = self.client.get(reverse('image_create'))
+        self.assertTemplateUsed(response, 'lumina/image_create_form.html')
         self.assertContains(response, ADMIN_ALBUM_UUID)
         self.assertNotContains(response, JUAN_ALBUM_UUID)
 

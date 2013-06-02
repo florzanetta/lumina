@@ -260,6 +260,11 @@ class ImageCreateView(CreateView):
             })
         return initial
 
+    def get_context_data(self, **kwargs):
+        context = super(ImageCreateView, self).get_context_data(**kwargs)
+        context['form'].fields['album'].queryset = Album.objects.for_user(self.request.user)
+        return context
+
 
 class ImageUpdateView(UpdateView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
