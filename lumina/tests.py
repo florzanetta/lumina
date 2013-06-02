@@ -7,17 +7,18 @@ Replace this with more appropriate tests for your application.
 
 import os
 import unittest
+import subprocess
 
 from mock import Mock
 from PIL import  Image as PilImage
 from StringIO import StringIO
 
-from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 
 from django.test import TestCase
 from django.test.utils import override_settings
 from django.test import LiveServerTestCase
+from django.conf import settings
 
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Image
@@ -65,6 +66,25 @@ class PilUtilsTest(TestCase):
 
 # https://docs.djangoproject.com/en/1.5/topics/testing/overview/#django.test.LiveServerTestCase
 
+def _get_webdriver():
+    # First, try Chrome
+    chromedriver_bin = None
+    try:
+        chromedriver_bin = subprocess.check_output(["which", "chromedriver"],
+            stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError:
+        for an_executable in settings.SELENIUM_WEBDRIVER_BIN:
+            if os.path.exists(an_executable):
+                chromedriver_bin = an_executable
+                break
+    if chromedriver_bin is not None:
+        from selenium.webdriver.chrome.webdriver import WebDriver as ChromeWebDriver
+        return ChromeWebDriver(executable_path=chromedriver_bin)
+    else:
+        from selenium.webdriver.firefox.webdriver import WebDriver as FirefoxWebDriver
+        return FirefoxWebDriver()
+
+
 @unittest.skipUnless(os.environ.get("RUN_SELENIUM", '0') == '1', "RUN_SELENIUM != 1")
 class LuminaSeleniumTests(LiveServerTestCase):
     fixtures = ['admin_user.json']
@@ -76,7 +96,7 @@ class LuminaSeleniumTests(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.selenium = WebDriver()
+        cls.selenium = _get_webdriver()
         super(LuminaSeleniumTests, cls).setUpClass()
 
     @classmethod
@@ -85,7 +105,6 @@ class LuminaSeleniumTests(LiveServerTestCase):
         super(LuminaSeleniumTests, cls).tearDownClass()
 
     def test_login(self):
-        assert isinstance(self.selenium, WebDriver)
         self.selenium.get('%s%s' % (self.live_server_url, '/album/list/'))
         self._wait_until_render_done()
         username_input = self.selenium.find_element_by_id("id_username")
