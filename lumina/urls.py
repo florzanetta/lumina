@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_control
 
 from lumina.views import ImageCreateView, ImageUpdateView, ImageListView,\
     AlbumListView, AlbumDetailView, AlbumCreateView, AlbumUpdateView
@@ -16,13 +17,22 @@ urlpatterns = patterns('',
     #===========================================================================
     # Album
     #===========================================================================
-    url(r'^album/list/$', login_required(AlbumListView.as_view()),
+    url(r'^album/list/$',
+        cache_control(private=True)(
+            login_required(
+                AlbumListView.as_view())),
         name='album_list'),
-    url(r'^album/detail/(?P<pk>\d+)/$', login_required(AlbumDetailView.as_view()),
+    url(r'^album/detail/(?P<pk>\d+)/$',
+        cache_control(private=True)(
+            login_required(AlbumDetailView.as_view())),
         name='album_detail'),
-    url(r'^album/create/$', login_required(AlbumCreateView.as_view()),
+    url(r'^album/create/$',
+        cache_control(private=True)(
+            login_required(AlbumCreateView.as_view())),
         name='album_create'),
-    url(r'^album/update/(?P<pk>\d+)/$', login_required(AlbumUpdateView.as_view()),
+    url(r'^album/update/(?P<pk>\d+)/$',
+        cache_control(private=True)(
+            login_required(AlbumUpdateView.as_view())),
         name='album_update'),
 
     #===========================================================================
@@ -39,11 +49,17 @@ urlpatterns = patterns('',
     #===========================================================================
     # Image
     #===========================================================================
-    url(r'^image/list/$', login_required(ImageListView.as_view()),
+    url(r'^image/list/$',
+        cache_control(private=True)(
+            login_required(ImageListView.as_view())),
         name='image_list'),
-    url(r'^image/create/$', login_required(ImageCreateView.as_view()),
+    url(r'^image/create/$',
+        cache_control(private=True)(
+            login_required(ImageCreateView.as_view())),
         name='image_create'),
-    url(r'^image/update/(?P<pk>\d+)/$', login_required(ImageUpdateView.as_view()),
+    url(r'^image/update/(?P<pk>\d+)/$',
+        cache_control(private=True)(
+            login_required(ImageUpdateView.as_view())),
         name='image_update'),
     url(r'^image/(\d+)/thumb/$', 'lumina.views.image_thumb',
         name='image_thumb'),

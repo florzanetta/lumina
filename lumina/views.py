@@ -1,5 +1,8 @@
 # Create your views here.
 
+import mimetypes
+import os
+
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.views.generic.edit import CreateView, UpdateView
@@ -8,22 +11,22 @@ from django.views.generic.detail import DetailView
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.servers.basehttp import FileWrapper
+from django.core.files.storage import default_storage
+from django.views.decorators.cache import cache_control
 
 from lumina.models import Image, Album, SharedAlbum
 from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
     AlbumUpdateForm
-from django.core.files.storage import default_storage
-import mimetypes
-import os
+
 
 #
 # List of generic CBV:
 #  - https://docs.djangoproject.com/en/1.5/ref/class-based-views/
 #
-
-# TODO: send cache headers
+# Cache:
+#  - https://docs.djangoproject.com/en/1.5/topics/cache/#controlling-cache-using-other-headers
+#
 
 
 def home(request):
@@ -40,12 +43,14 @@ def _image_thumb(request, image, max_size=None):
 
 
 @login_required
+@cache_control(private=True)
 def image_thumb_64x64(request, image_id):
     image = Image.objects.for_user(request.user).get(pk=image_id)
     return _image_thumb(request, image, 64)
 
 
 @login_required
+@cache_control(private=True)
 def image_thumb(request, image_id, max_size=None):
     image = Image.objects.for_user(request.user).get(pk=image_id)
     return _image_thumb(request, image, 64)
@@ -55,17 +60,20 @@ def image_thumb(request, image_id, max_size=None):
 # SharedAlbum
 #===============================================================================
 
+@cache_control(private=True)
 def shared_album_view(request, random_hash):
     shared_album = SharedAlbum.objects.get(random_hash=random_hash)
     return render_to_response('lumina/sharedalbum_view.html', {'object': shared_album, },
         context_instance=RequestContext(request))
 
 
+@cache_control(private=True)
 def shared_album_image_thumb_64x64(request, random_hash, image_id):
     shared_album = SharedAlbum.objects.get(random_hash=random_hash)
     return _image_thumb(request, shared_album.get_image_from_album(image_id), 64)
 
 
+@cache_control(private=True)
 def shared_album_image_download(request, random_hash, image_id):
     shared_album = SharedAlbum.objects.get(random_hash=random_hash)
     image = shared_album.get_image_from_album(image_id)
@@ -74,6 +82,7 @@ def shared_album_image_download(request, random_hash, image_id):
     filesize = os.path.getsize(full_filename)
     content_type = mimetypes.guess_type(full_filename)[0]
 
+    # from django.core.servers.basehttp import FileWrapper
     #    with open(full_filename) as f:
     #        fw = FileWrapper(f)
     #        response = HttpResponse(fw, content_type=content_type)
