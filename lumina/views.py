@@ -5,7 +5,7 @@ from django.template.context import RequestContext
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
 from lumina.models import Image, Album
@@ -26,14 +26,21 @@ def home(request):
 @login_required
 def image_thumb_64x64(request, image_id):
     image = Image.objects.for_user(request.user).get(pk=image_id)
-    return HttpResponse(generate_thumbnail(image, max_size=64),
-        content_type='image/jpg')
+    try:
+        thumb = generate_thumbnail(image, max_size=64)
+        return HttpResponse(thumb, content_type='image/jpg')
+    except IOError:
+        return HttpResponseRedirect('/static/album-icon-64x64.png')
 
 
 @login_required
 def image_thumb(request, image_id):
     image = Image.objects.for_user(request.user).get(pk=image_id)
-    return HttpResponse(generate_thumbnail(image), content_type='image/jpg')
+    try:
+        thumb = generate_thumbnail(image)
+        return HttpResponse(thumb, content_type='image/jpg')
+    except IOError:
+        return HttpResponseRedirect('/static/album-icon-64x64.png')
 
 
 #===============================================================================
