@@ -11,23 +11,33 @@
 
 	<h3>Imagenes para '{{ user }}'</h3>
 
-	{% for image in object_list %}
-		<ul class="media-list">
-			<li class="media"><a class="pull-left" href="{% url 'image_update' image.pk %}"><img
-					class="media-object" src="{% url 'image_thumb_64x64' image.pk %}">
-	            </a>
-				<div class="media-body">
-					<p class="media-heading"><a
-					   href="{% url 'image_update' image.pk %}">{{ image.original_filename }}</a></p>
-                      <small>{{ image.size|filesizeformat }}</small>
-                      -
-                      <small class="muted">{{ image.content_type }}</small>
-				</div>
-			</li>
-		</ul>
-	{% empty %}
-		<p>No hay imagenes...</p>
-	{% endfor %}
+    {% for image in object_list %}
+		<div class="media">
+			<a class="pull-left" href="javascript:void(0);">
+				<img class="media-object" src="{% url 'image_thumb_64x64' image.pk %}">
+			</a>
+			<div class="media-body">
+				<div class="media-heading"><a
+                       href="{% url 'image_update' image.pk %}">{{ image.original_filename }}</a>
+                </div>
+                <div>
+                      <small> <span class="label">{{ image.size|filesizeformat }}</span></small>
+                      &nbsp;
+                      <small><span class="label">{{ image.content_type }}</span></small>
+                      &nbsp;
+                      <small><a href="#" class="btn btn-primary btn-mini">Bajar</a></small>
+                </div>
+				<!-- Nested media object  - - >
+					<div class="media">
+					   ...
+					</div>
+				-->
+			</div>
+		</div>
+	    <hr>
+    {% empty %}
+        <p>No hay imagenes...</p>
+    {% endfor %}
 
 {% endblock content %}
 
