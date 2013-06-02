@@ -8,6 +8,7 @@ Replace this with more appropriate tests for your application.
 import os
 import unittest
 import subprocess
+import json
 
 from mock import Mock
 from PIL import  Image as PilImage
@@ -21,8 +22,10 @@ from django.test import LiveServerTestCase
 from django.conf import settings
 
 from lumina.pil_utils import generate_thumbnail
-from lumina.models import Image
-import json
+from lumina.models import Image, Album
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+
 
 MEDIA_ROOT_FOR_TESTING = os.path.join(os.path.split(
     os.path.abspath(__file__))[0], '../test/test-images')
@@ -64,6 +67,75 @@ class PilUtilsTest(TestCase):
             generate_thumbnail(image_mock)
         self.assertEqual(cm.exception.args, ('cannot identify image file',))
 
+
+ADMIN_ALBUM_UUID = "1d300055-7b06-498d-bb33-43e263c6c95e"
+ADMIN_ALBUM_ID = 1
+JUAN_ALBUM_UUID = "16436663-7ae0-4902-888d-e1c4da976c25"
+JUAN_ALBUM_ID = 2
+
+PRIVATE_URLS = [
+    reverse('album_list'),
+    reverse('album_detail', args=[1]),
+    reverse('album_detail', args=[2]),
+    reverse('album_create'),
+    reverse('album_update', args=[1]),
+    reverse('album_update', args=[2]),
+    # TODO: complete this list
+]
+
+
+class PermissoinsTests(TestCase):
+    fixtures = ['admin_user.json', 'admin-and-juan-albums.json']
+
+    def test_required_fixtures(self):
+        u_admin = User.objects.get(username='admin')
+        u_juan = User.objects.get(username='juan')
+        self.assertEqual(Album.objects.get(pk=ADMIN_ALBUM_ID).user,
+            u_admin)
+        self.assertEqual(Album.objects.get(pk=JUAN_ALBUM_ID).user,
+            u_juan)
+
+    def test_login_on_privates_views(self):
+        response = self.client.get(reverse('home'))
+        self.assertTemplateUsed(response, 'lumina/index.html')
+
+        for url in PRIVATE_URLS:
+            response = self.client.get(url)
+            redirect_to = "http://testserver/accounts/login/?next={0}".format(url)
+            self.assertRedirects(response, redirect_to)
+            response = self.client.get(redirect_to)
+            self.assertTemplateUsed(response, 'registration/login.html')
+
+    def test_shared_album(self):
+        # TODO: implement this
+        pass
+
+    def test_private_album(self):
+        # Login
+        self.assertTrue(
+            self.client.login(username='admin', password='admin'))
+
+        # View list of albums
+        response = self.client.get(reverse('album_list'))
+        self.assertTemplateUsed(response, 'lumina/album_list.html')
+        self.assertContains(response, ADMIN_ALBUM_UUID)
+        self.assertNotContains(response, JUAN_ALBUM_UUID)
+
+        # View it's own album
+        response = self.client.get(reverse('album_detail', args=[ADMIN_ALBUM_ID]))
+        self.assertTemplateUsed(response, 'lumina/album_detail.html')
+        self.assertContains(response, ADMIN_ALBUM_UUID)
+        self.assertNotContains(response, JUAN_ALBUM_UUID)
+
+        # View other's album
+        response = self.client.get(reverse('album_detail', args=[JUAN_ALBUM_ID]))
+        self.assertTemplateNotUsed(response, 'lumina/album_detail.html')
+        self.assertEqual(response.status_code, 404)
+
+
+#===============================================================================
+# Selenium
+#===============================================================================
 
 # https://docs.djangoproject.com/en/1.5/topics/testing/overview/#django.test.LiveServerTestCase
 

@@ -91,6 +91,7 @@ To check **code coverage**, run:
 To generate **fixtures**, run:
 
     $ python manage.py dumpdata --format=json --indent=4 --natural auth.User > lumina/fixtures/admin_user.json
+    $ python manage.py dumpdata --format=json --indent=4 --natural lumina.Album > lumina/fixtures/admin-and-juan-albums.json
 
 (remember to execute this with a **CLEAN** database: see *Reset of the database and uploads*).
 
