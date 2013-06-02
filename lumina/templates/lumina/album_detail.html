@@ -15,7 +15,7 @@
         {% for image in object.image_set.all %}
             <tr>
                 <td width="20%"><img src="{% url 'image_thumb' image.pk %}"></td>
-                <td width="80%"><a href="{% url 'image_edit' image.pk %}">{{ image }}</a></td>
+                <td width="80%"><a href="{% url 'image_update' image.pk %}">{{ image }}</a></td>
             </tr>
         {% empty %}
             <tr><td>El album no contienen imagenes...</td></tr>

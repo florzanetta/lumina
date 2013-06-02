@@ -13,12 +13,12 @@
 
 	{% for image in object_list %}
 		<ul class="media-list">
-			<li class="media"><a class="pull-left" href="{% url 'image_edit' image.pk %}"><img
+			<li class="media"><a class="pull-left" href="{% url 'image_update' image.pk %}"><img
 					class="media-object" src="{% url 'image_thumb_64x64' image.pk %}">
 	            </a>
 				<div class="media-body">
 					<h4 class="media-heading"><a
-					   href="{% url 'image_edit' image.pk %}">{{ image.image.url }}</a></h4>
+					   href="{% url 'image_update' image.pk %}">{{ image.image.url }}</a></h4>
 				</div>
 			</li>
 		</ul>
