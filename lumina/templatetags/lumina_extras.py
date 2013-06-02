@@ -8,6 +8,9 @@ import json
 from django import template
 from django.core import serializers
 from django.db.models.query import QuerySet
+from django.template.context import Context
+from django.conf import settings
+
 
 register = template.Library()
 
@@ -45,7 +48,12 @@ class DumpObjectsNode(template.Node):
                             raise
                 else:
                     raise
-        return json.dumps(objects)
+
+        t = template.loader.get_template('lumina/templatetags/dump_objects.html')
+        return t.render(Context({
+            'json': json.dumps(objects),
+            'debug': settings.DEBUG,
+        }))
 
 
 @register.tag
