@@ -6,13 +6,18 @@ Replace this with more appropriate tests for your application.
 """
 
 import os
+import unittest
 
 from mock import Mock
 from PIL import  Image as PilImage
 from StringIO import StringIO
 
+from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.support.wait import WebDriverWait
+
 from django.test import TestCase
 from django.test.utils import override_settings
+from django.test import LiveServerTestCase
 
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Image
@@ -56,3 +61,36 @@ class PilUtilsTest(TestCase):
         with self.assertRaises(IOError) as cm:
             generate_thumbnail(image_mock)
         self.assertEqual(cm.exception.args, ('cannot identify image file',))
+
+
+# https://docs.djangoproject.com/en/1.5/topics/testing/overview/#django.test.LiveServerTestCase
+
+@unittest.skipUnless(os.environ.get("RUN_SELENIUM", '0') == '1', "RUN_SELENIUM != 1")
+class LuminaSeleniumTests(LiveServerTestCase):
+    fixtures = ['admin_user.json']
+
+    def _wait_until_render_done(self):
+        # https://docs.djangoproject.com/en/1.5/topics/testing/overview/#django.test.LiveServerTestCase @IgnorePep8
+        WebDriverWait(self.selenium, 5).until(
+            lambda driver: driver.find_element_by_tag_name('body'))
+
+    @classmethod
+    def setUpClass(cls):
+        cls.selenium = WebDriver()
+        super(LuminaSeleniumTests, cls).setUpClass()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super(LuminaSeleniumTests, cls).tearDownClass()
+
+    def test_login(self):
+        assert isinstance(self.selenium, WebDriver)
+        self.selenium.get('%s%s' % (self.live_server_url, '/album/list/'))
+        self._wait_until_render_done()
+        username_input = self.selenium.find_element_by_id("id_username")
+        username_input.send_keys('admin')
+        password_input = self.selenium.find_element_by_id("id_password")
+        password_input.send_keys('admin')
+        self.selenium.find_element_by_id('submit_button').click()
+        self._wait_until_render_done()

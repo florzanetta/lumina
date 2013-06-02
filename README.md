@@ -59,19 +59,28 @@ Defaults settings
 Testing
 -------
 
-To execute the tests, run:
+To **execute the tests**, run:
 
-    $ python manage.py test lumina
+    $ python manage.py test --liveserver=localhost:8082 lumina
 
 or:
 
-    $ python manage.py test lumina -v 2
+    $ python manage.py test --liveserver=localhost:8082 lumina -v 2
 
-To check code coverage, run:
+To include Selenium tests define the env variable **RUN_SELENIUM=1**:
+
+    $ env RUN_SELENIUM=1 python manage.py test --liveserver=localhost:8082 lumina
+
+To check **code coverage**, run:
 
     $ coverage run --source='.' --omit='virtualenv/*' manage.py test lumina
     $ coverage report
 
+To generate **fixtures**, run:
+
+    $ python manage.py dumpdata --format=json --indent=4 --natural auth.User > lumina/fixtures/admin_user.json
+
+(remember to execute this with a **CLEAN** database).
 
 Licence
 -------
