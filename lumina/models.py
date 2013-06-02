@@ -40,15 +40,16 @@ class SharedAlbumManager(models.Manager, ForUserManagerMixin):
 
 
 class SharedAlbum(models.Model):
-    shared_with = models.CharField(max_length=300)
+    shared_with = models.EmailField(max_length=254)
+    # https://docs.djangoproject.com/en/1.5/ref/models/fields/#emailfield
     user = models.ForeignKey(User)
-    album = models.ForeignKey(Album, null=True)
+    album = models.ForeignKey(Album)
     random_hash = models.CharField(max_length=36, unique=True) # len(uuid4) = 36
 
     objects = SharedAlbumManager()
 
     def __unicode__(self):
-        return u"Shared Album {0}".format(self.album.name)
+        return u"Shared Album {0} with {1}".format(self.album.name, self.shared_with)
 
 
 #===============================================================================
