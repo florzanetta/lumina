@@ -22,6 +22,7 @@ from django.conf import settings
 
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Image
+import json
 
 MEDIA_ROOT_FOR_TESTING = os.path.join(os.path.split(
     os.path.abspath(__file__))[0], '../test/test-images')
@@ -89,11 +90,6 @@ def _get_webdriver():
 class LuminaSeleniumTests(LiveServerTestCase):
     fixtures = ['admin_user.json']
 
-    def _wait_until_render_done(self):
-        # https://docs.djangoproject.com/en/1.5/topics/testing/overview/#django.test.LiveServerTestCase @IgnorePep8
-        WebDriverWait(self.selenium, 5).until(
-            lambda driver: driver.find_element_by_tag_name('body'))
-
     @classmethod
     def setUpClass(cls):
         cls.selenium = _get_webdriver()
@@ -104,12 +100,72 @@ class LuminaSeleniumTests(LiveServerTestCase):
         cls.selenium.quit()
         super(LuminaSeleniumTests, cls).tearDownClass()
 
+    def _wait_until_render_done(self):
+        """
+        Wait until the browser finished rendering the HTML.
+        To be used after clics, submits. etc.
+        """
+        # https://docs.djangoproject.com/en/1.5/topics/testing/overview/#django.test.LiveServerTestCase @IgnorePep8
+        WebDriverWait(self.selenium, 5).until(
+            lambda driver: driver.find_element_by_tag_name('body'))
+
+    def _get_dump_of_objects(self):
+        """
+        Returns the objects dumped with a {% dump_objects %}
+        """
+        debug_dump_of_objects = self.selenium.execute_script(
+            "return $('#debug_dump_of_objects').html();")
+        self.assertTrue(debug_dump_of_objects,
+            "There is no 'debug_dump_of_objects' element in the HTML."
+            "Maybe you forgot to use '{% dump_objects %}'?")
+        dumped_objects = {}
+        try:
+            level0_obj = json.loads(debug_dump_of_objects)
+        except:
+            print "-" * 70
+            print debug_dump_of_objects
+            print "-" * 70
+            raise
+        for key, value in level0_obj.iteritems():
+            try:
+                dumped_objects[key] = json.loads(value)
+            except:
+                dumped_objects[key] = value
+        return dumped_objects
+
+    def _go_home(self):
+        """Goes to the home page and return _get_dump_of_objects()"""
+        self.selenium.get('%s%s' % (self.live_server_url, '/'))
+        self._wait_until_render_done()
+        objs = self._get_dump_of_objects()
+        return objs
+
+    def _logout(self):
+        self.selenium.get('%s%s' % (self.live_server_url, '/accounts/logout/'))
+        self._wait_until_render_done()
+        objs = self._get_dump_of_objects()
+        return objs
+
+    def _assert_login_form_was_displayed(self):
+        objs = self._get_dump_of_objects()
+        self.assertEqual(objs, {})
+        self.assertTrue(self.selenium.find_element_by_id('submit_button'))
+        self.assertTrue(self.selenium.find_element_by_id("id_username"))
+        self.assertTrue(self.selenium.find_element_by_id("id_password"))
+
     def test_login(self):
+        # Go home
+        objs = self._go_home()
+        self.assertEqual(objs['user'], 'AnonymousUser')
+        # Go to album list
         self.selenium.get('%s%s' % (self.live_server_url, '/album/list/'))
         self._wait_until_render_done()
-        username_input = self.selenium.find_element_by_id("id_username")
-        username_input.send_keys('admin')
-        password_input = self.selenium.find_element_by_id("id_password")
-        password_input.send_keys('admin')
+        self._assert_login_form_was_displayed()
+        # Do login
+        self.selenium.find_element_by_id("id_username").send_keys('admin')
+        self.selenium.find_element_by_id("id_password").send_keys('admin')
         self.selenium.find_element_by_id('submit_button').click()
         self._wait_until_render_done()
+        # Get list of albums
+        objs = self._get_dump_of_objects()
+        self.assertEqual(objs['object_list'], [])

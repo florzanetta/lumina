@@ -1,4 +1,4 @@
-{% if debug %}
+{% if dump_objects %}
     <small><a href="javascript:void(0);" onclick="$('#debug_dump_of_objects').toggle();">Mostrar dump</a></small>
     <pre style="display: none;" id="debug_dump_of_objects">{{ json }}</pre>
 {% endif %}

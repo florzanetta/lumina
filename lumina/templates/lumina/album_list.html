@@ -1,4 +1,5 @@
 {% extends "lumina/base.html" %}
+{% load lumina_extras %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,6 +33,8 @@
 	{% empty %}
 	   <p>No hay albumes...</p>
 	{% endfor %}
+
+    {% dump_objects object_list %}
 
 {% endblock content %}
 

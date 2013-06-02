@@ -52,7 +52,7 @@ class DumpObjectsNode(template.Node):
         t = template.loader.get_template('lumina/templatetags/dump_objects.html')
         return t.render(Context({
             'json': json.dumps(objects),
-            'debug': settings.DEBUG,
+            'dump_objects': settings.LUMINA_DUMP_OBJECTS,
         }))
 
 
