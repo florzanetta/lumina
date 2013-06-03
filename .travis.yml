@@ -1,8 +1,9 @@
 #
 # http://about.travis-ci.org/docs/user/languages/python/
 #
+language: python
 python:
  - "2.7"
 install:
- - "pip install -r requirements-travis-ci.txt --use-mirrors"
+ - "pip install -q -r requirements-travis-ci.txt --use-mirrors"
 script: "python manage.py test lumina"
