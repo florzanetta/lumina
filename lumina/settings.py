@@ -10,6 +10,9 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+# http://south.readthedocs.org/en/latest/settings.html#south-tests-migrate
+SOUTH_TESTS_MIGRATE = False
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
