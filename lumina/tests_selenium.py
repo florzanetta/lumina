@@ -21,7 +21,8 @@ def _get_webdriver():
     # First, try Chrome
     chromedriver_bin = None
     try:
-        chromedriver_bin = subprocess.check_output(["which", "chromedriver"],
+        chromedriver_bin = subprocess.check_output(
+            ["which", "chromedriver"],
             stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError:
         for an_executable in settings.SELENIUM_WEBDRIVER_BIN:
@@ -54,7 +55,8 @@ class LuminaSeleniumTests(LiveServerTestCase):
         Wait until the browser finished rendering the HTML.
         To be used after clics, submits. etc.
         """
-        # https://docs.djangoproject.com/en/1.5/topics/testing/overview/#django.test.LiveServerTestCase @IgnorePep8
+        # https://docs.djangoproject.com/en/1.5/topics/testing/overview/
+        #    #django.test.LiveServerTestCase
         from selenium.webdriver.support.wait import WebDriverWait
         WebDriverWait(self.selenium, 5).until(
             lambda driver: driver.find_element_by_tag_name('body'))
@@ -65,7 +67,8 @@ class LuminaSeleniumTests(LiveServerTestCase):
         """
         debug_dump_of_objects = self.selenium.execute_script(
             "return $('#debug_dump_of_objects').html();")
-        self.assertTrue(debug_dump_of_objects,
+        self.assertTrue(
+            debug_dump_of_objects,
             "There is no 'debug_dump_of_objects' element in the HTML."
             "Maybe you forgot to use '{% dump_objects %}'?")
         dumped_objects = {}
@@ -93,13 +96,17 @@ class LuminaSeleniumTests(LiveServerTestCase):
         _assert_user_in_dump_of_objects(objs, 'admin') -> Assert default 'admin'
         _assert_user_in_dump_of_objects(objs, 'admin', key='logged_in_user')
         """
-        self.assertIn(key, dump_of_objects,
+        self.assertIn(
+            key,
+            dump_of_objects,
             "Dump of objects doesn't contains 'user' key.")
         user = dump_of_objects[key]
         if username is None:
             self.assertEqual(user, 'AnonymousUser')
         else:
-            self.assertNotEqual(user, 'AnonymousUser',
+            self.assertNotEqual(
+                user,
+                'AnonymousUser',
                 "Dump of objects has reference to 'AnonymousUser'")
             try:
                 self.assertEqual(user[0]['fields']['username'], username)

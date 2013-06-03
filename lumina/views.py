@@ -39,7 +39,8 @@ def home(request):
         }
     else:
         ctx = {}
-    return render_to_response('lumina/index.html', ctx,
+    return render_to_response(
+        'lumina/index.html', ctx,
         context_instance=RequestContext(request))
 
 
@@ -104,7 +105,8 @@ def image_download(request, image_id):
 #===============================================================================
 
 class SharedAlbumAnonymousView(DetailView):
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/#django.views.generic.detail.DetailView @IgnorePep8
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.detail.DetailView
     model = SharedAlbum
     slug_url_kwarg = 'random_hash'
     slug_field = 'random_hash'
@@ -160,7 +162,8 @@ class SharedAlbumCreateView(CreateView):
 #===============================================================================
 
 class AlbumListView(ListView):
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/#django.views.generic.list.ListView @IgnorePep8
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.list.ListView
     model = Album
 
     def get_queryset(self):
@@ -168,7 +171,8 @@ class AlbumListView(ListView):
 
 
 class AlbumDetailView(DetailView):
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/#django.views.generic.detail.DetailView @IgnorePep8
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.detail.DetailView
     model = Album
 
     def get_queryset(self):
@@ -205,7 +209,8 @@ class AlbumUpdateView(UpdateView):
 #===============================================================================
 
 class ImageListView(ListView):
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/#django.views.generic.list.ListView @IgnorePep8
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.list.ListView
     model = Image
 
     def get_queryset(self):

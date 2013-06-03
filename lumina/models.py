@@ -45,7 +45,7 @@ class SharedAlbum(models.Model):
     # https://docs.djangoproject.com/en/1.5/ref/models/fields/#emailfield
     user = models.ForeignKey(User)
     album = models.ForeignKey(Album)
-    random_hash = models.CharField(max_length=36, unique=True) # len(uuid4) = 36
+    random_hash = models.CharField(max_length=36, unique=True)  # len(uuid4) = 36
 
     objects = SharedAlbumManager()
 

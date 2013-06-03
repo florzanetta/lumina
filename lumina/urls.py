@@ -3,8 +3,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
-from lumina.views import ImageCreateView, ImageUpdateView, ImageListView,\
-    AlbumListView, AlbumDetailView, AlbumCreateView, AlbumUpdateView,\
+from lumina.views import ImageCreateView, ImageUpdateView, ImageListView, \
+    AlbumListView, AlbumDetailView, AlbumCreateView, AlbumUpdateView, \
     SharedAlbumAnonymousView, SharedAlbumCreateView
 
 # Uncomment the next two lines to enable the admin:
@@ -12,7 +12,12 @@ admin.autodiscover()
 
 # TODO: See: http://django-braces.readthedocs.org/en/latest/index.html#loginrequiredmixin
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
+
+    #===========================================================================
+    # Home
+    #===========================================================================
     url(r'^$', 'lumina.views.home', name='home'),
 
     #===========================================================================
@@ -95,7 +100,7 @@ urlpatterns = patterns('',
     #
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
-    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {
-        'next_page': '/',
-    }, name='logout',),
+    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
+        {'next_page': '/', },
+        name='logout',),
 )

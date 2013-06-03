@@ -8,7 +8,7 @@ Replace this with more appropriate tests for your application.
 import os
 
 from mock import Mock
-from PIL import  Image as PilImage
+from PIL import Image as PilImage
 from StringIO import StringIO
 
 from django.test import TestCase
@@ -158,4 +158,4 @@ class PermissoinsTests(TestCase):
 #===============================================================================
 
 if os.environ.get("RUN_SELENIUM", '0') == '1':
-    from lumina.tests_selenium import * #@UnusedWildImport
+    from lumina.tests_selenium import *  # @UnusedWildImport

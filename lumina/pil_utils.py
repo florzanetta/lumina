@@ -1,5 +1,5 @@
 from cStringIO import StringIO
-from PIL import  Image as PilImage
+from PIL import Image as PilImage
 
 from django.core.files.storage import default_storage
 
@@ -18,5 +18,5 @@ def generate_thumbnail(image, max_size=None):
     img.thumbnail((max_size, max_size,), PilImage.ANTIALIAS)
     output_file = StringIO()
     img.save(output_file, "JPEG")
-    del img # no need to close it
+    del img  # no need to close it
     return output_file.getvalue()
