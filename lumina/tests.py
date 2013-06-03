@@ -13,11 +13,11 @@ from StringIO import StringIO
 
 from django.test import TestCase
 from django.test.utils import override_settings
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Image, Album
-from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
 
 
 MEDIA_ROOT_FOR_TESTING = os.path.join(os.path.split(
