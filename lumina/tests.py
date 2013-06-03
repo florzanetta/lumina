@@ -14,8 +14,6 @@ from mock import Mock
 from PIL import  Image as PilImage
 from StringIO import StringIO
 
-from selenium.webdriver.support.wait import WebDriverWait
-
 from django.test import TestCase
 from django.test.utils import override_settings
 from django.test import LiveServerTestCase
@@ -205,6 +203,7 @@ class LuminaSeleniumTests(LiveServerTestCase):
         To be used after clics, submits. etc.
         """
         # https://docs.djangoproject.com/en/1.5/topics/testing/overview/#django.test.LiveServerTestCase @IgnorePep8
+        from selenium.webdriver.support.wait import WebDriverWait
         WebDriverWait(self.selenium, 5).until(
             lambda driver: driver.find_element_by_tag_name('body'))
 
