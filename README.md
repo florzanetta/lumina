@@ -59,6 +59,10 @@ with username 'admin' and password 'admin'):
     $ python manage.py migrate
     $ python manage.py loaddata admin_user.json
 
+To add to the database some initial data (albums, images and shares), run:
+
+    $ python manage.py loaddata admin-albums-and-test-images.json
+
 
 Defaults settings
 -----------------
