@@ -95,6 +95,19 @@ To generate **fixtures**, run:
 
 (remember to execute this with a **CLEAN** database: see *Reset of the database and uploads*).
 
+Travis-CI
+---------
+
+Travis-CI will:
+
+1) check the source code for PEP8, which can be tested locally with:
+
+    $ pep8 --show-source --statistics --max-line-length=100 --exclude=lumina/migrations --show-source lumina
+
+2) run the tests, excluding Selenium tests:
+
+    $ manage.py test lumina -v 2
+
 Licence
 -------
 
