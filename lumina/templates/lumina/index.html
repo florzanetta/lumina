@@ -13,20 +13,17 @@
     {% if user.is_authenticated %}
         <h2>Bienvenido, {{ user.username }}!</h2>
         <h4>Estadisticas</h4>
-        <table class="table">
-            <tr>
-                <td width="10%">{{ album_count }}</td>
-                <th>Albumes</th>
-            </tr>
-            <tr>
-                <td width="10%">{{ sharedalbum_count }}</td>
-                <th>Albumes compartidos</th>
-            </tr>
-            <tr>
-                <td width="10%">{{ image_count }}</td>
-                <th>Imagenes</th>
-            </tr>
-        </table>
+
+        <p><span class="badge badge-info">{{ album_count }}</span>
+				Album{{ album_count|pluralize:",es" }}</p>
+                            
+        <p><span class="badge badge-info">{{ sharedalbum_count }}</span>
+				Album{{ sharedalbum_count|pluralize:",es" }}
+				compartido{{ sharedalbum_count|pluralize:",s" }}</p>
+
+        <p><span class="badge badge-info">{{ image_count }}</span>
+                Imagen{{ image_count|pluralize:",es" }}</p>
+                            
     {% else %}
         <h2>Bienvenido!</h2>
         <p>

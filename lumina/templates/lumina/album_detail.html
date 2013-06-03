@@ -18,12 +18,10 @@
         {% include 'lumina/include/image.html' with image=image only %}
     {% empty %}
         <p>No hay imagenes...</p>
+	    <hr>
     {% endfor %}
 
-    <hr>
-
     <h5>Compartido:</h5>
-
     <table class="table">
 	    {% for sharedalbum in object.sharedalbum_set.all %}
 	        <tr>
