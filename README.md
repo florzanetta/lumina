@@ -112,6 +112,15 @@ The *checks.sh* shell script does that (a little more, since it runs Selenium te
     $ ./checks.sh
 
 
+Git hooks
+---------
+
+To avoid breaking the builds, you could add a pre-commit hook that run the pep8 checks:
+
+    $ cd .git/hooks/
+    $ ln -s ../../.pre-commit-git-hook pre-commit
+
+
 Licence
 -------
 
