@@ -4,6 +4,11 @@ import os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+#
+# Dump object with {% dump_objects %}
+#
+LUMINA_DUMP_OBJECTS = True
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
@@ -32,7 +37,10 @@ DATABASES = {
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+]
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -107,6 +115,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    # 'lumina.middleware.LoggingMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -145,11 +154,6 @@ SELENIUM_WEBDRIVER_BIN = (
     '/usr/lib/chromium-browser/chromedriver',
 )
 
-#
-# Dump object with {% dump_objects %}
-#
-LUMINA_DUMP_OBJECTS = True
-
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -168,9 +172,18 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler'
+        },
     },
     'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
