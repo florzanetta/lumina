@@ -1,6 +1,15 @@
 # Django settings for lumina project.
 import os
 
+#===============================================================================
+# Notes for 'production' settings for Lumina:
+#===============================================================================
+#
+# - LUMINA_DUMP_OBJECTS should be False
+# - DEFAULT_FILE_STORAGE: TestImagesFallbackStorage should *NO* be used in prod.
+#
+#===============================================================================
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -153,6 +162,10 @@ SELENIUM_WEBDRIVER_BIN = (
     # Ubuntu 13.04 - Package: 'chromium-chromedriver'
     '/usr/lib/chromium-browser/chromedriver',
 )
+
+# Default:
+# DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DEFAULT_FILE_STORAGE = 'lumina.django_files_storage.TestImagesFallbackStorage'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
