@@ -45,3 +45,4 @@ nosetests.xml
 *.aux
 
 /virtualenv
+/travic-ci
