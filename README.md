@@ -1,6 +1,8 @@
 lumina
 ======
 
+[![Build Status of master](https://travis-ci.org/hgdeoro/lumina.png?branch=master)](https://travis-ci.org/hgdeoro/lumina)
+
 Photography management software oriented to both labs and professional photographers.
 
 This project is centered in the need of the photographers and labs for an integrated system to help
