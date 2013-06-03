@@ -107,6 +107,11 @@ Travis-CI will:
 
     $ manage.py test lumina -v 2
 
+The *checks.sh* shell script does that (a little more, since it runs Selenium tests):
+
+    $ ./checks.sh
+
+
 Licence
 -------
 
