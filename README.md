@@ -1,7 +1,7 @@
 lumina
 ======
 
-[![Build Status of master](https://travis-ci.org/hgdeoro/lumina.png?branch=master)](https://travis-ci.org/hgdeoro/lumina)
+[![Build Status of master](https://api.travis-ci.org/florzanetta/lumina.png?branch=master)](https://travis-ci.org/florzanetta/lumina)
 
 Photography management software oriented to facilitate the exchange of photographies and images
 for professional users, including photographers, photo labs, printing houses, and their customers.
