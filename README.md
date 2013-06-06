@@ -125,6 +125,19 @@ To avoid breaking the builds, you could add a pre-commit hook that run the pep8 
     $ ln -s ../../.pre-commit-git-hook pre-commit
 
 
+PyDev
+-----
+
+We use PyDev to develop Lumina. We recommend to setup the project with:
+
+ + Project -> Properties -> Resources -> Text file encoding -> Other -> UTF-8
+ + Project -> Properties -> Resources -> New text file line delimiter -> Other -> Unix
+
+And, in general, to avoid pep8 errors:
+
+ + Window -> Preferences -> PyDev -> Editor -> Code Style -> Code Formatter -> Spaces before a comment? -> 2 spaces
+
+
 Licence
 -------
 
