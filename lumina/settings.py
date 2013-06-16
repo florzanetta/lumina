@@ -168,6 +168,53 @@ SELENIUM_WEBDRIVER_BIN = (
 # DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 DEFAULT_FILE_STORAGE = 'lumina.django_files_storage.TestImagesFallbackStorage'
 
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.twitter.TwitterBackend',
+    #    'social_auth.backends.facebook.FacebookBackend',
+    #    'social_auth.backends.google.GoogleOAuthBackend',
+    #    'social_auth.backends.google.GoogleOAuth2Backend',
+    #    'social_auth.backends.google.GoogleBackend',
+    #    'social_auth.backends.yahoo.YahooBackend',
+    #    'social_auth.backends.browserid.BrowserIDBackend',
+    #    'social_auth.backends.contrib.linkedin.LinkedinBackend',
+    #    'social_auth.backends.contrib.disqus.DisqusBackend',
+    #    'social_auth.backends.contrib.livejournal.LiveJournalBackend',
+    #    'social_auth.backends.contrib.orkut.OrkutBackend',
+    #    'social_auth.backends.contrib.foursquare.FoursquareBackend',
+    #    'social_auth.backends.contrib.github.GithubBackend',
+    #    'social_auth.backends.contrib.vk.VKOAuth2Backend',
+    #    'social_auth.backends.contrib.live.LiveBackend',
+    #    'social_auth.backends.contrib.skyrock.SkyrockBackend',
+    #    'social_auth.backends.contrib.yahoo.YahooOAuthBackend',
+    #    'social_auth.backends.contrib.readability.ReadabilityBackend',
+    #    'social_auth.backends.contrib.fedora.FedoraBackend',
+    #    'social_auth.backends.OpenIDBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# The URL where requests are redirected after login when the contrib.auth.login
+# view gets no next parameter.
+LOGIN_REDIRECT_URL = 'home'
+
+#
+# SOCIAL_AUTH_LOGIN_REDIRECT_URL
+# Where to redirect after an existing user was identified
+#
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+
+#
+# SOCIAL_AUTH_NEW_USER_REDIRECT_URL
+# Where to redirect after a new user was created
+#
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/?SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL'
+SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = '/?SOCIAL_AUTH_DISCONNECT_REDIRECT_URL'
+SOCIAL_AUTH_BACKEND_ERROR_URL = '/?SOCIAL_AUTH_BACKEND_ERROR_URL'
+SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
+SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
+SOCIAL_AUTH_INACTIVE_USER_URL = '/?SOCIAL_AUTH_INACTIVE_USER_URL'
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -205,3 +252,11 @@ LOGGING = {
         },
     }
 }
+
+try:
+    from lumina.local_settings import *  # @UnusedWildImport
+except ImportError, e:
+    import warnings
+    warnings.warn("Couldn't import from 'lumina.local_settings': %s" % e.args[0], stacklevel=0)
+    TWITTER_CONSUMER_KEY = ''
+    TWITTER_CONSUMER_SECRET = ''
