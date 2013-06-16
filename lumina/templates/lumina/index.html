@@ -23,7 +23,17 @@
 
         <p><span class="badge badge-info">{{ image_count }}</span>
                 Imagen{{ image_count|pluralize:",es" }}</p>
-                            
+
+        <hr>
+
+        {% if 'twitter' in auth_providers %}
+            <a href="{% url 'socialauth_disconnect' 'twitter' %}"><img
+                alt="Twitter" src="/static/socialmedia_sleek_icons/16px/twitter.png"> Disssociate from Twitter account.</a>.
+        {% else %}
+            <a href="{% url 'socialauth_begin' 'twitter' %}"><img
+                alt="Twitter" src="/static/socialmedia_sleek_icons/16px/twitter.png"> Associate Twitter account.</a>.
+        {% endif %}
+
     {% else %}
         <h2>Bienvenido!</h2>
         <p>
@@ -32,7 +42,7 @@
         </p>
     {% endif %}
 
-	{% dump_objects user user.social_auth.all %}
+	{% dump_objects user user.social_auth.all auth_providers %}
 
 {% endblock content %}
 
