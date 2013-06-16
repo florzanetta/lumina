@@ -2,3 +2,8 @@ Django==1.5.1
 South==0.8.1
 Pillow==2.0.0
 pep8==1.4.5
+# django-social-auth
+httplib2==0.8
+oauth2==1.5.211
+python-openid==2.2.5
+django-social-auth==0.7.23
