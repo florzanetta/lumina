@@ -32,7 +32,7 @@
         </p>
     {% endif %}
 
-	{% dump_objects user %}
+	{% dump_objects user user.social_auth.all %}
 
 {% endblock content %}
 
