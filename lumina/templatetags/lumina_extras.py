@@ -24,8 +24,13 @@ class DumpObjectsNode(template.Node):
     def render(self, context):
         # https://docs.djangoproject.com/en/1.5/topics/serialization/
         objects = {}
+        json_to_show = []
         for t_var in self.template_variables:
             var_name = t_var.var
+            json_to_show.append('')
+            json_to_show.append('-' * 70)
+            json_to_show.append(var_name)
+            json_to_show.append('-' * 70)
             try:
                 var = t_var.resolve(context)
             except template.VariableDoesNotExist:
@@ -34,9 +39,9 @@ class DumpObjectsNode(template.Node):
 
             try:
                 if isinstance(var, QuerySet):
-                    objects[var_name] = serializers.serialize('json', var)
+                    objects[var_name] = serializers.serialize('json', var, indent=2)
                 else:
-                    objects[var_name] = serializers.serialize('json', [var])
+                    objects[var_name] = serializers.serialize('json', [var], indent=2)
             except AttributeError, ae:
                 if ae.args[0].endswith("object has no attribute '_meta'"):
                     try:
@@ -49,9 +54,13 @@ class DumpObjectsNode(template.Node):
                 else:
                     raise
 
+            json_to_show.append(objects[var_name])
+            # </end for>
+
         t = template.loader.get_template('lumina/templatetags/dump_objects.html')
         return t.render(Context({
             'json': json.dumps(objects),
+            'json_to_show': '\n'.join(json_to_show),
             'dump_objects': settings.LUMINA_DUMP_OBJECTS,
         }))
 
