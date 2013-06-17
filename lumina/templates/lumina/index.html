@@ -26,12 +26,22 @@
 
         <hr>
 
-        {% if social_auth.twitter %}
+        {% if 'google-oauth' in social_auth|non_empty_unicode_keys %}
+            <a href="{% url 'socialauth_disconnect' 'google-oauth' %}"><img
+                alt="Twitter" src="/static/google-icon-16x16.png"> Disssociate from Google account</a>
+        {% else %}
+            <a href="{% url 'socialauth_begin' 'google-oauth' %}"><img
+                alt="Twitter" src="/static/google-icon-16x16.png"> Associate Google account</a>
+        {% endif %}
+
+        &nbsp;
+
+        {% if 'twitter' in social_auth|non_empty_unicode_keys %}
             <a href="{% url 'socialauth_disconnect' 'twitter' %}"><img
-                alt="Twitter" src="/static/socialmedia_sleek_icons/16px/twitter.png"> Disssociate from Twitter account.</a>.
+                alt="Twitter" src="/static/socialmedia_sleek_icons/16px/twitter.png"> Disssociate from Twitter account</a>
         {% else %}
             <a href="{% url 'socialauth_begin' 'twitter' %}"><img
-                alt="Twitter" src="/static/socialmedia_sleek_icons/16px/twitter.png"> Associate Twitter account.</a>.
+                alt="Twitter" src="/static/socialmedia_sleek_icons/16px/twitter.png"> Associate Twitter account</a>
         {% endif %}
 
     {% else %}

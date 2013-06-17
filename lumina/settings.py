@@ -171,7 +171,7 @@ DEFAULT_FILE_STORAGE = 'lumina.django_files_storage.TestImagesFallbackStorage'
 AUTHENTICATION_BACKENDS = (
     'social_auth.backends.twitter.TwitterBackend',
     #    'social_auth.backends.facebook.FacebookBackend',
-    #    'social_auth.backends.google.GoogleOAuthBackend',
+    'social_auth.backends.google.GoogleOAuthBackend',
     #    'social_auth.backends.google.GoogleOAuth2Backend',
     #    'social_auth.backends.google.GoogleBackend',
     #    'social_auth.backends.yahoo.YahooBackend',
@@ -263,6 +263,11 @@ LOGGING = {
         },
     }
 }
+
+# Googgle allows us to use OAuth without key/secret
+# See: http://django-social-auth.readthedocs.org/en/latest/backends/google.html#google-oauth
+GOOGLE_CONSUMER_KEY = ''
+GOOGLE_CONSUMER_SECRET = ''
 
 try:
     from lumina.local_settings import *  # @UnusedWildImport

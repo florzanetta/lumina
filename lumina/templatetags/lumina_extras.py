@@ -75,3 +75,8 @@ def dump_objects(parser, token):
         raise template.TemplateSyntaxError("{0} tag requires a single argument".format(
             token.contents.split()[0]))
     return DumpObjectsNode(objects)
+
+
+@register.filter(name='non_empty_unicode_keys')
+def non_empty_unicode_keys(a_dict):
+    return [unicode(k) for k in a_dict.keys() if a_dict[k]]
