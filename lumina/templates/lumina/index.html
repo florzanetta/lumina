@@ -26,6 +26,8 @@
 
         <hr>
 
+        <!--
+        # Google OAuth doesn't work yet...
         {% if 'google-oauth' in social_auth|non_empty_unicode_keys %}
             <a href="{% url 'socialauth_disconnect' 'google-oauth' %}"><img
                 alt="Twitter" src="/static/google-icon-16x16.png"> Disssociate from Google account</a>
@@ -35,10 +37,13 @@
         {% endif %}
 
         &nbsp;
+        -->
 
         {% if 'twitter' in social_auth|non_empty_unicode_keys %}
+        <!--
             <a href="{% url 'socialauth_disconnect' 'twitter' %}"><img
                 alt="Twitter" src="/static/twitter-icon-16x16.jpg"> Disssociate from Twitter account</a>
+        -->
         {% else %}
             <a href="{% url 'socialauth_begin' 'twitter' %}"><img
                 alt="Twitter" src="/static/twitter-icon-16x16.jpg"> Associate Twitter account</a>
