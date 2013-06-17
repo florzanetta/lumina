@@ -36,7 +36,7 @@ def home(request):
             'album_count': Album.objects.for_user(request.user).count(),
             'image_count': Image.objects.for_user(request.user).count(),
             'sharedalbum_count': SharedAlbum.objects.for_user(request.user).count(),
-            'auth_providers': request.user.social_auth.get_providers(),
+#            'auth_providers': request.user.social_auth.get_providers(),
         }
     else:
         ctx = {}

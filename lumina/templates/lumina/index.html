@@ -26,7 +26,7 @@
 
         <hr>
 
-        {% if 'twitter' in auth_providers %}
+        {% if social_auth.twitter %}
             <a href="{% url 'socialauth_disconnect' 'twitter' %}"><img
                 alt="Twitter" src="/static/socialmedia_sleek_icons/16px/twitter.png"> Disssociate from Twitter account.</a>.
         {% else %}
@@ -42,7 +42,7 @@
         </p>
     {% endif %}
 
-	{% dump_objects user user.social_auth.all auth_providers %}
+	{% dump_objects user user.social_auth.all social_auth social_auth.twitter %}
 
 {% endblock content %}
 
