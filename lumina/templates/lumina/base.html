@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% load lumina_extras %}<!DOCTYPE html>
 <html>
 <head>
     <title>{% block title %}Lumina{% endblock %}</title>
@@ -31,6 +31,9 @@
 										<li class="active"><a href="{% url 'admin:lumina_sharedalbum_changelist' %}" target="_blank">Shared</a></li>
 								{% endif %}
 								<li><a href="{% url 'logout' %}">Salir</a></li>
+								{% if 'twitter' in social_auth|non_empty_unicode_keys %}
+	                                <li><img alt="Logged in with Twitter" src="/static/twitter-icon-16x16.jpg"></li>
+								{% endif %}
 						{% else %}
 								<li><a href="{% url 'django.contrib.auth.views.login' %}?next=/">Iniciar sesión</a></li>
 						{% endif %}
