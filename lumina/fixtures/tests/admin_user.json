@@ -9,7 +9,7 @@
         "is_active": true, 
         "is_superuser": true, 
         "is_staff": true, 
-        "last_login": "2013-06-02T22:21:33.874Z", 
+        "last_login": "2013-07-25T21:25:06.862Z", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$10000$BwQXewpxQcZD$nDKTejFAi5m4cJGSehc/gbomsN7Fl1iK6mlKXVO5k0Q=", 
@@ -27,12 +27,48 @@
         "is_active": true, 
         "is_superuser": false, 
         "is_staff": false, 
-        "last_login": "2013-06-02T22:23:05.429Z", 
+        "last_login": "2013-07-25T21:27:11.080Z", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$10000$kVQYwa4roggz$qPv0QC7ZUcypbGrTFLBs5fDCHZsqqVXaEPhA470EXkc=", 
         "email": "juan@example.com", 
         "date_joined": "2013-06-02T22:21:48Z"
+    }
+},
+{
+    "pk": 3, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "customer-ba07eb50-9fb5-4593-98", 
+        "first_name": "Albert", 
+        "last_name": "Einstein", 
+        "is_active": true, 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2013-07-25T21:26:32.019Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "customer", 
+        "email": "albert.einstein@example.com", 
+        "date_joined": "2013-07-25T21:26:32.019Z"
+    }
+},
+{
+    "pk": 4, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "customer-957a6230-3eac-4ee1-a4", 
+        "first_name": "Max", 
+        "last_name": "Planck", 
+        "is_active": true, 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2013-07-25T21:28:50.599Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "max", 
+        "email": "max.planck@example.com", 
+        "date_joined": "2013-07-25T21:28:50.599Z"
     }
 }
 ]
