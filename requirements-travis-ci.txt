@@ -6,4 +6,4 @@ pep8==1.4.5
 httplib2==0.8
 oauth2==1.5.211
 python-openid==2.2.5
-django-social-auth==0.7.23
+django-social-auth==0.7.25
