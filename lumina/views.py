@@ -329,7 +329,7 @@ class CustomerCreateView(CreateView):
 
     def form_valid(self, form):
         # Set the password
-        form.instance.password = form['password1'].value()
+        # form.instance.password = form['password1'].value()
 
         ret = super(CustomerCreateView, self).form_valid(form)
 
@@ -337,6 +337,10 @@ class CustomerCreateView(CreateView):
         new_user = User.objects.get(pk=form.instance.id)
         LuminaUserProfile.objects.create(
             user=new_user, user_type=LuminaUserProfile.GUEST, customer_of=self.request.user)
+
+        # Set the password
+        new_user.set_password(form['password1'].value())
+        new_user.save()
 
         messages.success(self.request, 'El cliente fue creado correctamente')
         return ret
