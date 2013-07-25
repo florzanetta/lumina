@@ -40,7 +40,8 @@ def home(request):
         ctx = {
             'album_count': Album.objects.for_user(request.user).count(),
             'image_count': Image.objects.for_user(request.user).count(),
-            'sharedalbum_count': SharedAlbum.objects.for_user(request.user).count(),
+            'shared_album_via_email_count': SharedAlbum.objects.for_user(request.user).count(),
+            'others_album_count': Album.objects.filter(shared_with=request.user).count(),
 #            'auth_providers': request.user.social_auth.get_providers(),
         }
     else:

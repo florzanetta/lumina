@@ -12,17 +12,27 @@
 
     {% if user.is_authenticated %}
         <h2>Bienvenido, {{ user.get_full_name }}!</h2>
+
         <h4>Estadisticas de tus álbumes</h4>
 
         <p><span class="badge badge-info">{{ album_count }}</span>
-				Album{{ album_count|pluralize:",es" }}</p>
-                            
-        <p><span class="badge badge-info">{{ sharedalbum_count }}</span>
-				Album{{ sharedalbum_count|pluralize:",es" }}
-				compartido{{ sharedalbum_count|pluralize:",s" }}</p>
+				album{{ album_count|pluralize:",es" }}</p>
+
+        <p><span class="badge badge-info">{{ shared_album_via_email_count }}</span>
+				album{{ sharedalbum_count|pluralize:",es" }}
+				compartido{{ sharedalbum_count|pluralize:",s" }} por email</p>
 
         <p><span class="badge badge-info">{{ image_count }}</span>
-                Imagen{{ image_count|pluralize:",es" }}</p>
+                imagen{{ image_count|pluralize:",es" }}</p>
+
+        <hr>
+
+        <h4>Albumes que otros han compartido con vos</h4>
+
+        <p><span class="badge badge-info">{{ others_album_count }}</span>
+                album{{ others_album_count|pluralize:",es" }} ha{{ others_album_count|pluralize:",n" }}
+                sido compartido{{ others_album_count|pluralize }} con vos.
+        </p>
 
         <hr>
 
