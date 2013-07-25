@@ -98,3 +98,33 @@ class Image(models.Model):
     def set_original_filename(self, filename):
         """Set original filename, truncating if it's too large"""
         self.original_filename = filename[0:128]
+
+
+#===============================================================================
+# LuminaUserProfile
+#===============================================================================
+
+class LuminaUserProfileManager(models.Manager):
+
+    def for_user(self, user):
+        """Filter objects by user"""
+        return self.filter(customer_of=user)
+
+
+class LuminaUserProfile(models.Model):
+    # https://docs.djangoproject.com/en/1.5/topics/auth/customizing/\
+    #    #extending-the-existing-user-model
+    PHOTOGRAPHER = 'P'
+    GUEST = 'G'
+    USER_TYPES = (
+        (PHOTOGRAPHER, 'Fotografo'),
+        (GUEST, 'Invitado'),
+    )
+    user = models.ForeignKey(User)
+    user_type = models.CharField(max_length=1, choices=USER_TYPES, default=PHOTOGRAPHER)
+    customer_of = models.ForeignKey(User, related_name='customers')
+
+    objects = LuminaUserProfileManager()
+
+    def __unicode__(self):
+        return u"Profile of '{0}'".format(self.user)

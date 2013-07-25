@@ -18,6 +18,21 @@ TEMPLATE_DEBUG = DEBUG
 #
 LUMINA_DUMP_OBJECTS = True
 
+#
+# AUTH_USER_MODEL = 'lumina.LuminaUser'
+#
+# Can't use AUTH_USER_MODEL:
+#
+# lumina (master)$ python manage.py migrate
+# Running migrations for social_auth:
+#  - Migrating forwards to 0002_auto__add_unique_nonce_timestamp_salt_server_u (...)
+#  > social_auth:0001_initial
+# ValueError: Cannot successfully create field 'user' for model 'usersocialauth':
+#        "The model 'luminauser' from the app 'lumina' is not available in this migration.".
+#
+
+AUTH_PROFILE_MODULE = 'lumina.LuminaUserProfile'
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
