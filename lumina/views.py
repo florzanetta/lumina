@@ -14,12 +14,12 @@ from django.contrib import messages
 from django.core.files.storage import default_storage
 from django.views.decorators.cache import cache_control
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
 from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile
 from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
-    AlbumUpdateForm, SharedAlbumCreateForm
-from django.contrib.auth.models import User
+    AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm
 
 
 #
@@ -305,3 +305,23 @@ class CustomerListView(ListView):
 
     def get_queryset(self):
         return User.objects.filter(luminauserprofile__customer_of=self.request.user)
+
+
+class CustomerCreateView(CreateView):
+    model = User
+    form_class = CustomerCreateForm
+    template_name = 'lumina/customer_create_form.html'
+
+    def form_valid(self, form):
+        # Set the password
+        form.instance.password = form['password1'].value()
+
+        ret = super(CustomerCreateView, self).form_valid(form)
+
+        # Create the profile module
+        new_user = User.objects.get(pk=form.instance.id)
+        LuminaUserProfile.objects.create(
+            user=new_user, user_type=LuminaUserProfile.GUEST, customer_of=self.request.user)
+
+        messages.success(self.request, 'El cliente fue creado correctamente')
+        return ret

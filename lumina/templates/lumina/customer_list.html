@@ -37,7 +37,7 @@
     {% endfor %}
 
     <p>
-        <a href="{ % url 'xxxxxxxxxxxxxxx' % }" class="btn btn-primary">Agregar cliente</a>
+        <a href="{% url 'customer_create' %}" class="btn btn-primary">Agregar cliente</a>
     </p>
 
     {% dump_objects user object_list %}

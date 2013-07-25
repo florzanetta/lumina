@@ -5,7 +5,8 @@ from django.views.decorators.cache import cache_control
 
 from lumina.views import ImageCreateView, ImageUpdateView, ImageListView, \
     AlbumListView, AlbumDetailView, AlbumCreateView, AlbumUpdateView, \
-    SharedAlbumAnonymousView, SharedAlbumCreateView, CustomerListView
+    SharedAlbumAnonymousView, SharedAlbumCreateView, CustomerListView, \
+    CustomerCreateView
 
 # Uncomment the next two lines to enable the admin:
 admin.autodiscover()
@@ -98,10 +99,15 @@ urlpatterns = patterns(
     #===========================================================================
     # LuminaUserProfile
     #===========================================================================
-    url(r'^luminauserprofile/list/$',
+    url(r'^customer/list/$',
         cache_control(private=True)(
             login_required(CustomerListView.as_view())),
-        name='luminauserprofile_list'),
+        name='customer_list'),
+
+    url(r'^customer/create/$',
+        cache_control(private=True)(
+            login_required(CustomerCreateView.as_view())),
+        name='customer_create'),
 
     #
     # Other
