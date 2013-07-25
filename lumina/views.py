@@ -350,6 +350,7 @@ class CustomerUpdateView(UpdateView):
             updated_user = User.objects.get(pk=form.instance.id)
             logger.warn("Changing password of user '%s'", updated_user.username)
             updated_user.set_password(form['password1'].value())
+            updated_user.save()
 
         messages.success(self.request, 'El cliente fue actualizado correctamente')
         return ret
