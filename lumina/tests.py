@@ -10,6 +10,7 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.contrib.auth import authenticate
 
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Image, Album
@@ -215,15 +216,19 @@ class CustomerTests(LuminaTestCase):
             'first_name': 'Erwin',
             'last_name': u'Schrödinger',
             'email': 'erwin@example.com',
-            'password1': 'erwin',
-            'password2': 'erwin',
+            'password1': 'erwin123',
+            'password2': 'erwin123',
         }
         response = self.client.post(reverse('customer_create'), form_data)
         self.assertEqual(User.objects.filter(username='erwin').count(), 1)
 
         self.assertEqual(
-            User.objects.filter(username='erwin', password='erwin').count(), 0,
+            User.objects.filter(username='erwin', password='erwin123').count(), 0,
             msg="The password was saved in the database as clear-text!!!")
+
+        self.assertTrue(
+            authenticate(username='erwin', password='erwin123'),
+            msg="Couldn't authenticate the created user")
 
 
 #===============================================================================
