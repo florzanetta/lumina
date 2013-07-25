@@ -11,8 +11,8 @@
 {% block content %}
 
     {% if user.is_authenticated %}
-        <h2>Bienvenido, {{ user.username }}!</h2>
-        <h4>Estadisticas</h4>
+        <h2>Bienvenido, {{ user.get_full_name }}!</h2>
+        <h4>Estadisticas de tus álbumes</h4>
 
         <p><span class="badge badge-info">{{ album_count }}</span>
 				Album{{ album_count|pluralize:",es" }}</p>

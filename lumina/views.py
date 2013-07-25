@@ -178,7 +178,10 @@ class AlbumListView(ListView):
     model = Album
 
     def get_queryset(self):
-        return Album.objects.for_user(self.request.user)
+        return (
+            Album.objects.for_user(self.request.user) |
+            Album.objects.filter(shared_with=self.request.user)
+        )
 
 
 class AlbumDetailView(DetailView):

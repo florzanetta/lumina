@@ -10,7 +10,7 @@
 
 {% block content %}
 
-	<h3>Clientes de '{{ user }}'</h3>
+	<h3>Clientes de '{{ user.get_full_name }}'</h3>
 
     {% for customer in object_list %}
 		<div class="media">

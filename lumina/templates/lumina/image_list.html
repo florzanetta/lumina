@@ -9,7 +9,7 @@
 
 {% block content %}
 
-	<h3>Imagenes para '{{ user }}'</h3>
+	<h3>Imagenes de '{{ user.get_full_name }}'</h3>
 
     {% for image in object_list %}
         {% include 'lumina/include/image.html' with image=image only %}
