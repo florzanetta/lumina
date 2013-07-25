@@ -1,9 +1,4 @@
-"""
-This file demonstrates writing tests using the unittest module. These will pass
-when you run "manage.py test".
-
-Replace this with more appropriate tests for your application.
-"""
+# -*- coding: utf-8 -*-
 
 import os
 
@@ -29,6 +24,16 @@ MEDIA_ROOT_FOR_TESTING = os.path.join(os.path.split(
 #        '../test/test-images')
 #    image_path = os.path.join(test_images_dir, '8902217876_de6e699066.jpg')
 #    return image_path
+
+
+class LuminaTestCase(TestCase):
+
+    def _login(self, username):
+        self.assertTrue(self.client.login(username=username, password=username))
+
+    def login_admin(self):
+        """Logon with the 'admin' user"""
+        self._login('admin')
 
 
 class PilUtilsTest(TestCase):
@@ -80,11 +85,8 @@ PRIVATE_URLS = [
 ]
 
 
-class PermissoinsTests(TestCase):
+class PermissoinsTests(LuminaTestCase):
     fixtures = ['tests/users.json', 'tests/albums.json', 'tests/images.json']
-
-    def _login(self, username):
-        self.assertTrue(self.client.login(username=username, password=username))
 
     def test_required_fixtures_admin(self):
         u_admin = User.objects.get(username='admin')
@@ -194,6 +196,34 @@ class PermissoinsTests(TestCase):
     #        response = self.client.get(reverse('image_update', args=[JUAN_IMAGE_ID]))
     #        self.assertTemplateNotUsed(response, 'lumina/image_update_form.html')
     #        self.assertEqual(response.status_code, 404)
+
+
+class CustomerTests(LuminaTestCase):
+    fixtures = ['tests/users.json']
+
+    def test_hashed_password(self):
+        self.login_admin()
+
+        response = self.client.get(reverse('customer_create'))
+        self.assertTemplateUsed(response, 'lumina/customer_create_form.html')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(User.objects.filter(username='erwin').count(), 0)
+
+        form_data = {
+            'username': 'erwin',
+            'first_name': 'Erwin',
+            'last_name': u'Schrödinger',
+            'email': 'erwin@example.com',
+            'password1': 'erwin',
+            'password2': 'erwin',
+        }
+        response = self.client.post(reverse('customer_create'), form_data)
+        self.assertEqual(User.objects.filter(username='erwin').count(), 1)
+
+        self.assertEqual(
+            User.objects.filter(username='erwin', password='erwin').count(), 0,
+            msg="The password was saved in the database as clear-text!!!")
 
 
 #===============================================================================
