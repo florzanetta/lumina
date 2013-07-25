@@ -48,7 +48,7 @@
         "last_login": "2013-07-25T21:26:32.019Z", 
         "groups": [], 
         "user_permissions": [], 
-        "password": "customer", 
+        "password": "pbkdf2_sha256$10000$m2vJ3GU8gv6B$oHVMTUWO7W2OjRnP+7JwzZHrFRPis4ZTRTCF40qIL+U=", 
         "email": "albert.einstein@example.com", 
         "date_joined": "2013-07-25T21:26:32.019Z"
     }
@@ -66,7 +66,7 @@
         "last_login": "2013-07-25T21:28:50.599Z", 
         "groups": [], 
         "user_permissions": [], 
-        "password": "max", 
+        "password": "pbkdf2_sha256$10000$NnpduGewVDQM$24AyL+l9H5HyIr53kuunJC6L1lRTPi6pd5R3A0l2yX0=", 
         "email": "max.planck@example.com", 
         "date_joined": "2013-07-25T21:28:50.599Z"
     }
