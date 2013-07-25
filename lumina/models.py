@@ -45,7 +45,7 @@ class SharedAlbum(models.Model):
     shared_with = models.EmailField(max_length=254)
     # https://docs.djangoproject.com/en/1.5/ref/models/fields/#emailfield
     user = models.ForeignKey(User)
-    album = models.ForeignKey(Album)
+    album = models.ForeignKey(Album, related_name='shares_via_email')
     random_hash = models.CharField(max_length=36, unique=True)  # len(uuid4) = 36
 
     objects = SharedAlbumManager()

@@ -26,10 +26,15 @@
                             <span class="badge badge-info">{{ album.image_set.count }}</span>
                             imagen{{ album.image_set.count|pluralize:",es" }}
                         </small>
+                      -
+                      <small>
+                          Compartido con <span class="badge badge-info">{{ album.shared_with.count }}</span>
+                          cliente{{ album.shared_with.count|pluralize:",s" }}.
+                      </small>
 		              -
 		              <small>
-		                  Compartido con <span class="badge badge-info">{{ album.sharedalbum_set.count }}</span>
-	                      persona{{ album.sharedalbum_set.count|pluralize:",s" }}
+		                  Compartido con <span class="badge badge-info">{{ album.shares_via_email.count }}</span>
+	                      persona{{ album.shares_via_email.count|pluralize:",s" }} via email.
 		              </small>
 		        </div>
 		    </div>
