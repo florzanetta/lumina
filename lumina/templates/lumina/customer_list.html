@@ -19,7 +19,7 @@
 		    </a>
 		    <div class="media-body">
 		        <div class="media-heading"><a
-		               href="{ % url 'album_detail' album.pk % }">{{ customer.get_full_name }}</a>
+		               href="{% url 'customer_update' customer.id %}">{{ customer.get_full_name }}</a>
 		        </div>
 		        <div>
 		              <small>

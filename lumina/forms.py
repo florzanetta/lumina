@@ -74,4 +74,22 @@ class CustomerCreateForm(forms.ModelForm):
             raise forms.ValidationError('Los passwords no concuerdan')
         return self.cleaned_data
 
-# LuminaUserProfileUpdateForm = LuminaUserProfileCreateForm
+
+class CustomerUpdateForm(forms.ModelForm):
+    password1 = forms.CharField(
+        max_length=20, required=False, widget=forms.PasswordInput(), label=u'Contrasena')
+    password2 = forms.CharField(
+        max_length=20, required=False, widget=forms.PasswordInput(),
+        label=u'Contrasena (otra vez)')
+
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'password1', 'password2')
+
+    def clean(self):
+        super(CustomerUpdateForm, self).clean()
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        if password1 != password2:
+            raise forms.ValidationError('Los passwords no concuerdan')
+        return self.cleaned_data

@@ -2,6 +2,7 @@
 
 import os
 import uuid
+import logging
 
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
@@ -19,7 +20,8 @@ from django.contrib.auth.models import User
 from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile
 from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
-    AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm
+    AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm,\
+    CustomerUpdateForm
 
 
 #
@@ -29,6 +31,8 @@ from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
 # Cache:
 #  - https://docs.djangoproject.com/en/1.5/topics/cache/#controlling-cache-using-other-headers
 #
+
+logger = logging.getLogger(__name__)
 
 
 def home(request):
@@ -325,4 +329,27 @@ class CustomerCreateView(CreateView):
             user=new_user, user_type=LuminaUserProfile.GUEST, customer_of=self.request.user)
 
         messages.success(self.request, 'El cliente fue creado correctamente')
+        return ret
+
+
+class CustomerUpdateView(UpdateView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
+    model = User
+    form_class = CustomerUpdateForm
+    template_name = 'lumina/customer_update_form.html'
+    success_url = reverse_lazy('customer_list')
+
+    def form_valid(self, form):
+        #        ret = super(AlbumUpdateView, self).form_valid(form)
+        #        messages.success(self.request, 'El album fue actualizado correctamente')
+        #        return ret
+        ret = super(CustomerUpdateView, self).form_valid(form)
+
+        # Set the password
+        if form['password1'].value():
+            updated_user = User.objects.get(pk=form.instance.id)
+            logger.warn("Changing password of user '%s'", updated_user.username)
+            updated_user.set_password(form['password1'].value())
+
+        messages.success(self.request, 'El cliente fue actualizado correctamente')
         return ret
