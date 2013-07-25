@@ -12,20 +12,20 @@
 
 	<h3>Clientes de '{{ user }}'</h3>
 
-    {% for customer_profile in object_list %}
+    {% for customer in object_list %}
 		<div class="media">
 		    <a class="pull-left" href="javascript:void(0);">
 		        <img class="media-object" src="/static/album-icon-64x64.png">
 		    </a>
 		    <div class="media-body">
 		        <div class="media-heading"><a
-		               href="{ % url 'album_detail' album.pk % }">{{ customer_profile.user.get_full_name }}</a>
+		               href="{ % url 'album_detail' album.pk % }">{{ customer.get_full_name }}</a>
 		        </div>
 		        <div>
 		              <small>
-                          <i class="icon-envelope"></i> <a href="mailto:{{ customer_profile.user.email }}">{{ customer_profile.user.email }}</a>
+                          <i class="icon-envelope"></i> <a href="mailto:{{ customer.email }}">{{ customer.email }}</a>
                           <br>
-                          <i class="icon-user"></i> {{ customer_profile.user.username }}
+                          <i class="icon-user"></i> {{ customer.username }}
 		              </small>
 		        </div>
 		    </div>

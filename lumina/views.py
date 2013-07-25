@@ -19,6 +19,7 @@ from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile
 from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
     AlbumUpdateForm, SharedAlbumCreateForm
+from django.contrib.auth.models import User
 
 
 #
@@ -298,8 +299,9 @@ class ImageUpdateView(UpdateView):
 # LuminaUserProfile
 #===============================================================================
 
-class LuminaUserProfileListView(ListView):
-    model = LuminaUserProfile
+class CustomerListView(ListView):
+    model = User
+    template_name = 'lumina/customer_list.html'
 
     def get_queryset(self):
-        return LuminaUserProfile.objects.for_user(self.request.user)
+        return User.objects.filter(luminauserprofile__customer_of=self.request.user)
