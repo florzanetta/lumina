@@ -120,7 +120,7 @@ class LuminaUserProfile(models.Model):
         (PHOTOGRAPHER, 'Fotografo'),
         (GUEST, 'Invitado'),
     )
-    user = models.ForeignKey(User)
+    user = models.OneToOneField(User)
     user_type = models.CharField(max_length=1, choices=USER_TYPES, default=PHOTOGRAPHER)
     customer_of = models.ForeignKey(User, related_name='customers')
 
