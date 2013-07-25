@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.files.storage import default_storage
 from django.views.decorators.cache import cache_control
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.models import User
 
 from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile
@@ -311,6 +311,7 @@ class CustomerCreateView(CreateView):
     model = User
     form_class = CustomerCreateForm
     template_name = 'lumina/customer_create_form.html'
+    success_url = reverse_lazy('customer_list')
 
     def form_valid(self, form):
         # Set the password
