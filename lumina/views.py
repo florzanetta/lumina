@@ -167,6 +167,11 @@ class SharedAlbumCreateView(CreateView):
 # Album
 #===============================================================================
 
+#class SafeAlbumViewMixin(object):
+#    def get_queryset(self):
+#        return Album.objects.for_user(self.request.user)
+
+
 class AlbumListView(ListView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
     #    #django.views.generic.list.ListView
@@ -198,11 +203,13 @@ class AlbumCreateView(CreateView):
 
 
 class AlbumUpdateView(UpdateView):
-
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = Album
     form_class = AlbumUpdateForm
     template_name = 'lumina/album_update_form.html'
+
+    def get_queryset(self):
+        return Album.objects.for_user(self.request.user)
 
     def form_valid(self, form):
         ret = super(AlbumUpdateView, self).form_valid(form)
@@ -288,6 +295,9 @@ class ImageUpdateView(UpdateView):
     #        context.update({'menu_image_update_flag': 'active'})
     #        return context
 
+    def get_queryset(self):
+        return Image.objects.for_user(self.request.user)
+
     def form_valid(self, form):
         ret = super(ImageUpdateView, self).form_valid(form)
         messages.success(self.request, 'La imagen fue actualizada correctamente')
@@ -338,6 +348,9 @@ class CustomerUpdateView(UpdateView):
     form_class = CustomerUpdateForm
     template_name = 'lumina/customer_update_form.html'
     success_url = reverse_lazy('customer_list')
+
+#    def get_queryset(self):
+#        return User.objects.filter(luminauserprofile__customer_of=self.request.user)
 
     def form_valid(self, form):
         #        ret = super(AlbumUpdateView, self).form_valid(form)
