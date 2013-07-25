@@ -1,0 +1,48 @@
+{% extends "lumina/base.html" %}
+{% load lumina_extras %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina - Client list{% endblock %}</title>
+</head>
+<body>
+
+{% block content %}
+
+	<h3>Clientes de '{{ user }}'</h3>
+
+    {% for customer_profile in object_list %}
+		<div class="media">
+		    <a class="pull-left" href="javascript:void(0);">
+		        <img class="media-object" src="/static/album-icon-64x64.png">
+		    </a>
+		    <div class="media-body">
+		        <div class="media-heading"><a
+		               href="{ % url 'album_detail' album.pk % }">{{ customer_profile.user.get_full_name }}</a>
+		        </div>
+		        <div>
+		              <small>
+                          <i class="icon-envelope"></i> <a href="mailto:{{ customer_profile.user.email }}">{{ customer_profile.user.email }}</a>
+                          <br>
+                          <i class="icon-user"></i> {{ customer_profile.user.username }}
+		              </small>
+		        </div>
+		    </div>
+		</div>
+		<hr>
+    {% empty %}
+       <p>No hay clientes registrados...</p>
+        <hr>
+    {% endfor %}
+
+    <p>
+        <a href="{ % url 'xxxxxxxxxxxxxxx' % }" class="btn btn-primary">Agregar cliente</a>
+    </p>
+
+    {% dump_objects user object_list %}
+
+{% endblock content %}
+
+</body>
+</html>

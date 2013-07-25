@@ -15,7 +15,7 @@ from django.core.files.storage import default_storage
 from django.views.decorators.cache import cache_control
 from django.core.urlresolvers import reverse
 
-from lumina.models import Image, Album, SharedAlbum
+from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile
 from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
     AlbumUpdateForm, SharedAlbumCreateForm
@@ -292,3 +292,14 @@ class ImageUpdateView(UpdateView):
         context = super(ImageUpdateView, self).get_context_data(**kwargs)
         context['form'].fields['album'].queryset = Album.objects.for_user(self.request.user)
         return context
+
+
+#===============================================================================
+# LuminaUserProfile
+#===============================================================================
+
+class LuminaUserProfileListView(ListView):
+    model = LuminaUserProfile
+
+    def get_queryset(self):
+        return LuminaUserProfile.objects.for_user(self.request.user)
