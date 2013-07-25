@@ -70,10 +70,14 @@ class PilUtilsTest(TestCase):
 ADMIN_ALBUM_UUID = "1d300055-7b06-498d-bb33-43e263c6c95e"
 ADMIN_ALBUM_ID = 1
 ADMIN_IMAGE_ID = 1
+ADMIN_CUSTOMER_UUID = "ba07eb50-9fb5-4593-98"
+ADMIN_CUSTOMER_ID = 3
 
 JUAN_ALBUM_UUID = "16436663-7ae0-4902-888d-e1c4da976c25"
 JUAN_ALBUM_ID = 2
 JUAN_IMAGE_ID = 2
+JUAN_CUSTOMER_UUID = "957a6230-3eac-4ee1-a4"
+JUAN_CUSTOMER_ID = 4
 
 PRIVATE_URLS = [
     reverse('album_list'),
@@ -184,19 +188,26 @@ class PermissoinsTests(LuminaTestCase):
         self.assertTemplateNotUsed(response, 'lumina/image_update_form.html')
         self.assertEqual(response.status_code, 404)
 
-    #    def test_private_customers(self):
-    #        """
-    #        Login with 'admin' user, and assert he cant' access other's customers
-    #        """
-    #        self._login('admin')
-    #
-    #        # Modify my image / other's image
-    #        response = self.client.get(reverse('image_update', args=[ADMIN_IMAGE_ID]))
-    #        self.assertTemplateUsed(response, 'lumina/image_update_form.html')
-    #        self.assertEqual(response.status_code, 200)
-    #        response = self.client.get(reverse('image_update', args=[JUAN_IMAGE_ID]))
-    #        self.assertTemplateNotUsed(response, 'lumina/image_update_form.html')
-    #        self.assertEqual(response.status_code, 404)
+    def test_private_customers(self):
+        """
+        Login with 'admin' user, and assert he cant' access other's customers
+        """
+        self._login('admin')
+
+        # List admin's customers
+        response = self.client.get(reverse('customer_list'))
+        self.assertTemplateUsed(response, 'lumina/customer_list.html')
+        self.assertContains(response, ADMIN_CUSTOMER_UUID)
+        self.assertNotContains(response, JUAN_CUSTOMER_UUID)
+
+        # Modify my customer / other's image
+        response = self.client.get(reverse('customer_update', args=[ADMIN_CUSTOMER_ID]))
+        self.assertTemplateUsed(response, 'lumina/customer_update_form.html')
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(reverse('customer_update', args=[JUAN_CUSTOMER_ID]))
+        self.assertTemplateNotUsed(response, 'lumina/customer_update_form.html')
+        self.assertEqual(response.status_code, 404)
 
 
 class CustomerTests(LuminaTestCase):

@@ -328,9 +328,6 @@ class CustomerCreateView(CreateView):
     success_url = reverse_lazy('customer_list')
 
     def form_valid(self, form):
-        # Set the password
-        # form.instance.password = form['password1'].value()
-
         ret = super(CustomerCreateView, self).form_valid(form)
 
         # Create the profile module
@@ -353,8 +350,8 @@ class CustomerUpdateView(UpdateView):
     template_name = 'lumina/customer_update_form.html'
     success_url = reverse_lazy('customer_list')
 
-#    def get_queryset(self):
-#        return User.objects.filter(luminauserprofile__customer_of=self.request.user)
+    def get_queryset(self):
+        return User.objects.filter(luminauserprofile__customer_of=self.request.user)
 
     def form_valid(self, form):
         #        ret = super(AlbumUpdateView, self).form_valid(form)
