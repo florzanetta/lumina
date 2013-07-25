@@ -195,6 +195,12 @@ class AlbumCreateView(CreateView):
     form_class = AlbumCreateForm
     template_name = 'lumina/album_create_form.html'
 
+    def get_form(self, form_class):
+        form = super(AlbumCreateView, self).get_form(form_class)
+        user_customers = User.objects.filter(luminauserprofile__customer_of=self.request.user)
+        form.fields['shared_with'].queryset = user_customers
+        return form
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         ret = super(AlbumCreateView, self).form_valid(form)
@@ -207,6 +213,12 @@ class AlbumUpdateView(UpdateView):
     model = Album
     form_class = AlbumUpdateForm
     template_name = 'lumina/album_update_form.html'
+
+    def get_form(self, form_class):
+        form = super(AlbumUpdateView, self).get_form(form_class)
+        user_customers = User.objects.filter(luminauserprofile__customer_of=self.request.user)
+        form.fields['shared_with'].queryset = user_customers
+        return form
 
     def get_queryset(self):
         return Album.objects.for_user(self.request.user)

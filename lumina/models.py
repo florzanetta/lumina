@@ -21,7 +21,8 @@ class AlbumManager(models.Manager, ForUserManagerMixin):
 
 class Album(models.Model):
     name = models.CharField(max_length=300)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User)  # owner
+    shared_with = models.ManyToManyField(User, blank=True, related_name='others_shared_albums')
 
     objects = AlbumManager()
 
