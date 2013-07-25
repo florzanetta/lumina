@@ -152,6 +152,14 @@ class PermissoinsTests(TestCase):
         self.assertTemplateNotUsed(response, 'lumina/album_detail.html')
         self.assertEqual(response.status_code, 404)
 
+        # Modify my album / other's album
+        response = self.client.get(reverse('album_update', args=[ADMIN_ALBUM_ID]))
+        self.assertTemplateUsed(response, 'lumina/album_update_form.html')
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get(reverse('album_update', args=[JUAN_ALBUM_ID]))
+        self.assertTemplateNotUsed(response, 'lumina/album_update_form.html')
+        self.assertEqual(response.status_code, 404)
+
 
 #===============================================================================
 # Selenium
