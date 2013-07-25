@@ -81,7 +81,9 @@ PRIVATE_URLS = [
 
 
 class PermissoinsTests(TestCase):
-    fixtures = ['admin_user.json', 'admin-and-juan-albums.json', 'admin-and-juan-images.json']
+    fixtures = [
+        'tests/admin_user.json', 'tests/admin-and-juan-albums.json',
+        'tests/admin-and-juan-images.json']
 
     def _login(self, username):
         self.assertTrue(self.client.login(username=username, password=username))
