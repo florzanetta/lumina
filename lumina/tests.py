@@ -96,7 +96,11 @@ class PermissoinsTests(TestCase):
         self.assertEqual(Album.objects.get(pk=JUAN_ALBUM_ID).user, u_juan)
         self.assertEqual(Image.objects.get(pk=JUAN_IMAGE_ID).user, u_juan)
 
-    def test_login_on_privates_views(self):
+    def test_anonymous_access_to_privates_views(self):
+        """
+        Anonymous access to private views should return redirects to login page
+        """
+
         response = self.client.get(reverse('home'))
         self.assertTemplateUsed(response, 'lumina/index.html')
 
@@ -133,6 +137,9 @@ class PermissoinsTests(TestCase):
         pass
 
     def test_private_album(self):
+        """
+        Login with 'admin' user, and assert he cant' access other's stuff
+        """
         self._login('admin')
 
         # View list of albums
@@ -159,6 +166,34 @@ class PermissoinsTests(TestCase):
         response = self.client.get(reverse('album_update', args=[JUAN_ALBUM_ID]))
         self.assertTemplateNotUsed(response, 'lumina/album_update_form.html')
         self.assertEqual(response.status_code, 404)
+
+    def test_private_images(self):
+        """
+        Login with 'admin' user, and assert he cant' access other's images
+        """
+        self._login('admin')
+
+        # Modify my image / other's image
+        response = self.client.get(reverse('image_update', args=[ADMIN_IMAGE_ID]))
+        self.assertTemplateUsed(response, 'lumina/image_update_form.html')
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get(reverse('image_update', args=[JUAN_IMAGE_ID]))
+        self.assertTemplateNotUsed(response, 'lumina/image_update_form.html')
+        self.assertEqual(response.status_code, 404)
+
+    #    def test_private_customers(self):
+    #        """
+    #        Login with 'admin' user, and assert he cant' access other's customers
+    #        """
+    #        self._login('admin')
+    #
+    #        # Modify my image / other's image
+    #        response = self.client.get(reverse('image_update', args=[ADMIN_IMAGE_ID]))
+    #        self.assertTemplateUsed(response, 'lumina/image_update_form.html')
+    #        self.assertEqual(response.status_code, 200)
+    #        response = self.client.get(reverse('image_update', args=[JUAN_IMAGE_ID]))
+    #        self.assertTemplateNotUsed(response, 'lumina/image_update_form.html')
+    #        self.assertEqual(response.status_code, 404)
 
 
 #===============================================================================
