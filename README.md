@@ -57,11 +57,12 @@ with username 'admin' and password 'admin'):
     $ rm -rf ~/lumina.sqlite ~/lumina/uploads
     $ python manage.py syncdb --noinput
     $ python manage.py migrate
-    $ python manage.py loaddata admin_user.json
+    $ python manage.py loaddata tests/admin_user.json
 
 To add to the database some initial data (albums, images and shares), run:
 
-    $ python manage.py loaddata admin-albums-and-test-images.json
+    $ python manage.py loaddata tests/admin-and-juan-albums.json
+    $ python manage.py loaddata tests/admin-and-juan-images.json
 
 
 Defaults settings
@@ -93,8 +94,9 @@ To check **code coverage**, run:
 
 To generate **fixtures**, run:
 
-    $ python manage.py dumpdata --format=json --indent=4 --natural auth.User > lumina/fixtures/admin_user.json
-    $ python manage.py dumpdata --format=json --indent=4 --natural lumina.Album > lumina/fixtures/admin-and-juan-albums.json
+    $ python manage.py dumpdata --format=json --indent=4 --natural auth.User > lumina/fixtures/tests/admin_user.json
+    $ python manage.py dumpdata --format=json --indent=4 --natural lumina.Album > lumina/fixtures/tests/admin-and-juan-albums.json
+    $ python manage.py dumpdata --format=json --indent=4 --natural lumina.Image > lumina/fixtures/tests/admin-and-juan-images.json
 
 (remember to execute this with a **CLEAN** database: see *Reset of the database and uploads*).
 
