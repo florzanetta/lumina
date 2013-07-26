@@ -91,21 +91,21 @@ def _image_download(request, image):
 @login_required
 @cache_control(private=True)
 def image_thumb_64x64(request, image_id):
-    image = Image.objects.for_user(request.user).get(pk=image_id)
+    image = Image.objects.all_visible(request.user).get(pk=image_id)
     return _image_thumb(request, image, 64)
 
 
 @login_required
 @cache_control(private=True)
 def image_thumb(request, image_id, max_size=None):
-    image = Image.objects.for_user(request.user).get(pk=image_id)
+    image = Image.objects.all_visible(request.user).get(pk=image_id)
     return _image_thumb(request, image, 64)
 
 
 @login_required
 @cache_control(private=True)
 def image_download(request, image_id):
-    image = Image.objects.for_user(request.user).get(pk=image_id)
+    image = Image.objects.all_visible(request.user).get(pk=image_id)
     return _image_download(request, image)
 
 

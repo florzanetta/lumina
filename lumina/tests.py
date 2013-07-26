@@ -130,8 +130,9 @@ class BasicAccessTest(LuminaTestCase):
             all_the_images = set(
                 all_the_images + list(Image.objects.all_my_images(self._logged_in_user)))
             for image in all_the_images:
-                self.assertEqual(self.client.get(
-                    reverse("image_update", args=[image.id])).status_code, 200)
+                if image.user == self._logged_in_user:
+                    self.assertEqual(self.client.get(
+                        reverse("image_update", args=[image.id])).status_code, 200)
                 self.assertEqual(self.client.get(
                     reverse("image_thumb", args=[image.id])).status_code, 200)
                 self.assertEqual(self.client.get(

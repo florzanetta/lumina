@@ -119,6 +119,13 @@ class ImageManager(models.Manager, ForUserManagerMixin):
         """Returns all the user's images"""
         return self.for_user(user)
 
+    def all_visible(self, user):
+        """
+        Returns all the visible images for an user
+        (ie: the user's images + the images of shared albums of other users)
+        """
+        return self.filter(Q(user=user) | Q(album__shared_with=user))
+
 
 class Image(models.Model):
     # See: https://docs.djangoproject.com/en/1.5/ref/models/fields/#filefield
