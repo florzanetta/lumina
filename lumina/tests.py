@@ -115,17 +115,21 @@ class BasicAccessTest(LuminaTestCase):
                 response = self.client.get(reverse(view_name))
                 self.assertEqual(response.status_code, 200)
 
+            all_the_images = []
             for album in Album.objects.all_visible(self._logged_in_user):
                 # "album_detail", "album_update", "image_update"
                 self.assertEqual(self.client.get(
                     reverse("album_detail", args=[album.id])).status_code, 200)
+                all_the_images += list(album.image_set.all())
                 if album.user == self._logged_in_user:
                     self.assertEqual(self.client.get(
                         reverse("album_update", args=[album.id])).status_code, 200,
                         msg="Status code != 200 - User: {0} - Album: {1}".format(
                             self._logged_in_user, album.id))
 
-            for image in Image.objects.all_my_images(self._logged_in_user):
+            all_the_images = set(
+                all_the_images + list(Image.objects.all_my_images(self._logged_in_user)))
+            for image in all_the_images:
                 self.assertEqual(self.client.get(
                     reverse("image_update", args=[image.id])).status_code, 200)
                 self.assertEqual(self.client.get(
