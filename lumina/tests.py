@@ -29,12 +29,25 @@ MEDIA_ROOT_FOR_TESTING = os.path.join(os.path.split(
 
 class LuminaTestCase(TestCase):
 
-    def _login(self, username):
-        self.assertTrue(self.client.login(username=username, password=username))
+    def _login(self, username, password=None):
+        self.assertTrue(self.client.login(username=username, password=password or username))
+        self._logged_in_user = User.objects.get(username=username)
 
     def login_admin(self):
         """Logon with the 'admin' user"""
         self._login('admin')
+
+    def login_juan(self):
+        """Logon with the 'juan' user"""
+        self._login('juan')
+
+    def login_albert(self):
+        """Logon with the 'albert' user"""
+        self._login('customer-ba07eb50-9fb5-4593-98', 'albert')
+
+    def login_max(self):
+        """Logon with the 'max' user"""
+        self._login('customer-957a6230-3eac-4ee1-a4', 'max')
 
 
 class PilUtilsTest(TestCase):
@@ -88,6 +101,42 @@ PRIVATE_URLS = [
     reverse('album_update', args=[2]),
     # TODO: complete this list
 ]
+
+
+class BasicAccessTest(LuminaTestCase):
+    fixtures = ['tests/users.json', 'tests/albums.json', 'tests/images.json']
+
+    def test_access_to_pages(self):
+        for login_func in (self.login_admin, self.login_juan, self.login_albert, self.login_max):
+            login_func()  # user -> self._logged_in_user
+            for view_name in (
+                'home', 'album_list', 'album_create', 'shared_album_create',
+                    'image_list', 'image_create', 'customer_list', 'customer_create'):
+                response = self.client.get(reverse(view_name))
+                self.assertEqual(response.status_code, 200)
+
+            for album in Album.objects.all_visible(self._logged_in_user):
+                # "album_detail", "album_update", "image_update"
+                self.assertEqual(self.client.get(
+                    reverse("album_detail", args=[album.id])).status_code, 200)
+                self.assertEqual(self.client.get(
+                    reverse("album_update", args=[album.id])).status_code, 200,
+                    msg="Status code != 200 - User: {0} - Album: {1}".format(
+                        self._logged_in_user, album.id))
+                self.assertEqual(self.client.get(
+                    reverse("image_update", args=[album.id])).status_code, 200)
+
+            for image in Image.objects.all_my_images(self._logged_in_user):
+                # "image_thumb", "image_thumb_64x64", "image_download", "xxxxxxxxxxxx",
+                self.assertEqual(self.client.get(
+                    reverse("image_thumb", args=[image.id])).status_code, 200)
+                self.assertEqual(self.client.get(
+                    reverse("image_thumb_64x64", args=[image.id])).status_code, 200)
+                self.assertEqual(self.client.get(
+                    reverse("image_download", args=[image.id])).status_code, 200)
+
+            #    for customer in ProxyUser:
+            #        # "customer_update",
 
 
 class PermissoinsTests(LuminaTestCase):
