@@ -242,6 +242,40 @@ class CustomerTests(LuminaTestCase):
             msg="Couldn't authenticate the created user")
 
 
+class AlbumManagerTests(LuminaTestCase):
+    fixtures = ['tests/users.json', 'tests/albums.json', 'tests/images.json']
+
+    def setUp(self):
+        self.admin = User.objects.get(username='admin')
+        self.juan = User.objects.get(username='juan')
+        self.albert = User.objects.get(username='customer-ba07eb50-9fb5-4593-98')
+        self.max = User.objects.get(username='customer-957a6230-3eac-4ee1-a4')
+
+    def test_all_my_albums(self):
+        admin_albums = Album.objects.all_my_albums(self.admin)
+        self.assertEqual(admin_albums.count(), 1)
+        self.assertEqual(admin_albums.all()[0].id, 1)
+
+        juan_albums = Album.objects.all_my_albums(self.juan)
+        self.assertEqual(juan_albums.count(), 1)
+        self.assertEqual(juan_albums.all()[0].id, 2)
+
+        self.assertEqual(Album.objects.all_my_albums(self.albert).count(), 0)
+
+    def test_shared_with_me(self):
+        self.assertEqual(Album.objects.shared_with_me(self.admin).count(), 0)
+        self.assertEqual(Album.objects.shared_with_me(self.juan).count(), 0)
+        self.assertEqual(Album.objects.shared_with_me(self.albert).count(), 0)
+        self.assertEqual(Album.objects.shared_with_me(self.max).count(), 1)
+        album = Album.objects.shared_with_me(self.max).get()
+        self.assertEqual(album.user, self.juan)
+
+    def test_all_visible(self):
+        self.assertEqual(Album.objects.all_visible(self.admin).count(), 1)
+        self.assertEqual(Album.objects.all_visible(self.juan).count(), 1)
+        self.assertEqual(Album.objects.all_visible(self.albert).count(), 0)
+        self.assertEqual(Album.objects.all_visible(self.max).count(), 1)
+
 #===============================================================================
 # Selenium
 #===============================================================================

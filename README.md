@@ -57,12 +57,19 @@ with username 'admin' and password 'admin'):
     $ rm -rf ~/lumina.sqlite ~/lumina/uploads
     $ python manage.py syncdb --noinput
     $ python manage.py migrate
-    $ python manage.py loaddata tests/admin_user.json
 
 To add to the database some initial data (albums, images and shares), run:
 
-    $ python manage.py loaddata tests/admin-and-juan-albums.json
-    $ python manage.py loaddata tests/admin-and-juan-images.json
+    $ python manage.py loaddata tests/users.json
+    $ python manage.py loaddata tests/albums.json
+    $ python manage.py loaddata tests/images.json
+
+The username/passwords to login are:
+
+    * admin/admin (with Django superuser's permission)
+    * juan/juan (photographer)
+    * customer-ba07eb50-9fb5-4593-98/albert (admin's customer)
+    * customer-957a6230-3eac-4ee1-a4/max (juan's customer)
 
 
 Defaults settings
