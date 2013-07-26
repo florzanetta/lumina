@@ -38,10 +38,11 @@ logger = logging.getLogger(__name__)
 def home(request):
     if request.user.is_authenticated():
         ctx = {
-            'album_count': Album.objects.for_user(request.user).count(),
-            'image_count': Image.objects.for_user(request.user).count(),
-            'shared_album_via_email_count': SharedAlbum.objects.for_user(request.user).count(),
-            'others_album_count': Album.objects.filter(shared_with=request.user).count(),
+            'album_count': Album.objects.all_my_albums(request.user).count(),
+            'image_count': Image.objects.all_my_images(request.user).count(),
+            'shared_album_via_email_count': SharedAlbum.objects.all_my_shares(
+                request.user).count(),
+            'others_album_count': Album.objects.shared_with_me(request.user).count(),
 #            'auth_providers': request.user.social_auth.get_providers(),
         }
     else:
@@ -160,7 +161,7 @@ class SharedAlbumCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(SharedAlbumCreateView, self).get_context_data(**kwargs)
-        context['form'].fields['album'].queryset = Album.objects.for_user(self.request.user)
+        context['form'].fields['album'].queryset = Album.objects.all_my_albums(self.request.user)
         return context
 
 
@@ -179,10 +180,7 @@ class AlbumListView(ListView):
     model = Album
 
     def get_queryset(self):
-        return (
-            Album.objects.for_user(self.request.user) |
-            Album.objects.filter(shared_with=self.request.user)
-        )
+        return Album.objects.all_visible(self.request.user)
 
 
 class AlbumDetailView(DetailView):
@@ -191,7 +189,7 @@ class AlbumDetailView(DetailView):
     model = Album
 
     def get_queryset(self):
-        return Album.objects.for_user(self.request.user)
+        return Album.objects.all_visible(self.request.user)
 
 
 class AlbumCreateView(CreateView):
@@ -201,6 +199,7 @@ class AlbumCreateView(CreateView):
 
     def get_form(self, form_class):
         form = super(AlbumCreateView, self).get_form(form_class)
+        # TODO: move the next query to some ModelManager
         user_customers = User.objects.filter(luminauserprofile__customer_of=self.request.user)
         form.fields['shared_with'].queryset = user_customers
         return form
@@ -220,12 +219,13 @@ class AlbumUpdateView(UpdateView):
 
     def get_form(self, form_class):
         form = super(AlbumUpdateView, self).get_form(form_class)
+        # TODO: move the next query to some ModelManager
         user_customers = User.objects.filter(luminauserprofile__customer_of=self.request.user)
         form.fields['shared_with'].queryset = user_customers
         return form
 
     def get_queryset(self):
-        return Album.objects.for_user(self.request.user)
+        return Album.objects.all_my_albums(self.request.user)
 
     def form_valid(self, form):
         ret = super(AlbumUpdateView, self).form_valid(form)
@@ -243,7 +243,7 @@ class ImageListView(ListView):
     model = Image
 
     def get_queryset(self):
-        return Image.objects.for_user(self.request.user)
+        return Image.objects.all_my_images(self.request.user)
 
 
 class ImageCreateView(CreateView):
@@ -296,7 +296,7 @@ class ImageCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(ImageCreateView, self).get_context_data(**kwargs)
-        context['form'].fields['album'].queryset = Album.objects.for_user(self.request.user)
+        context['form'].fields['album'].queryset = Album.objects.all_my_albums(self.request.user)
         return context
 
 
@@ -312,7 +312,7 @@ class ImageUpdateView(UpdateView):
     #        return context
 
     def get_queryset(self):
-        return Image.objects.for_user(self.request.user)
+        return Image.objects.all_my_images(self.request.user)
 
     def form_valid(self, form):
         ret = super(ImageUpdateView, self).form_valid(form)
@@ -321,7 +321,7 @@ class ImageUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(ImageUpdateView, self).get_context_data(**kwargs)
-        context['form'].fields['album'].queryset = Album.objects.for_user(self.request.user)
+        context['form'].fields['album'].queryset = Album.objects.all_my_albums(self.request.user)
         return context
 
 
@@ -334,6 +334,7 @@ class CustomerListView(ListView):
     template_name = 'lumina/customer_list.html'
 
     def get_queryset(self):
+        # TODO: move the next query to some ModelManager
         return User.objects.filter(luminauserprofile__customer_of=self.request.user)
 
 
@@ -367,6 +368,7 @@ class CustomerUpdateView(UpdateView):
     success_url = reverse_lazy('customer_list')
 
     def get_queryset(self):
+        # TODO: move the next query to some ModelManager
         return User.objects.filter(luminauserprofile__customer_of=self.request.user)
 
     def form_valid(self, form):

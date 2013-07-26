@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 
 
 class ForUserManagerMixin():
@@ -16,7 +17,21 @@ class ForUserManagerMixin():
 #===============================================================================
 
 class AlbumManager(models.Manager, ForUserManagerMixin):
-    pass
+
+    def all_my_albums(self, user):
+        """Returns all the user's albums"""
+        return self.for_user(user)
+
+    def shared_with_me(self, user):
+        """Returns all the albums that other users have shared with 'user'"""
+        return self.filter(shared_with=user)
+
+    def all_visible(self, user):
+        """
+        Returns all the visible albums for an user
+        (ie: the user's albums + the shared albums of other users)
+        """
+        return self.filter(Q(user=user) | Q(shared_with=user))
 
 
 class Album(models.Model):
@@ -38,7 +53,10 @@ class Album(models.Model):
 #===============================================================================
 
 class SharedAlbumManager(models.Manager, ForUserManagerMixin):
-    pass
+
+    def all_my_shares(self, user):
+        """Returns all the shares"""
+        return self.for_user(user)
 
 
 class SharedAlbum(models.Model):
@@ -71,7 +89,10 @@ class SharedAlbum(models.Model):
 #===============================================================================
 
 class ImageManager(models.Manager, ForUserManagerMixin):
-    pass
+
+    def all_my_images(self, user):
+        """Returns all the user's images"""
+        return self.for_user(user)
 
 
 class Image(models.Model):
