@@ -32,6 +32,8 @@
                           <i class="icon-envelope"></i> <a href="mailto:{{ customer.email }}">{{ customer.email }}</a>
                           <br>
                           <i class="icon-user"></i> {{ customer.username }}
+                          -
+                          Último acceso: hace {{ customer.last_login|timesince }}
 		              </small>
 		        </div>
 		    </div>
