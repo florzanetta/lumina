@@ -20,6 +20,12 @@
 		    <div class="media-body">
 		        <div class="media-heading"><a
 		               href="{% url 'customer_update' customer.id %}">{{ customer.get_full_name }}</a>
+		               {% if not customer.is_active %}
+		                  <div>
+			                  <span class="label label-warning">Deshabilitado</span>
+			                  <small>El usuario no podrá loguearse.</small>
+		                  </div>
+		               {% endif %}
 		        </div>
 		        <div>
 		              <small>

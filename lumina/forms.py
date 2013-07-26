@@ -64,7 +64,9 @@ class CustomerCreateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+        fields = (
+            'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2'
+        )
 
     def clean(self):
         super(CustomerCreateForm, self).clean()
@@ -84,7 +86,9 @@ class CustomerUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'password1', 'password2')
+        fields = (
+            'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2'
+        )
 
     def clean(self):
         super(CustomerUpdateForm, self).clean()
