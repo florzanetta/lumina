@@ -17,7 +17,8 @@ from django.views.decorators.cache import cache_control
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.models import User
 
-from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile
+from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile,\
+    UserProxy
 from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
     AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm,\
@@ -199,9 +200,8 @@ class AlbumCreateView(CreateView):
 
     def get_form(self, form_class):
         form = super(AlbumCreateView, self).get_form(form_class)
-        # TODO: move the next query to some ModelManager
-        user_customers = User.objects.filter(luminauserprofile__customer_of=self.request.user)
-        form.fields['shared_with'].queryset = user_customers
+        form.fields['shared_with'].queryset = UserProxy.custom_objects.all_my_customers(
+            self.request.user)
         return form
 
     def form_valid(self, form):
@@ -219,9 +219,8 @@ class AlbumUpdateView(UpdateView):
 
     def get_form(self, form_class):
         form = super(AlbumUpdateView, self).get_form(form_class)
-        # TODO: move the next query to some ModelManager
-        user_customers = User.objects.filter(luminauserprofile__customer_of=self.request.user)
-        form.fields['shared_with'].queryset = user_customers
+        form.fields['shared_with'].queryset = UserProxy.custom_objects.all_my_customers(
+            self.request.user)
         return form
 
     def get_queryset(self):
@@ -334,8 +333,7 @@ class CustomerListView(ListView):
     template_name = 'lumina/customer_list.html'
 
     def get_queryset(self):
-        # TODO: move the next query to some ModelManager
-        return User.objects.filter(luminauserprofile__customer_of=self.request.user)
+        return UserProxy.custom_objects.all_my_customers(self.request.user)
 
 
 class CustomerCreateView(CreateView):
@@ -368,13 +366,9 @@ class CustomerUpdateView(UpdateView):
     success_url = reverse_lazy('customer_list')
 
     def get_queryset(self):
-        # TODO: move the next query to some ModelManager
-        return User.objects.filter(luminauserprofile__customer_of=self.request.user)
+        return UserProxy.custom_objects.all_my_customers(self.request.user)
 
     def form_valid(self, form):
-        #        ret = super(AlbumUpdateView, self).form_valid(form)
-        #        messages.success(self.request, 'El album fue actualizado correctamente')
-        #        return ret
         ret = super(CustomerUpdateView, self).form_valid(form)
 
         # Set the password

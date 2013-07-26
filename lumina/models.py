@@ -13,6 +13,31 @@ class ForUserManagerMixin():
 
 
 #===============================================================================
+# UserProxy
+#===============================================================================
+
+# https://docs.djangoproject.com/en/1.5/topics/db/models/#proxy-models
+
+class UserProxyManager(models.Manager):
+
+    def all_my_customers(self, user):
+        return self.filter(luminauserprofile__customer_of=user)
+
+
+class UserProxyExtraManagers(models.Model):
+    custom_objects = UserProxyManager()
+
+    class Meta:
+        abstract = True
+
+
+class UserProxy(User, UserProxyExtraManagers):
+
+    class Meta:
+        proxy = True
+
+
+#===============================================================================
 # Album
 #===============================================================================
 

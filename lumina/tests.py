@@ -13,7 +13,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate
 
 from lumina.pil_utils import generate_thumbnail
-from lumina.models import Image, Album
+from lumina.models import Image, Album, UserProxy
 
 
 MEDIA_ROOT_FOR_TESTING = os.path.join(os.path.split(
@@ -135,8 +135,9 @@ class BasicAccessTest(LuminaTestCase):
                 self.assertEqual(self.client.get(
                     reverse("image_download", args=[image.id])).status_code, 200)
 
-            #    for customer in ProxyUser:
-            #        # "customer_update",
+            for customer in UserProxy.custom_objects.all_my_customers(self._logged_in_user):
+                self.assertEqual(self.client.get(
+                    reverse("customer_update", args=[customer.id])).status_code, 200)
 
 
 class PermissoinsTests(LuminaTestCase):
