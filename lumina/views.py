@@ -108,7 +108,7 @@ def image_thumb(request, image_id, max_size=None):
 def image_download(request, image_id):
     image = Image.objects.all_visible(request.user).get(pk=image_id)
     return _image_download(request, image)
-    
+
 
 #===============================================================================
 # SharedAlbum
@@ -147,16 +147,17 @@ class SharedAlbumCreateView(CreateView):
         form.instance.user = self.request.user
         form.instance.random_hash = str(uuid.uuid4())
         ret = super(SharedAlbumCreateView, self).form_valid(form)
-        
+
         messages.success(self.request, 'El album fue compartido correctamente')
         subject = "Nuevo album compartido con Ud."
         from_email = "Lumina <notifications@lumina-photo.com.ar>"
         to_email = form.instance.shared_with
-        link = "http://127.0.0.1:8000/shared/album/anonymous/view/{}/".format(form.instance.random_hash)
+        link = "http://127.0.0.1:8000/shared/album/anonymous/view/{}/"
+        link = link.format(form.instance.random_hash)
         message = "Tiene un nuevo album compartido. Para verlo ingrese a {}".format(link)
         msg = EmailMessage(subject, message, from_email, [to_email])
         msg.send(fail_silently=False)
-        
+
         return ret
 
     def get_initial(self):
@@ -165,7 +166,7 @@ class SharedAlbumCreateView(CreateView):
             initial.update({
                 'album': self.request.GET['id_album'],
             })
-        return initial      
+        return initial
 
     def get_success_url(self):
         return reverse('album_detail', args=[self.object.album.pk])
@@ -182,14 +183,15 @@ class ImageSelectionCreateView(CreateView):
     model = ImageSelection
     form_class = ImageSelectionForm
     template_name = 'lumina/selection_create_form.html'
-    
+
     def get_success_url(self):
         return reverse('album_detail', args=[self.object.album.pk])
-    
+
     def get_context_data(self, **kwargs):
         context = super(ImageSelectionCreateView, self).get_context_data(**kwargs)
         context['form'].fields['album'].queryset = Album.objects.all_my_albums(self.request.user)
-        context['form'].fields['customer'].queryset = UserProxy.custom_objects.all_my_customers(self.request.user)
+        customer_qs = UserProxy.custom_objects.all_my_customers(self.request.user)
+        context['form'].fields['customer'].queryset = customer_qs
         return context
 
 #===============================================================================

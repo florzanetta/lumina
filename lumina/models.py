@@ -113,7 +113,8 @@ class ImageSelection(models.Model):
     album = models.ForeignKey(Album)
     customer = models.ForeignKey(User)
     image_quantity = models.PositiveIntegerField()
-    
+
+
 #===============================================================================
 # Image
 #===============================================================================

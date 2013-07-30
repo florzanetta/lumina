@@ -232,7 +232,7 @@ SOCIAL_AUTH_INACTIVE_USER_URL = '/?SOCIAL_AUTH_INACTIVE_USER_URL'
 
 # SERVER_EMAIL = 'notifications@lumina-photo.com.ar'
 # DEFAULT_FROM_EMAIL = 'Lumina <notifications@lumina-photo.com.ar>'
-# EMAIL_HOST_USER = 'notifications@lumina-photo.com.ar' 
+# EMAIL_HOST_USER = 'notifications@lumina-photo.com.ar'
 # EMAIL_HOST_PASSWORD = ''
 # EMAIL_USE_TLS = False
 EMAIL_HOST = 'localhost'
