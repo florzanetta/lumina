@@ -109,6 +109,11 @@ class SharedAlbum(models.Model):
                 image_id, self.id)))
 
 
+class ImageSelection(models.Model):
+    album = models.ForeignKey(Album)
+    customer = models.ForeignKey(User)
+    image_quantity = models.PositiveIntegerField()
+    
 #===============================================================================
 # Image
 #===============================================================================

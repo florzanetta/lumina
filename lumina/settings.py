@@ -230,6 +230,16 @@ SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
 SOCIAL_AUTH_INACTIVE_USER_URL = '/?SOCIAL_AUTH_INACTIVE_USER_URL'
 
+# SERVER_EMAIL = 'notifications@lumina-photo.com.ar'
+# DEFAULT_FROM_EMAIL = 'Lumina <notifications@lumina-photo.com.ar>'
+# EMAIL_HOST_USER = 'notifications@lumina-photo.com.ar' 
+# EMAIL_HOST_PASSWORD = ''
+# EMAIL_USE_TLS = False
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
+# Email Test Server: python -m smtpd -n -c DebuggingServer localhost:1025
+
+
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",

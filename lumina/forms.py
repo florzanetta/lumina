@@ -7,7 +7,7 @@ Created on Jun 1, 2013
 from django import forms
 from django.contrib.auth.models import User
 
-from lumina.models import Image, Album, SharedAlbum
+from lumina.models import Image, Album, SharedAlbum, ImageSelection
 
 
 #===============================================================================
@@ -20,6 +20,17 @@ class SharedAlbumCreateForm(forms.ModelForm):
         model = SharedAlbum
         exclude = ('user', 'random_hash',)
 
+
+#===============================================================================
+# SharedAlbum
+#===============================================================================
+
+class ImageSelectionForm(forms.ModelForm):
+
+    class Meta:
+        model = ImageSelection
+        #exclude = ('user', 'random_hash',)
+        
 
 #===============================================================================
 # Album

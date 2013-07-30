@@ -6,7 +6,7 @@ from django.views.decorators.cache import cache_control
 from lumina.views import ImageCreateView, ImageUpdateView, ImageListView, \
     AlbumListView, AlbumDetailView, AlbumCreateView, AlbumUpdateView, \
     SharedAlbumAnonymousView, SharedAlbumCreateView, CustomerListView, \
-    CustomerCreateView, CustomerUpdateView
+    CustomerCreateView, CustomerUpdateView, ImageSelectionCreateView
 
 # Uncomment the next two lines to enable the admin:
 admin.autodiscover()
@@ -66,7 +66,12 @@ urlpatterns = patterns(
     url(r'^shared/album/anonymous/download/(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
         'lumina.views.shared_album_image_download',
         name='shared_album_image_download'),
-
+    
+    url(r'^shared/album/selection/$',
+        cache_control(private=True)(
+            login_required(
+                ImageSelectionCreateView.as_view())),
+        name='image_selection_create'),
 
     #===========================================================================
     # Image
