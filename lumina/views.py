@@ -148,16 +148,16 @@ class SharedAlbumCreateView(CreateView):
         form.instance.random_hash = str(uuid.uuid4())
         ret = super(SharedAlbumCreateView, self).form_valid(form)
 
-        messages.success(self.request, 'El album fue compartido correctamente')
         subject = "Nuevo album compartido con Ud."
         from_email = "Lumina <notifications@lumina-photo.com.ar>"
         to_email = form.instance.shared_with
         link = "http://127.0.0.1:8000/shared/album/anonymous/view/{}/"
         link = link.format(form.instance.random_hash)
-        message = "Tiene un nuevo album compartido. Para verlo ingrese a {}".format(link)
+        message = "Tiene un nuevo album compartido.\nPara verlo ingrese a {}".format(link)
         msg = EmailMessage(subject, message, from_email, [to_email])
         msg.send(fail_silently=False)
-
+        
+        messages.success(self.request, 'El album fue compartido correctamente')
         return ret
 
     def get_initial(self):
