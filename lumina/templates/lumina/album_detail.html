@@ -24,7 +24,10 @@
     {% if object.user == user %}
         <!-- the logged in user is the owner of the album -->
 
-	    <h5>Compartido con clientes:</h5>
+	    <h5>
+	       Compartido con clientes:
+	           &nbsp;&nbsp;&nbsp;<i class="icon-question-sign"></i><small> Para compartir un album con un cliente, utilice <strong>Actualizar album</strong></small>
+	    </h5>
 	    <table class="table">
 	        {% for customer in object.shared_with.all %}
 	            <tr>
