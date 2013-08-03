@@ -1,0 +1,27 @@
+{% extends "lumina/base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina - Peticiones de selección de imágenes de album {{ object.album.name }}{% endblock %}</title>
+</head>
+<body>
+
+{% block content %}
+
+    <h3>Peticiones de selección de imágenes de album {{ object.album.name }}</h3>
+
+    <hr>
+
+    <h5>Imágenes del album:</h5>
+    {% for image in object.album.image_set.all %}
+        {% include 'lumina/include/image.html' with image=image only %}
+    {% empty %}
+        <p>El album no posee imagenes...</p>
+	    <hr>
+    {% endfor %}
+
+{% endblock content %}
+
+</body>
+</html>

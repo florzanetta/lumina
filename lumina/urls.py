@@ -7,7 +7,7 @@ from lumina.views import ImageCreateView, ImageUpdateView, ImageListView, \
     AlbumListView, AlbumDetailView, AlbumCreateView, AlbumUpdateView, \
     SharedAlbumAnonymousView, SharedAlbumCreateView, CustomerListView, \
     CustomerCreateView, CustomerUpdateView, ImageSelectionCreateView,\
-    ImageSelectionListView
+    ImageSelectionListView, ImageSelectionDetailView
 
 # Uncomment the next two lines to enable the admin:
 admin.autodiscover()
@@ -83,6 +83,11 @@ urlpatterns = patterns(
             login_required(
                 ImageSelectionListView.as_view())),
         name='imageselection_list'),
+
+    url(r'^imageselection/detail/(?P<pk>\d+)/$',
+        cache_control(private=True)(
+            login_required(ImageSelectionDetailView.as_view())),
+        name='imageselection_detail'),
 
     #===========================================================================
     # Image

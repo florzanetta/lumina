@@ -19,7 +19,7 @@
 		    </a>
 		    <div class="media-body">
 		        <div class="media-heading"><a
-		               href="#{ % url 'album_detail' album.pk % }"><strong>Album</strong>: {{ pet.album.name }}</a> <br>
+		               href="{% url 'imageselection_detail' pet.id %}"><strong>Album</strong>: {{ pet.album.name }}</a> <br>
                        <small><strong>Estado</strong>: {{ pet.get_status_display }}</small>
 		        </div>
 		    </div>

@@ -241,6 +241,16 @@ class ImageSelectionCreateView(CreateView):
         context['form'].fields['customer'].queryset = customer_qs
         return context
 
+
+class ImageSelectionDetailView(DetailView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.detail.DetailView
+    model = ImageSelection
+
+    def get_queryset(self):
+        return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user)
+
+
 #===============================================================================
 # Album
 #===============================================================================

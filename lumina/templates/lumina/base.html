@@ -33,7 +33,7 @@
 	                                <li><a href="{% url 'customer_list' %}">Lista de clientes</a></li>
                                 {% else %}
                                     <li><a href="{% url 'imageselection_list' %}"
-                                        title="Lista de peticiones de seleccion de imagenes">Lista de peticiones...</a></li>                                
+                                        title="Lista de peticiones de seleccion de imagenes">Lista de peticiones...</a></li>
                                 {% endif %}
 								{% if user.is_staff or user.is_superuser %}
 										<li class="active"><a href="{% url 'admin:lumina_album_changelist' %}" target="_blank">Album</a></li>
