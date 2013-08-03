@@ -40,7 +40,7 @@
 	        <p><span class="badge badge-info">{{ image_selection_pending_count }}</span>
 	                Ud. posee {{ image_selection_pending_count }}
 	                {{ image_selection_pending_count|pluralize:"petición,peticiones" }}
-	                de selección de imagenes. <a href="#">Haga clic aqui</a> para verlas...
+	                de selección de imagenes. <a href="{% url 'imageselection_list' %}">Haga clic aqui</a> para verlas...
 	        </p>
 	        <hr>
         {% endif %}

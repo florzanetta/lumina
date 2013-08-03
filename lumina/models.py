@@ -136,6 +136,9 @@ class ImageSelectionManager(models.Manager):
         """
         return self.filter(customer=user, status=ImageSelection.STATUS_WAITING)
 
+    def all_my_imageselections_as_customer(self, user):
+        return self.filter(customer=user)
+
 
 class ImageSelection(models.Model):
     """

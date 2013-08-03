@@ -181,6 +181,20 @@ class SharedAlbumCreateView(CreateView):
         return context
 
 
+#===============================================================================
+# ImageSelection
+#===============================================================================
+
+
+class ImageSelectionListView(ListView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.list.ListView
+    model = ImageSelection
+
+    def get_queryset(self):
+        return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user)
+
+
 class ImageSelectionCreateView(CreateView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
     # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
