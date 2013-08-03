@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -131,10 +133,17 @@ class ImageSelection(models.Model):
     in low resolution, select the images he/she wants, and after
     confirming the selection, download the selected images in full-resolution.
     """
+    STATUS_WAITING = 'W'
+    STATUS_IMAGES_SELECTED = 'S'
+    STATUS = (
+        (STATUS_WAITING, u'Esperando selección de cliente'),
+        (STATUS_IMAGES_SELECTED, u'Seleccion realizada'),
+    )
     user = models.ForeignKey(User, related_name='+')
     album = models.ForeignKey(Album)
     customer = models.ForeignKey(User, related_name='+')
     image_quantity = models.PositiveIntegerField()
+    status = models.CharField(max_length=1, choices=STATUS, default=STATUS_WAITING)
 
 
 #===============================================================================

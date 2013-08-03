@@ -72,12 +72,14 @@
         <table class="table">
             {% for imageselection in object.imageselection_set.all %}
                 <tr>
-                   <td width="15%">
-                        Solicitud enviada...
-                   </td>
-                   <td width="85%">
-                        <i class="icon-user"></i> {{ imageselection.customer.get_full_name }}
-                            ({{ imageselection.customer.username }})
+                   <td width="100%">
+                        <div>
+	                        <i class="icon-user"></i> {{ imageselection.customer.get_full_name }}
+	                            ({{ imageselection.customer.username }})
+                        </div>
+                        <div>
+                            <em><small>{{ imageselection.get_status_display }}</small></em>
+                        </div>
                    </td>
                 </tr>
             {% empty %}
