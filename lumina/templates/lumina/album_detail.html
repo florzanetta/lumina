@@ -66,6 +66,32 @@
     {% if object.user == user %}
         <!-- the logged in user is the owner of the album -->
 
+        <hr>
+    
+        <h5>Solicitudes de selección de fotos:</h5>
+        <table class="table">
+            {% for imageselection in object.imageselection_set.all %}
+                <tr>
+                   <td width="15%">
+                        Solicitud enviada...
+                   </td>
+                   <td width="85%">
+                        <i class="icon-user"></i> {{ imageselection.customer.get_full_name }}
+                            ({{ imageselection.customer.username }})
+                   </td>
+                </tr>
+            {% empty %}
+                <tr><td><small>No hay ninguna solicitud...</small></td></tr>
+            {% endfor %}
+        </table>
+
+    {% endif %}
+
+    <!-- // Buttons on bottom of page -->
+
+    {% if object.user == user %}
+        <!-- the logged in user is the owner of the album -->
+
 	    <hr>
 
 	    <p>
