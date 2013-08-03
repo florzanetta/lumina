@@ -85,6 +85,18 @@ class SharedAlbumManager(models.Manager, ForUserManagerMixin):
 
 
 class SharedAlbum(models.Model):
+    """
+    Represents an album shared via email.
+
+    An email is sent to the receiver, with a link to view the album.
+    To view the almbum, the receiver just need the link, and doens't
+    need to have an account nor bie logged in.
+
+    Anyone with the link can see tha images of the album.
+
+    With the current implementation, all the images of the album
+    can be seen, and downloaded.
+    """
     shared_with = models.EmailField(max_length=254)
     # https://docs.djangoproject.com/en/1.5/ref/models/fields/#emailfield
     user = models.ForeignKey(User)
@@ -110,6 +122,16 @@ class SharedAlbum(models.Model):
 
 
 class ImageSelection(models.Model):
+    """
+    Represents a request of the phtographer (user) to one
+    of his customers (customer) to let the customer select
+    which of the images of the album he wants.
+
+    The customer will be able to see thumbnails of the images
+    in low resolution, select the images he/she wants, and after
+    confirming the selection, download the selected images in full-resolution.
+    """
+    user = models.ForeignKey(User)
     album = models.ForeignKey(Album)
     customer = models.ForeignKey(User)
     image_quantity = models.PositiveIntegerField()
