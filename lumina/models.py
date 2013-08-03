@@ -123,6 +123,20 @@ class SharedAlbum(models.Model):
                 image_id, self.id)))
 
 
+#===============================================================================
+# ImageSelection
+#===============================================================================
+
+class ImageSelectionManager(models.Manager):
+
+    def pending_image_selections(self, user):
+        """
+        Returns ImageSelection instances for which the customer
+        has to do the selection of the images.
+        """
+        return self.filter(customer=user, status=ImageSelection.STATUS_WAITING)
+
+
 class ImageSelection(models.Model):
     """
     Represents a request of the phtographer (user) to one
@@ -144,6 +158,8 @@ class ImageSelection(models.Model):
     customer = models.ForeignKey(User, related_name='+')
     image_quantity = models.PositiveIntegerField()
     status = models.CharField(max_length=1, choices=STATUS, default=STATUS_WAITING)
+
+    objects = ImageSelectionManager()
 
 
 #===============================================================================

@@ -28,13 +28,22 @@
         <hr>
 
         <h4>Albumes que otros han compartido con vos</h4>
-
         <p><span class="badge badge-info">{{ others_album_count }}</span>
                 album{{ others_album_count|pluralize:",es" }} ha{{ others_album_count|pluralize:",n" }}
                 sido compartido{{ others_album_count|pluralize }} con vos.
         </p>
 
         <hr>
+
+        {% if user|user_is_customer %}
+	        <h4>Peticiones de selección de fotos pendientes...</h4>
+	        <p><span class="badge badge-info">{{ image_selection_pending_count }}</span>
+	                Ud. posee {{ image_selection_pending_count }}
+	                {{ image_selection_pending_count|pluralize:"petición,peticiones" }}
+	                de selección de imagenes. <a href="#">Haga clic aqui</a> para verlas...
+	        </p>
+	        <hr>
+        {% endif %}
 
         <!--
         # Google OAuth doesn't work yet...
@@ -67,7 +76,7 @@
         </p>
     {% endif %}
 
-	{% dump_objects user user.social_auth.all social_auth social_auth.twitter %}
+	{% dump_objects user user.luminauserprofile user.social_auth.all social_auth social_auth.twitter %}
 
 {% endblock content %}
 
