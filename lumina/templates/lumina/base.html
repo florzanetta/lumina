@@ -13,6 +13,8 @@
 	       font-size: small;
 	       color: gray;
 	   }
+	   {% block css %}
+	   {% endblock %}
 	</style>
 </head>
 <body>
@@ -114,5 +116,7 @@
     </div>
 <script src="/static/jquery-1.9.1.min.js"></script>
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+{% block javascript_bottom %}
+{% endblock %}
 </body>
 </html>
