@@ -1,4 +1,4 @@
-# Create your views here.
+# -*- coding: utf-8 -*-
 
 import os
 import uuid
@@ -18,11 +18,11 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 
-from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile,\
+from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile, \
     UserProxy, ImageSelection
 from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
-    AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm,\
+    AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm, \
     CustomerUpdateForm, ImageSelectionForm
 
 
@@ -185,6 +185,35 @@ class ImageSelectionCreateView(CreateView):
     model = ImageSelection
     form_class = ImageSelectionForm
     template_name = 'lumina/imageselection_create_form.html'
+
+    def get_initial(self):
+        initial = super(ImageSelectionCreateView, self).get_initial()
+        if 'id_album' in self.request.GET:
+            initial.update({
+                'album': self.request.GET['id_album'],
+            })
+        return initial
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        ret = super(ImageSelectionCreateView, self).form_valid(form)
+
+        subject = "Solicitud de seleccion de imagenes"
+        from_email = "Lumina <notifications@lumina-photo.com.ar>"
+        to_email = form.instance.customer.email
+        #link = "http://127.0.0.1:8000/shared/album/anonymous/view/{}/"
+        #link = link.format(form.instance.random_hash)
+        link = self.request.build_absolute_uri(
+            reverse('album_detail', args=[form.instance.album.id]))
+        message = u"Tiene una nueva solicitud para seleccionar fotografías.\n" + \
+            "Para verlo ingrese a {}".format(link)
+        msg = EmailMessage(subject, message, from_email, [to_email])
+        msg.send(fail_silently=False)
+
+        messages.success(
+            self.request, 'La solicitud de seleccion de imagenes '
+            'fue creada correctamente.')
+        return ret
 
     def get_success_url(self):
         return reverse('album_detail', args=[self.object.album.pk])
