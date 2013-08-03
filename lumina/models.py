@@ -131,9 +131,9 @@ class ImageSelection(models.Model):
     in low resolution, select the images he/she wants, and after
     confirming the selection, download the selected images in full-resolution.
     """
-    user = models.ForeignKey(User)
-    album = models.ForeignKey(Album)
-    customer = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name='+')
+    album = models.ForeignKey(Album, related_name='+')
+    customer = models.ForeignKey(User, related_name='+')
     image_quantity = models.PositiveIntegerField()
 
 
