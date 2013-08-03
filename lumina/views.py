@@ -16,7 +16,7 @@ from django.core.files.storage import default_storage
 from django.views.decorators.cache import cache_control
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.models import User
-from django.core.mail import send_mail, BadHeaderError, EmailMessage
+from django.core.mail import EmailMessage
 
 from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile,\
     UserProxy, ImageSelection

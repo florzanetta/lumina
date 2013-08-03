@@ -42,6 +42,6 @@ nosetests.xml
 *.toc
 *.aux
 
-/virtualenv
+/virtualenv*/
 /travic-ci
 /lumina/local_settings.py
