@@ -12,8 +12,20 @@
               &nbsp;
               <small><span class="label">{{ image.content_type }}</span></small>
               &nbsp;
-              <small><a href="{% url 'image_download' image.pk %}" class="btn btn-primary btn-mini">Bajar</a></small>
+              <small><a href="{% url 'image_download' image.pk %}"
+                class="btn btn-primary btn-mini lumina_download_image">Bajar</a></small>
+
+            {% if checkbox_for_selection %}
+				<label class="checkbox" for="selected_images_{{ image.id }}"><input
+                        type="checkbox" name="selected_images" value="{{ image.id }}"
+                        id="selected_images_{{ image.id }}"> Seleccionar
+                </label>
+            {% endif %}
+
         </div>
     </div>
 </div>
+
+{% if not nohr %}
 <hr>
+{% endif %}
