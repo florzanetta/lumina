@@ -184,7 +184,7 @@ class ImageSelectionCreateView(CreateView):
     # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
     model = ImageSelection
     form_class = ImageSelectionForm
-    template_name = 'lumina/selection_create_form.html'
+    template_name = 'lumina/imageselection_create_form.html'
 
     def get_success_url(self):
         return reverse('album_detail', args=[self.object.album.pk])

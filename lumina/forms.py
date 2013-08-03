@@ -29,7 +29,7 @@ class ImageSelectionForm(forms.ModelForm):
 
     class Meta:
         model = ImageSelection
-        #exclude = ('user', 'random_hash',)
+        exclude = ('user',)
 
 
 #===============================================================================
