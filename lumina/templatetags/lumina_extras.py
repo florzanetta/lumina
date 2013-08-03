@@ -101,3 +101,19 @@ def user_is_customer(user):
     except LuminaUserProfile.DoesNotExist:
         # If Profile doens't exists, assume is a photographer...
         return False
+
+
+@register.filter(name='user_is_photographer')
+def user_is_photographer(user):
+    if user is None:
+        return False
+
+    try:
+        profile = user.luminauserprofile
+        if profile.user_type == LuminaUserProfile.PHOTOGRAPHER:
+            return True
+        else:
+            return False
+    except LuminaUserProfile.DoesNotExist:
+        # If Profile doens't exists, assume is a photographer...
+        return True
