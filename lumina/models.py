@@ -175,10 +175,28 @@ class ImageManager(models.Manager, ForUserManagerMixin):
         """Returns all the user's images"""
         return self.for_user(user)
 
-    def all_visible(self, user):
+    def all_previsualisable(self, user):
         """
-        Returns all the visible images for an user
+        Returns all the visible images for preview, ie: thumbnails or low quality.
+
+        Some of the images may be downloaded (in full resolution).
         (ie: the user's images + the images of shared albums of other users)
+        but other won't be downloadable (images from ImageSelection)
+
+        See `all_downloable()`.
+        """
+        return self.filter(
+            Q(user=user) |
+            Q(album__shared_with=user) |
+            Q(album__imageselection__customer=user)
+        )
+
+    def all_downloable(self, user):
+        """
+        Returns all the downloable images for an user
+        (ie: the user's images + the images of shared albums of other users)
+
+        See `all_visible_low_quality()`.
         """
         return self.filter(Q(user=user) | Q(album__shared_with=user))
 
