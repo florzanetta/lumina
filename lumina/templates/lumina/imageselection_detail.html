@@ -14,6 +14,7 @@
     <hr>
 
     <h5>Imágenes del album:</h5>
+
     {% for image in object.album.image_set.all %}
         {% include 'lumina/include/image.html' with image=image only %}
     {% empty %}
@@ -22,6 +23,21 @@
     {% endfor %}
 
 {% endblock content %}
+
+{% block javascript_bottom %}
+
+	<script type="text/javascript">
+	   {% if object.album.user != user %}
+			$(document).ready(function() {
+				$('.lumina_download_image').addClass('disabled');
+				$('.lumina_download_image').bind('click', function(e){
+				     e.preventDefault();
+				});
+			});
+		{% endif %}
+	</script>
+
+{% endblock %}
 
 </body>
 </html>

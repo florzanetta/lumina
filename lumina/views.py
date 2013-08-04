@@ -196,6 +196,10 @@ class ImageSelectionListView(ListView):
 
 
 class ImageSelectionCreateView(CreateView):
+    """
+    With this view, the photographer creates a request
+    to the customer.
+    """
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
     # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
     model = ImageSelection
@@ -242,13 +246,48 @@ class ImageSelectionCreateView(CreateView):
         return context
 
 
+class ImageSelectionUpdateView(DetailView):
+    """
+    With this view, the customer selects the images he/she wants.
+    """
+    # Here we use DetailView instead of UpdateView because we
+    # can't use a form to set the MtoM, so it's easier to use
+    # the model instance + request values
+    #
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
+    model = ImageSelection
+    template_name = 'lumina/imageselection_update_for_customer_form.html'
+
+    def get_queryset(self):
+        return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user)
+
+    #
+    # This is the default implementation for GET, just for reference pourposes
+    #
+    #    def get(self, request, *args, **kwargs):
+    #        self.object = self.get_object()
+    #        context = self.get_context_data(object=self.object)
+    #        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        messages.success(self.request, 'ACA SE HUBIERA ACTUALIZADO EL MODELO')
+        return reverse('imageselection_select_images', args=[self.object.id])
+
+
 class ImageSelectionDetailView(DetailView):
+    """
+    This view shows in read-only an ImageSelectoin instance.
+
+    This should be used for album's owner, and the customer (only
+    after he/she has selected the images).
+    """
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
     #    #django.views.generic.detail.DetailView
     model = ImageSelection
 
     def get_queryset(self):
-        return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user)
+        return ImageSelection.objects.all_my_accessible_imageselections(self.request.user)
 
 
 #===============================================================================

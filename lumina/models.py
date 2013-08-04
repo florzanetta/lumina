@@ -136,6 +136,16 @@ class ImageSelectionManager(models.Manager):
         """
         return self.filter(customer=user, status=ImageSelection.STATUS_WAITING)
 
+    def all_my_accessible_imageselections(self, user):
+        """
+        Returns all the ImageSelection instances including those for what the user
+        is the customer, and those for what the user is the owner of the album
+        """
+        return self.filter(
+            Q(customer=user) |
+            Q(album__user=user)
+        )
+
     def all_my_imageselections_as_customer(self, user):
         return self.filter(customer=user)
 
@@ -149,6 +159,8 @@ class ImageSelection(models.Model):
     The customer will be able to see thumbnails of the images
     in low resolution, select the images he/she wants, and after
     confirming the selection, download the selected images in full-resolution.
+
+    The `user` should be the owner of the `album`.
     """
     STATUS_WAITING = 'W'
     STATUS_IMAGES_SELECTED = 'S'
@@ -161,6 +173,8 @@ class ImageSelection(models.Model):
     customer = models.ForeignKey(User, related_name='+')
     image_quantity = models.PositiveIntegerField()
     status = models.CharField(max_length=1, choices=STATUS, default=STATUS_WAITING)
+
+    selected_images = models.ManyToManyField('Image')
 
     objects = ImageSelectionManager()
 
