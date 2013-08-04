@@ -9,19 +9,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'ImageSelection'
-        db.create_table(u'lumina_imageselection', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('album', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['lumina.Album'])),
-            ('customer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('image_quantity', self.gf('django.db.models.fields.PositiveIntegerField')()),
-        ))
-        db.send_create_signal(u'lumina', ['ImageSelection'])
+        # Adding field 'ImageSelection.user'
+        db.add_column(u'lumina_imageselection', 'user',
+                      self.gf('django.db.models.fields.related.ForeignKey')(default=-1, related_name='+', to=orm['auth.User']),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting model 'ImageSelection'
-        db.delete_table(u'lumina_imageselection')
+        # Deleting field 'ImageSelection.user'
+        db.delete_column(u'lumina_imageselection', 'user_id')
 
 
     models = {
@@ -80,10 +76,11 @@ class Migration(SchemaMigration):
         },
         u'lumina.imageselection': {
             'Meta': {'object_name': 'ImageSelection'},
-            'album': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['lumina.Album']"}),
-            'customer': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
+            'album': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['lumina.Album']"}),
+            'customer': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['auth.User']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image_quantity': ('django.db.models.fields.PositiveIntegerField', [], {})
+            'image_quantity': ('django.db.models.fields.PositiveIntegerField', [], {}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['auth.User']"})
         },
         u'lumina.luminauserprofile': {
             'Meta': {'object_name': 'LuminaUserProfile'},

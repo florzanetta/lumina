@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -85,6 +87,18 @@ class SharedAlbumManager(models.Manager, ForUserManagerMixin):
 
 
 class SharedAlbum(models.Model):
+    """
+    Represents an album shared via email.
+
+    An email is sent to the receiver, with a link to view the album.
+    To view the almbum, the receiver just need the link, and doens't
+    need to have an account nor bie logged in.
+
+    Anyone with the link can see tha images of the album.
+
+    With the current implementation, all the images of the album
+    can be seen, and downloaded.
+    """
     shared_with = models.EmailField(max_length=254)
     # https://docs.djangoproject.com/en/1.5/ref/models/fields/#emailfield
     user = models.ForeignKey(User)
@@ -109,10 +123,46 @@ class SharedAlbum(models.Model):
                 image_id, self.id)))
 
 
+#===============================================================================
+# ImageSelection
+#===============================================================================
+
+class ImageSelectionManager(models.Manager):
+
+    def pending_image_selections(self, user):
+        """
+        Returns ImageSelection instances for which the customer
+        has to do the selection of the images.
+        """
+        return self.filter(customer=user, status=ImageSelection.STATUS_WAITING)
+
+    def all_my_imageselections_as_customer(self, user):
+        return self.filter(customer=user)
+
+
 class ImageSelection(models.Model):
+    """
+    Represents a request of the phtographer (user) to one
+    of his customers (customer) to let the customer select
+    which of the images of the album he wants.
+
+    The customer will be able to see thumbnails of the images
+    in low resolution, select the images he/she wants, and after
+    confirming the selection, download the selected images in full-resolution.
+    """
+    STATUS_WAITING = 'W'
+    STATUS_IMAGES_SELECTED = 'S'
+    STATUS = (
+        (STATUS_WAITING, u'Esperando selección de cliente'),
+        (STATUS_IMAGES_SELECTED, u'Seleccion realizada'),
+    )
+    user = models.ForeignKey(User, related_name='+')
     album = models.ForeignKey(Album)
-    customer = models.ForeignKey(User)
+    customer = models.ForeignKey(User, related_name='+')
     image_quantity = models.PositiveIntegerField()
+    status = models.CharField(max_length=1, choices=STATUS, default=STATUS_WAITING)
+
+    objects = ImageSelectionManager()
 
 
 #===============================================================================
@@ -125,10 +175,28 @@ class ImageManager(models.Manager, ForUserManagerMixin):
         """Returns all the user's images"""
         return self.for_user(user)
 
-    def all_visible(self, user):
+    def all_previsualisable(self, user):
         """
-        Returns all the visible images for an user
+        Returns all the visible images for preview, ie: thumbnails or low quality.
+
+        Some of the images may be downloaded (in full resolution).
         (ie: the user's images + the images of shared albums of other users)
+        but other won't be downloadable (images from ImageSelection)
+
+        See `all_downloable()`.
+        """
+        return self.filter(
+            Q(user=user) |
+            Q(album__shared_with=user) |
+            Q(album__imageselection__customer=user)
+        )
+
+    def all_downloable(self, user):
+        """
+        Returns all the downloable images for an user
+        (ie: the user's images + the images of shared albums of other users)
+
+        See `all_visible_low_quality()`.
         """
         return self.filter(Q(user=user) | Q(album__shared_with=user))
 

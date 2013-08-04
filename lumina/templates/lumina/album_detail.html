@@ -21,41 +21,86 @@
 	    <hr>
     {% endfor %}
 
-    <h5>Compartido con clientes:</h5>
-    <table class="table">
-        {% for customer in object.shared_with.all %}
-            <tr>
-               <td>
-                    <i class="icon-user"></i> {{ customer.get_full_name }}
-                    ({{ customer.username }})
-               </td>
-            </tr>
-        {% empty %}
-            <tr><td>El album no ha sido compartido con ningún cliente</td></tr>
-        {% endfor %}
-    </table>
+    {% if object.user == user %}
+        <!-- the logged in user is the owner of the album -->
 
-    <hr>
+	    <h5>
+	       Compartido con clientes:
+	           &nbsp;&nbsp;&nbsp;<i class="icon-question-sign"></i><small> Para compartir un album con un cliente, utilice <strong>Actualizar album</strong></small>
+	    </h5>
+	    <table class="table">
+	        {% for customer in object.shared_with.all %}
+	            <tr>
+	               <td>
+	                    <i class="icon-user"></i> {{ customer.get_full_name }}
+	                    ({{ customer.username }})
+	               </td>
+	            </tr>
+	        {% empty %}
+	            <tr><td>El album no ha sido compartido con ningún cliente</td></tr>
+	        {% endfor %}
+	    </table>
 
-    <h5>Compartido via email:</h5>
-    <table class="table">
-        {% for sharedalbum in object.shares_via_email.all %}
-            <tr>
-               <td width="5%"><a href="{% url 'shared_album_view' sharedalbum.random_hash %}">Link</a></td>
-               <td width="95%"><i class="icon-envelope"></i> {{ sharedalbum.shared_with }}</td>
-            </tr>
-        {% empty %}
-            <tr><td>El album no ha sido compartido via email</td></tr>
-        {% endfor %}
-    </table>
-
-    <hr>
+    {% endif %}
 
     {% if object.user == user %}
+        <!-- the logged in user is the owner of the album -->
+
+	    <hr>
+	
+	    <h5>Compartido via email:</h5>
+	    <table class="table">
+	        {% for sharedalbum in object.shares_via_email.all %}
+	            <tr>
+	               <td width="5%"><a href="{% url 'shared_album_view' sharedalbum.random_hash %}">Link</a></td>
+	               <td width="95%"><i class="icon-envelope"></i> {{ sharedalbum.shared_with }}</td>
+	            </tr>
+	        {% empty %}
+	            <tr><td>El album no ha sido compartido via email</td></tr>
+	        {% endfor %}
+	    </table>
+
+    {% endif %}
+
+
+    {% if object.user == user %}
+        <!-- the logged in user is the owner of the album -->
+
+        <hr>
+    
+        <h5>Solicitudes de selección de fotos:</h5>
+        <table class="table">
+            {% for imageselection in object.imageselection_set.all %}
+                <tr>
+                   <td width="100%">
+                        <div>
+	                        <i class="icon-user"></i> {{ imageselection.customer.get_full_name }}
+	                            ({{ imageselection.customer.username }})
+                        </div>
+                        <div>
+                            <em><small>{{ imageselection.get_status_display }}</small></em>
+                        </div>
+                   </td>
+                </tr>
+            {% empty %}
+                <tr><td><small>No hay ninguna solicitud...</small></td></tr>
+            {% endfor %}
+        </table>
+
+    {% endif %}
+
+    <!-- // Buttons on bottom of page -->
+
+    {% if object.user == user %}
+        <!-- the logged in user is the owner of the album -->
+
+	    <hr>
+
 	    <p>
 		    <a href="{% url 'album_update' object.pk %}" class="btn btn-primary">Actualizar album</a>
 		    <a href="{% url 'image_create' %}?id_album={{ object.pk }}" class="btn btn-primary">Agregar imagen</a>
-		    <a href="{% url 'shared_album_create' %}?id_album={{ object.pk }}" class="btn btn-primary">Compartir album via email</a>
+            <a href="{% url 'shared_album_create' %}?id_album={{ object.pk }}" class="btn btn-primary">Compartir album via email</a>
+            <a href="{% url 'image_selection_create' %}?id_album={{ object.pk }}" class="btn btn-primary">Solicitar selección de imágenes</a>
 	    </p>
     {% endif %}
 

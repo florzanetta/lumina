@@ -13,6 +13,8 @@
 	       font-size: small;
 	       color: gray;
 	   }
+	   {% block css %}
+	   {% endblock %}
 	</style>
 </head>
 <body>
@@ -25,11 +27,16 @@
 						<li><a href="{% url 'home' %}">Home</a></li>
 						{% if user.is_authenticated %}
 								<li><a href="{% url 'album_list' %}">Lista de albumes</a></li>
-								<li><a href="{% url 'album_create' %}">Agregar album</a></li>
-								<li><a href="{% url 'shared_album_create' %}">Compartir album</a></li>
-								<li><a href="{% url 'image_list' %}">Lista de imagenes</a></li>
-                                <li><a href="{% url 'image_create' %}">Agregar imagen</a></li>
-                                <li><a href="{% url 'customer_list' %}">Lista de clientes</a></li>
+								{% if user|user_is_photographer %}
+									<li><a href="{% url 'album_create' %}">Agregar album</a></li>
+									<li><a href="{% url 'shared_album_create' %}">Compartir album</a></li>
+									<li><a href="{% url 'image_list' %}">Lista de imagenes</a></li>
+	                                <li><a href="{% url 'image_create' %}">Agregar imagen</a></li>
+	                                <li><a href="{% url 'customer_list' %}">Lista de clientes</a></li>
+                                {% else %}
+                                    <li><a href="{% url 'imageselection_list' %}"
+                                        title="Lista de peticiones de seleccion de imagenes">Lista de peticiones...</a></li>
+                                {% endif %}
 								{% if user.is_staff or user.is_superuser %}
 										<li class="active"><a href="{% url 'admin:lumina_album_changelist' %}" target="_blank">Album</a></li>
 										<li class="active"><a href="{% url 'admin:lumina_image_changelist' %}" target="_blank">Image</a></li>
@@ -109,5 +116,7 @@
     </div>
 <script src="/static/jquery-1.9.1.min.js"></script>
 <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+{% block javascript_bottom %}
+{% endblock %}
 </body>
 </html>

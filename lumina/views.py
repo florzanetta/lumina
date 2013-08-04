@@ -1,4 +1,4 @@
-# Create your views here.
+# -*- coding: utf-8 -*-
 
 import os
 import uuid
@@ -16,13 +16,13 @@ from django.core.files.storage import default_storage
 from django.views.decorators.cache import cache_control
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.models import User
-from django.core.mail import send_mail, BadHeaderError, EmailMessage
+from django.core.mail import EmailMessage
 
-from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile,\
+from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile, \
     UserProxy, ImageSelection
 from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
-    AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm,\
+    AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm, \
     CustomerUpdateForm, ImageSelectionForm
 
 
@@ -45,6 +45,8 @@ def home(request):
             'shared_album_via_email_count': SharedAlbum.objects.all_my_shares(
                 request.user).count(),
             'others_album_count': Album.objects.shared_with_me(request.user).count(),
+            'image_selection_pending_count': ImageSelection.objects.pending_image_selections(
+                request.user).count(),
 #            'auth_providers': request.user.social_auth.get_providers(),
         }
     else:
@@ -92,21 +94,21 @@ def _image_download(request, image):
 @login_required
 @cache_control(private=True)
 def image_thumb_64x64(request, image_id):
-    image = Image.objects.all_visible(request.user).get(pk=image_id)
+    image = Image.objects.all_previsualisable(request.user).get(pk=image_id)
     return _image_thumb(request, image, 64)
 
 
 @login_required
 @cache_control(private=True)
 def image_thumb(request, image_id, max_size=None):
-    image = Image.objects.all_visible(request.user).get(pk=image_id)
+    image = Image.objects.all_previsualisable(request.user).get(pk=image_id)
     return _image_thumb(request, image, 64)
 
 
 @login_required
 @cache_control(private=True)
 def image_download(request, image_id):
-    image = Image.objects.all_visible(request.user).get(pk=image_id)
+    image = Image.objects.all_downloable(request.user).get(pk=image_id)
     return _image_download(request, image)
 
 
@@ -179,12 +181,55 @@ class SharedAlbumCreateView(CreateView):
         return context
 
 
+#===============================================================================
+# ImageSelection
+#===============================================================================
+
+
+class ImageSelectionListView(ListView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.list.ListView
+    model = ImageSelection
+
+    def get_queryset(self):
+        return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user)
+
+
 class ImageSelectionCreateView(CreateView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
     # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
     model = ImageSelection
     form_class = ImageSelectionForm
-    template_name = 'lumina/selection_create_form.html'
+    template_name = 'lumina/imageselection_create_form.html'
+
+    def get_initial(self):
+        initial = super(ImageSelectionCreateView, self).get_initial()
+        if 'id_album' in self.request.GET:
+            initial.update({
+                'album': self.request.GET['id_album'],
+            })
+        return initial
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        ret = super(ImageSelectionCreateView, self).form_valid(form)
+
+        subject = "Solicitud de seleccion de imagenes"
+        from_email = "Lumina <notifications@lumina-photo.com.ar>"
+        to_email = form.instance.customer.email
+        #link = "http://127.0.0.1:8000/shared/album/anonymous/view/{}/"
+        #link = link.format(form.instance.random_hash)
+        link = self.request.build_absolute_uri(
+            reverse('album_detail', args=[form.instance.album.id]))
+        message = u"Tiene una nueva solicitud para seleccionar fotografías.\n" + \
+            "Para verlo ingrese a {}".format(link)
+        msg = EmailMessage(subject, message, from_email, [to_email])
+        msg.send(fail_silently=False)
+
+        messages.success(
+            self.request, 'La solicitud de seleccion de imagenes '
+            'fue creada correctamente.')
+        return ret
 
     def get_success_url(self):
         return reverse('album_detail', args=[self.object.album.pk])
@@ -195,6 +240,16 @@ class ImageSelectionCreateView(CreateView):
         customer_qs = UserProxy.custom_objects.all_my_customers(self.request.user)
         context['form'].fields['customer'].queryset = customer_qs
         return context
+
+
+class ImageSelectionDetailView(DetailView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.detail.DetailView
+    model = ImageSelection
+
+    def get_queryset(self):
+        return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user)
+
 
 #===============================================================================
 # Album

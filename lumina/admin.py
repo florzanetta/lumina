@@ -1,7 +1,9 @@
 from django.contrib import admin
-from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile
+from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile,\
+    ImageSelection
 
 admin.site.register(Image)
 admin.site.register(Album)
 admin.site.register(SharedAlbum)
 admin.site.register(LuminaUserProfile)
+admin.site.register(ImageSelection)
