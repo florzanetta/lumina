@@ -1,20 +1,23 @@
-{% load lumina_extras %}<!DOCTYPE html>
+{% load lumina_extras %}
+<!DOCTYPE html>
 <html>
 <head>
-    <title>{% block title %}Lumina{% endblock %}</title>
+	<title>{% block title %}Lumina{% endblock %}</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet"
+		media="screen">
 	<style type="text/css">
-	   ul.errorlist li {
-	       color: #e00;
-	   }
-	   .helptext {
-	       font-size: small;
-	       color: gray;
-	   }
-	   {% block css %}
-	   {% endblock %}
+		ul.errorlist li {
+			color: #e00;
+		}
+		
+		.helptext {
+			font-size: small;
+			color: gray;
+		}
+		{% block css %}
+		{% endblock %}
 	</style>
 </head>
 <body>
@@ -22,101 +25,140 @@
 	<div class="container">
 
 		<div class="masthead">
-				<ul class="nav nav-pills pull-right">
-						<!-- <li class="active"> -->
-						<li><a href="{% url 'home' %}">Home</a></li>
+			<div class="navbar">
+				<div class="navbar-inner">
+					<!-- <li class="active"> -->
+					<ul class="nav">
+						<li><a href="{% url 'home' %}">Home</a></li> 
 						{% if user.is_authenticated %}
-								<li><a href="{% url 'album_list' %}">Lista de albumes</a></li>
-								{% if user|user_is_photographer %}
-									<li><a href="{% url 'album_create' %}">Agregar album</a></li>
-									<li><a href="{% url 'shared_album_create' %}">Compartir album</a></li>
-									<li><a href="{% url 'image_list' %}">Lista de imagenes</a></li>
-	                                <li><a href="{% url 'image_create' %}">Agregar imagen</a></li>
-	                                <li><a href="{% url 'customer_list' %}">Lista de clientes</a></li>
-                                {% else %}
-                                    <li><a href="{% url 'imageselection_list' %}"
-                                        title="Lista de peticiones de seleccion de imagenes">Lista de peticiones...</a></li>
-                                {% endif %}
-								{% if user.is_staff or user.is_superuser %}
-										<li class="active"><a href="{% url 'admin:lumina_album_changelist' %}" target="_blank">Album</a></li>
-										<li class="active"><a href="{% url 'admin:lumina_image_changelist' %}" target="_blank">Image</a></li>
-										<li class="active"><a href="{% url 'admin:lumina_sharedalbum_changelist' %}" target="_blank">Shared</a></li>
-								{% endif %}
-								<li><a href="{% url 'logout' %}">Salir</a></li>
-								{% if 'twitter' in social_auth|non_empty_unicode_keys %}
-	                                <li><img alt="Logged in with Twitter" src="/static/twitter-icon-16x16.jpg"></li>
-								{% endif %}
-						{% else %}
-								<li><a href="{% url 'django.contrib.auth.views.login' %}?next=/">Iniciar sesión</a></li>
+							<li class="dropdown"><a class="dropdown-toggle"
+								data-toggle="dropdown" href="#">Albums <b class="caret"></b>
+							</a>
+								<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+									<li><a href="{% url 'album_list' %}">Lista de albumes</a></li>
+							{% if user|user_is_photographer %}
+										<li><a href="{% url 'album_create' %}">Agregar album</a></li>
+										<li><a href="{% url 'shared_album_create' %}">Compartir
+												album</a></li>
+		
+									</ul></li>
+								<li class="dropdown"><a class="dropdown-toggle"
+									data-toggle="dropdown" href="#">Imagenes <b class="caret"></b></a>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+										<li><a href="{% url 'image_list' %}">Lista de imagenes</a></li>
+										<li><a href="{% url 'image_create' %}">Agregar imagen</a></li>
+									</ul>
+								</li>
+								<li class="dropdown"><a class="dropdown-toggle"
+									data-toggle="dropdown" href="#">Clientes <b class="caret"></b></a>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+										<li><a href="{% url 'customer_list' %}">Lista de
+												clientes</a></li>
+										<li><a href="{% url 'customer_create' %}">Agregar cliente</a></li>
+									</ul>
+								</li> 
+							{% else %} <!-- user is client -->
+									<li><a href="{% url 'imageselection_list' %}"
+										title="Lista de peticiones de seleccion de imagenes">Lista de
+											peticiones...</a>
+									</li>
+								</ul>
+							</li> 
+							{% endif %} 
+							{% if user.is_staff or user.is_superuser %}
+					<li class="dropdown"><a class="dropdown-toggle"
+						data-toggle="dropdown" href="#">Admin <b class="caret"></b></a>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+							<li class="active"><a
+								href="{% url 'admin:lumina_album_changelist' %}" target="_blank">Album</a></li>
+							<li class="active"><a
+								href="{% url 'admin:lumina_image_changelist' %}" target="_blank">Image</a></li>
+							<li class="active"><a
+								href="{% url 'admin:lumina_sharedalbum_changelist' %}"
+								target="_blank">Shared</a></li>
+						</ul></li> 
+							{% endif %}
+					</ul>
+					<ul class="nav pull-right">
+						<li class="pull-right"><a href="{% url 'logout' %}">Salir</a></li>
+							{% if 'twitter' in social_auth|non_empty_unicode_keys %}
+						<li><img alt="Logged in with Twitter"
+							src="/static/twitter-icon-16x16.jpg"></li> 
+							{% endif %} 
+						{% else	%}
+						<li><a
+							href="{% url 'django.contrib.auth.views.login' %}?next=/">Iniciar
+								sesión</a></li> 
 						{% endif %}
-				</ul>
-				<h3 class="muted">Lumina</h3>
-		</div> <!-- END DIV.masthead -->
+					</ul>
+				</div>
+				<!-- navbar inner -->
+			</div>
+			<!-- navbar -->
+			<h3 class="muted">Lumina</h3>
+		</div>
+		<!-- END DIV.masthead -->
 
-    <hr/>
- 
-	{% for message in messages %}
-	   {% if "error" in message.tags %}
+		<hr />
 
-	        <div class="alert alert-error">
-	            <button type="button" class="close" data-dismiss="alert">&times;</button>
-	            <h4>Error!</h4>
-	            {{ message }}
-	        </div>
+		{% for message in messages %} 
+		
+		{% if "error" in message.tags %}
 
-       {% elif "warning" in message.tags %}
+		<div class="alert alert-error">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<h4>Error!</h4>
+			{{ message }}
+		</div>
 
-            <div class="alert alert-block">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <h4>Atencion!</h4>
-                {{ message }}
-            </div>
+		{% elif "warning" in message.tags %}
 
-       {% elif "success" in message.tags %}
+		<div class="alert alert-block">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<h4>Atencion!</h4>
+			{{ message }}
+		</div>
 
-            <div class="alert alert-success">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <h4>Finalizado:</h4>
-                {{ message }}
-            </div>
+		{% elif "success" in message.tags %}
 
-       {% elif "info" in message.tags %}
+		<div class="alert alert-success">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<h4>Finalizado:</h4>
+			{{ message }}
+		</div>
 
-            <div class="alert alert-info">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <h4>Informacoin:</h4>
-                {{ message }}
-            </div>
+		{% elif "info" in message.tags %}
 
-       {% elif "debug" in message.tags %}
+		<div class="alert alert-info">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<h4>Informacion:</h4>
+			{{ message }}
+		</div>
 
-            {# the same as "INFO" #}
-            <div class="alert alert-info">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <h4>Informacoin:</h4>
-                {{ message }}
-            </div>
+		{% elif "debug" in message.tags %} {# the same as "INFO" #}
+		<div class="alert alert-info">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<h4>Informacion:</h4>
+			{{ message }}
+		</div>
 
-       {% else %}
+		{% else %} {# the same as "INFO" #}
+		<div class="alert alert-info">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<h4>Informacion:</h4>
+			{{ message }}
+		</div>
 
-            {# the same as "INFO" #}
-            <div class="alert alert-info">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <h4>Informacoin:</h4>
-                {{ message }}
-            </div>
+		{% endif %} 
+		{% endfor %} 
+		
+		{% block content %} 
+		{% endblock content %}
 
-       {% endif %}
-	   
-	{% endfor %}
-
-{% block content %}
-{% endblock content %}
-
-    </div>
-<script src="/static/jquery-1.9.1.min.js"></script>
-<script src="/static/bootstrap/js/bootstrap.min.js"></script>
-{% block javascript_bottom %}
-{% endblock %}
+	</div>
+	<script src="/static/jquery-1.9.1.min.js"></script>
+	<script src="/static/bootstrap/js/bootstrap.min.js"></script>
+	{% block javascript_bottom %} 
+	{% endblock %}
 </body>
 </html>
