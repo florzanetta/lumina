@@ -155,8 +155,8 @@ class SharedAlbumCreateView(CreateView):
         #link = link.format(form.instance.random_hash)
         link = self.request.build_absolute_uri(
             reverse('shared_album_view', args=[form.instance.random_hash]))
-        message = "Tiene un nuevo album compartido.\nPara verlo ingrese a {}".format(link)
-        msg = EmailMessage(subject, message, from_email, [to_email])
+        body = "Tiene un nuevo album compartido.\nPara verlo ingrese a {}".format(link)
+        msg = EmailMessage(subject, body, from_email, [to_email])
         msg.send(fail_silently=False)
 
         messages.success(self.request, 'El album fue compartido correctamente')
