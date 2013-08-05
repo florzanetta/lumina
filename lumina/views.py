@@ -38,6 +38,12 @@ from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
 logger = logging.getLogger(__name__)
 
 
+def send_email(subject, to_email, body):
+    from_email = "Lumina <notifications@lumina-photo.com.ar>"
+    msg = EmailMessage(subject, body, from_email, [to_email])
+    msg.send(fail_silently=False)
+
+
 def home(request):
     if request.user.is_authenticated():
         ctx = {
@@ -152,15 +158,11 @@ class SharedAlbumCreateView(CreateView):
         ret = super(SharedAlbumCreateView, self).form_valid(form)
 
         subject = "Nuevo album compartido con Ud."
-        from_email = "Lumina <notifications@lumina-photo.com.ar>"
         to_email = form.instance.shared_with
-        #link = "http://127.0.0.1:8000/shared/album/anonymous/view/{}/"
-        #link = link.format(form.instance.random_hash)
         link = self.request.build_absolute_uri(
             reverse('shared_album_view', args=[form.instance.random_hash]))
         body = "Tiene un nuevo album compartido.\nPara verlo ingrese a {}".format(link)
-        msg = EmailMessage(subject, body, from_email, [to_email])
-        msg.send(fail_silently=False)
+        send_email(subject, to_email, body)
 
         messages.success(self.request, 'El album fue compartido correctamente')
         return ret
@@ -222,8 +224,8 @@ class ImageSelectionCreateView(CreateView):
         subject = "Solicitud de seleccion de imagenes"
         from_email = "Lumina <notifications@lumina-photo.com.ar>"
         to_email = form.instance.customer.email
-        #link = "http://127.0.0.1:8000/shared/album/anonymous/view/{}/"
-        #link = link.format(form.instance.random_hash)
+        # link = "http://127.0.0.1:8000/shared/album/anonymous/view/{}/"
+        # link = link.format(form.instance.random_hash)
         link = self.request.build_absolute_uri(
             reverse('album_detail', args=[form.instance.album.id]))
         message = u"Tiene una nueva solicitud para seleccionar fotografías.\n" + \
@@ -336,7 +338,7 @@ class ImageSelectionDetailView(DetailView):
 # Album
 #===============================================================================
 
-#class SafeAlbumViewMixin(object):
+# class SafeAlbumViewMixin(object):
 #    def get_queryset(self):
 #        return Album.objects.for_user(self.request.user)
 
