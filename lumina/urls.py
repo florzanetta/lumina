@@ -84,6 +84,10 @@ urlpatterns = patterns(
                 ImageSelectionListView.as_view())),
         name='imageselection_list'),
 
+    url(r'^imageselection/redirect/(?P<pk>\d+)/$',
+        'lumina.views.imageselection_redirect',
+        name='imageselection_redirect'),
+
     url(r'^imageselection/detail/(?P<pk>\d+)/$',
         cache_control(private=True)(
             login_required(ImageSelectionDetailView.as_view())),

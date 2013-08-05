@@ -190,6 +190,25 @@ class SharedAlbumCreateView(CreateView):
 # ImageSelection
 #===============================================================================
 
+@login_required
+@cache_control(private=True)
+def imageselection_redirect(request, pk):
+    imageselection_id = int(pk)
+    imageselection = ImageSelection.objects.all_my_accessible_imageselections(
+        request.user).get(id=imageselection_id)
+    assert isinstance(imageselection, ImageSelection)
+
+    if imageselection.user == request.user:
+        return HttpResponseRedirect(reverse('imageselection_detail',
+                                            args=[imageselection_id]))
+    else:
+        if imageselection.status == ImageSelection.STATUS_IMAGES_SELECTED:
+            return HttpResponseRedirect(reverse('imageselection_detail',
+                                                args=[imageselection_id]))
+        else:
+            return HttpResponseRedirect(reverse('imageselection_select_images',
+                                                args=[imageselection_id]))
+
 
 class ImageSelectionListView(ListView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
