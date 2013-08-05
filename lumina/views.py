@@ -39,6 +39,8 @@ logger = logging.getLogger(__name__)
 
 
 def send_email(subject, to_email, body):
+    logger.info("Sending email '{}' to '{}'".format(
+        subject, to_email))
     from_email = "Lumina <notifications@lumina-photo.com.ar>"
     msg = EmailMessage(subject, body, from_email, [to_email])
     msg.send(fail_silently=False)
@@ -222,16 +224,12 @@ class ImageSelectionCreateView(CreateView):
         ret = super(ImageSelectionCreateView, self).form_valid(form)
 
         subject = "Solicitud de seleccion de imagenes"
-        from_email = "Lumina <notifications@lumina-photo.com.ar>"
         to_email = form.instance.customer.email
-        # link = "http://127.0.0.1:8000/shared/album/anonymous/view/{}/"
-        # link = link.format(form.instance.random_hash)
         link = self.request.build_absolute_uri(
             reverse('album_detail', args=[form.instance.album.id]))
         message = u"Tiene una nueva solicitud para seleccionar fotografías.\n" + \
             "Para verlo ingrese a {}".format(link)
-        msg = EmailMessage(subject, message, from_email, [to_email])
-        msg.send(fail_silently=False)
+        send_email(subject, to_email, message)
 
         messages.success(
             self.request, 'La solicitud de seleccion de imagenes '
@@ -297,6 +295,14 @@ class ImageSelectionForCustomerView(DetailView):
             image_selection.selected_images.add(images_by_id[img_id])
         image_selection.status = ImageSelection.STATUS_IMAGES_SELECTED
         image_selection.save()
+
+        subject = "El cliente ha realizado su selección"
+        to_email = image_selection.album.user.email
+        link = self.request.build_absolute_uri(
+            reverse('imageselection_detail', args=[image_selection.id]))
+        body = "El cliente ha seleccionado las imagenes del album.\n" + \
+            "Para verlo ingrese a {}".format(link)
+        send_email(subject, to_email, body)
 
         messages.success(self.request, 'La seleccion fue guardada correctamente')
         return HttpResponseRedirect(reverse('imageselection_detail',
