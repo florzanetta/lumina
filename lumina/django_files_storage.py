@@ -40,10 +40,9 @@ class TestImagesFallbackStorage(FileSystemStorage):
         except SuspiciousOperation:
             alternative_path = _get_fallback_path(name)
             if os.path.exists(alternative_path):
-                logger.warn(
-                    "path() raised SuspiciousOperation and alternative_path '%s' exists."
-                    "Will return alternative_path",
-                    alternative_path)
+                warnings.warn(
+                    "path() raised SuspiciousOperation and alternative_path '{}' exists."
+                    "Will return alternative_path".format(alternative_path))
                 return os.path.normpath(alternative_path)
             logger.warn(
                 "path() raised SuspiciousOperation and alternative_path doesnt '%s' exists."
@@ -52,14 +51,14 @@ class TestImagesFallbackStorage(FileSystemStorage):
             raise
 
         # We get here if 'original_resolved_path' doesn't exists... will try fallback
-        logger.warn(
-            "path(): initial resolved path '%s' doesn't exists. Will try alternative",
-            original_resolved_path)
+        warnings.warn(
+            "path(): initial resolved path '{}' doesn't exists."
+            "Will try alternative".format(original_resolved_path))
         alternative_path = _get_fallback_path(name)
         if os.path.exists(alternative_path):
-            logger.warn(
-                "path() alternative_path '%s' does exists. Will return alternative_path",
-                alternative_path)
+            warnings.warn(
+                "path() alternative_path '{}' does exists. "
+                "Will return alternative_path".format(alternative_path))
             return os.path.normpath(alternative_path)
         logger.warn(
             "path() alternative_path '%s' does NOT exists either. "
