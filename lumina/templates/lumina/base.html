@@ -29,7 +29,7 @@
 				<div class="navbar-inner">
 					<!-- <li class="active"> -->
 					<ul class="nav">
-						<li><a href="{% url 'home' %}">Home</a></li> 
+						<li><a href="{% url 'home' %}">Lumina</a></li> 
 						{% if user.is_authenticated %}
 							<li class="dropdown"><a class="dropdown-toggle"
 								data-toggle="dropdown" href="#">Albums <b class="caret"></b>
@@ -94,12 +94,8 @@
 				</div>
 				<!-- navbar inner -->
 			</div>
-			<!-- navbar -->
-			<h3 class="muted">Lumina</h3>
 		</div>
 		<!-- END DIV.masthead -->
-
-		<hr />
 
 		{% for message in messages %} 
 		
