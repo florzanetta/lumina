@@ -17,6 +17,7 @@ from django.views.decorators.cache import cache_control
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
+from django.core.exceptions import SuspiciousOperation
 
 from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile, \
     UserProxy, ImageSelection
@@ -24,7 +25,6 @@ from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
     AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm, \
     CustomerUpdateForm, ImageSelectionForm
-from django.core.exceptions import SuspiciousOperation
 
 
 #
@@ -315,7 +315,6 @@ class ImageSelectionDetailView(DetailView):
     def get_queryset(self):
         return ImageSelection.objects.all_my_accessible_imageselections(self.request.user)
 
-
     def get_context_data(self, **kwargs):
         ctx = super(ImageSelectionDetailView, self).get_context_data(**kwargs)
         image_selection = ctx['object']
@@ -332,7 +331,6 @@ class ImageSelectionDetailView(DetailView):
             raise(SuspiciousOperation())
         return ctx
 
-        
 
 #===============================================================================
 # Album
@@ -341,7 +339,6 @@ class ImageSelectionDetailView(DetailView):
 #class SafeAlbumViewMixin(object):
 #    def get_queryset(self):
 #        return Album.objects.for_user(self.request.user)
-
 
 class AlbumListView(ListView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
