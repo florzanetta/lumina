@@ -24,6 +24,7 @@ from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
     AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm, \
     CustomerUpdateForm, ImageSelectionForm
+from django.core.exceptions import PermissionDenied, SuspiciousOperation
 
 
 #
@@ -246,7 +247,7 @@ class ImageSelectionCreateView(CreateView):
         return context
 
 
-class ImageSelectionUpdateView(DetailView):
+class ImageSelectionForCustomerView(DetailView):
     """
     With this view, the customer selects the images he/she wants.
     """
@@ -270,9 +271,34 @@ class ImageSelectionUpdateView(DetailView):
     #        return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        messages.success(self.request, 'ACA SE HUBIERA ACTUALIZADO EL MODELO')
-        return reverse('imageselection_select_images', args=[self.object.id])
+        image_selection = self.get_object()
+        assert isinstance(image_selection, ImageSelection)
+        selected_images_ids = request.POST.getlist('selected_images')
+        if len(selected_images_ids) != image_selection.image_quantity:
+            messages.error(self.request,
+                           'Debe seleccionar {} imagen/es'.format(image_selection.image_quantity))
+            return HttpResponseRedirect(reverse('imageselection_select_images',
+                                                args=[image_selection.id]))
+
+        # use `str` to compare, to avoid conversion to `int`
+        images = image_selection.album.image_set.all()
+        allowed_images_id = [str(img.id) for img in images]
+        invalid_ids = [img_id for img_id in selected_images_ids if img_id not in allowed_images_id]
+
+        if invalid_ids:
+            # This was an attempt to submit ids for images on other's albums!
+            raise(SuspiciousOperation("Invalid ids: {}".format(','.join(invalid_ids))))
+
+        images_by_id = dict([(img.id, img) for img in images])
+        for img_id in selected_images_ids:
+            img_id = int(img_id)
+            image_selection.selected_images.add(images_by_id[img_id])
+        image_selection.status = ImageSelection.STATUS_IMAGES_SELECTED
+        image_selection.save()
+
+        messages.success(self.request, 'La seleccion fue guardada correctamente')
+        return HttpResponseRedirect(reverse('imageselection_detail',
+                                            args=[image_selection.id]))
 
 
 class ImageSelectionDetailView(DetailView):
