@@ -24,7 +24,7 @@ from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
     AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm, \
     CustomerUpdateForm, ImageSelectionForm
-from django.core.exceptions import PermissionDenied, SuspiciousOperation
+from django.core.exceptions import SuspiciousOperation
 
 
 #
@@ -109,7 +109,7 @@ def image_thumb(request, image_id, max_size=None):
 @login_required
 @cache_control(private=True)
 def image_download(request, image_id):
-    image = Image.objects.all_downloable(request.user).get(pk=image_id)
+    image = Image.objects.get_for_download(request.user, int(image_id))
     return _image_download(request, image)
 
 
@@ -323,7 +323,8 @@ class ImageSelectionDetailView(DetailView):
 
         if image_selection.user == self.request.user:
             # Show all to the photographer
-            ctx['images_to_show'] = image_selection.album.images.all()
+            ctx['images_to_show'] = image_selection.album.image_set.all()
+            ctx['selected_images'] = image_selection.selected_images.all()
         elif image_selection.customer == self.request.user:
             # Show only selected images to customer
             ctx['images_to_show'] = image_selection.selected_images.all()

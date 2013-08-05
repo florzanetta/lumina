@@ -196,8 +196,6 @@ class ImageManager(models.Manager, ForUserManagerMixin):
         Some of the images may be downloaded (in full resolution).
         (ie: the user's images + the images of shared albums of other users)
         but other won't be downloadable (images from ImageSelection)
-
-        See `all_downloable()`.
         """
         return self.filter(
             Q(user=user) |
@@ -205,14 +203,37 @@ class ImageManager(models.Manager, ForUserManagerMixin):
             Q(album__imageselection__customer=user)
         )
 
-    def all_downloable(self, user):
+    def get_for_download(self, user, image_id):
         """
-        Returns all the downloable images for an user
-        (ie: the user's images + the images of shared albums of other users)
+        Returns an images to be downloaded by the user
+        """
+        # Original implementation (returns filtered result)
+        # return self.filter(
+        #    Q(user=user) |
+        #    Q(album__shared_with=user)
+        # )
+        #
+        # This ***might*** work, using F() queries:
+        # return self.filter(
+        #    Q(user=user) |
+        #    Q(album__shared_with=user) |
+        #    Q(imageselection__customer=user, imageselection__selected_images=F('id'))
+        # )
 
-        See `all_visible_low_quality()`.
-        """
-        return self.filter(Q(user=user) | Q(album__shared_with=user))
+        try:
+            # The user owns the image?
+            return self.get(user=user, id=image_id)
+        except Image.DoesNotExist:
+            pass
+
+        try:
+            # The image was shared with the user?
+            return self.get(album__shared_with=user, id=image_id)
+        except Image.DoesNotExist:
+            pass
+
+        # Tha image was selected by the user?
+        return self.get(imageselection__customer=user, imageselection__selected_images=image_id)
 
 
 class Image(models.Model):
