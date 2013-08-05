@@ -174,7 +174,7 @@ class ImageSelection(models.Model):
     image_quantity = models.PositiveIntegerField()
     status = models.CharField(max_length=1, choices=STATUS, default=STATUS_WAITING)
 
-    selected_images = models.ManyToManyField('Image')
+    selected_images = models.ManyToManyField('Image', blank=True)
 
     objects = ImageSelectionManager()
 
