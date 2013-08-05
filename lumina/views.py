@@ -316,6 +316,23 @@ class ImageSelectionDetailView(DetailView):
         return ImageSelection.objects.all_my_accessible_imageselections(self.request.user)
 
 
+    def get_context_data(self, **kwargs):
+        ctx = super(ImageSelectionDetailView, self).get_context_data(**kwargs)
+        image_selection = ctx['object']
+        assert isinstance(image_selection, ImageSelection)
+
+        if image_selection.user == self.request.user:
+            # Show all to the photographer
+            ctx['images_to_show'] = image_selection.album.images.all()
+        elif image_selection.customer == self.request.user:
+            # Show only selected images to customer
+            ctx['images_to_show'] = image_selection.selected_images.all()
+        else:
+            raise(SuspiciousOperation())
+        return ctx
+
+        
+
 #===============================================================================
 # Album
 #===============================================================================

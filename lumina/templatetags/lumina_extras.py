@@ -121,7 +121,7 @@ def user_is_photographer(user):
 
 @register.filter(name='full_name_with_username')
 def full_name_with_username(user):
-    if user is None:
+    if not user:
         return u''
 
     return u"{0} ({1})".format(user.get_full_name(),

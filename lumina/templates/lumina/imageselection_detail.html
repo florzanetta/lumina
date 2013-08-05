@@ -28,27 +28,15 @@
 
     <h5>Imágenes del album:</h5>
 
-    {% for image in object.album.image_set.all %}
+    {% for image in images_to_show %}
         {% include 'lumina/include/image.html' with image=image only %}
     {% empty %}
-        <p>El album no posee imagenes...</p>
+        <p>No hay imagenes para mostrar...</p>
     {% endfor %}
 
 {% endblock content %}
 
 {% block javascript_bottom %}
-
-	<!-- only the album's owner can download the original files -->
-	<script type="text/javascript">
-	   {% if object.album.user != user %}
-			$(document).ready(function() {
-				$('.lumina_download_image').addClass('disabled');
-				$('.lumina_download_image').bind('click', function(e){
-				     e.preventDefault();
-				});
-			});
-		{% endif %}
-	</script>
 
 {% endblock %}
 
