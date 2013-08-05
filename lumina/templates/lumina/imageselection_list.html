@@ -19,15 +19,18 @@
 		    </a>
 		    <div class="media-body">
 		        <div class="media-heading"><a
-		               href="{% url 'imageselection_select_images' pet.id %}"><strong>Album</strong>: {{ pet.album.name }}</a> <br>
-                       <small><strong>Estado</strong>: {{ pet.get_status_display }}</small>
+		               href="{% url 'imageselection_select_images' pet.id %}"><strong>Album</strong>:
+		               		{{ pet.album.name }}</a> <br>
+                       <small><strong>Estado</strong>: {{ pet.get_status_display }}</small> <br>
+						<small><strong>Cant. de imagenes permitidas:</strong>
+							{{ pet.image_quantity }}</small><br>
+                       
 		        </div>
 		    </div>
 		</div>
 		<hr>
     {% empty %}
        <p>No hay peticiones...</p>
-        <hr>
     {% endfor %}
 
     {% dump_objects user object_list %}

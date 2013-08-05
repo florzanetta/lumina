@@ -1,4 +1,5 @@
 {% extends "lumina/base.html" %}
+{% load lumina_extras %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,11 +8,23 @@
 </head>
 <body>
 
+<!--
+	This template shows an 'read-only' version of ImageSelection
+	(for both photographers and customers)
+-->
+
 {% block content %}
 
     <h3>Peticiones de selección de imágenes de album {{ object.album.name }}</h3>
 
-    <hr>
+	<small><strong>Estado:</strong>
+		{{ object.get_status_display }}</small><br>
+
+	<small><strong>Compartido con:</strong>
+		{{ object.customer|full_name_with_username }}</small><br>
+
+	<small><strong>Cant. de imagenes permitidas:</strong>
+		{{ object.image_quantity }}</small><br>
 
     <h5>Imágenes del album:</h5>
 
@@ -19,13 +32,13 @@
         {% include 'lumina/include/image.html' with image=image only %}
     {% empty %}
         <p>El album no posee imagenes...</p>
-	    <hr>
     {% endfor %}
 
 {% endblock content %}
 
 {% block javascript_bottom %}
 
+	<!-- only the album's owner can download the original files -->
 	<script type="text/javascript">
 	   {% if object.album.user != user %}
 			$(document).ready(function() {
