@@ -10,6 +10,8 @@
 
 {% block content %}
 
+<h3>Inicio de sesión</h3>
+
 {% if form.errors %}
 	<div class="alert alert-error">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -22,18 +24,23 @@
 {% csrf_token %}
 <table>
 <tr>
-    <td>{{ form.username.label_tag }}</td>
+    <td style="padding-right: 1em; text-align: right;">{{ form.username.label_tag }}</td>
     <td>{{ form.username }}</td>
 </tr>
 <tr>
-    <td>{{ form.password.label_tag }}</td>
+    <td style="padding-right: 1em; text-align: right;">{{ form.password.label_tag }}</td>
     <td>{{ form.password }}</td>
+</tr>
+<tr>
+    <td> &nbsp; </td>
+    <td><input type="submit" value="Login" id="submit_button" class="btn btn-primary"/></td>
 </tr>
 </table>
 
-<input type="submit" value="Login" id="submit_button" class="btn btn-primary"/>
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
+
+<p>&nbsp;</p>
 
 <hr>
 
@@ -45,6 +52,16 @@
 {% dump_objects %}
 
 {% endblock content %}
+
+{% block javascript_bottom %} 
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#id_username').focus();
+	});
+</script>
+
+{% endblock %}
 
 </body>
 </html>
