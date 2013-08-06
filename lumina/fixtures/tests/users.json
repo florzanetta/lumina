@@ -4,17 +4,17 @@
     "model": "auth.user", 
     "fields": {
         "username": "admin", 
-        "first_name": "", 
-        "last_name": "", 
+        "first_name": "\u00c1lbaro", 
+        "last_name": "Andrada", 
         "is_active": true, 
         "is_superuser": true, 
         "is_staff": true, 
-        "last_login": "2013-07-25T21:25:06.862Z", 
+        "last_login": "2013-08-06T03:29:47Z", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$10000$BwQXewpxQcZD$nDKTejFAi5m4cJGSehc/gbomsN7Fl1iK6mlKXVO5k0Q=", 
         "email": "admin@example.com", 
-        "date_joined": "2013-05-30T23:14:13.136Z"
+        "date_joined": "2013-05-30T23:14:13Z"
     }
 },
 {
