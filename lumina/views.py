@@ -279,15 +279,8 @@ class ImageSelectionForCustomerView(DetailView):
     template_name = 'lumina/imageselection_update_for_customer_form.html'
 
     def get_queryset(self):
-        return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user)
-
-    #
-    # This is the default implementation for GET, just for reference pourposes
-    #
-    #    def get(self, request, *args, **kwargs):
-    #        self.object = self.get_object()
-    #        context = self.get_context_data(object=self.object)
-    #        return self.render_to_response(context)
+        return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user,
+                                                                         just_pending=True)
 
     def post(self, request, *args, **kwargs):
         image_selection = self.get_object()
