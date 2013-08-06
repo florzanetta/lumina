@@ -70,12 +70,15 @@
 						data-toggle="dropdown" href="#">Admin <b class="caret"></b></a>
 						<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 							<li><a
-								href="{% url 'admin:lumina_album_changelist' %}" target="_blank">Album</a></li>
+								href="{% url 'admin:lumina_album_changelist' %}" target="_blank">Albums</a></li>
 							<li><a
-								href="{% url 'admin:lumina_image_changelist' %}" target="_blank">Image</a></li>
+								href="{% url 'admin:lumina_image_changelist' %}" target="_blank">Images</a></li>
 							<li><a
 								href="{% url 'admin:lumina_sharedalbum_changelist' %}"
-								target="_blank">Shared</a></li>
+								target="_blank">Shared Albums</a></li>
+							<li><a
+								href="{% url 'admin:lumina_imageselection_changelist' %}"
+								target="_blank">Image Selection</a></li>
 						</ul></li> 
 							{% endif %}
 					</ul>
