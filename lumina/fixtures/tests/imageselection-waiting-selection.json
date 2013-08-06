@@ -1,0 +1,18 @@
+[
+{
+    "pk": 1, 
+    "model": "lumina.imageselection", 
+    "fields": {
+        "album": 2, 
+        "customer": [
+            "customer-957a6230-3eac-4ee1-a4"
+        ], 
+        "selected_images": [], 
+        "status": "W", 
+        "user": [
+            "juan"
+        ], 
+        "image_quantity": 1
+    }
+}
+]
