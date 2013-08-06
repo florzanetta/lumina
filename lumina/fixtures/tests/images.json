@@ -5,7 +5,7 @@
     "fields": {
         "album": 1, 
         "original_filename": "825fc870-ae81-407f-97b2-c1698323d709--8902217876_de6e699066.jpg", 
-        "image": "8902217876_de6e699066.jpg",
+        "image": "8902217876_de6e699066.jpg", 
         "user": [
             "admin"
         ], 
@@ -19,12 +19,26 @@
     "fields": {
         "album": 2, 
         "original_filename": "761f71cc-7b63-41f7-942d-7d4ce8a7a193--8902217876_de6e699066.jpg", 
-        "image": "8902217876_de6e699066.jpg",
+        "image": "8902217876_de6e699066.jpg", 
         "user": [
             "juan"
         ], 
         "content_type": "image/jpeg", 
         "size": 249942
+    }
+},
+{
+    "pk": 3, 
+    "model": "lumina.image", 
+    "fields": {
+        "album": 2, 
+        "original_filename": "Birds--Birds--Birds--5931142538.jpg", 
+        "image": "Birds--Birds--Birds--5931142538.jpg", 
+        "user": [
+            "juan"
+        ], 
+        "content_type": "image/jpeg", 
+        "size": 211357
     }
 }
 ]
