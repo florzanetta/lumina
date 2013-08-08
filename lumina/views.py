@@ -9,7 +9,8 @@ from django.template.context import RequestContext
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.http.response import HttpResponse, HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseRedirect,\
+    HttpResponseNotFound, HttpResponseNotAllowed, HttpResponseServerError
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.files.storage import default_storage
@@ -17,7 +18,8 @@ from django.views.decorators.cache import cache_control
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
-from django.core.exceptions import SuspiciousOperation
+from django.core.exceptions import SuspiciousOperation, ObjectDoesNotExist,\
+    ImproperlyConfigured, PermissionDenied
 
 from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile, \
     UserProxy, ImageSelection
@@ -63,6 +65,27 @@ def home(request):
     return render_to_response(
         'lumina/index.html', ctx,
         context_instance=RequestContext(request))
+
+
+@login_required
+@cache_control(private=True)
+def check_404(request):
+    logger.info("Raising ObjectDoesNotExist()")
+    raise(ObjectDoesNotExist())
+
+
+@login_required
+@cache_control(private=True)
+def check_500(request):
+    logger.info("Raising Exception()")
+    raise(Exception())
+
+
+@login_required
+@cache_control(private=True)
+def check_403(request):
+    logger.info("Raising PermissionDenied()")
+    raise(PermissionDenied())
 
 
 def _image_thumb(request, image, max_size=None):
