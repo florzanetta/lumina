@@ -58,7 +58,7 @@ class AlbumManager(models.Manager, ForUserManagerMixin):
         Returns all the visible albums for an user
         (ie: the user's albums + the shared albums of other users)
         """
-        return self.filter(Q(user=user) | Q(shared_with=user))
+        return self.filter(Q(user=user) | Q(shared_with=user)).distinct()
 
 
 class Album(models.Model):
@@ -208,7 +208,7 @@ class ImageManager(models.Manager, ForUserManagerMixin):
             Q(user=user) |
             Q(album__shared_with=user) |
             Q(album__imageselection__customer=user)
-        )
+        ).distinct()
 
     def get_for_download(self, user, image_id):
         """
