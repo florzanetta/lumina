@@ -1,0 +1,28 @@
+[
+{
+    "pk": 1, 
+    "model": "lumina.luminauserprofile", 
+    "fields": {
+        "customer_of": [
+            "fotografo"
+        ], 
+        "user": [
+            "cliente"
+        ], 
+        "user_type": "G"
+    }
+},
+{
+    "pk": 2, 
+    "model": "lumina.luminauserprofile", 
+    "fields": {
+        "customer_of": [
+            "fotografo"
+        ], 
+        "user": [
+            "max_planck"
+        ], 
+        "user_type": "G"
+    }
+}
+]
