@@ -54,15 +54,15 @@ Reset of the database and uploads
 To reset the data (delete uploads, reset database and create an 'admin', user to login
 with username 'admin' and password 'admin'):
 
-    $ rm -rf ~/lumina.sqlite ~/lumina/uploads
-    $ python manage.py syncdb --noinput
-    $ python manage.py migrate
+    rm -rf ~/lumina.sqlite ~/lumina/uploads
+    python manage.py syncdb --noinput
+    python manage.py migrate
 
 To add to the database some initial data (albums, images and shares), run:
 
-    $ python manage.py loaddata tests/users.json
-    $ python manage.py loaddata tests/albums.json
-    $ python manage.py loaddata tests/images.json
+    python manage.py loaddata tests/users.json
+    python manage.py loaddata tests/albums.json
+    python manage.py loaddata tests/images.json
 
 The username/passwords to login are:
 
@@ -107,6 +107,12 @@ To generate **fixtures**, run:
     $ python manage.py dumpdata --format=json --indent=4 --natural lumina.ImageSelection > lumina/fixtures/tests/imageselection-waiting-selection.json
 
 (remember to execute this with a **CLEAN** database: see *Reset of the database and uploads*).
+
+You can ignore the error `UserWarning: Couldn't import from 'lumina.local_settings': No module named local_settings`.
+If you create a settings files for your environment, it won't appear anymore:
+
+    $ touch lumina/local_settings.py
+
 
 Travis-CI
 ---------
