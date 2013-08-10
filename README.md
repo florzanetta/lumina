@@ -60,16 +60,13 @@ with username 'admin' and password 'admin'):
 
 To add to the database some initial data (albums, images and shares), run:
 
-    python manage.py loaddata tests/users.json
-    python manage.py loaddata tests/albums.json
-    python manage.py loaddata tests/images.json
+    python manage.py loaddata sample/users.json sample/albums.json sample/images.json
 
 The username/passwords to login are:
 
-    * admin/admin (with Django superuser's permission)
-    * juan/juan (photographer)
-    * customer-ba07eb50-9fb5-4593-98/albert (admin's customer)
-    * customer-957a6230-3eac-4ee1-a4/max (juan's customer)
+    * fotografo/fotografo (with Django superuser's permission)
+    * cliente/cliente (customer of fotografo)
+    * max_planck/max_planck (customer of fotografo)
 
 
 Defaults settings
