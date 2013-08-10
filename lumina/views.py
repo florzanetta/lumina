@@ -362,14 +362,17 @@ class ImageSelectionDetailView(DetailView):
         image_selection = ctx['object']
         assert isinstance(image_selection, ImageSelection)
 
-        if image_selection.user == self.request.user:
+        # Compare `id` because of the use of UserProxyManager
+        if image_selection.user.id == self.request.user.id:
             # Show all to the photographer
             ctx['images_to_show'] = image_selection.album.image_set.all()
             ctx['selected_images'] = image_selection.selected_images.all()
-        elif image_selection.customer == self.request.user:
+        elif image_selection.customer.id == self.request.user.id:
             # Show only selected images to customer
             ctx['images_to_show'] = image_selection.selected_images.all()
         else:
+            # the requested ImageSelection instance does NOT belong
+            # to the photographer neither to the customer!
             raise(SuspiciousOperation())
         return ctx
 

@@ -34,6 +34,15 @@ class UserProxyExtraManagers(models.Model):
 
 
 class UserProxy(User, UserProxyExtraManagers):
+    """
+    This is a class to be used instead of Django's User.
+    This is needed to make simple modifications, like an
+    improved __unicode__(), and to add methods
+    to the Manager object.
+    """
+
+    def __unicode__(self):
+        return u"{} ({})".format(self.get_full_name(), self.username)
 
     class Meta:
         proxy = True
@@ -177,7 +186,7 @@ class ImageSelection(models.Model):
     )
     user = models.ForeignKey(User, related_name='+')
     album = models.ForeignKey(Album)
-    customer = models.ForeignKey(User, related_name='+')
+    customer = models.ForeignKey(UserProxy, related_name='+')
     image_quantity = models.PositiveIntegerField()
     status = models.CharField(max_length=1, choices=STATUS, default=STATUS_WAITING)
 
