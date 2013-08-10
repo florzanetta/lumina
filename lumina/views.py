@@ -9,8 +9,7 @@ from django.template.context import RequestContext
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.http.response import HttpResponse, HttpResponseRedirect,\
-    HttpResponseNotFound, HttpResponseNotAllowed, HttpResponseServerError
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.files.storage import default_storage
@@ -19,7 +18,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.core.exceptions import SuspiciousOperation, ObjectDoesNotExist,\
-    ImproperlyConfigured, PermissionDenied
+    PermissionDenied
 
 from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile, \
     UserProxy, ImageSelection
