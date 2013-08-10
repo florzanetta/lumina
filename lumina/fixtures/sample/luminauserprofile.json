@@ -24,5 +24,18 @@
         ], 
         "user_type": "G"
     }
+},
+{
+    "pk": 3, 
+    "model": "lumina.luminauserprofile", 
+    "fields": {
+        "customer_of": [
+            "ERROR_USER"
+        ], 
+        "user": [
+            "ERROR_CUSTOMER"
+        ], 
+        "user_type": "G"
+    }
 }
 ]

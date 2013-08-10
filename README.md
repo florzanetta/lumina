@@ -96,7 +96,7 @@ To check **code coverage**, run:
     $ coverage run --source='.' --omit='virtualenv/*' manage.py test lumina
     $ coverage report
 
-To generate **fixtures**, run:
+To generate **fixtures** for testing, run:
 
     $ python manage.py dumpdata --format=json --indent=4 --natural auth.User lumina.luminauserprofile > lumina/fixtures/tests/users.json
     $ python manage.py dumpdata --format=json --indent=4 --natural lumina.Album > lumina/fixtures/tests/albums.json
@@ -109,6 +109,15 @@ You can ignore the error `UserWarning: Couldn't import from 'lumina.local_settin
 If you create a settings files for your environment, it won't appear anymore:
 
     $ touch lumina/local_settings.py
+
+
+To generate the fixtures of sample data:
+
+    python manage.py dumpdata --format=json --indent=4 --natural auth.User > lumina/fixtures/sample/users.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.Album > lumina/fixtures/sample/albums.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.Image > lumina/fixtures/sample/images.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.LuminaUserProfile > lumina/fixtures/sample/luminauserprofile.json
+
 
 
 Travis-CI

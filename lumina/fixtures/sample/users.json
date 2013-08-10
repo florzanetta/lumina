@@ -9,7 +9,7 @@
         "is_active": true, 
         "is_superuser": true, 
         "is_staff": true, 
-        "last_login": "2013-08-10T22:44:10.323Z", 
+        "last_login": "2013-08-10T23:08:18.171Z", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$10000$VqsXH2QLKVBN$O0GYMFrtinWthQlTIfwQH3S9vlhkpOjdly8iQ0HpCvQ=", 
@@ -51,6 +51,42 @@
         "password": "pbkdf2_sha256$10000$fu3gMLiq2xwv$eyta+G1TSZ+CMXO4UxzS7wy+0fDGmh9OL2Fwv8kINEA=", 
         "email": "quantumfanatic@example.com", 
         "date_joined": "2013-08-10T22:42:42.594Z"
+    }
+},
+{
+    "pk": 5, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "ERROR_USER", 
+        "first_name": "ERROR_USER", 
+        "last_name": "ERROR_USER", 
+        "is_active": true, 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2013-08-10T23:09:16.932Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$10000$UXmT3v6LcKk7$8k9FLhLPg6uqa5XSI/1VeAdrhRgoLS/dAPHW68chHJk=", 
+        "email": "ERROR_USER@EXAMPLE.COM", 
+        "date_joined": "2013-08-10T23:08:50Z"
+    }
+},
+{
+    "pk": 6, 
+    "model": "auth.user", 
+    "fields": {
+        "username": "ERROR_CUSTOMER", 
+        "first_name": "ERROR_CUSTOMER_N", 
+        "last_name": "ERROR_CUSTOMER_LN", 
+        "is_active": true, 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2013-08-10T23:10:06.806Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "password": "pbkdf2_sha256$10000$lyL3KlNMEgCN$24mOXmQ9ZQ5bpyGwRvPRV8M1y6B/K+amZ+0vPVL3QTM=", 
+        "email": "ERROR_CUSTOMER@example.com", 
+        "date_joined": "2013-08-10T23:10:06.806Z"
     }
 }
 ]
