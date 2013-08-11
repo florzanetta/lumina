@@ -4,6 +4,8 @@ import os
 import uuid
 import logging
 
+import mailer
+
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.views.generic.edit import CreateView, UpdateView
@@ -16,8 +18,7 @@ from django.core.files.storage import default_storage
 from django.views.decorators.cache import cache_control
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.models import User
-from django.core.mail import EmailMessage
-from django.core.exceptions import SuspiciousOperation, ObjectDoesNotExist,\
+from django.core.exceptions import SuspiciousOperation, ObjectDoesNotExist, \
     PermissionDenied
 
 from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile, \
@@ -43,8 +44,12 @@ def send_email(subject, to_email, body):
     logger.info("Sending email '{}' to '{}'".format(
         subject, to_email))
     from_email = "Lumina <notifications@lumina-photo.com.ar>"
-    msg = EmailMessage(subject, body, from_email, [to_email])
-    msg.send(fail_silently=False)
+    try:
+        mailer.send_mail(subject, body, from_email, [to_email], fail_silently=False)
+        logger.info("Email to %s, with subject '%s' queued", to_email, subject)
+    except:
+        logger.exception("Couldn't queue email to %s", to_email)
+        pass
 
 
 def home(request):
