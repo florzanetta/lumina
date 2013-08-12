@@ -467,6 +467,9 @@ class ImageCreateView(CreateView):
     form_class = ImageCreateForm
     template_name = 'lumina/image_create_form.html'
 
+    def get_success_url(self):
+        return reverse('album_detail', args=[self.object.album.pk])
+
     def form_valid(self, form):
         form.instance.user = self.request.user
 
