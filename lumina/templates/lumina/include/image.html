@@ -5,7 +5,7 @@
     </a>
     <div class="media-body">
         <div class="media-heading"><a
-               href="{% if image.user == user %}{% url 'image_update' image.pk %}{% else %}javascript:void(0);{% endif %}">{{ image.original_filename }}</a>
+               href="{% if image.user == user and read_write %}{% url 'image_update' image.pk %}{% else %}javascript:void(0);{% endif %}">{{ image.original_filename }}</a>
         </div>
         <div>
               <small> <span class="label">{{ image.size|filesizeformat }}</span></small>

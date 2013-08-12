@@ -29,7 +29,7 @@
     <h5>Imágenes del album:</h5>
 
     {% for image in images_to_show %}
-        {% include 'lumina/include/image.html' with image=image nohr=True only %}
+        {% include 'lumina/include/image.html' with image=image nohr=True user=user only %}
         {% if image in selected_images %}
         	<small><i class="icon-ok"></i> Esta imagen fue seleccionada por el cliente.</small>
         {% endif %}

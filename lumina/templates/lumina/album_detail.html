@@ -15,7 +15,7 @@
 
     <h5>Imágenes del album:</h5>
     {% for image in object.image_set.all %}
-        {% include 'lumina/include/image.html' with image=image user=user only %}
+        {% include 'lumina/include/image.html' with image=image user=user read_write=True only %}
     {% empty %}
         <p>No hay imagenes...</p>
 	    <hr>

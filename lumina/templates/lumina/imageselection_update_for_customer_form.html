@@ -31,7 +31,7 @@
        <form method="post">
 	    {% for image in object.album.image_set.all %}
 	    
-	        {% include 'lumina/include/image.html' with image=image checkbox_for_selection=True hide_download=True only %}
+	        {% include 'lumina/include/image.html' with image=image checkbox_for_selection=True hide_download=True user=user only %}
 	        
 	    {% empty %}
 	        <p>El album no posee imagenes...</p>
