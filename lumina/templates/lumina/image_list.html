@@ -12,7 +12,7 @@
 	<h3>Imagenes de '{{ user.get_full_name }}'</h3>
 
     {% for image in object_list %}
-        {% include 'lumina/include/image.html' with image=image only %}
+        {% include 'lumina/include/image.html' with image=image user=user only %}
     {% empty %}
         <p>No hay imagenes...</p>
     {% endfor %}
