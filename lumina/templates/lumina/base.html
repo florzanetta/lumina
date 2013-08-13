@@ -101,8 +101,12 @@
 		                            {% if user.is_authenticated %}
 
 													<!-- Items de drop-down  -->
-													<li><a href="{% url 'logout' %}">Salir</a></li>
-
+                                                    {% if user|user_is_photographer %} <!-- user is photographer -->
+                                                            <li><a href="javascript:void(0);" title="Usuario: {{ user.username }}"><em><small>{{ user.get_full_name }} &nbsp; (fotografo)</small></em></a></li>
+                                                    {% else %} <!-- user is client -->
+                                                            <li><a href="javascript:void(0);" title="Usuario: {{ user.username }}"><em><small>{{ user.get_full_name }} &nbsp; (cliente)</small></em></a></li>
+                                                    {% endif %}
+                                                    <li><a href="{% url 'logout' %}">Salir</a></li>
 													{% if 'twitter' in social_auth|non_empty_unicode_keys %}
 												          <li><img alt="Logged in with Twitter" src="/static/twitter-icon-16x16.jpg"></li> 
 													{% endif %}
