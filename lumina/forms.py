@@ -26,7 +26,15 @@ class SharedAlbumCreateForm(forms.ModelForm):
 # SharedAlbum
 #===============================================================================
 
-class ImageSelectionForm(forms.ModelForm):
+class ImageSelectionCreateForm(forms.ModelForm):
+
+    def clean_image_quantity(self):
+        data = self.cleaned_data['image_quantity']
+        if data <= 0:
+            raise(forms.ValidationError("La cantidad de imagenes debe ser mayor a 0"))
+
+        # Always return the cleaned data, whether you have changed it or not.
+        return data
 
     class Meta:
         model = ImageSelection

@@ -26,7 +26,7 @@ from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile, \
 from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
     AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm, \
-    CustomerUpdateForm, ImageSelectionForm
+    CustomerUpdateForm, ImageSelectionCreateForm
 
 
 #
@@ -254,7 +254,7 @@ class ImageSelectionCreateView(CreateView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
     # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
     model = ImageSelection
-    form_class = ImageSelectionForm
+    form_class = ImageSelectionCreateForm
     template_name = 'lumina/imageselection_create_form.html'
 
     def get_initial(self):
