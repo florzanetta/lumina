@@ -3,7 +3,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Q
 
 
@@ -193,6 +193,15 @@ class ImageSelection(models.Model):
     selected_images = models.ManyToManyField('Image', blank=True)
 
     objects = ImageSelectionManager()
+
+    def clean(self):
+        # from django.core.exceptions import ValidationError
+        if self.id is None:
+            image_count = self.album.image_set.count()
+            if self.image_quantity > image_count:
+                msg = {'image_quantity': 'Debe seleccionar {} o menos imagenes'.format(
+                    image_count)}
+                raise ValidationError(msg)
 
 
 #===============================================================================
