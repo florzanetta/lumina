@@ -8,6 +8,7 @@ from django import forms
 from django.contrib.auth.models import User
 
 from lumina.models import Image, Album, SharedAlbum, ImageSelection
+from django.forms.widgets import CheckboxSelectMultiple
 
 
 #===============================================================================
@@ -42,7 +43,15 @@ class AlbumCreateForm(forms.ModelForm):
         model = Album
         exclude = ('user',)
 
-AlbumUpdateForm = AlbumCreateForm
+
+class AlbumUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Album
+        exclude = ('user',)
+        widgets = {
+            'shared_with': CheckboxSelectMultiple(),
+        }
 
 
 #===============================================================================
