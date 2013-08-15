@@ -34,26 +34,37 @@
         </table>
     </form>
 
-    <div id="statistics" style="display: none;">
-        <table class="table table-condensed">
-            <tr>
-                <th width="5%">Original:</th>
-                <td>
-                    <span id="stats_orig_size"></span>
-                </td>
-            </tr>
-            <tr>
-                <th>Preview:</th>
-                <td>
-                    <span id="stats_preview_size"></span>
-                </td>
-            </tr>
-        </table>
-    </div>
-
     <div id="thumbnails_preview"></div>
 
     <ul id="status"></ul>
+
+    <div id="statistics_modal" class="modal hide" tabindex="-1" role="dialog">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Generando previsualizaciones...</h3>
+        </div>
+        <div class="modal-body">
+            <div id="statistics">
+                <table class="table table-condensed">
+                    <tr>
+                        <th width="5%">Original:</th>
+                        <td>
+                            <span id="stats_orig_size"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Preview:</th>
+                        <td>
+                            <span id="stats_preview_size"></span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" id="close_statistics_modal" data-loading-text="Procesando...">Cerrar</button>
+        </div>
+    </div>
 
     {% endblock content %} {% block javascript_bottom %}
     <script type="text/javascript">
@@ -65,9 +76,12 @@
 					}
 
 					function update_statistics() {
-						$('#stats_orig_size')[0].textContent = readablizeBytes(document.size_original);
-						$('#stats_preview_size')[0].textContent = readablizeBytes(document.size_preview);
-						$('#statistics').show();
+						$('#stats_orig_size')[0].textContent = readablizeBytes(document.LUM_SIZE_ORIGINAL);
+						$('#stats_preview_size')[0].textContent = readablizeBytes(document.LUM_SIZE_PREVIEW);
+
+						if (document.LUM_PREVIEW_IMAGES.length >= document.LUM_FILE_COUNT) {
+							$('#close_statistics_modal').button('reset');
+						}
 					}
 
 					function add_preview_img_error(non_image_file) {
@@ -89,39 +103,6 @@
 						var height = ret[2];
 
 						console.info("URL: " + url)
-
-						/*
-						var li = document.createElement("li");
-						//li.className = "span4";
-
-						var div = document.createElement("div");
-						div.className = "thumbnail text-center";
-						li.appendChild(div);
-
-						var newImg = document.createElement("img");
-						newImg.src = url;
-						div.appendChild(newImg);
-						document.LUM_PREVIEW_IMAGES.push(url);
-
-						var filename = document.createElement("small");
-						filename.textContent = "" + image_file.name + "";
-						tmp = document.createElement("div");
-						tmp.appendChild(filename);
-						div.appendChild(tmp);
-
-						var filesize = document.createElement("small");
-						filesize.textContent = "" + image_file.size + " bytes";
-						tmp = document.createElement("div");
-						tmp.appendChild(filesize);
-						div.appendChild(tmp);
-
-						var imgsize = document.createElement("small");
-						imgsize.textContent = img.width + "x" + img.height;
-						tmp = document.createElement("div");
-						tmp.appendChild(imgsize);
-						div.appendChild(tmp);
-						thumbnails.append(li);
-						 */
 
 						//
 						// 1st DIV
@@ -220,8 +201,8 @@
 						var hr = document.createElement("hr");
 						thumbnails.appendChild(hr);
 
-						document.size_original += image_file.size;
-						document.size_preview += preview_file_size;
+						document.LUM_SIZE_ORIGINAL += image_file.size;
+						document.LUM_SIZE_PREVIEW += preview_file_size;
 						update_statistics();
 					}
 
@@ -283,17 +264,22 @@
 					}
 
 					function show_thumbnail() {
-						$('#statistics').hide();
 						document.LUM_PREVIEW_IMAGES = new Array();
 						document.LUM_PREVIEW_FILENAMES = new Array();
-						document.size_original = 0;
-						document.size_preview = 0;
+						document.LUM_SIZE_ORIGINAL = 0;
+						document.LUM_SIZE_PREVIEW = 0;
+
 						$('#thumbnails_preview').empty();
 						$('#status').empty();
 
+						$('#close_statistics_modal').button('loading');
+						$('#statistics_modal').modal();
 						var fileInput = $("#fileinput")[0];
 						var fileList = fileInput.files;
 						var filesToUpload = fileList;
+
+						document.LUM_FILE_COUNT = filesToUpload.length;
+
 						for (x = 0; x < filesToUpload.length; x++) {
 							var fileToUpload = filesToUpload[x];
 							process_image_file(fileToUpload);
