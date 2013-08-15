@@ -65,9 +65,9 @@
 					}
 
 					function update_statistics() {
-						$('#statistics').show();
 						$('#stats_orig_size')[0].textContent = readablizeBytes(document.size_original);
 						$('#stats_preview_size')[0].textContent = readablizeBytes(document.size_preview);
+						$('#statistics').show();
 					}
 
 					function add_preview_img_error(non_image_file) {
@@ -283,6 +283,7 @@
 					}
 
 					function show_thumbnail() {
+						$('#statistics').hide();
 						document.LUM_PREVIEW_IMAGES = new Array();
 						document.LUM_PREVIEW_FILENAMES = new Array();
 						document.size_original = 0;
@@ -314,9 +315,16 @@
 							url : "{% url 'test_html5_upload_ajax' %}",
 							data : images
 						}).done(function(msg) {
-							alert("Data Saved: " + msg);
+							console.info("Ajax: " + msg)
+							if (msg['status'] == 'ok') {
+								window.location.replace(msg['redirect']);
+							} else {
+								alert("ERROR - status != ok");
+								window.location.replace('/');
+							}
 						}).fail(function(msg) {
 							alert("ERROR");
+							window.location.replace('/');
 						});
 
 					}

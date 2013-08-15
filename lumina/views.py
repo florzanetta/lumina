@@ -30,6 +30,7 @@ from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
     AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm, \
     CustomerUpdateForm, ImageSelectionCreateForm
+import json
 
 
 #
@@ -78,7 +79,13 @@ def test_html5_upload_ajax(request):
         new_image.size = len(thumb_contents)
         new_image.image.save('thumb_' + filename, ContentFile(thumb_contents))
         new_image.save()
-    return HttpResponse("Got {} images".format(img_count))
+
+    response_data = {
+                     'img_count': img_count,
+                     'status': 'ok',
+                     'redirect': reverse('album_detail', args=[new_album.id]),
+                     }
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
 def send_email(subject, to_email, body):
