@@ -16,7 +16,7 @@
 
 			<tr>
 				<td>Imagenes</td>
-				<td><input type="file" name="images" multiple></td>
+				<td><input id="fileinput" type="file" name="images" multiple></td>
 			</tr>
 
 			<tr>
@@ -30,14 +30,25 @@
 		</table>
 	</form>
 
+	<div id="status">
+	</div>
+
 	{% endblock content %}
 
 	{% block javascript_bottom %}
-
 	<script type="text/javascript">
+
 	function subir_previsualizacion() {
-		alert("ok");
-	}	
+		var fileInput = $("#fileinput")[0];
+		var fileList = fileInput.files;
+		var filesToUpload = fileList;
+		var status = $('#status');
+		for (x=0; x < filesToUpload.length; x++) {
+			var fileToUpload = filesToUpload[x];
+			status.append("<p>Archivo: " + fileToUpload.name + "( " + fileToUpload.size + "bytes)</p>");
+		}
+	}
+
 	</script>
 	{% endblock %}
 
