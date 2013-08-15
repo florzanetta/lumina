@@ -74,6 +74,7 @@
 						var newImg = document.createElement("img");
 						newImg.src = url;
 						div.appendChild(newImg);
+						document.TEMP.push(url);
 
 						var filename = document.createElement("small");
 						filename.textContent = "" + image_file.name + "";
@@ -154,6 +155,7 @@
 					}
 
 					function show_thumbnail() {
+						document.TEMP = new Array();
 						$('#thumbnails_preview').empty();
 						$('#status').empty();
 						var fileInput = $("#fileinput")[0];
@@ -166,9 +168,24 @@
 					}
 
 					function queue_for_upload() {
-						alert("TODO: CODE THIS!");
+						var images = {};
+						for (i = 0; i < document.TEMP.length; i++) {
+							images['img' + i] = document.TEMP[i];
+							console.info("URL[" + i + "]=" + document.TEMP[i]);
+						}
+
+						$.ajax({
+							type : "POST",
+							url : "{% url 'test_html5_upload_ajax' %}",
+							data : images
+						}).done(function(msg) {
+							alert("Data Saved: " + msg);
+						}).fail(function(msg) {
+							alert("ERROR");
+						});
+
 					}
-					
+
 					$(document).ready(function() {
 						$('#fileinput').bind('change', show_thumbnail);
 					});

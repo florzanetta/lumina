@@ -48,6 +48,19 @@ def test_html5_upload(request):
         context_instance=RequestContext(request))
 
 
+@csrf_exempt
+def test_html5_upload_ajax(request):
+    index = 0
+    img_count = 0
+    while True:
+        key = "img" + str(index)
+        if not key in request.POST:
+            break
+        img_count += 1
+        index += 1
+    return HttpResponse("Got {} images".format(img_count))
+
+
 def send_email(subject, to_email, body):
     logger.info("Sending email '{}' to '{}'".format(
         subject, to_email))

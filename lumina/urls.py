@@ -6,7 +6,7 @@ from django.views.decorators.cache import cache_control
 from lumina.views import ImageCreateView, ImageUpdateView, ImageListView, \
     AlbumListView, AlbumDetailView, AlbumCreateView, AlbumUpdateView, \
     SharedAlbumAnonymousView, SharedAlbumCreateView, CustomerListView, \
-    CustomerCreateView, CustomerUpdateView, ImageSelectionCreateView,\
+    CustomerCreateView, CustomerUpdateView, ImageSelectionCreateView, \
     ImageSelectionListView, ImageSelectionDetailView, ImageSelectionForCustomerView
 
 # Uncomment the next two lines to enable the admin:
@@ -18,6 +18,8 @@ urlpatterns = patterns(
     '',
 
     url(r'^test_html5_upload$', 'lumina.views.test_html5_upload', name='test_html5_upload'),
+    url(r'^test_html5_upload_ajax', 'lumina.views.test_html5_upload_ajax',
+        name='test_html5_upload_ajax'),
 
     #===========================================================================
     # Home
