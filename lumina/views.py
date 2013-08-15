@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+import logging
 import os
 import uuid
-import logging
 
 import mailer
 
@@ -27,6 +28,7 @@ from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
     AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm, \
     CustomerUpdateForm, ImageSelectionCreateForm
+import base64
 
 
 #
@@ -50,14 +52,30 @@ def test_html5_upload(request):
 
 @csrf_exempt
 def test_html5_upload_ajax(request):
+    PREFIX = 'data:image/jpeg;base64,'
     index = 0
     img_count = 0
+    new_album = Album.objects.create(name="Album {}".format(str(datetime.datetime.now())),
+                                     user=request.user)
     while True:
         key = "img" + str(index)
         if not key in request.POST:
             break
         img_count += 1
         index += 1
+
+        thumb_base64 = request.POST[key]
+        # thumb_base64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA(...)AP/2Q=="
+        assert thumb_base64.startswith(PREFIX)
+        thumb_base64 = thumb_base64[len(PREFIX):]
+        thumb_contents = base64.decodestring(thumb_base64)
+
+        new_image = Image(album=new_album, user=request.user, content_type='image/jpg',
+                         original_filename=str(uuid.uuid4()))
+        new_image.size = len(thumb_contents)
+        from django.core.files.base import ContentFile
+        new_image.image.save('thumb.jpg', ContentFile(thumb_contents))
+        new_image.save()
     return HttpResponse("Got {} images".format(img_count))
 
 
