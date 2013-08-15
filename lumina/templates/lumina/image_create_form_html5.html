@@ -7,50 +7,112 @@
 </head>
 <body>
 
-	{% block content %}
+    {% block content %}
 
-	<h3>Agregar imagen // HTML5 + client-side thumbnail</h3>
-	<form action="." method="post" enctype="multipart/form-data">
-		<!-- { % csrf_token % } -->
-		<table class="table">
+    <h3>Agregar imagen // HTML5 + client-side thumbnail</h3>
+    <form action="." method="post" enctype="multipart/form-data">
+        <!-- { % csrf_token % } -->
+        <table class="table">
 
-			<tr>
-				<td>Imagenes</td>
-				<td><input id="fileinput" type="file" name="images" multiple></td>
-			</tr>
+            <tr>
+                <td>Imagenes</td>
+                <td>
+                    <input id="fileinput" type="file" name="images" multiple>
+                </td>
+            </tr>
 
-			<tr>
-				<td></td>
-				<td>
-					<input type="button" value="Subir inmediatamente" class="btn btn-primary">
-					<a href="javascript:void(0);" onclick="subir_previsualizacion();"
-						class="btn btn-primary">Subir previsualizacion</a>
-				</td>
-			</tr>
-		</table>
-	</form>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="button" value="Subir inmediatamente" class="btn btn-primary"> <a
+                        href="javascript:void(0);" onclick="subir_previsualizacion();" class="btn btn-primary">Subir
+                        previsualizacion</a>
+                </td>
+            </tr>
+        </table>
+    </form>
 
-	<div id="status">
-	</div>
+    <div id="status"></div>
 
-	{% endblock content %}
+    {% endblock content %} {% block javascript_bottom %}
+    <script type="text/javascript">
+					// https://github.com/josefrichter/resize/blob/master/public/preprocess.js
+					function resizeMe(img, max_width, max_height, quality) {
 
-	{% block javascript_bottom %}
-	<script type="text/javascript">
+						// var max_width = fileinput.getAttribute('data-maxwidth');
+						// var max_height = fileinput.getAttribute('data-maxheight');
 
-	function subir_previsualizacion() {
-		var fileInput = $("#fileinput")[0];
-		var fileList = fileInput.files;
-		var filesToUpload = fileList;
-		var status = $('#status');
-		for (x=0; x < filesToUpload.length; x++) {
-			var fileToUpload = filesToUpload[x];
-			status.append("<p>Archivo: " + fileToUpload.name + "( " + fileToUpload.size + "bytes)</p>");
-		}
-	}
+						// Initially, W & H has original size
+						var width = img.width;
+						var height = img.height;
 
-	</script>
-	{% endblock %}
+						// calculate the width and height, constraining the proportions
+						if (width > height) {
+							if (width > max_width) {
+								//height *= max_width / width;
+								height = Math
+										.round(height *= max_width / width);
+								width = max_width;
+							}
+						} else {
+							if (height > max_height) {
+								//width *= max_height / height;
+								width = Math
+										.round(width *= max_height / height);
+								height = max_height;
+							}
+						}
+
+						// Now, W & H has the size for preview
+
+						// resize the canvas and draw the image data into it
+						var canvas = document.createElement('canvas');
+						canvas.width = width;
+						canvas.height = height;
+						var ctx = canvas.getContext("2d");
+						ctx.drawImage(img, 0, 0, width, height);
+
+						// xhgdeorox // preview.appendChild(canvas); // do the actual resized preview
+						console.info("Canvas: " + canvas);
+
+						// get the data from canvas as 70% JPG (can be also PNG, etc.)
+						// return canvas.toDataURL("image/jpeg", 0.7);
+						var dataUrl = canvas.toDataURL("image/jpeg", quality);
+						console.info("dataUrl: " + dataUrl);
+						return dataUrl;
+					}
+
+					function process_image_file(image_file) {
+						var status = $('#status');
+
+						var img = document.createElement("img");
+						img.src = window.URL.createObjectURL(image_file);
+
+						img.onload = function() {
+							status.append("<p>Archivo: " + image_file.name
+									+ "( " + image_file.size + "bytes; "
+									+ this.width + "x" + this.height + ")</p>");
+
+							var url = resizeMe(this, 90, 90, 0.1);
+							console.info("URL: " + url)
+							var newImg = document.createElement("img");
+							newImg.src = url;
+							status.append(newImg);
+
+						};
+					}
+
+					function subir_previsualizacion() {
+						var fileInput = $("#fileinput")[0];
+						var fileList = fileInput.files;
+						var filesToUpload = fileList;
+						for (x = 0; x < filesToUpload.length; x++) {
+							var fileToUpload = filesToUpload[x];
+							process_image_file(fileToUpload);
+						}
+					}
+				</script>
+    {% endblock %}
 
 </body>
 </html>
