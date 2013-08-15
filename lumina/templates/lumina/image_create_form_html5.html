@@ -52,7 +52,8 @@
 						var status = $('#status');
 						var li = document.createElement("li");
 						li.className = "text-error";
-						li.textContent = "" + non_image_file.name + " no es una imagen valida";
+						li.textContent = "" + non_image_file.name
+								+ " no es una imagen valida";
 						status.append(li);
 					}
 
@@ -148,6 +149,10 @@
 							process_image_file(fileToUpload);
 						}
 					}
+
+					$(document).ready(function() {
+						$('#fileinput').bind('change', subir_previsualizacion);
+					});
 				</script>
     {% endblock %}
 
