@@ -3,13 +3,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>{% block title %}Lumina - Agregar imagen{% endblock %}</title>
+<title>{% block title %}Lumina - Crear album de vistas previas{% endblock %}</title>
 </head>
 <body>
 
     {% block content %}
 
-    <h3>Agregar imagen // HTML5 + client-side thumbnail</h3>
+    <h3>Crear album de vistas previas</h3>
     <form action="." method="post" enctype="multipart/form-data">
         <!-- { % csrf_token % } -->
         <table class="table">
@@ -27,7 +27,8 @@
                     <!--
                     <input type="button" value="Subir inmediatamente" class="btn btn-primary">
                     -->
-                    <a href="javascript:void(0);" onclick="queue_for_upload();" class="btn btn-primary">Subir
+                    <a href="javascript:void(0);" onclick="upload_previews();"
+                        data-loading-text="Seleccione las imagenes..." class="btn btn-primary" id="submit_button">Subir
                         previsualizacion</a>
                 </td>
             </tr>
@@ -87,6 +88,11 @@
 								+ s[e];
 					}
 
+					function finished_loading_thumbnails() {
+						$('#submit_button').button('reset');
+						$('#close_statistics_modal').button('reset');
+					}
+
 					function show_statistics_modal() {
 						$('#stats_orig_size')[0].textContent = '';
 						$('#stats_preview_size')[0].textContent = '';
@@ -109,7 +115,7 @@
 						$('#stats_files_processed')[0].textContent = processed_including_current;
 
 						if (processed_including_current >= document.LUM_TOTAL_FILE_COUNT) {
-							$('#close_statistics_modal').button('reset');
+							finished_loading_thumbnails();
 						}
 					}
 
@@ -308,6 +314,11 @@
 						var fileList = fileInput.files;
 						var filesToUpload = fileList;
 
+						if (filesToUpload.length == 0) {
+							$('#submit_button').button('loading');
+							return;
+						}
+
 						document.LUM_TOTAL_FILE_COUNT = filesToUpload.length;
 						show_statistics_modal(); // Call *AFTER* setting doc.LUM_TOTAL_FILE_COUNT 
 
@@ -321,7 +332,7 @@
 
 					}
 
-					function queue_for_upload() {
+					function upload_previews() {
 						var images = {};
 						for (i = 0; i < document.LUM_PREVIEW_IMAGES.length; i++) {
 							images['img' + i] = document.LUM_PREVIEW_IMAGES[i];
@@ -351,6 +362,7 @@
 
 					$(document).ready(function() {
 						$('#fileinput').bind('change', show_thumbnail);
+						$('#submit_button').button('loading');
 					});
 				</script>
     {% endblock %}
