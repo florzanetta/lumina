@@ -101,7 +101,7 @@
 						var newImg = document.createElement("img");
 						newImg.src = url;
 						div.appendChild(newImg);
-						document.TEMP.push(url);
+						document.LUM_PREVIEW_IMAGES.push(url);
 
 						var filename = document.createElement("small");
 						filename.textContent = "" + image_file.name + "";
@@ -131,7 +131,8 @@
 						newImg.src = url;
 						newImg.className = "img-polaroid";
 						div.appendChild(newImg);
-						document.TEMP.push(url);
+						document.LUM_PREVIEW_IMAGES.push(url);
+						document.LUM_PREVIEW_FILENAMES.push(image_file.name);
 						thumbnails.appendChild(div);
 
 						//
@@ -282,7 +283,8 @@
 					}
 
 					function show_thumbnail() {
-						document.TEMP = new Array();
+						document.LUM_PREVIEW_IMAGES = new Array();
+						document.LUM_PREVIEW_FILENAMES = new Array();
 						document.size_original = 0;
 						document.size_preview = 0;
 						$('#thumbnails_preview').empty();
@@ -300,9 +302,11 @@
 
 					function queue_for_upload() {
 						var images = {};
-						for (i = 0; i < document.TEMP.length; i++) {
-							images['img' + i] = document.TEMP[i];
-							console.info("URL[" + i + "]=" + document.TEMP[i]);
+						for (i = 0; i < document.LUM_PREVIEW_IMAGES.length; i++) {
+							images['img' + i] = document.LUM_PREVIEW_IMAGES[i];
+							images['img' + i + '_filename'] = document.LUM_PREVIEW_FILENAMES[i];
+							console.info("URL[" + i + "]="
+									+ document.LUM_PREVIEW_IMAGES[i]);
 						}
 
 						$.ajax({

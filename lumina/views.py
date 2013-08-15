@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import base64
 import datetime
 import logging
 import os
@@ -21,6 +22,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import SuspiciousOperation, ObjectDoesNotExist, \
     PermissionDenied
 from django.views.decorators.csrf import csrf_exempt
+from django.core.files.base import ContentFile
 
 from lumina.models import Image, Album, SharedAlbum, \
     ImageSelection, LuminaUser
@@ -28,7 +30,6 @@ from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
     AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm, \
     CustomerUpdateForm, ImageSelectionCreateForm
-import base64
 
 
 #
@@ -65,16 +66,17 @@ def test_html5_upload_ajax(request):
         index += 1
 
         thumb_base64 = request.POST[key]
+        filename = request.POST[key + '_filename']
+
         # thumb_base64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA(...)AP/2Q=="
         assert thumb_base64.startswith(PREFIX)
         thumb_base64 = thumb_base64[len(PREFIX):]
         thumb_contents = base64.decodestring(thumb_base64)
 
         new_image = Image(album=new_album, user=request.user, content_type='image/jpg',
-                         original_filename=str(uuid.uuid4()))
+                         original_filename='thumb_' + filename)
         new_image.size = len(thumb_contents)
-        from django.core.files.base import ContentFile
-        new_image.image.save('thumb.jpg', ContentFile(thumb_contents))
+        new_image.image.save('thumb_' + filename, ContentFile(thumb_contents))
         new_image.save()
     return HttpResponse("Got {} images".format(img_count))
 
