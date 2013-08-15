@@ -74,17 +74,19 @@ def test_html5_upload_ajax(request):
         thumb_base64 = thumb_base64[len(PREFIX):]
         thumb_contents = base64.decodestring(thumb_base64)
 
-        new_image = Image(album=new_album, user=request.user, content_type='image/jpg',
-                         original_filename='thumb_' + filename)
+        new_image = Image(
+            album=new_album, user=request.user, content_type='image/jpg',
+            original_filename='thumb_' + filename)
+
         new_image.size = len(thumb_contents)
         new_image.image.save('thumb_' + filename, ContentFile(thumb_contents))
         new_image.save()
 
     response_data = {
-                     'img_count': img_count,
-                     'status': 'ok',
-                     'redirect': reverse('album_detail', args=[new_album.id]),
-                     }
+        'img_count': img_count,
+        'status': 'ok',
+        'redirect': reverse('album_detail', args=[new_album.id]),
+    }
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
