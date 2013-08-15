@@ -273,7 +273,10 @@
 						$('#status').empty();
 
 						$('#close_statistics_modal').button('loading');
-						$('#statistics_modal').modal();
+						$('#statistics_modal').modal({
+							backdrop : 'static',
+							keyboard : false
+						});
 						var fileInput = $("#fileinput")[0];
 						var fileList = fileInput.files;
 						var filesToUpload = fileList;
