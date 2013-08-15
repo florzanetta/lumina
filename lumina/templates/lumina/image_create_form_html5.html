@@ -14,17 +14,32 @@
 		<!-- { % csrf_token % } -->
 		<table class="table">
 
-			<input type="file" name="images" multiple>
+			<tr>
+				<td>Imagenes</td>
+				<td><input type="file" name="images" multiple></td>
+			</tr>
 
 			<tr>
 				<td></td>
-				<td><input type="submit" value="Agregar"
-					class="btn btn-primary"></td>
+				<td>
+					<input type="button" value="Subir inmediatamente" class="btn btn-primary">
+					<a href="javascript:void(0);" onclick="subir_previsualizacion();"
+						class="btn btn-primary">Subir previsualizacion</a>
+				</td>
 			</tr>
 		</table>
 	</form>
 
 	{% endblock content %}
+
+	{% block javascript_bottom %}
+
+	<script type="text/javascript">
+	function subir_previsualizacion() {
+		alert("ok");
+	}	
+	</script>
+	{% endblock %}
 
 </body>
 </html>
