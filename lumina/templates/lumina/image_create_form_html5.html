@@ -34,13 +34,19 @@
         </table>
     </form>
 
-    <div id="thumbnails_preview">
-    </div>
+    <div id="thumbnails_preview"></div>
 
     <ul id="status"></ul>
 
     {% endblock content %} {% block javascript_bottom %}
     <script type="text/javascript">
+					function readablizeBytes(bytes) {
+						var s = [ 'bytes', 'kB', 'MB', 'GB', 'TB', 'PB' ];
+						var e = Math.floor(Math.log(bytes) / Math.log(1024));
+						return (bytes / Math.pow(1024, e)).toFixed(2) + " "
+								+ s[e];
+					}
+
 					function add_preview_img_error(non_image_file) {
 						var status = $('#status');
 						var li = document.createElement("li");
@@ -54,7 +60,11 @@
 						var thumbnails = $('#thumbnails_preview')[0];
 						var tmp;
 
-						var url = resizeMe(img, 400, 400, 0.5);
+						var ret = resizeMe(img, 400, 400, 0.5);
+						var url = ret[0];
+						var width = ret[1];
+						var height = ret[2];
+
 						console.info("URL: " + url)
 
 						/*
@@ -109,7 +119,7 @@
 						// File
 						var small = document.createElement("small");
 						tmp = document.createElement("strong");
-						tmp.textContent = "File: ";
+						tmp.textContent = "Original file: ";
 						small.appendChild(tmp);
 
 						tmp = document.createElement("span");
@@ -122,7 +132,8 @@
 						small.appendChild(tmp);
 
 						tmp = document.createElement("span");
-						tmp.textContent = "" + image_file.size + " - ";
+						tmp.textContent = "" + readablizeBytes(image_file.size)
+								+ " - ";
 						small.appendChild(tmp);
 
 						// Img. dimensions
@@ -137,6 +148,51 @@
 						div.appendChild(small);
 						thumbnails.appendChild(div);
 
+						//
+						// 3rd DIV
+						//
+
+						var preview_file_size = window.atob(url.substring(23)).length;
+
+						div = document.createElement("div");
+						small = document.createElement("small");
+
+						// File size
+						tmp = document.createElement("strong");
+						tmp.textContent = "Preview size: ";
+						small.appendChild(tmp);
+
+						tmp = document.createElement("span");
+						tmp.textContent = ""
+								+ readablizeBytes(preview_file_size);
+						small.appendChild(tmp);
+
+						// Img. dimensions
+						tmp = document.createElement("strong");
+						tmp.textContent = " - Dimensions: ";
+						small.appendChild(tmp);
+
+						tmp = document.createElement("span");
+						tmp.textContent = "" + width + "x" + height;
+						small.appendChild(tmp);
+
+						// Speedup
+						var speedup = ((preview_file_size * 1.0)
+								/ (image_file.size * 1.0) * 100.0)
+						tmp = document.createElement("strong");
+						tmp.textContent = " - Radio: ";
+						small.appendChild(tmp);
+
+						tmp = document.createElement("span");
+						tmp.textContent = "" + speedup.toFixed(2);
+						small.appendChild(tmp);
+
+						div.appendChild(small);
+						thumbnails.appendChild(div);
+
+						//
+						// HR
+						//
 						var hr = document.createElement("hr");
 						thumbnails.appendChild(hr);
 
@@ -182,7 +238,7 @@
 						// return canvas.toDataURL("image/jpeg", 0.7);
 						var dataUrl = canvas.toDataURL("image/jpeg", quality);
 						console.info("dataUrl: " + dataUrl);
-						return dataUrl;
+						return [ dataUrl, width, height ];
 					}
 
 					function process_image_file(image_file) {
