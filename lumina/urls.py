@@ -17,6 +17,8 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
 
+    url(r'^test_html5_upload$', 'lumina.views.test_html5_upload', name='test_html5_upload'),
+
     #===========================================================================
     # Home
     #===========================================================================

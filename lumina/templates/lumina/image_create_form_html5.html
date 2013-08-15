@@ -1,0 +1,30 @@
+{% extends "lumina/base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina - Agregar imagen{% endblock %}</title>
+</head>
+<body>
+
+	{% block content %}
+
+	<h3>Agregar imagen // HTML5 + client-side thumbnail</h3>
+	<form action="." method="post" enctype="multipart/form-data">
+		<!-- { % csrf_token % } -->
+		<table class="table">
+
+			<input type="file" name="images" multiple>
+
+			<tr>
+				<td></td>
+				<td><input type="submit" value="Agregar"
+					class="btn btn-primary"></td>
+			</tr>
+		</table>
+	</form>
+
+	{% endblock content %}
+
+</body>
+</html>

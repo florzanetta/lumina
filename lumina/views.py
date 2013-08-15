@@ -19,6 +19,7 @@ from django.views.decorators.cache import cache_control
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import SuspiciousOperation, ObjectDoesNotExist, \
     PermissionDenied
+from django.views.decorators.csrf import csrf_exempt
 
 from lumina.models import Image, Album, SharedAlbum, \
     ImageSelection, LuminaUser
@@ -37,6 +38,14 @@ from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
 #
 
 logger = logging.getLogger(__name__)
+
+
+@csrf_exempt
+def test_html5_upload(request):
+    ctx = {}
+    return render_to_response(
+        'lumina/image_create_form_html5.html', ctx,
+        context_instance=RequestContext(request))
 
 
 def send_email(subject, to_email, body):
