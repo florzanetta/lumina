@@ -88,6 +88,7 @@
 						var img = document.createElement("img");
 						img.src = window.URL.createObjectURL(image_file);
 
+						// http://stackoverflow.com/questions/12570834/how-can-i-get-the-file-size-image-height-and-width-before-upload
 						img.onerror = function() {
 							status.append("<p>Archivo: " + image_file.name
 									+ "( " + image_file.size
