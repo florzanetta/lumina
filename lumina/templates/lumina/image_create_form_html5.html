@@ -88,6 +88,12 @@
 						var img = document.createElement("img");
 						img.src = window.URL.createObjectURL(image_file);
 
+						img.onerror = function() {
+							status.append("<p>Archivo: " + image_file.name
+									+ "( " + image_file.size
+									+ "bytes; NO ES UN ARCHIVO VALIDO)</p>");
+						};
+
 						img.onload = function() {
 							status.append("<p>Archivo: " + image_file.name
 									+ "( " + image_file.size + "bytes; "
@@ -103,6 +109,7 @@
 					}
 
 					function subir_previsualizacion() {
+						$('#status').empty();
 						var fileInput = $("#fileinput")[0];
 						var fileList = fileInput.files;
 						var filesToUpload = fileList;
