@@ -90,34 +90,55 @@
 						thumbnails.append(li);
 						 */
 
+						//
+						// 1st DIV
+						//
 						var div = document.createElement("div");
-						// div.className = "thumbnail text-center";
-
 						var newImg = document.createElement("img");
 						newImg.src = url;
 						newImg.className = "img-polaroid";
 						div.appendChild(newImg);
 						document.TEMP.push(url);
-
-						var filename = document.createElement("small");
-						filename.textContent = "" + image_file.name + "";
-						tmp = document.createElement("div");
-						tmp.appendChild(filename);
-						div.appendChild(tmp);
-
-						var filesize = document.createElement("small");
-						filesize.textContent = "" + image_file.size + " bytes";
-						tmp = document.createElement("div");
-						tmp.appendChild(filesize);
-						div.appendChild(tmp);
-
-						var imgsize = document.createElement("small");
-						imgsize.textContent = img.width + "x" + img.height;
-						tmp = document.createElement("div");
-						tmp.appendChild(imgsize);
-						div.appendChild(tmp);
-
 						thumbnails.appendChild(div);
+
+						//
+						// 2nd DIV
+						//
+						div = document.createElement("div");
+
+						// File
+						var small = document.createElement("small");
+						tmp = document.createElement("strong");
+						tmp.textContent = "File: ";
+						small.appendChild(tmp);
+
+						tmp = document.createElement("span");
+						tmp.textContent = "" + image_file.name + " - ";
+						small.appendChild(tmp);
+
+						// File size
+						tmp = document.createElement("strong");
+						tmp.textContent = "Size: ";
+						small.appendChild(tmp);
+
+						tmp = document.createElement("span");
+						tmp.textContent = "" + image_file.size + " - ";
+						small.appendChild(tmp);
+
+						// Img. dimensions
+						tmp = document.createElement("strong");
+						tmp.textContent = "Dimensions: ";
+						small.appendChild(tmp);
+
+						tmp = document.createElement("span");
+						tmp.textContent = "" + img.width + "x" + img.height;
+						small.appendChild(tmp);
+
+						div.appendChild(small);
+						thumbnails.appendChild(div);
+
+						var hr = document.createElement("hr");
+						thumbnails.appendChild(hr);
 
 					}
 
