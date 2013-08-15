@@ -36,6 +36,28 @@
 
     {% endblock content %} {% block javascript_bottom %}
     <script type="text/javascript">
+					function add_preview_img_error(non_image_file) {
+						var status = $('#status');
+						status.append("<p>Archivo: " + non_image_file.name
+								+ "( " + non_image_file.size
+								+ "bytes; NO ES UN ARCHIVO VALIDO)</p>");
+					}
+
+					function add_preview_img(image_file, img) {
+						var status = $('#status');
+						status.append("<p>Archivo: " + image_file.name + "( "
+								+ image_file.size + "bytes; " + img.width + "x"
+								+ img.height + ")</p>");
+
+						var url = resizeMe(img, 90, 90, 0.1);
+						console.info("URL: " + url)
+						// <img src="..." class="img-polaroid">
+						var newImg = document.createElement("img");
+						newImg.className = newImg.className + "img-polaroid";
+						newImg.src = url;
+						status.append(newImg);
+					}
+
 					// https://github.com/josefrichter/resize/blob/master/public/preprocess.js
 					function resizeMe(img, max_width, max_height, quality) {
 
@@ -83,31 +105,16 @@
 					}
 
 					function process_image_file(image_file) {
-						var status = $('#status');
-
 						var img = document.createElement("img");
 						img.src = window.URL.createObjectURL(image_file);
 
 						// http://stackoverflow.com/questions/12570834/how-can-i-get-the-file-size-image-height-and-width-before-upload
 						img.onerror = function() {
-							status.append("<p>Archivo: " + image_file.name
-									+ "( " + image_file.size
-									+ "bytes; NO ES UN ARCHIVO VALIDO)</p>");
+							add_preview_img_error(image_file);
 						};
 
 						img.onload = function() {
-							status.append("<p>Archivo: " + image_file.name
-									+ "( " + image_file.size + "bytes; "
-									+ this.width + "x" + this.height + ")</p>");
-
-							var url = resizeMe(this, 90, 90, 0.1);
-							console.info("URL: " + url)
-							// <img src="..." class="img-polaroid">
-							var newImg = document.createElement("img");
-							newImg.className = newImg.className + "img-polaroid";
-							newImg.src = url;
-							status.append(newImg);
-
+							add_preview_img(image_file, this);
 						};
 					}
 
