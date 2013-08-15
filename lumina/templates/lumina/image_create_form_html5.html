@@ -59,6 +59,8 @@
 
 					function add_preview_img(image_file, img) {
 						var thumbnails = $('#thumbnails_preview');
+						var tmp;
+
 						/*
 						status.append("<p>Archivo: " + image_file.name + "( "
 								+ image_file.size + "bytes; " + img.width + "x"
@@ -69,15 +71,33 @@
 
 						var li = document.createElement("li");
 						li.className = "span4";
+
 						var div = document.createElement("div");
 						div.className = "thumbnail text-center";
 						li.appendChild(div);
+
 						var newImg = document.createElement("img");
 						newImg.src = url;
 						div.appendChild(newImg);
+
 						var filename = document.createElement("small");
 						filename.textContent = "" + image_file.name + "";
-						div.appendChild(filename);
+						tmp = document.createElement("div");
+						tmp.appendChild(filename);
+						div.appendChild(tmp);
+
+						var filesize = document.createElement("small");
+						filesize.textContent = "" + image_file.size + " bytes";
+						tmp = document.createElement("div");
+						tmp.appendChild(filesize);
+						div.appendChild(tmp);
+
+						var imgsize = document.createElement("small");
+						imgsize.textContent = img.width + "x" + img.height;
+						tmp = document.createElement("div");
+						tmp.appendChild(imgsize);
+						div.appendChild(tmp);
+
 						thumbnails.append(li);
 					}
 
