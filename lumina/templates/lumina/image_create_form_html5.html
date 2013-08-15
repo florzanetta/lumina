@@ -34,6 +34,23 @@
         </table>
     </form>
 
+    <div id="statistics" style="display: none;">
+        <table class="table table-condensed">
+            <tr>
+                <th width="5%">Original:</th>
+                <td>
+                    <span id="stats_orig_size"></span>
+                </td>
+            </tr>
+            <tr>
+                <th>Preview:</th>
+                <td>
+                    <span id="stats_preview_size"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
     <div id="thumbnails_preview"></div>
 
     <ul id="status"></ul>
@@ -45,6 +62,12 @@
 						var e = Math.floor(Math.log(bytes) / Math.log(1024));
 						return (bytes / Math.pow(1024, e)).toFixed(2) + " "
 								+ s[e];
+					}
+
+					function update_statistics() {
+						$('#statistics').show();
+						$('#stats_orig_size')[0].textContent = readablizeBytes(document.size_original);
+						$('#stats_preview_size')[0].textContent = readablizeBytes(document.size_preview);
 					}
 
 					function add_preview_img_error(non_image_file) {
@@ -196,6 +219,9 @@
 						var hr = document.createElement("hr");
 						thumbnails.appendChild(hr);
 
+						document.size_original += image_file.size;
+						document.size_preview += preview_file_size;
+						update_statistics();
 					}
 
 					// https://github.com/josefrichter/resize/blob/master/public/preprocess.js
@@ -257,8 +283,11 @@
 
 					function show_thumbnail() {
 						document.TEMP = new Array();
+						document.size_original = 0;
+						document.size_preview = 0;
 						$('#thumbnails_preview').empty();
 						$('#status').empty();
+
 						var fileInput = $("#fileinput")[0];
 						var fileList = fileInput.files;
 						var filesToUpload = fileList;
@@ -266,6 +295,7 @@
 							var fileToUpload = filesToUpload[x];
 							process_image_file(fileToUpload);
 						}
+
 					}
 
 					function queue_for_upload() {
