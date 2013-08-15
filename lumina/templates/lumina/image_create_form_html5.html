@@ -32,12 +32,24 @@
         </table>
     </form>
 
-    <div id="status"></div>
+    <div id="status2"></div>
+
+    <ul class="thumbnails" id="status">
+        <!--
+        <li class="span4">
+            <div class="thumbnail">
+                <img data-src="holder.js/300x200" alt="">
+                <h3>Thumbnail label</h3>
+                <p>Thumbnail caption...</p>
+            </div>
+        </li>
+        -->
+    </ul>
 
     {% endblock content %} {% block javascript_bottom %}
     <script type="text/javascript">
 					function add_preview_img_error(non_image_file) {
-						var status = $('#status');
+						var status = $('#status2');
 						status.append("<p>Archivo: " + non_image_file.name
 								+ "( " + non_image_file.size
 								+ "bytes; NO ES UN ARCHIVO VALIDO)</p>");
@@ -45,17 +57,31 @@
 
 					function add_preview_img(image_file, img) {
 						var status = $('#status');
+						/*
 						status.append("<p>Archivo: " + image_file.name + "( "
 								+ image_file.size + "bytes; " + img.width + "x"
 								+ img.height + ")</p>");
-
+						 */
 						var url = resizeMe(img, 90, 90, 0.1);
 						console.info("URL: " + url)
-						// <img src="..." class="img-polaroid">
+
+						/*
 						var newImg = document.createElement("img");
-						newImg.className = newImg.className + "img-polaroid";
 						newImg.src = url;
 						status.append(newImg);
+						 */
+
+						var li = document.createElement("li");
+						var div = document.createElement("div");
+						div.className = "thumbnail";
+						li.appendChild(div);
+						var newImg = document.createElement("img");
+						newImg.src = url;
+						div.appendChild(newImg);
+						var filename = document.createElement("small");
+						filename.textContent = "" + image_file.name + "";
+						div.appendChild(filename);
+						status.append(li);
 					}
 
 					// https://github.com/josefrichter/resize/blob/master/public/preprocess.js
