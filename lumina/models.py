@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Q
+from django.contrib.auth.models import AbstractUser, UserManager
 
 
 class ForUserManagerMixin():
@@ -14,38 +14,29 @@ class ForUserManagerMixin():
         return self.filter(user=user)
 
 
-#===============================================================================
-# UserProxy
-#===============================================================================
-
-# https://docs.djangoproject.com/en/1.5/topics/db/models/#proxy-models
-
-class UserProxyManager(models.Manager):
-
-    def all_my_customers(self, user):
-        return self.filter(luminauserprofile__customer_of=user)
+class LuminaUserManager(UserManager):
+    pass
 
 
-class UserProxyExtraManagers(models.Model):
-    custom_objects = UserProxyManager()
+class LuminaUser(AbstractUser):
+    PHOTOGRAPHER = 'P'
+    GUEST = 'G'
+    USER_TYPES = (
+        (PHOTOGRAPHER, 'Fotografo'),
+        (GUEST, 'Invitado'),
+    )
+    user_type = models.CharField(max_length=1, choices=USER_TYPES, default=PHOTOGRAPHER)
+    customer_of = models.ForeignKey('self', null=True, related_name='customers')
 
-    class Meta:
-        abstract = True
+    objects = LuminaUserManager()
 
-
-class UserProxy(User, UserProxyExtraManagers):
-    """
-    This is a class to be used instead of Django's User.
-    This is needed to make simple modifications, like an
-    improved __unicode__(), and to add methods
-    to the Manager object.
-    """
+    def all_my_customers(self):
+        assert self.user_type == LuminaUser.PHOTOGRAPHER
+        # return self.filter(customer_of=self)
+        return self.customers.all()
 
     def __unicode__(self):
         return u"{} ({})".format(self.get_full_name(), self.username)
-
-    class Meta:
-        proxy = True
 
 
 #===============================================================================
@@ -72,8 +63,9 @@ class AlbumManager(models.Manager, ForUserManagerMixin):
 
 class Album(models.Model):
     name = models.CharField(max_length=300)
-    user = models.ForeignKey(User)  # owner
-    shared_with = models.ManyToManyField(User, blank=True, related_name='others_shared_albums')
+    user = models.ForeignKey(LuminaUser)  # owner
+    shared_with = models.ManyToManyField(LuminaUser, blank=True,
+                                         related_name='others_shared_albums')
 
     objects = AlbumManager()
 
@@ -110,7 +102,7 @@ class SharedAlbum(models.Model):
     """
     shared_with = models.EmailField(max_length=254)
     # https://docs.djangoproject.com/en/1.5/ref/models/fields/#emailfield
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(LuminaUser)
     album = models.ForeignKey(Album, related_name='shares_via_email')
     random_hash = models.CharField(max_length=36, unique=True)  # len(uuid4) = 36
 
@@ -150,10 +142,7 @@ class ImageSelectionManager(models.Manager):
         Returns all the ImageSelection instances including those for what the user
         is the customer, and those for what the user is the owner of the album
         """
-        return self.filter(
-            Q(customer=user) |
-            Q(album__user=user)
-        )
+        return self.filter(Q(customer=user) | Q(album__user=user))
 
     def all_my_imageselections_as_customer(self, user, just_pending=False):
         """
@@ -184,9 +173,9 @@ class ImageSelection(models.Model):
         (STATUS_WAITING, u'Esperando selección de cliente'),
         (STATUS_IMAGES_SELECTED, u'Seleccion realizada'),
     )
-    user = models.ForeignKey(User, related_name='+')
+    user = models.ForeignKey(LuminaUser, related_name='+')
     album = models.ForeignKey(Album)
-    customer = models.ForeignKey(UserProxy, related_name='+')
+    customer = models.ForeignKey(LuminaUser, related_name='+')
     image_quantity = models.PositiveIntegerField()
     status = models.CharField(max_length=1, choices=STATUS, default=STATUS_WAITING)
 
@@ -222,11 +211,10 @@ class ImageManager(models.Manager, ForUserManagerMixin):
         (ie: the user's images + the images of shared albums of other users)
         but other won't be downloadable (images from ImageSelection)
         """
-        return self.filter(
-            Q(user=user) |
-            Q(album__shared_with=user) |
-            Q(album__imageselection__customer=user)
-        ).distinct()
+        q = Q(user=user)
+        q = q | Q(album__shared_with=user)
+        q = q | Q(album__imageselection__customer=user)
+        return self.filter(q).distinct()
 
     def get_for_download(self, user, image_id):
         """
@@ -268,7 +256,7 @@ class Image(models.Model):
     size = models.PositiveIntegerField()
     original_filename = models.CharField(max_length=128)
     content_type = models.CharField(max_length=64)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(LuminaUser)
     album = models.ForeignKey(Album, null=True)
 
     objects = ImageManager()
@@ -286,33 +274,3 @@ class Image(models.Model):
     def set_original_filename(self, filename):
         """Set original filename, truncating if it's too large"""
         self.original_filename = filename[0:128]
-
-
-#===============================================================================
-# LuminaUserProfile
-#===============================================================================
-
-class LuminaUserProfileManager(models.Manager):
-
-    def for_user(self, user):
-        """Filter objects by user"""
-        return self.filter(customer_of=user)
-
-
-class LuminaUserProfile(models.Model):
-    # https://docs.djangoproject.com/en/1.5/topics/auth/customizing/\
-    #    #extending-the-existing-user-model
-    PHOTOGRAPHER = 'P'
-    GUEST = 'G'
-    USER_TYPES = (
-        (PHOTOGRAPHER, 'Fotografo'),
-        (GUEST, 'Invitado'),
-    )
-    user = models.OneToOneField(User)
-    user_type = models.CharField(max_length=1, choices=USER_TYPES, default=PHOTOGRAPHER)
-    customer_of = models.ForeignKey(User, related_name='customers')
-
-    objects = LuminaUserProfileManager()
-
-    def __unicode__(self):
-        return u"Profile of '{0}'".format(self.user)

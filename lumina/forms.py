@@ -5,10 +5,9 @@ Created on Jun 1, 2013
 '''
 
 from django import forms
-from django.contrib.auth.models import User
-
-from lumina.models import Image, Album, SharedAlbum, ImageSelection
 from django.forms.widgets import CheckboxSelectMultiple
+
+from lumina.models import Image, Album, SharedAlbum, ImageSelection, LuminaUser
 
 
 #===============================================================================
@@ -91,7 +90,7 @@ class CustomerCreateForm(forms.ModelForm):
         max_length=20, required=True, widget=forms.PasswordInput(), label=u'Contrasena (otra vez)')
 
     class Meta:
-        model = User
+        model = LuminaUser
         fields = (
             'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2'
         )
@@ -113,7 +112,7 @@ class CustomerUpdateForm(forms.ModelForm):
         label=u'Contrasena (otra vez)')
 
     class Meta:
-        model = User
+        model = LuminaUser
         fields = (
             'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2'
         )

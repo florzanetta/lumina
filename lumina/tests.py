@@ -8,19 +8,18 @@ from StringIO import StringIO
 
 from django.test import TestCase
 from django.test.utils import override_settings
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate
 
 from lumina.pil_utils import generate_thumbnail
-from lumina.models import Image, Album, UserProxy
+from lumina.models import Image, Album, LuminaUser
 
 
 MEDIA_ROOT_FOR_TESTING = os.path.join(os.path.split(
     os.path.abspath(__file__))[0], '../test/test-images')
 
 
-#def get_test_image_path():
+# def get_test_image_path():
 #    test_images_dir = os.path.join(os.path.split(os.path.abspath(__file__))[0],
 #        '../test/test-images')
 #    image_path = os.path.join(test_images_dir, '8902217876_de6e699066.jpg')
@@ -31,7 +30,7 @@ class LuminaTestCase(TestCase):
 
     def _login(self, username, password=None):
         self.assertTrue(self.client.login(username=username, password=password or username))
-        self._logged_in_user = User.objects.get(username=username)
+        self._logged_in_user = LuminaUser.objects.get(username=username)
 
     def login_admin(self):
         """Logon with the 'admin' user"""
@@ -140,7 +139,7 @@ class BasicAccessTest(LuminaTestCase):
                 self.assertEqual(self.client.get(
                     reverse("image_download", args=[image.id])).status_code, 200)
 
-            for customer in UserProxy.custom_objects.all_my_customers(self._logged_in_user):
+            for customer in self._logged_in_user.all_my_customers():
                 self.assertEqual(self.client.get(
                     reverse("customer_update", args=[customer.id])).status_code, 200)
 
@@ -149,12 +148,12 @@ class PermissoinsTests(LuminaTestCase):
     fixtures = ['tests/users.json', 'tests/albums.json', 'tests/images.json']
 
     def test_required_fixtures_admin(self):
-        u_admin = User.objects.get(username='admin')
+        u_admin = LuminaUser.objects.get(username='admin')
         self.assertEqual(Album.objects.get(pk=ADMIN_ALBUM_ID).user, u_admin)
         self.assertEqual(Image.objects.get(pk=ADMIN_IMAGE_ID).user, u_admin)
 
     def test_required_fixtures_juan(self):
-        u_juan = User.objects.get(username='juan')
+        u_juan = LuminaUser.objects.get(username='juan')
         self.assertEqual(Album.objects.get(pk=JUAN_ALBUM_ID).user, u_juan)
         self.assertEqual(Image.objects.get(pk=JUAN_IMAGE_ID).user, u_juan)
 
@@ -275,7 +274,7 @@ class CustomerTests(LuminaTestCase):
         self.assertTemplateUsed(response, 'lumina/customer_create_form.html')
         self.assertEqual(response.status_code, 200)
 
-        self.assertEqual(User.objects.filter(username='erwin').count(), 0)
+        self.assertEqual(LuminaUser.objects.filter(username='erwin').count(), 0)
 
         form_data = {
             'username': 'erwin',
@@ -286,10 +285,10 @@ class CustomerTests(LuminaTestCase):
             'password2': 'erwin123',
         }
         response = self.client.post(reverse('customer_create'), form_data)
-        self.assertEqual(User.objects.filter(username='erwin').count(), 1)
+        self.assertEqual(LuminaUser.objects.filter(username='erwin').count(), 1)
 
         self.assertEqual(
-            User.objects.filter(username='erwin', password='erwin123').count(), 0,
+            LuminaUser.objects.filter(username='erwin', password='erwin123').count(), 0,
             msg="The password was saved in the database as clear-text!!!")
 
         self.assertTrue(
@@ -301,10 +300,10 @@ class AlbumManagerTests(LuminaTestCase):
     fixtures = ['tests/users.json', 'tests/albums.json', 'tests/images.json']
 
     def setUp(self):
-        self.admin = User.objects.get(username='admin')
-        self.juan = User.objects.get(username='juan')
-        self.albert = User.objects.get(username='customer-ba07eb50-9fb5-4593-98')
-        self.max = User.objects.get(username='customer-957a6230-3eac-4ee1-a4')
+        self.admin = LuminaUser.objects.get(username='admin')
+        self.juan = LuminaUser.objects.get(username='juan')
+        self.albert = LuminaUser.objects.get(username='customer-ba07eb50-9fb5-4593-98')
+        self.max = LuminaUser.objects.get(username='customer-957a6230-3eac-4ee1-a4')
 
     def test_all_my_albums(self):
         admin_albums = Album.objects.all_my_albums(self.admin)

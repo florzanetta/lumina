@@ -12,7 +12,7 @@ from django.db.models.query import QuerySet
 from django.template.context import Context
 from django.conf import settings
 
-from lumina.models import LuminaUserProfile
+from lumina.models import LuminaUser
 
 
 logger = logging.getLogger(__name__)
@@ -91,32 +91,14 @@ def non_empty_unicode_keys(a_dict):
 def user_is_customer(user):
     if user is None:
         return False
-
-    try:
-        profile = user.luminauserprofile
-        if profile.user_type == LuminaUserProfile.GUEST:
-            return True
-        else:
-            return False
-    except LuminaUserProfile.DoesNotExist:
-        # If Profile doens't exists, assume is a photographer...
-        return False
+    return user.user_type == LuminaUser.GUEST
 
 
 @register.filter(name='user_is_photographer')
 def user_is_photographer(user):
     if user is None:
         return False
-
-    try:
-        profile = user.luminauserprofile
-        if profile.user_type == LuminaUserProfile.PHOTOGRAPHER:
-            return True
-        else:
-            return False
-    except LuminaUserProfile.DoesNotExist:
-        # If Profile doens't exists, assume is a photographer...
-        return True
+    return user.user_type == LuminaUser.PHOTOGRAPHER
 
 
 @register.filter(name='full_name_with_username')

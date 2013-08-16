@@ -31,7 +31,11 @@ LUMINA_DUMP_OBJECTS = True
 #        "The model 'luminauser' from the app 'lumina' is not available in this migration.".
 #
 
-AUTH_PROFILE_MODULE = 'lumina.LuminaUserProfile'
+AUTH_USER_MODEL = 'lumina.LuminaUser'
+
+SOUTH_MIGRATION_MODULES = {
+    'social_auth': 'ignore',
+}
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -52,7 +56,7 @@ DATABASES = {
         'USER': '',
         'PASSWORD': '',
         # Empty for localhost through domain sockets or
-        #'127.0.0.1' for localhost through TCP.
+        # '127.0.0.1' for localhost through TCP.
         'HOST': '',
         # Set to empty string for default.
         'PORT': '',
@@ -167,10 +171,10 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'lumina',
     'mailer',
     'social_auth',
     'south',
-    'lumina',
 )
 
 #

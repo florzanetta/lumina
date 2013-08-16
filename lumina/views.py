@@ -17,12 +17,11 @@ from django.contrib import messages
 from django.core.files.storage import default_storage
 from django.views.decorators.cache import cache_control
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.contrib.auth.models import User
 from django.core.exceptions import SuspiciousOperation, ObjectDoesNotExist, \
     PermissionDenied
 
-from lumina.models import Image, Album, SharedAlbum, LuminaUserProfile, \
-    UserProxy, ImageSelection
+from lumina.models import Image, Album, SharedAlbum, \
+    ImageSelection, LuminaUser
 from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
     AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm, \
@@ -288,7 +287,7 @@ class ImageSelectionCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(ImageSelectionCreateView, self).get_context_data(**kwargs)
         context['form'].fields['album'].queryset = Album.objects.all_my_albums(self.request.user)
-        customer_qs = UserProxy.custom_objects.all_my_customers(self.request.user)
+        customer_qs = self.request.user.all_my_customers()
         context['form'].fields['customer'].queryset = customer_qs
         return context
 
@@ -415,8 +414,7 @@ class AlbumCreateView(CreateView):
 
     def get_form(self, form_class):
         form = super(AlbumCreateView, self).get_form(form_class)
-        form.fields['shared_with'].queryset = UserProxy.custom_objects.all_my_customers(
-            self.request.user)
+        form.fields['shared_with'].queryset = self.request.user.all_my_customers()
         return form
 
     def form_valid(self, form):
@@ -434,8 +432,7 @@ class AlbumUpdateView(UpdateView):
 
     def get_form(self, form_class):
         form = super(AlbumUpdateView, self).get_form(form_class)
-        form.fields['shared_with'].queryset = UserProxy.custom_objects.all_my_customers(
-            self.request.user)
+        form.fields['shared_with'].queryset = self.request.user.all_my_customers()
         return form
 
     def get_queryset(self):
@@ -547,15 +544,15 @@ class ImageUpdateView(UpdateView):
 #===============================================================================
 
 class CustomerListView(ListView):
-    model = User
+    model = LuminaUser
     template_name = 'lumina/customer_list.html'
 
     def get_queryset(self):
-        return UserProxy.custom_objects.all_my_customers(self.request.user)
+        return self.request.user.all_my_customers()
 
 
 class CustomerCreateView(CreateView):
-    model = User
+    model = LuminaUser
     form_class = CustomerCreateForm
     template_name = 'lumina/customer_create_form.html'
     success_url = reverse_lazy('customer_list')
@@ -564,9 +561,9 @@ class CustomerCreateView(CreateView):
         ret = super(CustomerCreateView, self).form_valid(form)
 
         # Create the profile module
-        new_user = User.objects.get(pk=form.instance.id)
-        LuminaUserProfile.objects.create(
-            user=new_user, user_type=LuminaUserProfile.GUEST, customer_of=self.request.user)
+        new_user = LuminaUser.objects.get(pk=form.instance.id)
+        new_user.user_type = LuminaUser.GUEST
+        new_user.customer_of = self.request.user
 
         # Set the password
         new_user.set_password(form['password1'].value())
@@ -578,20 +575,20 @@ class CustomerCreateView(CreateView):
 
 class CustomerUpdateView(UpdateView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
-    model = User
+    model = LuminaUser
     form_class = CustomerUpdateForm
     template_name = 'lumina/customer_update_form.html'
     success_url = reverse_lazy('customer_list')
 
     def get_queryset(self):
-        return UserProxy.custom_objects.all_my_customers(self.request.user)
+        return self.request.user.all_my_customers()
 
     def form_valid(self, form):
         ret = super(CustomerUpdateView, self).form_valid(form)
 
         # Set the password
         if form['password1'].value():
-            updated_user = User.objects.get(pk=form.instance.id)
+            updated_user = LuminaUser.objects.get(pk=form.instance.id)
             logger.warn("Changing password of user '%s'", updated_user.username)
             updated_user.set_password(form['password1'].value())
             updated_user.save()
