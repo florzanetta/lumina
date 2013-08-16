@@ -24,16 +24,5 @@
             "juan"
         ]
     }
-},
-{
-    "pk": 3, 
-    "model": "lumina.album", 
-    "fields": {
-        "shared_with": [], 
-        "name": "My own (max's) album", 
-        "user": [
-            "customer-957a6230-3eac-4ee1-a4"
-        ]
-    }
 }
 ]

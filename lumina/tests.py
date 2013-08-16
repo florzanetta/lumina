@@ -330,7 +330,7 @@ class AlbumManagerTests(LuminaTestCase):
         self.assertEqual(juan_albums.all()[0].id, 2)
 
         self.assertEqual(Album.objects.all_my_albums(self.albert).count(), 0)
-        self.assertEqual(Album.objects.all_my_albums(self.max).count(), 1)
+        self.assertEqual(Album.objects.all_my_albums(self.max).count(), 0)
 
     def test_shared_with_me(self):
         self.assertEqual(Album.objects.shared_with_me(self.admin).count(), 0)
@@ -344,7 +344,7 @@ class AlbumManagerTests(LuminaTestCase):
         self.assertEqual(Album.objects.all_visible(self.admin).count(), 1)
         self.assertEqual(Album.objects.all_visible(self.juan).count(), 1)
         self.assertEqual(Album.objects.all_visible(self.albert).count(), 0)
-        self.assertEqual(Album.objects.all_visible(self.max).count(), 2)
+        self.assertEqual(Album.objects.all_visible(self.max).count(), 1)
 
 #===============================================================================
 # Selenium
