@@ -7,9 +7,11 @@
         "first_name": "\u00c1lbaro", 
         "last_name": "Andrada", 
         "is_active": true, 
+        "user_type": "P", 
         "is_superuser": true, 
+        "customer_of": null, 
         "is_staff": true, 
-        "last_login": "2013-08-06T03:29:47Z", 
+        "last_login": "2013-08-16T03:09:49.527Z", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$10000$BwQXewpxQcZD$nDKTejFAi5m4cJGSehc/gbomsN7Fl1iK6mlKXVO5k0Q=", 
@@ -25,7 +27,9 @@
         "first_name": "Juan", 
         "last_name": "P\u00e9rez", 
         "is_active": true, 
+        "user_type": "P", 
         "is_superuser": false, 
+        "customer_of": null, 
         "is_staff": false, 
         "last_login": "2013-07-25T21:59:12.884Z", 
         "groups": [], 
@@ -43,14 +47,18 @@
         "first_name": "Albert", 
         "last_name": "Einstein", 
         "is_active": true, 
+        "user_type": "G", 
         "is_superuser": false, 
+        "customer_of": [
+            "admin"
+        ], 
         "is_staff": false, 
-        "last_login": "2013-07-25T21:26:32.019Z", 
+        "last_login": "2013-07-25T21:26:32Z", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$10000$m2vJ3GU8gv6B$oHVMTUWO7W2OjRnP+7JwzZHrFRPis4ZTRTCF40qIL+U=", 
         "email": "albert.einstein@example.com", 
-        "date_joined": "2013-07-25T21:26:32.019Z"
+        "date_joined": "2013-07-25T21:26:32Z"
     }
 },
 {
@@ -61,14 +69,18 @@
         "first_name": "Max", 
         "last_name": "Planck", 
         "is_active": true, 
+        "user_type": "G", 
         "is_superuser": false, 
+        "customer_of": [
+            "juan"
+        ], 
         "is_staff": false, 
-        "last_login": "2013-07-25T21:28:50.599Z", 
+        "last_login": "2013-07-25T21:28:50Z", 
         "groups": [], 
         "user_permissions": [], 
         "password": "pbkdf2_sha256$10000$NnpduGewVDQM$24AyL+l9H5HyIr53kuunJC6L1lRTPi6pd5R3A0l2yX0=", 
         "email": "max.planck@example.com", 
-        "date_joined": "2013-07-25T21:28:50.599Z"
+        "date_joined": "2013-07-25T21:28:50Z"
     }
 }
 ]
