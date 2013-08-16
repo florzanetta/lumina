@@ -33,19 +33,19 @@ class LuminaTestCase(TestCase):
         self._logged_in_user = LuminaUser.objects.get(username=username)
 
     def login_admin(self):
-        """Logon with the 'admin' user"""
+        """Logon with the 'admin' user (photographer)"""
         self._login('admin')
 
     def login_juan(self):
-        """Logon with the 'juan' user"""
+        """Logon with the 'juan' user (photographer)"""
         self._login('juan')
 
     def login_albert(self):
-        """Logon with the 'albert' user"""
+        """Logon with the 'albert' user (customer)"""
         self._login('customer-ba07eb50-9fb5-4593-98', 'albert')
 
     def login_max(self):
-        """Logon with the 'max' user"""
+        """Logon with the 'max' user (customer)"""
         self._login('customer-957a6230-3eac-4ee1-a4', 'max')
 
 
@@ -108,24 +108,35 @@ class BasicAccessTest(LuminaTestCase):
     def test_access_to_pages(self):
         for login_func in (self.login_admin, self.login_juan, self.login_albert, self.login_max):
             login_func()  # user -> self._logged_in_user
-            for view_name in (
-                'home', 'album_list', 'album_create', 'shared_album_create',
-                    'image_list', 'image_create', 'customer_list', 'customer_create'):
-                response = self.client.get(reverse(view_name))
-                self.assertEqual(response.status_code, 200)
+            if self._logged_in_user.user_type == LuminaUser.PHOTOGRAPHER:
+                for view_name in (
+                    'home', 'album_list', 'album_create', 'shared_album_create',
+                        'image_list', 'image_create', 'customer_list', 'customer_create'):
+                    response = self.client.get(reverse(view_name))
+                    self.assertEqual(response.status_code, 200)
+            else:
+                # TODO: do tests for customer
+                pass
 
             all_the_images = []
             for album in Album.objects.all_visible(self._logged_in_user):
-                # "album_detail", "album_update", "image_update"
+                # Views to test: "album_detail", "album_update"
                 self.assertEqual(self.client.get(
                     reverse("album_detail", args=[album.id])).status_code, 200)
                 all_the_images += list(album.image_set.all())
-                if album.user == self._logged_in_user:
-                    self.assertEqual(self.client.get(
-                        reverse("album_update", args=[album.id])).status_code, 200,
-                        msg="Status code != 200 - User: {0} - Album: {1}".format(
-                            self._logged_in_user, album.id))
 
+                # If the user is the album's owner, the user must be able to update it
+                if album.user.pk == self._logged_in_user.pk:
+                    self.assertEqual(self._logged_in_user.user_type, LuminaUser.PHOTOGRAPHER,
+                                     "The user {0} owns an album, but it's a customer, "
+                                     "not a photographer!".format(self._logged_in_user))
+                    response = self.client.get(reverse("album_update", args=[album.id]))
+                    self.assertEqual(
+                        response.status_code, 200,
+                        msg="Status code != 200 - User: {0} - Album: {1}"
+                            "".format(self._logged_in_user, album.id))
+
+            # View to test: "image_update"
             all_the_images = set(
                 all_the_images + list(Image.objects.all_my_images(self._logged_in_user)))
             for image in all_the_images:
@@ -139,9 +150,13 @@ class BasicAccessTest(LuminaTestCase):
                 self.assertEqual(self.client.get(
                     reverse("image_download", args=[image.id])).status_code, 200)
 
-            for customer in self._logged_in_user.all_my_customers():
-                self.assertEqual(self.client.get(
-                    reverse("customer_update", args=[customer.id])).status_code, 200)
+            if self._logged_in_user.user_type == LuminaUser.PHOTOGRAPHER:
+                for customer in self._logged_in_user.all_my_customers():
+                    self.assertEqual(self.client.get(
+                        reverse("customer_update", args=[customer.id])).status_code, 200)
+            else:
+                # TODO: do tests for customer
+                pass
 
 
 class PermissoinsTests(LuminaTestCase):
