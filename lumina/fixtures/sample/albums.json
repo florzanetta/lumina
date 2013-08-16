@@ -6,7 +6,7 @@
         "shared_with": [], 
         "name": "Fotos de la selva", 
         "user": [
-            "fotografo"
+            "fotografo1"
         ]
     }
 },
@@ -16,12 +16,12 @@
     "fields": {
         "shared_with": [
             [
-                "max_planck"
+                "cliente1"
             ]
         ], 
         "name": "Aves", 
         "user": [
-            "fotografo"
+            "fotografo1"
         ]
     }
 },
@@ -32,7 +32,7 @@
         "shared_with": [], 
         "name": "ERROR_ALBUM", 
         "user": [
-            "ERROR_USER"
+            "ERROR_PHOTOGRAPHER"
         ]
     }
 }

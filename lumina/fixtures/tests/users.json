@@ -1,7 +1,7 @@
 [
 {
     "pk": 1, 
-    "model": "auth.user", 
+    "model": "lumina.luminauser", 
     "fields": {
         "username": "admin", 
         "first_name": "\u00c1lbaro", 
@@ -19,7 +19,7 @@
 },
 {
     "pk": 2, 
-    "model": "auth.user", 
+    "model": "lumina.luminauser", 
     "fields": {
         "username": "juan", 
         "first_name": "Juan", 
@@ -37,7 +37,7 @@
 },
 {
     "pk": 3, 
-    "model": "auth.user", 
+    "model": "lumina.luminauser", 
     "fields": {
         "username": "customer-ba07eb50-9fb5-4593-98", 
         "first_name": "Albert", 
@@ -55,7 +55,7 @@
 },
 {
     "pk": 4, 
-    "model": "auth.user", 
+    "model": "lumina.luminauser", 
     "fields": {
         "username": "customer-957a6230-3eac-4ee1-a4", 
         "first_name": "Max", 
@@ -69,32 +69,6 @@
         "password": "pbkdf2_sha256$10000$NnpduGewVDQM$24AyL+l9H5HyIr53kuunJC6L1lRTPi6pd5R3A0l2yX0=", 
         "email": "max.planck@example.com", 
         "date_joined": "2013-07-25T21:28:50.599Z"
-    }
-},
-{
-    "pk": 1, 
-    "model": "lumina.luminauserprofile", 
-    "fields": {
-        "customer_of": [
-            "admin"
-        ], 
-        "user": [
-            "customer-ba07eb50-9fb5-4593-98"
-        ], 
-        "user_type": "G"
-    }
-},
-{
-    "pk": 2, 
-    "model": "lumina.luminauserprofile", 
-    "fields": {
-        "customer_of": [
-            "juan"
-        ], 
-        "user": [
-            "customer-957a6230-3eac-4ee1-a4"
-        ], 
-        "user_type": "G"
     }
 }
 ]

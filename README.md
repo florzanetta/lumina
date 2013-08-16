@@ -60,13 +60,14 @@ with username 'admin' and password 'admin'):
 
 To add to the database some initial data (albums, images and shares), run:
 
-    python manage.py loaddata sample/users.json sample/luminauserprofile.json sample/albums.json sample/images.json
+    python manage.py loaddata sample/users.json sample/albums.json sample/images.json
 
 The username/passwords to login are:
 
-    * fotografo/fotografo (with Django superuser's permission)
-    * cliente/cliente (customer of fotografo)
-    * max_planck/max_planck (customer of fotografo)
+    * fotografo1/fotografo1
+    * cliente1/cliente1 (customer of fotografo1)
+    * cliente2/cliente2 (customer of fotografo1)
+    * admin/admin (Django superuser)
 
 
 Defaults settings
@@ -96,9 +97,9 @@ To check **code coverage**, run:
     $ coverage run --source='.' --omit='virtualenv/*' manage.py test lumina
     $ coverage report
 
-To generate **fixtures** for testing, run:
+To re-generate **fixtures** for testing, run:
 
-    $ python manage.py dumpdata --format=json --indent=4 --natural auth.User lumina.luminauserprofile > lumina/fixtures/tests/users.json
+    $ python manage.py dumpdata --format=json --indent=4 --natural lumina.LuminaUser > lumina/fixtures/tests/users.json
     $ python manage.py dumpdata --format=json --indent=4 --natural lumina.Album > lumina/fixtures/tests/albums.json
     $ python manage.py dumpdata --format=json --indent=4 --natural lumina.Image > lumina/fixtures/tests/images.json
     $ python manage.py dumpdata --format=json --indent=4 --natural lumina.ImageSelection > lumina/fixtures/tests/imageselection-waiting-selection.json
@@ -111,12 +112,11 @@ If you create a settings files for your environment, it won't appear anymore:
     $ touch lumina/local_settings.py
 
 
-To generate the fixtures of sample data:
+To re-generate the fixtures of sample data:
 
-    python manage.py dumpdata --format=json --indent=4 --natural auth.User > lumina/fixtures/sample/users.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.LuminaUser > lumina/fixtures/sample/users.json
     python manage.py dumpdata --format=json --indent=4 --natural lumina.Album > lumina/fixtures/sample/albums.json
     python manage.py dumpdata --format=json --indent=4 --natural lumina.Image > lumina/fixtures/sample/images.json
-    python manage.py dumpdata --format=json --indent=4 --natural lumina.LuminaUserProfile > lumina/fixtures/sample/luminauserprofile.json
 
 
 
