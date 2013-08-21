@@ -2,6 +2,7 @@
 
 import base64
 import datetime
+import json
 import logging
 import os
 import uuid
@@ -30,7 +31,6 @@ from lumina.pil_utils import generate_thumbnail
 from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
     AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm, \
     CustomerUpdateForm, ImageSelectionCreateForm
-import json
 
 
 #

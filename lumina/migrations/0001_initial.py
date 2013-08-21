@@ -1,3 +1,4 @@
+#@PydevCodeAnalysisIgnore
 # -*- coding: utf-8 -*-
 import datetime
 from south.db import db
