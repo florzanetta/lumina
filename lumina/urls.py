@@ -148,6 +148,10 @@ urlpatterns = patterns(
             login_required(CustomerUpdateView.as_view())),
         name='customer_update'),
 
+    #===========================================================================
+    # Rest API
+    #===========================================================================
+    url(r'^rest/', include('lumina.urls_rest')),
 
     #
     # Other
