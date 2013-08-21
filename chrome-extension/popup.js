@@ -19,7 +19,8 @@ var luminaService = {
 		// e.target.responseXML.querySelectorAll('photo');
 		var resp = JSON.parse(e.target.responseText);
 		var msg = document.createElement('p');
-		msg.textContent = '' + resp['status'] + " / " + resp['server_date_str'];
+		msg.textContent = '' + resp['status'] + " / " + resp['server_date_str']
+				+ " / '" + resp['username'] + "'";
 		document.body.appendChild(msg);
 	},
 
