@@ -49,11 +49,17 @@ var luminaService = {
 		var msg = '' + resp['status'] + " / " + resp['server_date_str']
 				+ " / '" + resp['username'] + "'";
 		console.info("eventPage.js: Server returned: " + msg);
+		chrome.browserAction.setIcon({
+			path : 'glyphicons_232_cloud.png'
+		});
 	},
 
 	xmlhttprequesterror_ : function(e) {
 		console.error("eventPage.js: XMLHttpRequest ERROR: '" + e + "' - "
 				+ e.target.status);
+		chrome.browserAction.setIcon({
+			path : 'glyphicons_413_cloud_minus.png'
+		});
 	}
 
 // http://stackoverflow.com/questions/4093722/upload-a-file-in-a-google-chrome-extension
@@ -69,11 +75,11 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
 
 // Create the alarm:
 chrome.alarms.create('lumina-poll', {
-	periodInMinutes : (1.0) / 12.0, // 10 secs
+	periodInMinutes : 1.0 / 3.0, // 20 secs
 });
 
 chrome.alarms.create('lumina-poll-initial', {
-	delayInMinutes : 0.001,
+	delayInMinutes : 1.0 / 12.0, // 5 secs
 });
 
 console.info("eventPage.js: end");
