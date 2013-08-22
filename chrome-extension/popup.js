@@ -5,6 +5,7 @@ var luminaService = {
 	 */
 	pingLumina : function() {
 		var req = new XMLHttpRequest();
+		// http://www.w3.org/TR/XMLHttpRequest/
 		req.open("GET", "http://127.0.0.1:8000/rest/ping", true);
 		req.onload = this.showPingResponse_.bind(this);
 		req.send(null);
@@ -24,6 +25,7 @@ var luminaService = {
 		document.body.appendChild(msg);
 	},
 
+	// http://stackoverflow.com/questions/4093722/upload-a-file-in-a-google-chrome-extension
 };
 
 // Run our kitten generation script as soon as the document's DOM is ready.
