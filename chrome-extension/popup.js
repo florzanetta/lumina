@@ -1,34 +1,23 @@
-var luminaService = {
+// Run our kitten generation script as soon as the document's DOM is ready.
 
-	/**
-	 * @public
-	 */
-	pingLumina : function() {
-		var req = new XMLHttpRequest();
-		// http://www.w3.org/TR/XMLHttpRequest/
-		req.open("GET", "http://127.0.0.1:8000/rest/ping", true);
-		req.onload = this.showPingResponse_.bind(this);
-		req.send(null);
-	},
-
-	/**
-	 * @param {ProgressEvent}
-	 *            e The XHR ProgressEvent.
-	 * @private
-	 */
-	showPingResponse_ : function(e) {
-		// e.target.responseXML.querySelectorAll('photo');
-		var resp = JSON.parse(e.target.responseText);
-		var msg = document.createElement('p');
-		msg.textContent = '' + resp['status'] + " / " + resp['server_date_str']
-				+ " / '" + resp['username'] + "'";
-		document.body.appendChild(msg);
-	},
-
-	// http://stackoverflow.com/questions/4093722/upload-a-file-in-a-google-chrome-extension
+function set_status(result) {
+	var status = document.getElementById('status');
+	status.textContent = result.log_msg;
 };
 
-// Run our kitten generation script as soon as the document's DOM is ready.
 document.addEventListener('DOMContentLoaded', function() {
-	luminaService.pingLumina();
+	var msg = document.createElement('h1');
+	msg.textContent = "Lumina";
+	document.body.appendChild(msg);
+
+	var status = document.createElement('div');
+	status.setAttribute("id", "status");
+	status.textContent = "";
+	document.body.appendChild(status);
+
+	chrome.runtime.getBackgroundPage(function(backgroundPageWindow) {
+		console.info("Last log: "
+				+ backgroundPageWindow.get_last_log(set_status));
+	});
+
 });
