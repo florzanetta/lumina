@@ -30,7 +30,7 @@ var luminaService = {
 	pingLumina : function() {
 		var req = new XMLHttpRequest();
 		// http://www.w3.org/TR/XMLHttpRequest/
-		req.open("GET", "http://127.0.0.1:8000/rest/ping", true);
+		req.open("GET", "http://localhost:8000/rest/ping", true);
 		req.onload = this.showPingResponse_.bind(this);
 		req.onerror = this.xmlhttprequesterror_.bind(this);
 		console.debug("eventPage.js: will send XMLHttpRequest")
