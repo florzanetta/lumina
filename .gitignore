@@ -45,3 +45,4 @@ nosetests.xml
 /virtualenv*/
 /travic-ci
 /lumina/local_settings.py
+/chrome-user-data-dir
