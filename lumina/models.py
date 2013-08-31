@@ -193,8 +193,9 @@ class Session(models.Model):
     # REFACTOR: `customer` is a new attribute
     customer = models.ForeignKey(Customer)
 
-    shared_with = models.ManyToManyField(LuminaUser, blank=True,
-                                         related_name='others_shared_albums')
+    # REFACTOR: `shared_with` used to point to `LuminaUser`
+    shared_with = models.ManyToManyField(Customer, blank=True,
+                                         related_name='sessions_shared_with_me')
 
     objects = SessionManager()
 
