@@ -70,6 +70,12 @@ class LuminaUser(AbstractUser):
 
     objects = LuminaUserManager()
 
+    def is_photographer(self):
+        return self.user_type == LuminaUser.PHOTOGRAPHER
+
+    def is_for_customer(self):
+        return self.user_type == LuminaUser.CUSTOMER
+
     # FIXME: REFACTOR: refactor this (if needed)
     def all_my_customers(self):
         assert self.user_type == LuminaUser.PHOTOGRAPHER
@@ -142,6 +148,16 @@ class SessionManager(models.Manager, ForUserManagerMixin):
     """
     Manager for the Session model
     """
+
+    def visible_sessions(self, user):
+        """Returns the sessions the user can see"""
+        # FIXME: REFACTOR: add support for shared sessions
+        if user.is_photographer():
+            return self.filter(studio=user.studio)
+        elif user.is_for_customer():
+            return self.filter(customer=user.user_for_customer)
+        else:
+            raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
 
     # FIXME: REFACTOR: refactor this (if needed)
     def all_my_albums(self, user):

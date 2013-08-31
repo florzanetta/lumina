@@ -26,9 +26,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
 
 from lumina.pil_utils import generate_thumbnail
-from lumina.forms import ImageCreateForm, ImageUpdateForm, AlbumCreateForm, \
-    AlbumUpdateForm, SharedAlbumCreateForm, CustomerCreateForm, \
-    CustomerUpdateForm, ImageSelectionCreateForm
+from lumina.models import Session
 
 
 #
@@ -100,23 +98,24 @@ def send_email(subject, to_email, body):
         pass
 
 
-# def home(request):
-#     if request.user.is_authenticated():
-#         ctx = {
-#             'album_count': Album.objects.all_my_albums(request.user).count(),
-#             'image_count': Image.objects.all_my_images(request.user).count(),
-#             'shared_album_via_email_count': SharedAlbum.objects.all_my_shares(
-#                 request.user).count(),
-#             'others_album_count': Album.objects.shared_with_me(request.user).count(),
-#             'image_selection_pending_count': ImageSelection.objects.pending_image_selections(
-#                 request.user).count(),
-#             # 'auth_providers': request.user.social_auth.get_providers(),
-#         }
-#     else:
-#         ctx = {}
-#     return render_to_response(
-#         'lumina/index.html', ctx,
-#         context_instance=RequestContext(request))
+def home(request):
+    if request.user.is_authenticated():
+        if request.user.is_photographer():
+            ctx = {
+                'session_count': Session.objects.visible_sessions(request.user).count(),
+#                 'image_count': Image.objects.all_my_images(request.user).count(),
+#                 'shared_album_via_email_count': SharedAlbum.objects.all_my_shares(
+#                     request.user).count(),
+#                 'others_album_count': Album.objects.shared_with_me(request.user).count(),
+#                 'image_selection_pending_count': ImageSelection.objects.pending_image_selections(
+#                     request.user).count(),
+#                 # 'auth_providers': request.user.social_auth.get_providers(),
+            }
+    else:
+        ctx = {}
+    return render_to_response(
+        'lumina/index.html', ctx,
+        context_instance=RequestContext(request))
 
 
 @login_required
