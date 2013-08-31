@@ -52,7 +52,7 @@
 	    <table class="table">
 	        {% for sharedalbum in object.shares_via_email.all %}
 	            <tr>
-	               <td width="5%"><a href="{% url 'shared_album_view' sharedalbum.random_hash %}">Link</a></td>
+	               <td width="5%"><a href="{ % url 'shared_album_view' sharedalbum.random_hash % }">Link</a></td>
 	               <td width="95%"><i class="icon-envelope"></i> {{ sharedalbum.shared_with }}</td>
 	            </tr>
 	        {% empty %}
@@ -74,7 +74,7 @@
                 <tr>
                    <td width="100%">
                         <div>
-	                        <i class="icon-user"></i> <a href="{% url 'imageselection_detail' imageselection.id %}">{{ imageselection.customer.get_full_name }}
+	                        <i class="icon-user"></i> <a href="{ % url 'imageselection_detail' imageselection.id % }">{{ imageselection.customer.get_full_name }}
 	                            ({{ imageselection.customer.username }})</a>
                         </div>
                         <div>
@@ -97,10 +97,10 @@
 	    <hr>
 
 	    <p>
-		    <a href="{% url 'album_update' object.pk %}" class="btn btn-primary">Actualizar album</a>
-		    <a href="{% url 'image_create' %}?id_album={{ object.pk }}" class="btn btn-primary">Agregar imagen</a>
-            <a href="{% url 'shared_album_create' %}?id_album={{ object.pk }}" class="btn btn-primary">Compartir album via email</a>
-            <a href="{% url 'image_selection_create' %}?id_album={{ object.pk }}" class="btn btn-primary">Solicitar selección de imágenes</a>
+		    <a href="{ % url 'album_update' object.pk % }" class="btn btn-primary">Actualizar album</a>
+		    <a href="{ % url 'image_create' % }?id_album={{ object.pk }}" class="btn btn-primary">Agregar imagen</a>
+            <a href="{ % url 'shared_album_create' % }?id_album={{ object.pk }}" class="btn btn-primary">Compartir album via email</a>
+            <a href="{ % url 'image_selection_create' % }?id_album={{ object.pk }}" class="btn btn-primary">Solicitar selección de imágenes</a>
 	    </p>
     {% endif %}
 

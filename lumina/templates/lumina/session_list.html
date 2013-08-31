@@ -19,7 +19,7 @@
 		    </a>
 		    <div class="media-body">
 		        <div class="media-heading"><a
-		               href="{ % url 'album_detail' a_session.pk % }">{{ a_session.name }}</a>
+		               href="{% url 'session_detail' a_session.pk %}">{{ a_session.name }}</a>
 		        </div>
 		        <div>
                         <small>

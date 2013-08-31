@@ -444,48 +444,48 @@ class SessionListView(ListView):
         return Session.objects.visible_sessions(self.request.user)
 
 
-# class AlbumDetailView(DetailView):
-#     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-#     #    #django.views.generic.detail.DetailView
-#     model = Album
-#
-#     def get_queryset(self):
-#         return Album.objects.all_visible(self.request.user)
-#
-#
-# class AlbumCreateView(CreateView):
-#     model = Album
-#     form_class = AlbumCreateForm
-#     template_name = 'lumina/album_create_form.html'
+class SessionDetailView(DetailView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.detail.DetailView
+    model = Session
+
+    def get_queryset(self):
+        return Session.objects.visible_sessions(self.request.user)
+
+
+# class SessionCreateView(CreateView):
+#     model = Session
+#     form_class = SessionCreateForm
+#     template_name = 'lumina/session_create_form.html'
 #
 #     def get_form(self, form_class):
-#         form = super(AlbumCreateView, self).get_form(form_class)
+#         form = super(SessionCreateView, self).get_form(form_class)
 #         form.fields['shared_with'].queryset = self.request.user.all_my_customers()
 #         return form
 #
 #     def form_valid(self, form):
 #         form.instance.user = self.request.user
-#         ret = super(AlbumCreateView, self).form_valid(form)
+#         ret = super(SessionCreateView, self).form_valid(form)
 #         messages.success(self.request, 'El album fue creado correctamente')
 #         return ret
 #
 #
-# class AlbumUpdateView(UpdateView):
+# class SessionUpdateView(UpdateView):
 #     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
-#     model = Album
-#     form_class = AlbumUpdateForm
-#     template_name = 'lumina/album_update_form.html'
+#     model = Session
+#     form_class = SessionUpdateForm
+#     template_name = 'lumina/session_update_form.html'
 #
 #     def get_form(self, form_class):
-#         form = super(AlbumUpdateView, self).get_form(form_class)
+#         form = super(SessionUpdateView, self).get_form(form_class)
 #         form.fields['shared_with'].queryset = self.request.user.all_my_customers()
 #         return form
 #
 #     def get_queryset(self):
-#         return Album.objects.all_my_albums(self.request.user)
+#         return Session.objects.all_my_albums(self.request.user)
 #
 #     def form_valid(self, form):
-#         ret = super(AlbumUpdateView, self).form_valid(form)
+#         ret = super(SessionUpdateView, self).form_valid(form)
 #         messages.success(self.request, 'El album fue actualizado correctamente')
 #         return ret
 

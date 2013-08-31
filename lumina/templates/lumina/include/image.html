@@ -1,11 +1,11 @@
 {# Requires: `image` #}
 <div class="media">
     <a class="pull-left" href="javascript:void(0);">
-        <img class="media-object" src="{% url 'image_thumb_64x64' image.pk %}">
+        <img class="media-object" src="{ % url 'image_thumb_64x64' image.pk % }">
     </a>
     <div class="media-body">
         <div class="media-heading"><a
-               href="{% if image.user == user and read_write %}{% url 'image_update' image.pk %}{% else %}javascript:void(0);{% endif %}">{{ image.original_filename }}</a>
+               href="{% if image.user == user and read_write %}{ % url 'image_update' image.pk % }{% else %}javascript:void(0);{% endif %}">{{ image.original_filename }}</a>
         </div>
         <div>
               <small> <span class="label">{{ image.size|filesizeformat }}</span></small>
@@ -15,7 +15,7 @@
 			  {% if hide_download %}
 			  {% else %}
 	              &nbsp;
-	              <small><a href="{% url 'image_download' image.pk %}"
+	              <small><a href="{ % url 'image_download' image.pk % }"
 	                class="btn btn-primary btn-mini lumina_download_image">Bajar</a></small>
 			  {% endif %}
 
