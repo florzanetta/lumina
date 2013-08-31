@@ -162,6 +162,7 @@ class SharedAlbumManager(models.Manager, ForUserManagerMixin):
         return self.for_user(user)
 
 
+# FIXME: REFACTOR: rename to `SharedSessionByEmail`
 class SharedAlbum(models.Model):
     """
     Represents an album shared via email.
@@ -177,11 +178,16 @@ class SharedAlbum(models.Model):
     """
     shared_with = models.EmailField(max_length=254)
     # https://docs.djangoproject.com/en/1.5/ref/models/fields/#emailfield
+
     # FIXME: REFACTOR: `user` should refer to `Studio`, not `LuminaUser`
     user = models.ForeignKey(LuminaUser)
+
     # FIXME: REFACTOR: `album` used to refer to `Album`
     # FIXME: REFACTOR: rename `album` to `Session`
     album = models.ForeignKey(Session, related_name='shares_via_email')
+
+    # FIXME: REFACTOR: add `shared_by`, to know who shared the album
+
     random_hash = models.CharField(max_length=36, unique=True)  # len(uuid4) = 36
 
     objects = SharedAlbumManager()
@@ -256,13 +262,16 @@ class ImageSelection(models.Model):
     )
     # FIXME: REFACTOR: `user` should refer to `Studio`, not `LuminaUser`
     user = models.ForeignKey(LuminaUser, related_name='+')
+
     # FIXME: REFACTOR: `album` used to refer to `Album`
     # FIXME: REFACTOR: rename `album` to `Session`
     album = models.ForeignKey(Session)
+
+    # FIXME: REFACTOR: `customer` should refer to `Customer`, not `LuminaUser`
     customer = models.ForeignKey(LuminaUser, related_name='+')
+
     image_quantity = models.PositiveIntegerField()
     status = models.CharField(max_length=1, choices=STATUS, default=STATUS_WAITING)
-
     selected_images = models.ManyToManyField('Image', blank=True)
 
     objects = ImageSelectionManager()
