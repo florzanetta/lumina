@@ -26,6 +26,13 @@ class LuminaUser(AbstractUser):
         (CUSTOMER, 'Cliente'),
     )
     user_type = models.CharField(max_length=1, choices=USER_TYPES, default=PHOTOGRAPHER)
+
+    # Attributes for PHOTOGRAPHERS & CUSTOMERS
+    studio = models.ForeignKey('Studio', related_name='photographers')
+
+    # Attributes for PHOTOGRAPHERS
+
+    # Attributes for CUSTOMERS
     customer_of = models.ForeignKey('self', null=True, blank=True, related_name='customers')
 
     objects = LuminaUserManager()
@@ -37,6 +44,14 @@ class LuminaUser(AbstractUser):
 
     def __unicode__(self):
         return u"{} ({})".format(self.get_full_name(), self.username)
+
+
+#===============================================================================
+# Studio
+#===============================================================================
+
+class Studio(models.Model):
+    name = models.CharField(max_length=100)
 
 
 #===============================================================================
