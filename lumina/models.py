@@ -199,11 +199,10 @@ class SharedSessionByEmail(models.Model):
     shared_with = models.EmailField(max_length=254)
     # https://docs.djangoproject.com/en/1.5/ref/models/fields/#emailfield
 
-    # FIXME: REFACTOR: `user` should refer to `Studio`, not `LuminaUser`
+    # FIXME: REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
     studio = models.ForeignKey(Studio)
 
-    # FIXME: REFACTOR: `album` used to refer to `Album`
-    # FIXME: REFACTOR: `session` used to be named `album`
+    # FIXME: REFACTOR: `session` used to be named `album` and refer to `Album`
     session = models.ForeignKey(Session, related_name='shares_via_email')
 
     # FIXME: REFACTOR: add `shared_by`, to know who shared the album
@@ -281,15 +280,15 @@ class ImageSelection(models.Model):
         (STATUS_WAITING, u'Esperando selección de cliente'),
         (STATUS_IMAGES_SELECTED, u'Seleccion realizada'),
     )
-    # FIXME: REFACTOR: `user` should refer to `Studio`, not `LuminaUser`
-    user = models.ForeignKey(LuminaUser, related_name='+')
 
-    # FIXME: REFACTOR: `album` used to refer to `Album`
-    # FIXME: REFACTOR: rename `album` to `Session`
-    album = models.ForeignKey(Session)
+    # FIXME: REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
+    studio = models.ForeignKey(Studio, related_name='+')
 
-    # FIXME: REFACTOR: `customer` should refer to `Customer`, not `LuminaUser`
-    customer = models.ForeignKey(LuminaUser, related_name='+')
+    # FIXME: REFACTOR: `session` used to be named `album` and refer to `Album`
+    session = models.ForeignKey(Session)
+
+    # FIXME: REFACTOR: `customer` used to refer to `LuminaUser`
+    customer = models.ForeignKey(Customer, related_name='+')
 
     image_quantity = models.PositiveIntegerField()
     status = models.CharField(max_length=1, choices=STATUS, default=STATUS_WAITING)
@@ -376,11 +375,12 @@ class Image(models.Model):
     size = models.PositiveIntegerField()
     original_filename = models.CharField(max_length=128)
     content_type = models.CharField(max_length=64)
-    # FIXME: REFACTOR: `user` should refer to `Studio`, not `LuminaUser`
-    user = models.ForeignKey(LuminaUser)
-    # FIXME: REFACTOR: `album` used to refer to `Album`
-    # FIXME: REFACTOR: rename `album` to `Session`
-    album = models.ForeignKey(Session, null=True)
+
+    # FIXME: REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
+    studio = models.ForeignKey(Studio)
+
+    # FIXME: REFACTOR: `session` used to be named `album` and refer to `Album`
+    session = models.ForeignKey(Session, null=True)
 
     objects = ImageManager()
 
