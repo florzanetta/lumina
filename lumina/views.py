@@ -457,7 +457,7 @@ class SessionDetailView(DetailView):
 class SessionCreateView(CreateView):
     model = Session
     form_class = SessionCreateForm
-    template_name = 'lumina/session_create_form.html'
+    template_name = 'lumina/base_create_update_form.html'
 
     def get_form(self, form_class):
         form = super(SessionCreateView, self).get_form(form_class)
@@ -469,6 +469,12 @@ class SessionCreateView(CreateView):
         ret = super(SessionCreateView, self).form_valid(form)
         messages.success(self.request, 'La sesión fue creado correctamente')
         return ret
+
+    def get_context_data(self, **kwargs):
+        context = super(SessionCreateView, self).get_context_data(**kwargs)
+        context['title'] = "Crear sesión"
+        context['submit_label'] = "Crear"
+        return context
 
 
 class SessionUpdateView(UpdateView):
