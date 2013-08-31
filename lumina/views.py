@@ -475,7 +475,7 @@ class SessionUpdateView(UpdateView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = Session
     form_class = SessionUpdateForm
-    template_name = 'lumina/session_update_form.html'
+    template_name = 'lumina/base_update_form.html'
 
     def get_form(self, form_class):
         form = super(SessionUpdateView, self).get_form(form_class)
@@ -489,6 +489,11 @@ class SessionUpdateView(UpdateView):
         ret = super(SessionUpdateView, self).form_valid(form)
         messages.success(self.request, 'La sesión fue actualizado correctamente')
         return ret
+
+    def get_context_data(self, **kwargs):
+        context = super(SessionUpdateView, self).get_context_data(**kwargs)
+        context['title'] = "Actualizar sesión"
+        return context
 
 
 #===============================================================================
