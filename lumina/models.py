@@ -152,7 +152,7 @@ class Session(models.Model):
 # SharedAlbum
 #===============================================================================
 
-class SharedAlbumManager(models.Manager, ForUserManagerMixin):
+class SharedSessionByEmailManager(models.Manager, ForUserManagerMixin):
     """
     Manager for the SharedAlbum model
     """
@@ -162,8 +162,8 @@ class SharedAlbumManager(models.Manager, ForUserManagerMixin):
         return self.for_user(user)
 
 
-# FIXME: REFACTOR: rename to `SharedSessionByEmail`
-class SharedAlbum(models.Model):
+# FIXME: REFACTOR: change uses of `SharedAlbum` to `SharedSessionByEmail`
+class SharedSessionByEmail(models.Model):
     """
     Represents an album shared via email.
 
@@ -180,20 +180,21 @@ class SharedAlbum(models.Model):
     # https://docs.djangoproject.com/en/1.5/ref/models/fields/#emailfield
 
     # FIXME: REFACTOR: `user` should refer to `Studio`, not `LuminaUser`
-    user = models.ForeignKey(LuminaUser)
+    studio = models.ForeignKey(Studio)
 
     # FIXME: REFACTOR: `album` used to refer to `Album`
-    # FIXME: REFACTOR: rename `album` to `Session`
-    album = models.ForeignKey(Session, related_name='shares_via_email')
+    # FIXME: REFACTOR: `session` used to be named `album`
+    session = models.ForeignKey(Session, related_name='shares_via_email')
 
     # FIXME: REFACTOR: add `shared_by`, to know who shared the album
+    # shared_by = models.ForeignKey(LuminaUser)
 
     random_hash = models.CharField(max_length=36, unique=True)  # len(uuid4) = 36
 
-    objects = SharedAlbumManager()
+    objects = SharedSessionByEmailManager()
 
     def __unicode__(self):
-        return u"Shared Album {0} with {1}".format(self.album.name, self.shared_with)
+        return u"Session {0} shared by email to {1}".format(self.album.name, self.shared_with)
 
     def get_image_from_album(self, image_id):
         """
