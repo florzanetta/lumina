@@ -158,18 +158,19 @@ class SessionManager(models.Manager, ForUserManagerMixin):
         return self.filter(Q(user=user) | Q(shared_with=user)).distinct()
 
 
-# FIXME: REFACTOR: change uses of `Album` to `Session`
+# FIXME: REFACTOR: change uses of `Album` to `Session` in views, etc.
 class Session(models.Model):
     """
     Represents a photo session.
     """
     name = models.CharField(max_length=300)
 
-    # FIXME: REFACTOR: `studio` used to be named `user` and point to `LuminaUser`
+    # REFACTOR: `studio` used to be named `user` and point to `LuminaUser`
     studio = models.ForeignKey(Studio)
 
-    # FIXME: REFACTOR: `customer` is a new attribute
+    # REFACTOR: `customer` is a new attribute
     customer = models.ForeignKey(Customer)
+
     shared_with = models.ManyToManyField(LuminaUser, blank=True,
                                          related_name='others_shared_albums')
 
@@ -196,7 +197,7 @@ class SharedSessionByEmailManager(models.Manager, ForUserManagerMixin):
         return self.for_user(user)
 
 
-# FIXME: REFACTOR: change uses of `SharedAlbum` to `SharedSessionByEmail`
+# FIXME: REFACTOR: change uses of `SharedAlbum` to `SharedSessionByEmail` in vies, etc.
 class SharedSessionByEmail(models.Model):
     """
     Represents an album shared via email.
@@ -213,10 +214,10 @@ class SharedSessionByEmail(models.Model):
     shared_with = models.EmailField(max_length=254)
     # https://docs.djangoproject.com/en/1.5/ref/models/fields/#emailfield
 
-    # FIXME: REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
+    # REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
     studio = models.ForeignKey(Studio)
 
-    # FIXME: REFACTOR: `session` used to be named `album` and refer to `Album`
+    # REFACTOR: `session` used to be named `album` and refer to `Album`
     session = models.ForeignKey(Session, related_name='shares_via_email')
 
     # FIXME: REFACTOR: add `shared_by`, to know who shared the album
@@ -295,13 +296,13 @@ class ImageSelection(models.Model):
         (STATUS_IMAGES_SELECTED, u'Seleccion realizada'),
     )
 
-    # FIXME: REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
+    # REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
     studio = models.ForeignKey(Studio, related_name='+')
 
-    # FIXME: REFACTOR: `session` used to be named `album` and refer to `Album`
+    # REFACTOR: `session` used to be named `album` and refer to `Album`
     session = models.ForeignKey(Session)
 
-    # FIXME: REFACTOR: `customer` used to refer to `LuminaUser`
+    # REFACTOR: `customer` used to refer to `LuminaUser`
     customer = models.ForeignKey(Customer, related_name='+')
 
     image_quantity = models.PositiveIntegerField()
@@ -390,10 +391,10 @@ class Image(models.Model):
     original_filename = models.CharField(max_length=128)
     content_type = models.CharField(max_length=64)
 
-    # FIXME: REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
+    # REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
     studio = models.ForeignKey(Studio)
 
-    # FIXME: REFACTOR: `session` used to be named `album` and refer to `Album`
+    # REFACTOR: `session` used to be named `album` and refer to `Album`
     session = models.ForeignKey(Session, null=True)
 
     objects = ImageManager()
