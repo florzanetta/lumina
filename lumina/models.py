@@ -110,6 +110,9 @@ class Studio(models.Model):
     name = models.CharField(max_length=100)
 
     objects = StudioManager()
+    
+    def __unicode__(self):
+        return u"Studio {0}".format(self.name)
 
 
 #===============================================================================
@@ -141,6 +144,9 @@ class Customer(models.Model):
     phone = models.CharField(max_length=20)
 
     objects = CustomerManager()
+    
+    def __unicode__(self):
+        return u"Customer {0}".format(self.name)
 
 
 #===============================================================================
@@ -374,10 +380,10 @@ class ImageManager(models.Manager, ForUserManagerMixin):
         else:
             raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
 
-    # FIXME: REFACTOR: refactor this (if needed)
-    def all_my_images(self, user):
-        """Returns all the user's images"""
-        return self.for_user(user)
+#      FIXME: REFACTOR: refactor this (if needed)
+#     def all_my_images(self, user):
+#         """Returns all the user's images"""
+#         return self.for_user(user)
 
     # FIXME: REFACTOR: refactor this (if needed)
     def all_previsualisable(self, user):
