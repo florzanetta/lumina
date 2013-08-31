@@ -110,7 +110,7 @@ class Studio(models.Model):
     name = models.CharField(max_length=100)
 
     objects = StudioManager()
-    
+
     def __unicode__(self):
         return u"Studio {0}".format(self.name)
 
@@ -144,7 +144,7 @@ class Customer(models.Model):
     phone = models.CharField(max_length=20)
 
     objects = CustomerManager()
-    
+
     def __unicode__(self):
         return u"Customer {0}".format(self.name)
 
