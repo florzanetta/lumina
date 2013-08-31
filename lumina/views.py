@@ -26,7 +26,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
 
 from lumina.pil_utils import generate_thumbnail
-from lumina.models import Session
+from lumina.models import Session, Image
 
 
 #
@@ -103,7 +103,7 @@ def home(request):
         if request.user.is_photographer():
             ctx = {
                 'session_count': Session.objects.visible_sessions(request.user).count(),
-#                 'image_count': Image.objects.all_my_images(request.user).count(),
+                'image_count': Image.objects.visible_images(request.user).count(),
 #                 'shared_album_via_email_count': SharedAlbum.objects.all_my_shares(
 #                     request.user).count(),
 #                 'others_album_count': Album.objects.shared_with_me(request.user).count(),

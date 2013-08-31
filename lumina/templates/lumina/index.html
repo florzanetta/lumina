@@ -18,6 +18,7 @@
         <p><span class="badge badge-info">{{ session_count }}</span>
 				album{{ session_count|pluralize:",es" }}</p>
 
+        <!-- # FIXME: REFACTOR: refactor this -->
         <p><span class="badge badge-info">{{ shared_album_via_email_count }}</span>
 				album{{ sharedalbum_count|pluralize:",es" }}
 				compartido{{ sharedalbum_count|pluralize:",s" }} por email</p>
@@ -28,6 +29,8 @@
         <hr>
 
         <h4>Albumes que otros han compartido con vos</h4>
+
+        <!-- # FIXME: REFACTOR: refactor this -->
         <p><span class="badge badge-info">{{ others_album_count }}</span>
                 album{{ others_album_count|pluralize:",es" }} ha{{ others_album_count|pluralize:",n" }}
                 sido compartido{{ others_album_count|pluralize }} con vos.
@@ -37,6 +40,7 @@
 
         {% if user|user_is_customer %}
 	        <h4>Peticiones de selección de fotos pendientes...</h4>
+            <!-- # FIXME: REFACTOR: refactor this -->
 	        <p><span class="badge badge-info">{{ image_selection_pending_count }}</span>
 	                Ud. posee {{ image_selection_pending_count }}
 	                {{ image_selection_pending_count|pluralize:"petición,peticiones" }}
@@ -47,13 +51,13 @@
 
         <!--
         # Google OAuth doesn't work yet...
-        {% if 'google-oauth' in social_auth|non_empty_unicode_keys %}
-            <a href="{% url 'socialauth_disconnect' 'google-oauth' %}"><img
+        { % if 'google-oauth' in social_auth|non_empty_unicode_keys % }
+            <a href="{ % url 'socialauth_disconnect' 'google-oauth' % }"><img
                 alt="Twitter" src="/static/google-icon-16x16.png"> Disssociate from Google account</a>
-        {% else %}
-            <a href="{% url 'socialauth_begin' 'google-oauth' %}"><img
+        { % else % }
+            <a href="{ % url 'socialauth_begin' 'google-oauth' % }"><img
                 alt="Twitter" src="/static/google-icon-16x16.png"> Associate Google account</a>
-        {% endif %}
+        { % endif % }
 
         &nbsp;
         -->
@@ -76,7 +80,7 @@
         </p>
     {% endif %}
 
-	{% dump_objects user user.luminauserprofile user.social_auth.all social_auth social_auth.twitter %}
+	{% dump_objects user user.social_auth.all social_auth social_auth.twitter %}
 
 {% endblock content %}
 
