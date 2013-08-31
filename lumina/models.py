@@ -34,39 +34,37 @@ class LuminaUser(AbstractUser):
     )
     user_type = models.CharField(max_length=1, choices=USER_TYPES, default=PHOTOGRAPHER)
 
-    # -----
+    # ----------------------------------------------------------------------
     # ----- Attributes for PHOTOGRAPHERS & CUSTOMERS
-    # -----
+    # ----------------------------------------------------------------------
 
     # FIXME: REFACTOR: add common attributes, like phone, cellphone, address, etc.
 
-    # -----
+    # ----------------------------------------------------------------------
     # ----- Attributes for PHOTOGRAPHERS // null=True, blank=True
-    # -----
+    # ----------------------------------------------------------------------
 
+    """
+    Studio from which the photographer is part
+
+    This should be None (NULL) for `user_type == CUSTOMER`.
+    """
     studio = models.ForeignKey('Studio', related_name='photographers', null=True, blank=True)
 
-    # -----
+    # ----------------------------------------------------------------------
     # ----- Attributes for CUSTOMERS // null=True, blank=True
-    # -----
-
-    """
-    user_for_studio: if not null, indicates that this instance (`self`) is
-    a Django user associated to the `Studio` where `user_for_studio` points to.
-
-    So, if `self.user_for_studio` points to "Studio ABC", this means that the
-    user referenced by `self` is a user for the studio "Studio ABC"
-    """
-    # REFACTOR: `user_for_studio` used to be named `customer_of` and point to `LuminaUser`
-    user_for_studio = models.ForeignKey('Studio', null=True, blank=True, related_name='users')
+    # ----------------------------------------------------------------------
 
     """
     user_for_customer: if not null, indicates that this instance (`self`) is
     a Django user associated to the `Customer` where `user_for_customer` points to.
 
     So, if `self.user_for_customer` points to "Customer XYZ", this means that the
-    user referenced by `self` is a user for the customer "Customer XYZ"
+    user referenced by `self` is a user for the customer "Customer XYZ".
+
+    This should be None (NULL) for `user_type == PHOTOGRAPHER`.
     """
+    # REFACTOR: used to be an attribute `customer_of` and point to `LuminaUser`
     # REFACTOR: `user_for_customer` is a new attribute
     user_for_customer = models.ForeignKey('Customer', null=True, blank=True, related_name='users')
 
@@ -129,7 +127,7 @@ class Customer(models.Model):
     or any person that the customer allowed to access the images.
     """
     name = models.CharField(max_length=100)
-    customer_of = models.ForeignKey(Studio, related_name='customers')
+    studio = models.ForeignKey(Studio, related_name='customers')
     address = models.TextField()
     phone = models.CharField(max_length=20)
 
