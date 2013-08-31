@@ -15,10 +15,16 @@ class ForUserManagerMixin():
 
 
 class LuminaUserManager(UserManager):
+    """
+    Manager for the LuminaUser model
+    """
     pass
 
 
 class LuminaUser(AbstractUser):
+    """
+    Represents a user who can log in and use the app.
+    """
     PHOTOGRAPHER = 'P'
     CUSTOMER = 'C'
     USER_TYPES = (
@@ -66,10 +72,14 @@ class LuminaUser(AbstractUser):
 
 class Studio(models.Model):
     """
-    A photography studio, which has:
-    - many *photographers* represented by `LuminaUser`
-    - many *customers* represented by `Customer`
-    - many *users* 'as employees of Customers' represented by `LuminaUser`
+    Represents a photography studio. That is the organization
+    that has many photographers.
+
+    A `studio` instance has photo `session` (made by a `photographer`
+    of the same `studio` for a specific `customer`).
+
+    A `studio` instance has many `customers`. Customers are organizations
+    who pays to the `studio`.
     """
     name = models.CharField(max_length=100)
 
@@ -96,6 +106,9 @@ class Customer(models.Model):
 #===============================================================================
 
 class SessionManager(models.Manager, ForUserManagerMixin):
+    """
+    Manager for the Session model
+    """
 
     def all_my_albums(self, user):
         """Returns all the user's albums"""
@@ -115,6 +128,9 @@ class SessionManager(models.Manager, ForUserManagerMixin):
 
 # FIXME: REFACTOR: change uses of `Album` to `Session`
 class Session(models.Model):
+    """
+    Represents a photo session.
+    """
     name = models.CharField(max_length=300)
     # FIXME: REFACTOR: `user` should refer to `Studio`, not `LuminaUser`
     user = models.ForeignKey(LuminaUser)
@@ -137,6 +153,9 @@ class Session(models.Model):
 #===============================================================================
 
 class SharedAlbumManager(models.Manager, ForUserManagerMixin):
+    """
+    Manager for the SharedAlbum model
+    """
 
     def all_my_shares(self, user):
         """Returns all the shares"""
@@ -188,6 +207,9 @@ class SharedAlbum(models.Model):
 #===============================================================================
 
 class ImageSelectionManager(models.Manager):
+    """
+    Manager for the ImageSelection model
+    """
 
     def pending_image_selections(self, user):
         """
@@ -260,6 +282,9 @@ class ImageSelection(models.Model):
 #===============================================================================
 
 class ImageManager(models.Manager, ForUserManagerMixin):
+    """
+    Manager for the Image model
+    """
 
     def all_my_images(self, user):
         """Returns all the user's images"""
@@ -312,6 +337,9 @@ class ImageManager(models.Manager, ForUserManagerMixin):
 
 
 class Image(models.Model):
+    """
+    Represents a single image
+    """
     # See: https://docs.djangoproject.com/en/1.5/ref/models/fields/#filefield
     # See: https://docs.djangoproject.com/en/1.5/topics/files/
     image = models.FileField(upload_to='images/%Y/%m/%d', max_length=300)
