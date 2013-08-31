@@ -104,9 +104,11 @@ def home(request):
             ctx = {
                 'session_count': Session.objects.visible_sessions(request.user).count(),
                 'image_count': Image.objects.visible_images(request.user).count(),
-#                 'shared_album_via_email_count': SharedAlbum.objects.all_my_shares(
+                'shared_session_via_email_count': 999,
+#                 'shared_session_via_email_count': SharedAlbum.objects.all_my_shares(
 #                     request.user).count(),
 #                 'others_album_count': Album.objects.shared_with_me(request.user).count(),
+                'image_selection_pending_count': 999,
 #                 'image_selection_pending_count': ImageSelection.objects.pending_image_selections(
 #                     request.user).count(),
 #                 # 'auth_providers': request.user.social_auth.get_providers(),

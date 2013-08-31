@@ -16,12 +16,11 @@
         <h4>Estadisticas de tus álbumes</h4>
 
         <p><span class="badge badge-info">{{ session_count }}</span>
-				album{{ session_count|pluralize:",es" }}</p>
+				sesiones{{ session_count|pluralize:",es" }}</p>
 
-        <!-- # FIXME: REFACTOR: refactor this -->
-        <p><span class="badge badge-info">{{ shared_album_via_email_count }}</span>
-				album{{ sharedalbum_count|pluralize:",es" }}
-				compartido{{ sharedalbum_count|pluralize:",s" }} por email</p>
+        <p><span class="badge badge-info">{{ shared_session_via_email_count }}</span>
+				sesiones{{ shared_session_via_email_count|pluralize:",es" }}
+				compartido{{ shared_session_via_email_count|pluralize:",s" }} por email</p>
 
         <p><span class="badge badge-info">{{ image_count }}</span>
                 imagen{{ image_count|pluralize:",es" }}</p>
@@ -30,11 +29,11 @@
 
         <h4>Albumes que otros han compartido con vos</h4>
 
-        <!-- # FIXME: REFACTOR: refactor this -->
+        <!-- # FIXME: REFACTOR: refactor this - - >
         <p><span class="badge badge-info">{{ others_album_count }}</span>
                 album{{ others_album_count|pluralize:",es" }} ha{{ others_album_count|pluralize:",n" }}
                 sido compartido{{ others_album_count|pluralize }} con vos.
-        </p>
+        </p> -->
 
         <hr>
 
@@ -44,7 +43,7 @@
 	        <p><span class="badge badge-info">{{ image_selection_pending_count }}</span>
 	                Ud. posee {{ image_selection_pending_count }}
 	                {{ image_selection_pending_count|pluralize:"petición,peticiones" }}
-	                de selección de imagenes. <a href="{% url 'imageselection_list' %}">Haga clic aqui</a> para verlas...
+	                de selección de imagenes. <a href="{ % url 'imageselection_list' % }">Haga clic aqui</a> para verlas...
 	        </p>
 	        <hr>
         {% endif %}
