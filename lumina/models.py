@@ -81,6 +81,15 @@ class LuminaUser(AbstractUser):
         assert self.user_type == LuminaUser.PHOTOGRAPHER
         return Customer.objects.customers_of(self)
 
+    def get_users_of_customer(self, customer_id):
+        """
+        Returns the users from the Customer with id = customer_id
+        """
+        assert self.user_type == LuminaUser.PHOTOGRAPHER
+        return LuminaUser.objects.filter(user_type=LuminaUser.CUSTOMER,
+                                   user_for_customer=customer_id,
+                                   user_for_customer__studio=self.studio)
+
     def __unicode__(self):
         return u"{} ({})".format(self.get_full_name(), self.username)
 

@@ -4,7 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
 from lumina.views import SessionListView, SessionDetailView, SessionCreateView,\
-    SessionUpdateView, CustomerListView, CustomerCreateView, CustomerUpdateView
+    SessionUpdateView, CustomerListView, CustomerCreateView, CustomerUpdateView,\
+    UserListView
 
 # Uncomment the next two lines to enable the admin:
 admin.autodiscover()
@@ -127,7 +128,7 @@ urlpatterns = patterns(
 #         name='image_download'),
 
     #===========================================================================
-    # LuminaUserProfile
+    # Customer
     #===========================================================================
     url(r'^customer/list/$',
         cache_control(private=True)(
@@ -143,6 +144,24 @@ urlpatterns = patterns(
         cache_control(private=True)(
             login_required(CustomerUpdateView.as_view())),
         name='customer_update'),
+
+    #===========================================================================
+    # Users
+    #===========================================================================
+    url(r'^customer/user/list/(?P<customer_id>\d+)/$',
+        cache_control(private=True)(
+            login_required(UserListView.as_view())),
+        name='customer_user_list'),
+
+#     url(r'^customer/user/create/$',
+#         cache_control(private=True)(
+#             login_required(UserCreateView.as_view())),
+#         name='customer_user_create'),
+#
+#     url(r'^customer/user/update/(?P<pk>\d+)/$',
+#         cache_control(private=True)(
+#             login_required(UserUpdateView.as_view())),
+#         name='customer_user_update'),
 
     #===========================================================================
     # Rest API

@@ -26,6 +26,11 @@
                           <i class="icon-user"></i> {{ customer.phone }}
 		              </small>
 		        </div>
+		        <div>
+		              <small>
+                          <i class="icon-user"></i> <a href="{% url 'customer_user_list' customer.id %}">Listar Usuarios</a>
+		              </small>
+		        </div>
 		    </div>
 		</div>
 		<hr>

@@ -651,6 +651,25 @@ class CustomerUpdateView(UpdateView):
         context['submit_label'] = "Actualizar"
         return context
 
+
+#===============================================================================
+# User
+#===============================================================================
+
+class UserListView(ListView):
+    model = LuminaUser
+    template_name = 'lumina/user_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserListView, self).get_context_data(**kwargs)
+        customer_id = int(self.kwargs['customer_id'])
+        context['customer'] = self.request.user.all_my_customers().get(pk=customer_id)
+        return context
+
+    def get_queryset(self):
+        customer_id = int(self.kwargs['customer_id'])
+        return self.request.user.get_users_of_customer(customer_id)
+
 # class UserUpdateView(UpdateView):
 #     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
 #     model = LuminaUser
