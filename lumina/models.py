@@ -188,6 +188,8 @@ class Session(models.Model):
     # REFACTOR: `studio` used to be named `user` and point to `LuminaUser`
     studio = models.ForeignKey(Studio)
 
+    photographer = models.ForeignKey(LuminaUser)
+
     # REFACTOR: `customer` is a new attribute
     customer = models.ForeignKey(Customer)
 
