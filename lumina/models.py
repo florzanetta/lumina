@@ -86,6 +86,8 @@ class Customer(models.Model):
     """
     name = models.CharField(max_length=100)
     customer_of = models.ForeignKey(Studio, related_name='customers')
+    address = models.TextField()
+    phone = models.CharField(max_length=20)
 
 
 #===============================================================================
