@@ -9,6 +9,7 @@ from django.contrib.auth.models import AbstractUser, UserManager
 
 class ForUserManagerMixin():
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def for_user(self, user):
         """Filter objects by user"""
         return self.filter(user=user)
@@ -71,11 +72,13 @@ class LuminaUser(AbstractUser):
 
     objects = LuminaUserManager()
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def all_my_customers(self):
         assert self.user_type == LuminaUser.PHOTOGRAPHER
         # return self.filter(customer_of=self)
         return self.customers.all()
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def __unicode__(self):
         return u"{} ({})".format(self.get_full_name(), self.username)
 
@@ -142,14 +145,17 @@ class SessionManager(models.Manager, ForUserManagerMixin):
     Manager for the Session model
     """
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def all_my_albums(self, user):
         """Returns all the user's albums"""
         return self.for_user(user)
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def shared_with_me(self, user):
         """Returns all the albums that other users have shared with 'user'"""
         return self.filter(shared_with=user)
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def all_visible(self, user):
         """
         Returns all the visible albums for an user
@@ -179,6 +185,7 @@ class Session(models.Model):
     def __unicode__(self):
         return u"Session {0}".format(self.name)
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def get_absolute_url(self):
         return reverse('album_detail', kwargs={'pk': self.pk})
 
@@ -192,6 +199,7 @@ class SharedSessionByEmailManager(models.Manager, ForUserManagerMixin):
     Manager for the SharedAlbum model
     """
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def all_my_shares(self, user):
         """Returns all the shares"""
         return self.for_user(user)
@@ -227,9 +235,11 @@ class SharedSessionByEmail(models.Model):
 
     objects = SharedSessionByEmailManager()
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def __unicode__(self):
         return u"Session {0} shared by email to {1}".format(self.album.name, self.shared_with)
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def get_image_from_album(self, image_id):
         """
         Returns the image with 'id' = 'image_id' only
@@ -252,6 +262,7 @@ class ImageSelectionManager(models.Manager):
     Manager for the ImageSelection model
     """
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def pending_image_selections(self, user):
         """
         Returns ImageSelection instances for which the customer
@@ -259,6 +270,7 @@ class ImageSelectionManager(models.Manager):
         """
         return self.filter(customer=user, status=ImageSelection.STATUS_WAITING)
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def all_my_accessible_imageselections(self, user):
         """
         Returns all the ImageSelection instances including those for what the user
@@ -266,6 +278,7 @@ class ImageSelectionManager(models.Manager):
         """
         return self.filter(Q(customer=user) | Q(album__user=user))
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def all_my_imageselections_as_customer(self, user, just_pending=False):
         """
         Returns a queryset filtering the ImageSelections for the specified user.
@@ -311,6 +324,7 @@ class ImageSelection(models.Model):
 
     objects = ImageSelectionManager()
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def clean(self):
         # from django.core.exceptions import ValidationError
         if self.id is None:
@@ -330,10 +344,12 @@ class ImageManager(models.Manager, ForUserManagerMixin):
     Manager for the Image model
     """
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def all_my_images(self, user):
         """Returns all the user's images"""
         return self.for_user(user)
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def all_previsualisable(self, user):
         """
         Returns all the visible images for preview, ie: thumbnails or low quality.
@@ -347,6 +363,7 @@ class ImageManager(models.Manager, ForUserManagerMixin):
         q = q | Q(album__imageselection__customer=user)
         return self.filter(q).distinct()
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def get_for_download(self, user, image_id):
         """
         Returns an images to be downloaded by the user
@@ -399,16 +416,20 @@ class Image(models.Model):
 
     objects = ImageManager()
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def __unicode__(self):
         return u"Image {0}".format(self.original_filename)
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def get_absolute_url(self):
         return reverse('image_update', kwargs={'pk': self.pk})
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def set_content_type(self, content_type):
         """Set content_type, truncating if it's too large"""
         self.content_type = content_type[0:64]
 
+    # FIXME: REFACTOR: refactor this (if needed)
     def set_original_filename(self, filename):
         """Set original filename, truncating if it's too large"""
         self.original_filename = filename[0:128]
