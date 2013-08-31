@@ -27,14 +27,15 @@ class LuminaUser(AbstractUser):
     )
     user_type = models.CharField(max_length=1, choices=USER_TYPES, default=PHOTOGRAPHER)
 
-    # Attributes for PHOTOGRAPHERS & CUSTOMERS
+    # ----- Attributes for PHOTOGRAPHERS & CUSTOMERS
+
+    # ----- Attributes for PHOTOGRAPHERS
     studio = models.ForeignKey('Studio', related_name='photographers')
 
-    # Attributes for PHOTOGRAPHERS
-
-    # Attributes for CUSTOMERS
+    # ----- Attributes for CUSTOMERS
     # FIXME: REFACTOR: `customer_of` used to point to `LuminaUser`
-    customer_of = models.ForeignKey('Studio', null=True, blank=True, related_name='customers')
+    # FIXME: REFACTOR: `customer_of` should be renamed to  `user_of`
+    customer_of = models.ForeignKey('Studio', null=True, blank=True, related_name='users')
 
     objects = LuminaUserManager()
 
