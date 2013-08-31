@@ -116,7 +116,9 @@ class SessionManager(models.Manager, ForUserManagerMixin):
 class Session(models.Model):
     name = models.CharField(max_length=300)
     # FIXME: REFACTOR: `user` should refer to `Studio`, not `LuminaUser`
-    user = models.ForeignKey(LuminaUser)  # owner
+    user = models.ForeignKey(LuminaUser)
+    # FIXME: REFACTOR: `customer` is a new attribute
+    customer = models.ForeignKey(Customer)
     shared_with = models.ManyToManyField(LuminaUser, blank=True,
                                          related_name='others_shared_albums')
 
