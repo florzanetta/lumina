@@ -112,7 +112,7 @@ def home(request):
             'others_album_count': Album.objects.shared_with_me(request.user).count(),
             'image_selection_pending_count': ImageSelection.objects.pending_image_selections(
                 request.user).count(),
-#            'auth_providers': request.user.social_auth.get_providers(),
+            # 'auth_providers': request.user.social_auth.get_providers(),
         }
     else:
         ctx = {}
@@ -435,10 +435,6 @@ class ImageSelectionDetailView(DetailView):
 #===============================================================================
 # Album
 #===============================================================================
-
-# class SafeAlbumViewMixin(object):
-#    def get_queryset(self):
-#        return Album.objects.for_user(self.request.user)
 
 class AlbumListView(ListView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
