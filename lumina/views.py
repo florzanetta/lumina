@@ -508,13 +508,13 @@ class SessionUpdateView(UpdateView):
 # Image
 #===============================================================================
 
-# class ImageListView(ListView):
-#     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-#     #    #django.views.generic.list.ListView
-#     model = Image
-#
-#     def get_queryset(self):
-#         return Image.objects.all_my_images(self.request.user)
+class ImageListView(ListView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.list.ListView
+    model = Image
+
+    def get_queryset(self):
+        return Image.objects.visible_images(self.request.user)
 #
 #
 # class ImageCreateView(CreateView):
