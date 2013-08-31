@@ -70,6 +70,13 @@ class LuminaUser(AbstractUser):
 # Studio
 #===============================================================================
 
+class StudioManager(models.Manager):
+    """
+    Manager for the Studio model
+    """
+    pass
+
+
 class Studio(models.Model):
     """
     Represents a photography studio. That is the organization
@@ -83,10 +90,19 @@ class Studio(models.Model):
     """
     name = models.CharField(max_length=100)
 
+    objects = StudioManager()
+
 
 #===============================================================================
 # Customer
 #===============================================================================
+
+class CustomerManager(models.Manager):
+    """
+    Manager for the Customer model
+    """
+    pass
+
 
 class Customer(models.Model):
     """
@@ -99,6 +115,8 @@ class Customer(models.Model):
     customer_of = models.ForeignKey(Studio, related_name='customers')
     address = models.TextField()
     phone = models.CharField(max_length=20)
+
+    objects = CustomerManager()
 
 
 #===============================================================================
@@ -132,8 +150,10 @@ class Session(models.Model):
     Represents a photo session.
     """
     name = models.CharField(max_length=300)
-    # FIXME: REFACTOR: `user` should refer to `Studio`, not `LuminaUser`
-    user = models.ForeignKey(LuminaUser)
+
+    # FIXME: REFACTOR: `studio` used to be named `user` and point to `LuminaUser`
+    studio = models.ForeignKey(Studio)
+
     # FIXME: REFACTOR: `customer` is a new attribute
     customer = models.ForeignKey(Customer)
     shared_with = models.ManyToManyField(LuminaUser, blank=True,
