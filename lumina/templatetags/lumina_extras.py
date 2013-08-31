@@ -91,7 +91,7 @@ def non_empty_unicode_keys(a_dict):
 def user_is_customer(user):
     if user is None:
         return False
-    return user.user_type == LuminaUser.GUEST
+    return user.user_type == LuminaUser.CUSTOMER
 
 
 @register.filter(name='user_is_photographer')

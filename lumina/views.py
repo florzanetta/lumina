@@ -613,7 +613,7 @@ class CustomerCreateView(CreateView):
 
         # Create the profile module
         new_user = LuminaUser.objects.get(pk=form.instance.id)
-        new_user.user_type = LuminaUser.GUEST
+        new_user.user_type = LuminaUser.CUSTOMER
         new_user.customer_of = self.request.user
 
         # Set the password

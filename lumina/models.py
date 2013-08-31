@@ -20,10 +20,10 @@ class LuminaUserManager(UserManager):
 
 class LuminaUser(AbstractUser):
     PHOTOGRAPHER = 'P'
-    GUEST = 'G'
+    CUSTOMER = 'C'
     USER_TYPES = (
         (PHOTOGRAPHER, 'Fotografo'),
-        (GUEST, 'Invitado'),
+        (CUSTOMER, 'Cliente'),
     )
     user_type = models.CharField(max_length=1, choices=USER_TYPES, default=PHOTOGRAPHER)
     customer_of = models.ForeignKey('self', null=True, blank=True, related_name='customers')
