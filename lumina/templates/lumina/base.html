@@ -36,16 +36,16 @@
 
 						{% if user.is_authenticated %}
 
-															<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Albums <b class="caret"></b></a>
+															<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Sesiones <b class="caret"></b></a>
 																<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 
                                                                                 <!-- Items de drop-down  -->
-																	          <li><a href="{% url 'album_list' %}">Lista de albumes</a></li>
+																	          <li><a href="{ % url 'album_list' % }">Lista de sesiones</a></li>
                                                                                 {% if user|user_is_photographer %} <!-- user is photographer -->
-																						<li><a href="{% url 'album_create' %}">Agregar album</a></li>
-																						<li><a href="{% url 'shared_album_create' %}">Compartir album</a></li>
+																						<li><a href="{ % url 'album_create' % }">Agregar sesión</a></li>
+																						<li><a href="{ % url 'shared_album_create' % }">Compartir sesión</a></li>
                                                                                 {% else %} <!-- user is client -->
-		                                                                                <li><a href="{% url 'imageselection_list' %}"
+		                                                                                <li><a href="{ % url 'imageselection_list' % }"
 		                                                                                    title="Lista de peticiones de seleccion de imagenes">Lista de peticiones...</a>
 		                                                                                </li>
                                                                                 {% endif %}
@@ -59,19 +59,19 @@
 																				<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 
 																										<!-- Items de drop-down  -->
-																										<li><a href="{% url 'image_list' %}">Lista de imagenes</a></li>
-																										<li><a href="{% url 'image_create' %}">Agregar imagen</a></li>
-                                                                                                        <li><a href="{% url 'test_html5_upload' %}">Crear album con vistas previas (Ajax)</a></li>
+																										<li><a href="{ % url 'image_list' % }">Lista de imagenes</a></li>
+																										<li><a href="{ % url 'image_create' % }">Agregar imagen</a></li>
+                                                                                                        <li><a href="{ % url 'test_html5_upload' % }">Crear album con vistas previas (Ajax)</a></li>
                                                                                                         
 
 																				</ul>
 																			</li>
-																			<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Clientes <b class="caret"></b></a>
+																			<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Usuarios <b class="caret"></b></a>
 																				<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 
 																										<!-- Items de drop-down  -->
-																										<li><a href="{% url 'customer_list' %}">Lista de clientes</a></li>
-																										<li><a href="{% url 'customer_create' %}">Agregar cliente</a></li>
+																										<li><a href="{ % url 'customer_list' % }">Lista de usuarios</a></li>
+																										<li><a href="{ % url 'customer_create' % }">Agregar usuario</a></li>
 
 																				</ul>
 																			</li> 
@@ -85,10 +85,10 @@
 																			<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 
 																								<!-- Items de drop-down  -->
-																								<li><a href="{% url 'admin:lumina_album_changelist' %}" target="_blank">Albums</a></li>
-																								<li><a href="{% url 'admin:lumina_image_changelist' %}" target="_blank">Images</a></li>
-																								<li><a href="{% url 'admin:lumina_sharedalbum_changelist' %}" target="_blank">Shared Albums</a></li>
-																								<li><a href="{% url 'admin:lumina_imageselection_changelist' %}" target="_blank">Image Selection</a></li>
+																								<li><a href="{ % url 'admin:lumina_album_changelist' % }" target="_blank">Albums</a></li>
+																								<li><a href="{ % url 'admin:lumina_image_changelist' % }" target="_blank">Images</a></li>
+																								<li><a href="{ % url 'admin:lumina_sharedalbum_changelist' % }" target="_blank">Shared Albums</a></li>
+																								<li><a href="{ % url 'admin:lumina_imageselection_changelist' % }" target="_blank">Image Selection</a></li>
 
 																			</ul></li>
 
@@ -106,7 +106,7 @@
                                                     {% if user|user_is_photographer %} <!-- user is photographer -->
                                                             <li><a href="javascript:void(0);" title="Usuario: {{ user.username }}"><em><small>{{ user.get_full_name }} &nbsp; (fotografo)</small></em></a></li>
                                                     {% else %} <!-- user is client -->
-                                                            <li><a href="javascript:void(0);" title="Usuario: {{ user.username }}"><em><small>{{ user.get_full_name }} &nbsp; (cliente)</small></em></a></li>
+                                                            <li><a href="javascript:void(0);" title="Usuario: {{ user.username }}"><em><small>{{ user.get_full_name }} &nbsp; (usuario)</small></em></a></li>
                                                     {% endif %}
                                                     <li><a href="{% url 'logout' %}">Salir</a></li>
 													{% if 'twitter' in social_auth|non_empty_unicode_keys %}
