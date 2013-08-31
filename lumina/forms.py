@@ -6,7 +6,7 @@ Created on Jun 1, 2013
 
 from django import forms
 from django.forms.widgets import CheckboxSelectMultiple
-from lumina.models import Session
+from lumina.models import Session, LuminaUser, Customer
 
 
 #===============================================================================
@@ -82,7 +82,17 @@ class SessionUpdateForm(forms.ModelForm):
 # Customer
 #===============================================================================
 
-# class CustomerCreateForm(forms.ModelForm):
+class CustomerCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = Customer
+        fields = (
+            'name', 'address', 'phone',
+        )
+
+CustomerUpdateForm = CustomerCreateForm
+
+# class UserCreateForm(forms.ModelForm):
 #     password1 = forms.CharField(
 #         max_length=20, required=True, widget=forms.PasswordInput(), label=u'Contrasena')
 #     password2 = forms.CharField(
@@ -103,7 +113,7 @@ class SessionUpdateForm(forms.ModelForm):
 #         return self.cleaned_data
 #
 #
-# class CustomerUpdateForm(forms.ModelForm):
+# class UserUpdateForm(forms.ModelForm):
 #     password1 = forms.CharField(
 #         max_length=20, required=False, widget=forms.PasswordInput(), label=u'Contrasena')
 #     password2 = forms.CharField(
