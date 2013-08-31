@@ -27,7 +27,7 @@ from django.core.files.base import ContentFile
 
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Session, Image
-from lumina.forms import SessionCreateForm
+from lumina.forms import SessionCreateForm, SessionUpdateForm
 
 
 #
@@ -471,24 +471,24 @@ class SessionCreateView(CreateView):
         return ret
 
 
-# class SessionUpdateView(UpdateView):
-#     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
-#     model = Session
-#     form_class = SessionUpdateForm
-#     template_name = 'lumina/session_update_form.html'
-#
-#     def get_form(self, form_class):
-#         form = super(SessionUpdateView, self).get_form(form_class)
-#         form.fields['shared_with'].queryset = self.request.user.all_my_customers()
-#         return form
-#
-#     def get_queryset(self):
-#         return Session.objects.all_my_albums(self.request.user)
-#
-#     def form_valid(self, form):
-#         ret = super(SessionUpdateView, self).form_valid(form)
-#         messages.success(self.request, 'El album fue actualizado correctamente')
-#         return ret
+class SessionUpdateView(UpdateView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
+    model = Session
+    form_class = SessionUpdateForm
+    template_name = 'lumina/session_update_form.html'
+
+    def get_form(self, form_class):
+        form = super(SessionUpdateView, self).get_form(form_class)
+        form.fields['shared_with'].queryset = self.request.user.all_my_customers()
+        return form
+
+    def get_queryset(self):
+        return Session.objects.visible_sessions(self.request.user)
+
+    def form_valid(self, form):
+        ret = super(SessionUpdateView, self).form_valid(form)
+        messages.success(self.request, 'La sesión fue actualizado correctamente')
+        return ret
 
 
 #===============================================================================

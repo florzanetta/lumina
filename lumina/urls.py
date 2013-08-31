@@ -3,7 +3,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
-from lumina.views import SessionListView, SessionDetailView, SessionCreateView
+from lumina.views import SessionListView, SessionDetailView, SessionCreateView,\
+    SessionUpdateView
 
 # Uncomment the next two lines to enable the admin:
 admin.autodiscover()
@@ -41,10 +42,10 @@ urlpatterns = patterns(
             login_required(SessionCreateView.as_view())),
         name='session_create'),
 
-#     url(r'^session/update/(?P<pk>\d+)/$',
-#         cache_control(private=True)(
-#             login_required(SessionUpdateView.as_view())),
-#         name='session_update'),
+    url(r'^session/update/(?P<pk>\d+)/$',
+        cache_control(private=True)(
+            login_required(SessionUpdateView.as_view())),
+        name='session_update'),
 
     #===========================================================================
     # SharedAlbum

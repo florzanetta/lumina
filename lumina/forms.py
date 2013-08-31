@@ -50,14 +50,14 @@ class SessionCreateForm(forms.ModelForm):
         exclude = ('studio', )
 
 
-# class AlbumUpdateForm(forms.ModelForm):
-#
-#     class Meta:
-#         model = Album
-#         exclude = ('user',)
-#         widgets = {
-#             'shared_with': CheckboxSelectMultiple(),
-#         }
+class SessionUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Session
+        exclude = ('studio',)
+        widgets = {
+            'shared_with': CheckboxSelectMultiple(),
+        }
 
 
 #===============================================================================

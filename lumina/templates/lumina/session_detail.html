@@ -91,13 +91,13 @@
 
     <!-- // Buttons on bottom of page -->
 
-    {% if object.user == user %}
-        <!-- the logged in user is the owner of the album -->
+    {% if object.studio == user.studio %}
+        <!-- the logged in user from the same Studio than the Session -->
 
 	    <hr>
 
 	    <p>
-		    <a href="{ % url 'album_update' object.pk % }" class="btn btn-primary">Actualizar album</a>
+		    <a href="{% url 'session_update' object.pk %}" class="btn btn-primary">Actualizar sesión</a>
 		    <a href="{ % url 'image_create' % }?id_album={{ object.pk }}" class="btn btn-primary">Agregar imagen</a>
             <a href="{ % url 'shared_album_create' % }?id_album={{ object.pk }}" class="btn btn-primary">Compartir album via email</a>
             <a href="{ % url 'image_selection_create' % }?id_album={{ object.pk }}" class="btn btn-primary">Solicitar selección de imágenes</a>

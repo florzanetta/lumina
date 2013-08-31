@@ -3,13 +3,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>{% block title %}Lumina - Actualizar album{% endblock %}</title>
+<title>{% block title %}Lumina - Actualizar sesión{% endblock %}</title>
 </head>
 <body>
 
 {% block content %}
 
-    <h3>Actualizar album</h3>
+    <h3>Actualizar sesión</h3>
     <form action="." method="post">{% csrf_token %}
 	    <table class="table">
 	        {{ form.as_table }}
