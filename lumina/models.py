@@ -27,15 +27,26 @@ class LuminaUser(AbstractUser):
     )
     user_type = models.CharField(max_length=1, choices=USER_TYPES, default=PHOTOGRAPHER)
 
+    # -----
     # ----- Attributes for PHOTOGRAPHERS & CUSTOMERS
+    # -----
 
-    # ----- Attributes for PHOTOGRAPHERS
-    studio = models.ForeignKey('Studio', related_name='photographers')
+    # -----
+    # ----- Attributes for PHOTOGRAPHERS // null=True, blank=True
+    # -----
 
-    # ----- Attributes for CUSTOMERS
+    studio = models.ForeignKey('Studio', related_name='photographers', null=True, blank=True)
+
+    # -----
+    # ----- Attributes for CUSTOMERS // null=True, blank=True
+    # -----
+
     # FIXME: REFACTOR: `customer_of` used to point to `LuminaUser`
     # FIXME: REFACTOR: `customer_of` should be renamed to  `user_of`
     customer_of = models.ForeignKey('Studio', null=True, blank=True, related_name='users')
+
+    # FIXME: REFACTOR: `user_of` is a new attribute
+    user_of = models.ForeignKey('Customer', null=True, blank=True, related_name='users')
 
     objects = LuminaUserManager()
 
@@ -53,7 +64,28 @@ class LuminaUser(AbstractUser):
 #===============================================================================
 
 class Studio(models.Model):
+    """
+    A photography studio, which has:
+    - many *photographers* represented by `LuminaUser`
+    - many *customers* represented by `Customer`
+    - many *users* 'as employees of Customers' represented by `LuminaUser`
+    """
     name = models.CharField(max_length=100)
+
+
+#===============================================================================
+# Customer
+#===============================================================================
+
+class Customer(models.Model):
+    """
+    A Customer (as the organization that pay to the photographer).
+
+    A customer has many 'users'... all of them are employee of the Customer,
+    or any person that the customer allowed to access the images.
+    """
+    name = models.CharField(max_length=100)
+    customer_of = models.ForeignKey(Studio, related_name='customers')
 
 
 #===============================================================================
