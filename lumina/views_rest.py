@@ -16,3 +16,12 @@ def ping(request):
         response_data['username'] = request.user.username
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+def check_pending_uploads(request):
+    response_data = {
+        'status': 'ok',
+        'pending_uploads_count': 0,
+    }
+
+    return HttpResponse(json.dumps(response_data), content_type="application/json")

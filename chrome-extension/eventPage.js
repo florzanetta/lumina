@@ -24,6 +24,12 @@ function get_last_log(callback) {
 
 var luminaService = {
 
+	getObjectFromXMLHttpResponse: function(response) {
+		// FIXME: handle exceptions!
+		var resp = JSON.parse(response.target.responseText);
+		return resp;
+	},
+		
 	/**
 	 * @public
 	 */
@@ -51,8 +57,10 @@ var luminaService = {
 		console.debug("eventPage.js: Server returned: " + msg);
 		if ('username' in resp && resp['username'].length > 0) {
 			set_log("User '" + resp['username'] + "' logged in");
+			console.info("eventPage.js: User is logged in");
 		} else {
 			set_log("Connection to server ok. Remember to login!");
+			console.info("eventPage.js: Connection to server ok. User is NOT logged in");
 		}
 
 		chrome.browserAction.setIcon({
@@ -67,6 +75,51 @@ var luminaService = {
 		chrome.browserAction.setIcon({
 			path : 'glyphicons_413_cloud_minus.png'
 		});
+	},
+
+	//
+	// check_pending_uploads
+	//
+
+	/**
+	 * @public
+	 */
+	checkForPendingUploads : function() {
+		var req = new XMLHttpRequest();
+		// http://www.w3.org/TR/XMLHttpRequest/
+		req.open("GET", "http://localhost:8000/rest/check_pending_uploads",
+				true);
+		req.onload = this.checkForPendingUploadsCallback.bind(this);
+		req.onerror = this.checkForPendingUploadsCallbackError.bind(this);
+		console.debug("eventPage.js: will send XMLHttpRequest")
+		req.send(null);
+		console.debug("eventPage.js: XMLHttpRequest sent")
+	},
+
+	checkForPendingUploadsCallback : function(e) {
+		var resp = this.getObjectFromXMLHttpResponse(e);
+		if(resp['status'] != 'ok') {
+			console.error("checkForPendingUploadsCallback(): Status != OK - status: '" + resp['status']  + "'");
+			// FIXME: do something else beyond logging by console!
+			return;
+		}
+			
+		if(! ('pending_uploads_count' in resp)) {
+			console.error("checkForPendingUploadsCallback(): 'pending_uploads_count' not in response");
+			// FIXME: do something else beyond logging by console!
+			return;
+		}
+		
+		if (resp['pending_uploads_count'] > 0) {
+			console.info("HAY UPLOADS PENDIENTES! - pending_uploads_count: " + resp['pending_uploads_count']);
+		} else {
+			console.info("No hay uploads pendientes");
+		}
+
+	},
+
+	checkForPendingUploadsCallbackError : function(e) {
+		console.error("checkForPendingUploadsCallbackError()");
 	}
 
 // http://stackoverflow.com/questions/4093722/upload-a-file-in-a-google-chrome-extension
@@ -85,7 +138,15 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
 	if (alarm.name == 'lumina-poll' || alarm.name == 'lumina-poll-initial') {
 		console.debug("eventPage.js: onAlarm(" + alarm.name + ")");
 		luminaService.pingLumina();
+		return;
 	}
+
+	if (alarm.name == 'lumina-poll-pending-uploads') {
+		console.debug("eventPage.js: onAlarm(" + alarm.name + ")");
+		luminaService.checkForPendingUploads();
+		return;
+	}
+
 });
 
 // Create the alarm:
@@ -95,6 +156,10 @@ chrome.alarms.create('lumina-poll', {
 
 chrome.alarms.create('lumina-poll-initial', {
 	delayInMinutes : 1.0 / 30.0, // 2 secs
+});
+
+chrome.alarms.create('lumina-poll-pending-uploads', {
+	periodInMinutes : 1.0 / 3.0, // 20 secs
 });
 
 console.info("eventPage.js: end");

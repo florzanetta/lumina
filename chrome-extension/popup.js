@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	status.textContent = "";
 	document.body.appendChild(status);
 
+	// http://developer.chrome.com/extensions/runtime.html#method-getBackgroundPage
 	chrome.runtime.getBackgroundPage(function(backgroundPageWindow) {
 		console.info("Last log: "
 				+ backgroundPageWindow.get_last_log(set_status));
