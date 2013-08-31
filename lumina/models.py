@@ -76,13 +76,11 @@ class LuminaUser(AbstractUser):
     def is_for_customer(self):
         return self.user_type == LuminaUser.CUSTOMER
 
-    # FIXME: REFACTOR: refactor this (if needed)
     def all_my_customers(self):
+        """Returns queryset of Customer"""
         assert self.user_type == LuminaUser.PHOTOGRAPHER
-        # return self.filter(customer_of=self)
-        return self.customers.all()
+        return Customer.objects.customers_of(self)
 
-    # FIXME: REFACTOR: refactor this (if needed)
     def __unicode__(self):
         return u"{} ({})".format(self.get_full_name(), self.username)
 
@@ -122,7 +120,12 @@ class CustomerManager(models.Manager):
     """
     Manager for the Customer model
     """
-    pass
+
+    def customers_of(self, photographer):
+        """
+        Returns the customers of the photographer's studio
+        """
+        return self.filter(studio=photographer.studio)
 
 
 class Customer(models.Model):
@@ -204,7 +207,7 @@ class Session(models.Model):
 
     # FIXME: REFACTOR: refactor this (if needed)
     def get_absolute_url(self):
-        return reverse('album_detail', kwargs={'pk': self.pk})
+        return reverse('session_detail', kwargs={'pk': self.pk})
 
 
 #===============================================================================

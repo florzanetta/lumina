@@ -95,7 +95,7 @@ PRIVATE_URLS = [
     reverse('album_list'),
     reverse('album_detail', args=[1]),
     reverse('album_detail', args=[2]),
-    reverse('album_create'),
+    reverse('session_create'),
     reverse('album_update', args=[1]),
     reverse('album_update', args=[2]),
     # TODO: complete this list
@@ -110,7 +110,7 @@ class BasicAccessTest(LuminaTestCase):
             login_func()  # user -> self._logged_in_user
             if self._logged_in_user.user_type == LuminaUser.PHOTOGRAPHER:
                 for view_name in (
-                    'home', 'album_list', 'album_create', 'shared_album_create',
+                    'home', 'album_list', 'session_create', 'shared_album_create',
                         'image_list', 'image_create', 'customer_list', 'customer_create'):
                     response = self.client.get(reverse(view_name))
                     self.assertEqual(response.status_code, 200)

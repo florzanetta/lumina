@@ -27,6 +27,7 @@ from django.core.files.base import ContentFile
 
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Session, Image
+from lumina.forms import SessionCreateForm
 
 
 #
@@ -453,23 +454,23 @@ class SessionDetailView(DetailView):
         return Session.objects.visible_sessions(self.request.user)
 
 
-# class SessionCreateView(CreateView):
-#     model = Session
-#     form_class = SessionCreateForm
-#     template_name = 'lumina/session_create_form.html'
-#
-#     def get_form(self, form_class):
-#         form = super(SessionCreateView, self).get_form(form_class)
-#         form.fields['shared_with'].queryset = self.request.user.all_my_customers()
-#         return form
-#
-#     def form_valid(self, form):
-#         form.instance.user = self.request.user
-#         ret = super(SessionCreateView, self).form_valid(form)
-#         messages.success(self.request, 'El album fue creado correctamente')
-#         return ret
-#
-#
+class SessionCreateView(CreateView):
+    model = Session
+    form_class = SessionCreateForm
+    template_name = 'lumina/session_create_form.html'
+
+    def get_form(self, form_class):
+        form = super(SessionCreateView, self).get_form(form_class)
+        form.fields['shared_with'].queryset = self.request.user.all_my_customers()
+        return form
+
+    def form_valid(self, form):
+        form.instance.studio = self.request.user.studio
+        ret = super(SessionCreateView, self).form_valid(form)
+        messages.success(self.request, 'La sesión fue creado correctamente')
+        return ret
+
+
 # class SessionUpdateView(UpdateView):
 #     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
 #     model = Session

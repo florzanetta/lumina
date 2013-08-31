@@ -49,7 +49,7 @@
     {% endfor %}
 
     <p>
-        <a href="{ % url 'album_create' % }" class="btn btn-primary">Agregar sesión</a>
+        <a href="{% url 'session_create' %}" class="btn btn-primary">Agregar sesión</a>
     </p>
 
     {% dump_objects user object_list %}

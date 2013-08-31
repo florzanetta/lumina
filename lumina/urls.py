@@ -3,7 +3,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
-from lumina.views import SessionListView, SessionDetailView
+from lumina.views import SessionListView, SessionDetailView, SessionCreateView
 
 # Uncomment the next two lines to enable the admin:
 admin.autodiscover()
@@ -36,11 +36,11 @@ urlpatterns = patterns(
             login_required(SessionDetailView.as_view())),
         name='session_detail'),
 
-#     url(r'^session/create/$',
-#         cache_control(private=True)(
-#             login_required(SessionCreateView.as_view())),
-#         name='session_create'),
-#
+    url(r'^session/create/$',
+        cache_control(private=True)(
+            login_required(SessionCreateView.as_view())),
+        name='session_create'),
+
 #     url(r'^session/update/(?P<pk>\d+)/$',
 #         cache_control(private=True)(
 #             login_required(SessionUpdateView.as_view())),
