@@ -43,12 +43,11 @@ class LuminaUser(AbstractUser):
     # ----- Attributes for CUSTOMERS // null=True, blank=True
     # -----
 
-    # FIXME: REFACTOR: `customer_of` used to point to `LuminaUser`
-    # FIXME: REFACTOR: `customer_of` should be renamed to  `user_of`
-    customer_of = models.ForeignKey('Studio', null=True, blank=True, related_name='users')
+    # FIXME: REFACTOR: `user_for_studio` used to be named `customer_of` and point to `LuminaUser`
+    user_for_studio = models.ForeignKey('Studio', null=True, blank=True, related_name='users')
 
-    # FIXME: REFACTOR: `user_of` is a new attribute
-    user_of = models.ForeignKey('Customer', null=True, blank=True, related_name='users')
+    # FIXME: REFACTOR: `user_for_customer` is a new attribute
+    user_for_customer = models.ForeignKey('Customer', null=True, blank=True, related_name='users')
 
     objects = LuminaUserManager()
 
