@@ -1,0 +1,60 @@
+{% extends "lumina/base.html" %}
+{% load lumina_extras %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina - Session list{% endblock %}</title>
+</head>
+<body>
+
+{% block content %}
+
+	<h3>Albumes de '{{ user.get_full_name }}'</h3>
+
+    {% for a_session in object_list %}
+		<div class="media">
+		    <a class="pull-left" href="javascript:void(0);">
+		        <img class="media-object" src="/static/album-icon-64x64.png">
+		    </a>
+		    <div class="media-body">
+		        <div class="media-heading"><a
+		               href="{ % url 'album_detail' a_session.pk % }">{{ a_session.name }}</a>
+		        </div>
+		        <div>
+                        <small>
+                            <span class="badge badge-info">{{ a_session.image_set.count }}</span>
+                            imagen{{ a_session.image_set.count|pluralize:",es" }}
+                        </small>
+                      -
+                      <small>
+                          Compartido con <span class="badge badge-info">{{ a_session.shared_with.count }}</span>
+                          cliente{{ a_session.shared_with.count|pluralize:",s" }}.
+                      </small>
+		              -
+		              <small>
+		                  Compartido con <span class="badge badge-info">{{ a_session.shares_via_email.count }}</span>
+	                      persona{{ a_session.shares_via_email.count|pluralize:",s" }} via email.
+		              </small>
+		        </div>
+		        <div>
+                    <i class="icon-user"></i> <small>Esta sessión pertenece a {{ a_session.photographer }}</small>
+		        </div>
+		    </div>
+		</div>
+		<hr>
+    {% empty %}
+       <p>No hay sessiones...</p>
+        <hr>
+    {% endfor %}
+
+    <p>
+        <a href="{ % url 'album_create' % }" class="btn btn-primary">Agregar sesión</a>
+    </p>
+
+    {% dump_objects user object_list %}
+
+{% endblock content %}
+
+</body>
+</html>

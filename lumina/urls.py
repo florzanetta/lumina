@@ -3,6 +3,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
+from lumina.views import SessionListView
+
 # Uncomment the next two lines to enable the admin:
 admin.autodiscover()
 
@@ -23,12 +25,12 @@ urlpatterns = patterns(
     #===========================================================================
     # Album
     #===========================================================================
-#     url(r'^album/list/$',
-#         cache_control(private=True)(
-#             login_required(
-#                 AlbumListView.as_view())),
-#         name='album_list'),
-#
+    url(r'^session/list/$',
+        cache_control(private=True)(
+            login_required(
+                SessionListView.as_view())),
+        name='session_list'),
+
 #     url(r'^album/detail/(?P<pk>\d+)/$',
 #         cache_control(private=True)(
 #             login_required(AlbumDetailView.as_view())),

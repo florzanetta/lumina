@@ -435,15 +435,15 @@ def check_403(request):
 # Album
 #===============================================================================
 
-# class AlbumListView(ListView):
-#     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-#     #    #django.views.generic.list.ListView
-#     model = Album
-#
-#     def get_queryset(self):
-#         return Album.objects.all_visible(self.request.user)
-#
-#
+class SessionListView(ListView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.list.ListView
+    model = Session
+
+    def get_queryset(self):
+        return Session.objects.visible_sessions(self.request.user)
+
+
 # class AlbumDetailView(DetailView):
 #     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
 #     #    #django.views.generic.detail.DetailView
