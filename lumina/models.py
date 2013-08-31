@@ -31,6 +31,8 @@ class LuminaUser(AbstractUser):
     # ----- Attributes for PHOTOGRAPHERS & CUSTOMERS
     # -----
 
+    # FIXME: REFACTOR: add common attributes, like phone, cellphone, address, etc.
+
     # -----
     # ----- Attributes for PHOTOGRAPHERS // null=True, blank=True
     # -----
