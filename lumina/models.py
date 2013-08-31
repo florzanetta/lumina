@@ -33,7 +33,7 @@ class LuminaUser(AbstractUser):
     # Attributes for PHOTOGRAPHERS
 
     # Attributes for CUSTOMERS
-    customer_of = models.ForeignKey('self', null=True, blank=True, related_name='customers')
+    customer_of = models.ForeignKey('Studio', null=True, blank=True, related_name='customers')
 
     objects = LuminaUserManager()
 
