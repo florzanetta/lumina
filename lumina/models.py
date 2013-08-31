@@ -33,6 +33,7 @@ class LuminaUser(AbstractUser):
     # Attributes for PHOTOGRAPHERS
 
     # Attributes for CUSTOMERS
+    # FIXME: REFACTOR: `customer_of` used to point to `LuminaUser`
     customer_of = models.ForeignKey('Studio', null=True, blank=True, related_name='customers')
 
     objects = LuminaUserManager()
@@ -78,6 +79,7 @@ class AlbumManager(models.Manager, ForUserManagerMixin):
 
 class Album(models.Model):
     name = models.CharField(max_length=300)
+    # FIXME: REFACTOR: `user` should refer to `Studio`, not `LuminaUser`
     user = models.ForeignKey(LuminaUser)  # owner
     shared_with = models.ManyToManyField(LuminaUser, blank=True,
                                          related_name='others_shared_albums')
@@ -117,6 +119,7 @@ class SharedAlbum(models.Model):
     """
     shared_with = models.EmailField(max_length=254)
     # https://docs.djangoproject.com/en/1.5/ref/models/fields/#emailfield
+    # FIXME: REFACTOR: `user` should refer to `Studio`, not `LuminaUser`
     user = models.ForeignKey(LuminaUser)
     album = models.ForeignKey(Album, related_name='shares_via_email')
     random_hash = models.CharField(max_length=36, unique=True)  # len(uuid4) = 36
@@ -188,6 +191,7 @@ class ImageSelection(models.Model):
         (STATUS_WAITING, u'Esperando selección de cliente'),
         (STATUS_IMAGES_SELECTED, u'Seleccion realizada'),
     )
+    # FIXME: REFACTOR: `user` should refer to `Studio`, not `LuminaUser`
     user = models.ForeignKey(LuminaUser, related_name='+')
     album = models.ForeignKey(Album)
     customer = models.ForeignKey(LuminaUser, related_name='+')
@@ -271,6 +275,7 @@ class Image(models.Model):
     size = models.PositiveIntegerField()
     original_filename = models.CharField(max_length=128)
     content_type = models.CharField(max_length=64)
+    # FIXME: REFACTOR: `user` should refer to `Studio`, not `LuminaUser`
     user = models.ForeignKey(LuminaUser)
     album = models.ForeignKey(Album, null=True)
 
