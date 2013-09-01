@@ -115,6 +115,8 @@ def home(request):
 #                     request.user).count(),
 #                 # 'auth_providers': request.user.social_auth.get_providers(),
             }
+        else:
+            ctx = {}
     else:
         ctx = {}
     return render_to_response(
