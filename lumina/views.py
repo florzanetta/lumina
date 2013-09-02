@@ -27,8 +27,8 @@ from django.core.files.base import ContentFile
 
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Session, Image, LuminaUser, Customer
-from lumina.forms import SessionCreateForm, SessionUpdateForm,\
-    CustomerCreateForm, CustomerUpdateForm
+from lumina.forms import SessionCreateForm, SessionUpdateForm, \
+    CustomerCreateForm, CustomerUpdateForm, UserCreateForm
 
 
 #
@@ -670,18 +670,55 @@ class UserListView(ListView):
         customer_id = int(self.kwargs['customer_id'])
         return self.request.user.get_users_of_customer(customer_id)
 
+
+class UserCreateView(CreateView):
+    model = LuminaUser
+    form_class = UserCreateForm
+    template_name = 'lumina/base_create_update_form.html'
+    success_url = reverse_lazy('customer_list')
+    # FIXME: redirect to list of users for the selected customer
+    # success_url = reverse_lazy('customer_user_list',
+    #    kwargs={'customer_id': self.kwargs['customer_id']})
+
+    def form_valid(self, form):
+        ret = super(CustomerCreateView, self).form_valid(form)
+
+        # Create the profile module
+        new_user = LuminaUser.objects.get(pk=form.instance.id)
+        new_user.user_type = LuminaUser.CUSTOMER
+        new_user.customer_of = self.request.user
+
+        # Set the password
+        new_user.set_password(form['password1'].value())
+        new_user.save()
+
+        raise(Exception("Jajajajaja! Iluuuusooooo!"))
+
+        messages.success(self.request, 'El cliente fue creado correctamente')
+        return ret
+
+    def get_context_data(self, **kwargs):
+        context = super(CustomerUpdateView, self).get_context_data(**kwargs)
+        context['title'] = "Crear usuario"
+        context['submit_label'] = "Crear"
+        return context
+
 # class UserUpdateView(UpdateView):
 #     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
 #     model = LuminaUser
-#     form_class = CustomerCreateForm # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-#     template_name = 'lumina/customer_update_form.html'
+#     form_class = UserUpdateForm
+#     template_name = 'lumina/base_create_update_form.html'
 #     success_url = reverse_lazy('customer_list')
+#     # FIXME: redirect to list of users
+#     # success_url = reverse_lazy('customer_user_list',
+#     #    kwargs={'customer_id': self.kwargs['customer_id']})
 #
 #     def get_queryset(self):
-#         return self.request.user.all_my_customers()
+#         customer_id = int(self.kwargs['customer_id'])
+#         return self.request.user.get_users_of_customer(customer_id)
 #
 #     def form_valid(self, form):
-#         ret = super(CustomerUpdateView, self).form_valid(form)
+#         ret = super(UserUpdateView, self).form_valid(form)
 #
 #         # Set the password
 #         if form['password1'].value():
@@ -691,25 +728,4 @@ class UserListView(ListView):
 #             updated_user.save()
 #
 #         messages.success(self.request, 'El cliente fue actualizado correctamente')
-#         return ret
-#
-# class UserCreateView(CreateView):
-#     model = LuminaUser
-#     form_class = CustomerCreateForm
-#     template_name = 'lumina/base_create_update_form.html'
-#     success_url = reverse_lazy('customer_list')
-#
-#     def form_valid(self, form):
-#         ret = super(CustomerCreateView, self).form_valid(form)
-#
-#         # Create the profile module
-#         new_user = LuminaUser.objects.get(pk=form.instance.id)
-#         new_user.user_type = LuminaUser.CUSTOMER
-#         new_user.customer_of = self.request.user
-#
-#         # Set the password
-#         new_user.set_password(form['password1'].value())
-#         new_user.save()
-#
-#         messages.success(self.request, 'El cliente fue creado correctamente')
 #         return ret

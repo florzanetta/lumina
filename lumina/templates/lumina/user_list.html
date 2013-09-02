@@ -45,7 +45,7 @@
     {% endfor %}
 
     <p>
-        <a href="{ % url 'customer_user_update' % }?xxxxxxxxxxxxxx=xxxxxxxxxxxxxxxxxxxx" class="btn btn-primary">Agregar usuario</a>
+        <a href="{% url 'customer_user_create' customer.id %}" class="btn btn-primary">Agregar usuario</a>
     </p>
 
     {% dump_objects user object_list %}
