@@ -7,7 +7,7 @@ from lumina.views import SessionListView, SessionDetailView, SessionCreateView,\
     SessionUpdateView, CustomerListView, CustomerCreateView, CustomerUpdateView,\
     UserListView, ImageListView, UserCreateView, UserUpdateView,\
     SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView,\
-    ImageCreateView, ImageUpdateView
+    ImageCreateView, ImageUpdateView, ImageSelectionCreateView
 
 
 # Uncomment the next two lines to enable the admin:
@@ -76,12 +76,12 @@ urlpatterns = patterns(
     #===========================================================================
     # ImageSelection
     #===========================================================================
-#     url(r'^shared/album/selection/$',
-#         cache_control(private=True)(
-#             login_required(
-#                 ImageSelectionCreateView.as_view())),
-#         name='image_selection_create'),
-#
+    url(r'^shared/album/selection/$',
+        cache_control(private=True)(
+            login_required(
+                ImageSelectionCreateView.as_view())),
+        name='image_selection_create'),
+
 #     url(r'^imageselection/list/$',
 #         cache_control(private=True)(
 #             login_required(

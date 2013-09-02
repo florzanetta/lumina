@@ -378,7 +378,7 @@ class ImageSelection(models.Model):
     def clean(self):
         # from django.core.exceptions import ValidationError
         if self.id is None:
-            image_count = self.album.image_set.count()
+            image_count = self.session.image_set.count()
             if self.image_quantity > image_count:
                 msg = {'image_quantity': 'Debe seleccionar {} o menos imagenes'.format(
                     image_count)}

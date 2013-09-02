@@ -27,10 +27,11 @@ from django.core.files.base import ContentFile
 
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Session, Image, LuminaUser, Customer,\
-    SharedSessionByEmail
+    SharedSessionByEmail, ImageSelection
 from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm,\
-    SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm
+    SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm,\
+    ImageSelectionCreateForm
 
 
 #
@@ -301,55 +302,60 @@ class SharedSessionByEmailCreateView(CreateView):
 #
 #     def get_queryset(self):
 #         return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user)
-#
-#
-# class ImageSelectionCreateView(CreateView):
-#     """
-#     With this view, the photographer creates a request
-#     to the customer.
-#     """
-#     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
-#     # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
-#     model = ImageSelection
-#     form_class = ImageSelectionCreateForm
-#     template_name = 'lumina/imageselection_create_form.html'
-#
-#     def get_initial(self):
-#         initial = super(ImageSelectionCreateView, self).get_initial()
-#         if 'id_album' in self.request.GET:
-#             initial.update({
-#                 'album': self.request.GET['id_album'],
-#             })
-#         return initial
-#
-#     def form_valid(self, form):
-#         form.instance.user = self.request.user
-#         ret = super(ImageSelectionCreateView, self).form_valid(form)
-#
-#         subject = "Solicitud de seleccion de imagenes"
-#         to_email = form.instance.customer.email
-#         link = self.request.build_absolute_uri(
-#             reverse('session_detail', args=[form.instance.album.id]))
-#         message = u"Tiene una nueva solicitud para seleccionar fotografías.\n" + \
-#             "Para verlo ingrese a {}".format(link)
-#         send_email(subject, to_email, message)
-#
-#         messages.success(
-#             self.request, 'La solicitud de seleccion de imagenes '
-#             'fue creada correctamente.')
-#         return ret
-#
-#     def get_success_url(self):
-#         return reverse('session_detail', args=[self.object.album.pk])
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(ImageSelectionCreateView, self).get_context_data(**kwargs)
-#         context['form'].fields['album'].queryset = Album.objects.all_my_albums(self.request.user)
-#         customer_qs = self.request.user.all_my_customers()
-#         context['form'].fields['customer'].queryset = customer_qs
-#         return context
-#
-#
+
+
+class ImageSelectionCreateView(CreateView):
+    """
+    With this view, the photographer creates a request
+    to the customer.
+    """
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
+    # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
+    model = ImageSelection
+    form_class = ImageSelectionCreateForm
+    template_name = 'lumina/base_create_update_form.html'
+
+    def get_initial(self):
+        initial = super(ImageSelectionCreateView, self).get_initial()
+        if 'id_session' in self.request.GET:
+            initial.update({
+                'session': self.request.GET['id_session'],
+            })
+        return initial
+
+    def form_valid(self, form):
+        form.instance.studio = self.request.user.studio
+        ret = super(ImageSelectionCreateView, self).form_valid(form)
+
+        subject = "Solicitud de seleccion de imagenes"
+        link = self.request.build_absolute_uri(
+            reverse('session_detail', args=[form.instance.session.id]))
+        message = u"Tiene una nueva solicitud para seleccionar fotografías.\n" + \
+            "Para verlo ingrese a {}".format(link)
+        for customer_user in form.instance.customer.users.all():
+            to_email = customer_user.email
+            send_email(subject, to_email, message)
+
+        messages.success(
+            self.request, 'La solicitud de seleccion de imagenes '
+            'fue creada correctamente.')
+        return ret
+
+    def get_success_url(self):
+        # return reverse('session_detail', args=[self.object.album.pk])
+        return "/"
+
+    def get_context_data(self, **kwargs):
+        context = super(ImageSelectionCreateView, self).get_context_data(**kwargs)
+        context['form'].fields['session'].queryset = self.request.user.studio.session_set.all()
+        customer_qs = self.request.user.all_my_customers()
+        context['form'].fields['customer'].queryset = customer_qs
+
+        context['title'] = "Solicitud de seleccion de fotos"
+        context['submit_label'] = "Enviar solicitud"
+        return context
+
+
 # class ImageSelectionForCustomerView(DetailView):
 #     """
 #     With this view, the customer selects the images he/she wants.

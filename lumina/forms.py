@@ -8,7 +8,7 @@ from django import forms
 from django.forms.widgets import CheckboxSelectMultiple
 
 from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail,\
-    Image
+    Image, ImageSelection
 
 
 #===============================================================================
@@ -26,19 +26,20 @@ class SharedSessionByEmailCreateForm(forms.ModelForm):
 # ImageSelection
 #===============================================================================
 
-# class ImageSelectionCreateForm(forms.ModelForm):
-#
-#     def clean_image_quantity(self):
-#         data = self.cleaned_data['image_quantity']
-#         if data <= 0:
-#             raise(forms.ValidationError("La cantidad de imagenes debe ser mayor a 0"))
-#
-#         # Always return the cleaned data, whether you have changed it or not.
-#         return data
-#
-#     class Meta:
-#         model = ImageSelection
-#         exclude = ('user', 'status', 'selected_images')
+class ImageSelectionCreateForm(forms.ModelForm):
+
+    def clean_image_quantity(self):
+        data = self.cleaned_data['image_quantity']
+        if data <= 0:
+            raise(forms.ValidationError("La cantidad de imagenes debe ser mayor a 0"))
+
+        # Always return the cleaned data, whether you have changed it or not.
+        return data
+
+    class Meta:
+        model = ImageSelection
+        fields = ('session', 'customer', 'image_quantity',)
+        #exclude = ('user', 'status', 'selected_images')
 
 
 #===============================================================================
