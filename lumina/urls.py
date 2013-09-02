@@ -54,7 +54,7 @@ urlpatterns = patterns(
         name='session_update'),
 
     #===========================================================================
-    # SharedSessionByEmail (ex: SharedAlbum)
+    # SharedSessionByEmail
     #===========================================================================
     url(r'^session/shared-by-email/create/$',
         cache_control(private=True)(
@@ -70,13 +70,13 @@ urlpatterns = patterns(
 
     url(r'^session/shared-by-email/anonymous/view/'
         '(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
-        'lumina.views.shared_album_image_thumb_64x64',
-        name='shared_album_image_thumb_64x64'),
+        'lumina.views.shared_session_by_email_image_thumb_64x64',
+        name='shared_session_by_email_image_thumb_64x64'),
 
     url(r'^session/shared-by-email/anonymous/download/'
         '(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
-        'lumina.views.shared_album_image_download',
-        name='shared_album_image_download'),
+        'lumina.views.shared_session_by_email_image_download',
+        name='shared_session_by_email_image_download'),
 
     #===========================================================================
     # ImageSelection
