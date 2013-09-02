@@ -8,14 +8,6 @@ from django.db.models import Q
 from django.contrib.auth.models import AbstractUser, UserManager
 
 
-class ForUserManagerMixin():
-
-    # FIXME: REFACTOR: refactor this (if needed)
-    def for_user(self, user):
-        """Filter objects by user"""
-        return self.filter(user=user)
-
-
 class LuminaUserManager(UserManager):
     """
     Manager for the LuminaUser model
@@ -175,7 +167,7 @@ class Customer(models.Model):
 # Session
 #===============================================================================
 
-class SessionManager(models.Manager, ForUserManagerMixin):
+class SessionManager(models.Manager):
     """
     Manager for the Session model
     """
@@ -192,24 +184,6 @@ class SessionManager(models.Manager, ForUserManagerMixin):
             return self.filter(customer=user.user_for_customer)
         else:
             raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
-
-    # FIXME: REFACTOR: refactor this (if needed)
-    def all_my_albums(self, user):
-        """Returns all the user's albums"""
-        return self.for_user(user)
-
-    # FIXME: REFACTOR: refactor this (if needed)
-    def shared_with_me(self, user):
-        """Returns all the albums that other users have shared with 'user'"""
-        return self.filter(shared_with=user)
-
-    # FIXME: REFACTOR: refactor this (if needed)
-    def all_visible(self, user):
-        """
-        Returns all the visible albums for an user
-        (ie: the user's albums + the shared albums of other users)
-        """
-        return self.filter(Q(user=user) | Q(shared_with=user)).distinct()
 
 
 # FIXME: REFACTOR: change uses of `Album` to `Session` in views, etc.
@@ -236,24 +210,18 @@ class Session(models.Model):
     def __unicode__(self):
         return u"Session {0}".format(self.name)
 
-    # FIXME: REFACTOR: refactor this (if needed)
     def get_absolute_url(self):
         return reverse('session_detail', kwargs={'pk': self.pk})
 
 
 #===============================================================================
-# SharedSessionByEmail (ex: SharedAlbum)
+# SharedSessionByEmail
 #===============================================================================
 
-class SharedSessionByEmailManager(models.Manager, ForUserManagerMixin):
+class SharedSessionByEmailManager(models.Manager):
     """
     Manager for the SharedSessionByEmail model
     """
-
-    # FIXME: REFACTOR: refactor this (if needed)
-    def all_my_shares(self, user):
-        """Returns all the shares"""
-        return self.for_user(user)
 
 
 # FIXME: REFACTOR: change uses of `SharedAlbum` to `SharedSessionByEmail` in vies, etc.
@@ -322,13 +290,13 @@ class ImageSelectionManager(models.Manager):
             return self.filter(session__customer=user.user_for_customer)
         raise(SuspiciousOperation())
 
-    # FIXME: REFACTOR: refactor this (if needed)
     def pending_image_selections(self, user):
         """
         Returns ImageSelection instances for which the customer
         has to do the selection of the images.
         """
-        return self.filter(customer=user, status=ImageSelection.STATUS_WAITING)
+        assert user.is_for_customer()
+        return self.filter(customer=user.user_for_customer, status=ImageSelection.STATUS_WAITING)
 
     def all_my_imageselections_as_customer(self, user, just_pending=False):
         """
@@ -390,7 +358,7 @@ class ImageSelection(models.Model):
 # Image
 #===============================================================================
 
-class ImageManager(models.Manager, ForUserManagerMixin):
+class ImageManager(models.Manager):
     """
     Manager for the Image model
     """
@@ -405,26 +373,22 @@ class ImageManager(models.Manager, ForUserManagerMixin):
         else:
             raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
 
-#      FIXME: REFACTOR: refactor this (if needed)
-#     def all_my_images(self, user):
-#         """Returns all the user's images"""
-#         return self.for_user(user)
+    #===============================================================================
+    #     # F-I-X-M-E: REFACTOR: refactor this (if needed)
+    #     def all_previsualisable(self, user):
+    #         """
+    #         Returns all the visible images for preview, ie: thumbnails or low quality.
+    #
+    #         Some of the images may be downloaded (in full resolution).
+    #         (ie: the user's images + the images of shared albums of other users)
+    #         but other won't be downloadable (images from ImageSelection)
+    #         """
+    #         q = Q(user=user)
+    #         q = q | Q(album__shared_with=user)
+    #         q = q | Q(album__imageselection__customer=user)
+    #         return self.filter(q).distinct()
+    #===============================================================================
 
-    # FIXME: REFACTOR: refactor this (if needed)
-    def all_previsualisable(self, user):
-        """
-        Returns all the visible images for preview, ie: thumbnails or low quality.
-
-        Some of the images may be downloaded (in full resolution).
-        (ie: the user's images + the images of shared albums of other users)
-        but other won't be downloadable (images from ImageSelection)
-        """
-        q = Q(user=user)
-        q = q | Q(album__shared_with=user)
-        q = q | Q(album__imageselection__customer=user)
-        return self.filter(q).distinct()
-
-    # FIXME: REFACTOR: refactor this (if needed)
     def get_for_download(self, user, image_id):
         """
         Returns an images to be downloaded by the user
@@ -444,22 +408,24 @@ class ImageManager(models.Manager, ForUserManagerMixin):
 
         if user.is_photographer():
             try:
-                # The user owns the image?
+                # If the image is from the same studio, return it
                 return self.get(studio=user.studio, id=image_id)
             except Image.DoesNotExist:
                 pass
 
         if user.is_for_customer():
             try:
-                # The image was shared with the user?
+                # If the image if from a shared session, return it
                 return self.get(session__shared_with=user.user_for_customer, id=image_id)
             except Image.DoesNotExist:
                 pass
 
-        # Tha image was selected by the user?
-        # FIXME: REFACTOR: ***finish this when ImageSelections is refactored***
-        return self.get(imageselection__customer=user,
-                        imageselection__selected_images=image_id)
+            # Tha image was selected by the user?
+            return self.get(imageselection__customer=user.user_for_customer,
+                            imageselection__status=ImageSelection.STATUS_IMAGES_SELECTED,
+                            imageselection__selected_images=image_id)
+
+        raise(Exception())
 
 
 class Image(models.Model):

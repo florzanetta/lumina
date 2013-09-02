@@ -113,13 +113,13 @@ def home(request):
 #                 'shared_session_via_email_count': SharedAlbum.objects.all_my_shares(
 #                     request.user).count(),
 #                 'others_album_count': Album.objects.shared_with_me(request.user).count(),
-                'image_selection_pending_count': 999,
-#                 'image_selection_pending_count': ImageSelection.objects.pending_image_selections(
-#                     request.user).count(),
 #                 # 'auth_providers': request.user.social_auth.get_providers(),
             }
         else:
-            ctx = {}
+            ctx = {
+                'image_selection_pending_count': ImageSelection.objects.pending_image_selections(
+                    request.user).count(),
+            }
     else:
         ctx = {}
     return render_to_response(
