@@ -50,14 +50,14 @@ class SessionCreateForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        exclude = ('studio', )
+        fields = ('name', 'photographer', 'customer', 'shared_with', )
 
 
 class SessionUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        exclude = ('studio',)
+        fields = ('name', 'photographer', 'customer', 'shared_with', )
         widgets = {
             'shared_with': CheckboxSelectMultiple(),
         }

@@ -483,11 +483,10 @@ class SessionCreateView(CreateView):
     model = Session
     form_class = SessionCreateForm
     template_name = 'lumina/base_create_update_form.html'
-    # FIXME: REFACTOR: the 'photographer' combo shows all the users
-    # That combo should show only the photographers of the Studio
 
     def get_form(self, form_class):
         form = super(SessionCreateView, self).get_form(form_class)
+        form.fields['photographer'].queryset = self.request.user.studio.photographers.all()
         form.fields['shared_with'].queryset = self.request.user.all_my_customers()
         return form
 
