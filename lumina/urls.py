@@ -69,9 +69,9 @@ urlpatterns = patterns(
         'lumina.views.shared_album_image_thumb_64x64',
         name='shared_album_image_thumb_64x64'),
 
-#     url(r'^shared/album/anonymous/download/(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
-#         'lumina.views.shared_album_image_download',
-#         name='shared_album_image_download'),
+    url(r'^shared/album/anonymous/download/(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
+        'lumina.views.shared_album_image_download',
+        name='shared_album_image_download'),
 
     #===========================================================================
     # ImageSelection

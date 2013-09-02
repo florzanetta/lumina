@@ -222,11 +222,11 @@ def shared_album_image_thumb_64x64(request, random_hash, image_id):
     return _image_thumb(request, shared_album.get_image_from_session(image_id), 64)
 
 
-# @cache_control(private=True)
-# def shared_album_image_download(request, random_hash, image_id):
-#     shared_album = SharedAlbum.objects.get(random_hash=random_hash)
-#     image = shared_album.get_image_from_session(image_id)
-#     return _image_download(request, image)
+@cache_control(private=True)
+def shared_album_image_download(request, random_hash, image_id):
+    shared_album = SharedSessionByEmail.objects.get(random_hash=random_hash)
+    image = shared_album.get_image_from_session(image_id)
+    return _image_download(request, image)
 
 
 class SharedSessionByEmailCreateView(CreateView):
