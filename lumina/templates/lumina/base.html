@@ -71,7 +71,7 @@
 
 																										<!-- Items de drop-down  -->
 																										<li><a href="{% url 'customer_list' %}">Lista de clientes</a></li>
-																										<li><a href="{ % url 'customer_create' % }">Agregar cliente</a></li>
+																										<li><a href="{% url 'customer_create' %}">Agregar cliente</a></li>
 
 																				</ul>
 																			</li> 
@@ -81,16 +81,19 @@
 
 				                                            {% if user.is_staff or user.is_superuser %}
 
-																		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin <b class="caret"></b></a>
-																			<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+																<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin <b class="caret"></b></a>
+																	<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 
-																								<!-- Items de drop-down  -->
-																								<li><a href="{ % url 'admin:lumina_album_changelist' % }" target="_blank">Albums</a></li>
-																								<li><a href="{ % url 'admin:lumina_image_changelist' % }" target="_blank">Images</a></li>
-																								<li><a href="{ % url 'admin:lumina_sharedalbum_changelist' % }" target="_blank">Shared Albums</a></li>
-																								<li><a href="{ % url 'admin:lumina_imageselection_changelist' % }" target="_blank">Image Selection</a></li>
+																	<!-- Items de drop-down  -->
+                                                                    <li><a href="{% url 'admin:lumina_luminauser_changelist' %}" target="_blank">LuminaUser</a></li>
+                                                                    <li><a href="{% url 'admin:lumina_studio_changelist' %}" target="_blank">Studio</a></li>
+                                                                    <li><a href="{% url 'admin:lumina_customer_changelist' %}" target="_blank">Customer</a></li>
+                                                                    <li><a href="{% url 'admin:lumina_image_changelist' %}" target="_blank">Image</a></li>
+																	<li><a href="{% url 'admin:lumina_session_changelist' %}" target="_blank">Session</a></li>
+                                                                    <li><a href="{% url 'admin:lumina_sharedsessionbyemail_changelist' %}" target="_blank">Shared Session by Email</a></li>
+																	<li><a href="{% url 'admin:lumina_imageselection_changelist' %}" target="_blank">Image Selection</a></li>
 
-																			</ul></li>
+																	</ul></li>
 
 				                                            {% endif %}
 
