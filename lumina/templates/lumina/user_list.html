@@ -19,7 +19,7 @@
             </a>
             <div class="media-body">
                 <div class="media-heading"><a
-                       href="{ % url 'customer_user_update' an_user.id % }">{{ an_user.get_full_name }}</a>
+                       href="{% url 'customer_user_update' an_user.id %}">{{ an_user.get_full_name }}</a>
                        {% if not an_user.is_active %}
                           <div>
                               <span class="label label-warning">Deshabilitado</span>

@@ -90,6 +90,14 @@ class LuminaUser(AbstractUser):
                                    user_for_customer=customer_id,
                                    user_for_customer__studio=self.studio)
 
+    def get_all_users(self):
+        """
+        Returns all the users of a Studio. This'll return all the user of all the customers
+        """
+        assert self.user_type == LuminaUser.PHOTOGRAPHER
+        return LuminaUser.objects.filter(user_type=LuminaUser.CUSTOMER,
+                                   user_for_customer__studio=self.studio)
+
     def __unicode__(self):
         return u"{} ({})".format(self.get_full_name(), self.username)
 

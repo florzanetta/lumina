@@ -28,7 +28,7 @@ from django.core.files.base import ContentFile
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Session, Image, LuminaUser, Customer
 from lumina.forms import SessionCreateForm, SessionUpdateForm, \
-    CustomerCreateForm, CustomerUpdateForm, UserCreateForm
+    CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm
 
 
 #
@@ -703,29 +703,35 @@ class UserCreateView(CreateView):
         context['submit_label'] = "Crear"
         return context
 
-# class UserUpdateView(UpdateView):
-#     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
-#     model = LuminaUser
-#     form_class = UserUpdateForm
-#     template_name = 'lumina/base_create_update_form.html'
-#     success_url = reverse_lazy('customer_list')
-#     # FIXME: redirect to list of users
-#     # success_url = reverse_lazy('customer_user_list',
-#     #    kwargs={'customer_id': self.kwargs['customer_id']})
-#
-#     def get_queryset(self):
-#         customer_id = int(self.kwargs['customer_id'])
-#         return self.request.user.get_users_of_customer(customer_id)
-#
-#     def form_valid(self, form):
-#         ret = super(UserUpdateView, self).form_valid(form)
-#
-#         # Set the password
-#         if form['password1'].value():
-#             updated_user = LuminaUser.objects.get(pk=form.instance.id)
-#             logger.warn("Changing password of user '%s'", updated_user.username)
-#             updated_user.set_password(form['password1'].value())
-#             updated_user.save()
-#
-#         messages.success(self.request, 'El cliente fue actualizado correctamente')
-#         return ret
+
+class UserUpdateView(UpdateView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
+    model = LuminaUser
+    form_class = UserUpdateForm
+    template_name = 'lumina/base_create_update_form.html'
+    success_url = reverse_lazy('customer_list')
+    # FIXME: redirect to list of users
+    # success_url = reverse_lazy('customer_user_list',
+    #    kwargs={'customer_id': self.kwargs['customer_id']})
+
+    def get_queryset(self):
+        return self.request.user.get_all_users()
+
+    def form_valid(self, form):
+        ret = super(UserUpdateView, self).form_valid(form)
+
+        # Set the password
+        if form['password1'].value():
+            updated_user = LuminaUser.objects.get(pk=form.instance.id)
+            logger.warn("Changing password of user '%s'", updated_user.username)
+            updated_user.set_password(form['password1'].value())
+            updated_user.save()
+
+        messages.success(self.request, 'El cliente fue actualizado correctamente')
+        return ret
+
+    def get_context_data(self, **kwargs):
+        context = super(UserUpdateView, self).get_context_data(**kwargs)
+        context['title'] = "Actualizar usuario"
+        context['submit_label'] = "Actualizar"
+        return context
