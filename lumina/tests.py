@@ -110,7 +110,7 @@ class BasicAccessTest(LuminaTestCase):
             login_func()  # user -> self._logged_in_user
             if self._logged_in_user.user_type == LuminaUser.PHOTOGRAPHER:
                 for view_name in (
-                    'home', 'album_list', 'session_create', 'shared_album_create',
+                    'home', 'album_list', 'session_create', 'shared_session_by_email_create',
                         'image_list', 'image_create', 'customer_list', 'customer_create'):
                     response = self.client.get(reverse(view_name))
                     self.assertEqual(response.status_code, 200)
@@ -191,7 +191,7 @@ class PermissoinsTests(LuminaTestCase):
     def test_only_users_albums_are_shown(self):
         self._login('admin')
         # Create album
-        response = self.client.get(reverse('shared_album_create'))
+        response = self.client.get(reverse('shared_session_by_email_create'))
         self.assertTemplateUsed(response, 'lumina/sharedalbum_create_form.html')
         self.assertContains(response, ADMIN_ALBUM_UUID)
         self.assertNotContains(response, JUAN_ALBUM_UUID)

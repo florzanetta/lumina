@@ -176,7 +176,10 @@ class SessionManager(models.Manager, ForUserManagerMixin):
     """
 
     def visible_sessions(self, user):
-        """Returns the sessions the user can see"""
+        """
+        Returns the sessions the user can see (this means, this method
+        may return sessions the user can see but not modify)
+        """
         # FIXME: REFACTOR: add support for shared sessions
         if user.is_photographer():
             return self.filter(studio=user.studio)
@@ -234,12 +237,12 @@ class Session(models.Model):
 
 
 #===============================================================================
-# SharedAlbum
+# SharedSessionByEmail (ex: SharedAlbum)
 #===============================================================================
 
 class SharedSessionByEmailManager(models.Manager, ForUserManagerMixin):
     """
-    Manager for the SharedAlbum model
+    Manager for the SharedSessionByEmail model
     """
 
     # FIXME: REFACTOR: refactor this (if needed)

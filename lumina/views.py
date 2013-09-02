@@ -26,9 +26,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
 
 from lumina.pil_utils import generate_thumbnail
-from lumina.models import Session, Image, LuminaUser, Customer
+from lumina.models import Session, Image, LuminaUser, Customer,\
+    SharedSessionByEmail
 from lumina.forms import SessionCreateForm, SessionUpdateForm, \
-    CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm
+    CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm,\
+    SharedSessionByEmailCreateForm
 
 
 #
@@ -202,7 +204,7 @@ def check_403(request):
 
 
 #===============================================================================
-# SharedAlbum
+# SharedSessionByEmail (ex: SharedAlbum)
 #===============================================================================
 
 # class SharedAlbumAnonymousView(DetailView):
@@ -225,45 +227,48 @@ def check_403(request):
 #     shared_album = SharedAlbum.objects.get(random_hash=random_hash)
 #     image = shared_album.get_image_from_album(image_id)
 #     return _image_download(request, image)
-#
-#
-# class SharedAlbumCreateView(CreateView):
-#     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
-#     # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
-#     model = SharedAlbum
-#     form_class = SharedAlbumCreateForm
-#     template_name = 'lumina/sharedalbum_create_form.html'
-#
-#     def form_valid(self, form):
-#         form.instance.user = self.request.user
-#         form.instance.random_hash = str(uuid.uuid4())
-#         ret = super(SharedAlbumCreateView, self).form_valid(form)
-#
-#         subject = "Nuevo album compartido con Ud."
-#         to_email = form.instance.shared_with
+
+
+class SharedSessionByEmailCreateView(CreateView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
+    # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
+    model = SharedSessionByEmail
+    form_class = SharedSessionByEmailCreateForm
+    template_name = 'lumina/base_create_update_form.html'
+
+    def form_valid(self, form):
+        form.instance.studio = self.request.user.studio
+        form.instance.random_hash = str(uuid.uuid4())
+        ret = super(SharedSessionByEmailCreateView, self).form_valid(form)
+
+        subject = "Nuevo album compartido con Ud."
+        to_email = form.instance.shared_with
 #         link = self.request.build_absolute_uri(
 #             reverse('shared_album_view', args=[form.instance.random_hash]))
-#         body = "Tiene un nuevo album compartido.\nPara verlo ingrese a {}".format(link)
-#         send_email(subject, to_email, body)
-#
-#         messages.success(self.request, 'El album fue compartido correctamente')
-#         return ret
-#
-#     def get_initial(self):
-#         initial = super(SharedAlbumCreateView, self).get_initial()
-#         if 'id_album' in self.request.GET:
-#             initial.update({
-#                 'album': self.request.GET['id_album'],
-#             })
-#         return initial
-#
-#     def get_success_url(self):
-#         return reverse('album_detail', args=[self.object.album.pk])
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(SharedAlbumCreateView, self).get_context_data(**kwargs)
-#         context['form'].fields['album'].queryset = Album.objects.all_my_albums(self.request.user)
-#         return context
+        link = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        body = "Tiene un nuevo album compartido.\nPara verlo ingrese a {}".format(link)
+        send_email(subject, to_email, body)
+
+        messages.success(self.request, 'El album fue compartido correctamente')
+        return ret
+
+    def get_initial(self):
+        initial = super(SharedSessionByEmailCreateView, self).get_initial()
+        if 'id_session' in self.request.GET:
+            initial.update({
+                'session': self.request.GET['id_session'],
+            })
+        return initial
+
+    def get_success_url(self):
+        return reverse('session_detail', args=[self.object.session.pk])
+
+    def get_context_data(self, **kwargs):
+        context = super(SharedSessionByEmailCreateView, self).get_context_data(**kwargs)
+        context['form'].fields['session'].queryset = self.request.user.studio.session_set.all()
+        context['title'] = "Compartir sesión por email"
+        context['submit_label'] = "Compartir"
+        return context
 
 
 #===============================================================================
@@ -461,6 +466,8 @@ class SessionCreateView(CreateView):
     model = Session
     form_class = SessionCreateForm
     template_name = 'lumina/base_create_update_form.html'
+    # FIXME: REFACTOR: the 'photographer' combo shows all the users
+    # That combo should show only the photographers of the Studio
 
     def get_form(self, form_class):
         form = super(SessionCreateView, self).get_form(form_class)

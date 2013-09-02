@@ -6,22 +6,23 @@ Created on Jun 1, 2013
 
 from django import forms
 from django.forms.widgets import CheckboxSelectMultiple
-from lumina.models import Session, LuminaUser, Customer
+
+from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail
 
 
 #===============================================================================
-# SharedAlbum
+# SharedSessionByEmail (ex: SharedAlbum)
 #===============================================================================
 
-# class SharedAlbumCreateForm(forms.ModelForm):
-#
-#     class Meta:
-#         model = SharedAlbum
-#         exclude = ('user', 'random_hash',)
+class SharedSessionByEmailCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = SharedSessionByEmail
+        fields = ('session', 'shared_with',)
 
 
 #===============================================================================
-# SharedAlbum
+# ImageSelection
 #===============================================================================
 
 # class ImageSelectionCreateForm(forms.ModelForm):
