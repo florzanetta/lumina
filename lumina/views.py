@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import base64
-import datetime
 import json
 import logging
 import os
@@ -496,9 +495,6 @@ def session_upload_previews_upload(request, session_id):
     PREFIX = 'data:image/jpeg;base64,'
     index = 0
     img_count = 0
-    # new_session = Session.objects.create(name="Sesión {}".format(str(datetime.datetime.now())),
-    #                                  studio=request.user.studio,
-    #                                  photographer=request.user)
     session = request.user.studio.session_set.all().get(pk=session_id)
     while True:
         key = "img" + str(index)
