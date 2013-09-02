@@ -12,7 +12,6 @@ from lumina.views import SessionListView, SessionDetailView, SessionCreateView,\
     ImageSelectionForCustomerView
 
 
-# Uncomment the next two lines to enable the admin:
 admin.autodiscover()
 
 # TODO: See: http://django-braces.readthedocs.org/en/latest/index.html#loginrequiredmixin
@@ -20,9 +19,9 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
 
-#     url(r'^test_html5_upload$', 'lumina.views.test_html5_upload', name='test_html5_upload'),
-#     url(r'^test_html5_upload_ajax', 'lumina.views.test_html5_upload_ajax',
-#         name='test_html5_upload_ajax'),
+     url(r'^test_html5_upload$', 'lumina.views.test_html5_upload', name='test_html5_upload'),
+     url(r'^test_html5_upload_ajax', 'lumina.views.test_html5_upload_ajax',
+         name='test_html5_upload_ajax'),
 
     #===========================================================================
     # Home
@@ -174,7 +173,7 @@ urlpatterns = patterns(
     #===========================================================================
     # Rest API
     #===========================================================================
-#    url(r'^rest/', include('lumina.urls_rest')),
+    url(r'^rest/', include('lumina.urls_rest')),
 
     #
     # Other

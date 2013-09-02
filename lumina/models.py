@@ -198,7 +198,7 @@ class Session(models.Model):
     photographer = models.ForeignKey(LuminaUser)
 
     # REFACTOR: `customer` is a new attribute
-    customer = models.ForeignKey(Customer)
+    customer = models.ForeignKey(Customer, null=True, blank=True)
 
     # REFACTOR: `shared_with` used to point to `LuminaUser`
     shared_with = models.ManyToManyField(Customer, blank=True,
