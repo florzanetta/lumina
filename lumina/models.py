@@ -286,11 +286,9 @@ class SharedSessionByEmail(models.Model):
 
     objects = SharedSessionByEmailManager()
 
-    # FIXME: REFACTOR: refactor this (if needed)
     def __unicode__(self):
         return u"Session {0} shared by email to {1}".format(self.session.name, self.shared_with)
 
-    # FIXME: REFACTOR: refactor this (if needed)
     def get_image_from_session(self, image_id):
         """
         Returns the image with 'id' = 'image_id' only
@@ -378,7 +376,6 @@ class ImageSelection(models.Model):
 
     objects = ImageSelectionManager()
 
-    # FIXME: REFACTOR: refactor this (if needed)
     def clean(self):
         # from django.core.exceptions import ValidationError
         if self.id is None:
@@ -484,20 +481,16 @@ class Image(models.Model):
 
     objects = ImageManager()
 
-    # FIXME: REFACTOR: refactor this (if needed)
     def __unicode__(self):
         return u"Image {0}".format(self.original_filename)
 
-    # FIXME: REFACTOR: refactor this (if needed)
     def get_absolute_url(self):
         return reverse('image_update', kwargs={'pk': self.pk})
 
-    # FIXME: REFACTOR: refactor this (if needed)
     def set_content_type(self, content_type):
         """Set content_type, truncating if it's too large"""
         self.content_type = content_type[0:64]
 
-    # FIXME: REFACTOR: refactor this (if needed)
     def set_original_filename(self, filename):
         """Set original filename, truncating if it's too large"""
         self.original_filename = filename[0:128]

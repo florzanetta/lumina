@@ -12,7 +12,7 @@ from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail,\
 
 
 #===============================================================================
-# SharedSessionByEmail (ex: SharedAlbum)
+# SharedSessionByEmail
 #===============================================================================
 
 class SharedSessionByEmailCreateForm(forms.ModelForm):
