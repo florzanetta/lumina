@@ -45,53 +45,6 @@ from lumina.forms import SessionCreateForm, SessionUpdateForm, \
 logger = logging.getLogger(__name__)
 
 
-@csrf_exempt
-def test_html5_upload(request):
-    ctx = {}
-    return render_to_response(
-        'lumina/image_create_form_html5.html', ctx,
-        context_instance=RequestContext(request))
-
-
-@csrf_exempt
-def test_html5_upload_ajax(request):
-    PREFIX = 'data:image/jpeg;base64,'
-    index = 0
-    img_count = 0
-    new_session = Session.objects.create(name="Album {}".format(str(datetime.datetime.now())),
-                                     studio=request.user.studio,
-                                     photographer=request.user)
-    while True:
-        key = "img" + str(index)
-        if not key in request.POST:
-            break
-        img_count += 1
-        index += 1
-
-        thumb_base64 = request.POST[key]
-        filename = request.POST[key + '_filename']
-
-        # thumb_base64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA(...)AP/2Q=="
-        assert thumb_base64.startswith(PREFIX)
-        thumb_base64 = thumb_base64[len(PREFIX):]
-        thumb_contents = base64.decodestring(thumb_base64)
-
-        new_image = Image(
-            session=new_session, studio=request.user.studio, content_type='image/jpg',
-            original_filename='thumb_' + filename)
-
-        new_image.size = len(thumb_contents)
-        new_image.image.save('thumb_' + filename, ContentFile(thumb_contents))
-        new_image.save()
-
-    response_data = {
-        'img_count': img_count,
-        'status': 'ok',
-        'redirect': reverse('session_detail', args=[new_session.id]),
-    }
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-
 def send_email(subject, to_email, body):
     logger.info("Sending email '{}' to '{}'".format(
         subject, to_email))
@@ -459,7 +412,7 @@ class ImageSelectionDetailView(DetailView):
 
 
 #===============================================================================
-# Album
+# Session
 #===============================================================================
 
 class SessionListView(ListView):
@@ -528,6 +481,54 @@ class SessionUpdateView(UpdateView):
         context['title'] = "Actualizar sesión"
         context['submit_label'] = "Actualizar"
         return context
+
+
+class SessionUploadPreviewsView(DetailView):
+    model = Session
+    template_name = "lumina/session_upload_previews.html"
+
+    def get_queryset(self):
+        return Session.objects.visible_sessions(self.request.user)
+
+
+@csrf_exempt
+def session_upload_previews_upload(request, session_id):
+    PREFIX = 'data:image/jpeg;base64,'
+    index = 0
+    img_count = 0
+    # new_session = Session.objects.create(name="Sesión {}".format(str(datetime.datetime.now())),
+    #                                  studio=request.user.studio,
+    #                                  photographer=request.user)
+    session = request.user.studio.session_set.all().get(pk=session_id)
+    while True:
+        key = "img" + str(index)
+        if not key in request.POST:
+            break
+        img_count += 1
+        index += 1
+
+        thumb_base64 = request.POST[key]
+        filename = request.POST[key + '_filename']
+
+        # thumb_base64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA(...)AP/2Q=="
+        assert thumb_base64.startswith(PREFIX)
+        thumb_base64 = thumb_base64[len(PREFIX):]
+        thumb_contents = base64.decodestring(thumb_base64)
+
+        new_image = Image(
+            session=session, studio=request.user.studio, content_type='image/jpg',
+            original_filename='thumb_' + filename)
+
+        new_image.size = len(thumb_contents)
+        new_image.image.save('thumb_' + filename, ContentFile(thumb_contents))
+        new_image.save()
+
+    response_data = {
+        'img_count': img_count,
+        'status': 'ok',
+        'redirect': reverse('session_detail', args=[session.id]),
+    }
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
 #===============================================================================

@@ -9,7 +9,7 @@ from lumina.views import SessionListView, SessionDetailView, SessionCreateView,\
     SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView,\
     ImageCreateView, ImageUpdateView, ImageSelectionCreateView,\
     ImageSelectionListView, ImageSelectionDetailView,\
-    ImageSelectionForCustomerView
+    ImageSelectionForCustomerView, SessionUploadPreviewsView
 
 
 admin.autodiscover()
@@ -18,10 +18,6 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-
-     url(r'^test_html5_upload$', 'lumina.views.test_html5_upload', name='test_html5_upload'),
-     url(r'^test_html5_upload_ajax', 'lumina.views.test_html5_upload_ajax',
-         name='test_html5_upload_ajax'),
 
     #===========================================================================
     # Home
@@ -51,6 +47,16 @@ urlpatterns = patterns(
         cache_control(private=True)(
             login_required(SessionUpdateView.as_view())),
         name='session_update'),
+
+    url(r'^session/upload-previews/(?P<pk>\d+)/$',
+        cache_control(private=True)(
+            login_required(SessionUploadPreviewsView.as_view())),
+        name='session_upload_previews'),
+
+     url(r'^session/upload-previews/(?P<session_id>\d+)/upload/',
+         'lumina.views.session_upload_previews_upload',
+         name='session_upload_previews_upload'),
+
 
     #===========================================================================
     # SharedSessionByEmail
