@@ -290,17 +290,17 @@ class SharedSessionByEmail(models.Model):
         return u"Session {0} shared by email to {1}".format(self.session.name, self.shared_with)
 
     # FIXME: REFACTOR: refactor this (if needed)
-    def get_image_from_album(self, image_id):
+    def get_image_from_session(self, image_id):
         """
         Returns the image with 'id' = 'image_id' only
-        if the image is part of the shared album.
+        if the image is part of the SharedSessionByEmail.
         """
-        image = Image.objects.get(pk=image_id)
-        if self.album == image.album:
-            return image
-        else:
-            raise(PermissionDenied("The Image {0} doesn't belong to the SharedAlbum {1}".format(
-                image_id, self.id)))
+        try:
+            return self.session.image_set.get(pk=image_id)
+        except Image.DoesNotExist:
+            raise(PermissionDenied("The Image {0} doesn't belong to "
+                                   "the SharedSessionByEmail {1}"
+                                   " or doesn't exists".format(image_id, self.id)))
 
 
 #===============================================================================

@@ -65,23 +65,23 @@ urlpatterns = patterns(
                 SharedSessionByEmailCreateView.as_view())),
         name='shared_session_by_email_create'),
 
-#     url(r'^shared/album/anonymous/view/(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
-#         'lumina.views.shared_album_image_thumb_64x64',
-#         name='shared_album_image_thumb_64x64'),
-#
+    url(r'^shared/album/anonymous/view/(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
+        'lumina.views.shared_album_image_thumb_64x64',
+        name='shared_album_image_thumb_64x64'),
+
 #     url(r'^shared/album/anonymous/download/(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
 #         'lumina.views.shared_album_image_download',
 #         name='shared_album_image_download'),
-#
+
+    #===========================================================================
+    # ImageSelection
+    #===========================================================================
 #     url(r'^shared/album/selection/$',
 #         cache_control(private=True)(
 #             login_required(
 #                 ImageSelectionCreateView.as_view())),
 #         name='image_selection_create'),
-
-    #===========================================================================
-    # ImageSelection
-    #===========================================================================
+#
 #     url(r'^imageselection/list/$',
 #         cache_control(private=True)(
 #             login_required(
