@@ -54,50 +54,53 @@ urlpatterns = patterns(
     #===========================================================================
     # SharedSessionByEmail (ex: SharedAlbum)
     #===========================================================================
-    url(r'^shared/session/anonymous/view/(?P<random_hash>[a-f0-9-]{36})/$',
-        cache_control(private=True)(
-            SharedSessionByEmailAnonymousView.as_view()),
-        name='shared_session_by_email_view'),
-
-    url(r'^shared/session/create/$',
+    url(r'^session/shared-by-email/create/$',
         cache_control(private=True)(
             login_required(
                 SharedSessionByEmailCreateView.as_view())),
         name='shared_session_by_email_create'),
 
-    url(r'^shared/album/anonymous/view/(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
+    url(r'^session/shared-by-email/anonymous/view/'
+        '(?P<random_hash>[a-f0-9-]{36})/$',
+        cache_control(private=True)(
+            SharedSessionByEmailAnonymousView.as_view()),
+        name='shared_session_by_email_view'),
+
+    url(r'^session/shared-by-email/anonymous/view/'
+        '(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
         'lumina.views.shared_album_image_thumb_64x64',
         name='shared_album_image_thumb_64x64'),
 
-    url(r'^shared/album/anonymous/download/(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
+    url(r'^session/shared-by-email/anonymous/download/'
+        '(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
         'lumina.views.shared_album_image_download',
         name='shared_album_image_download'),
 
     #===========================================================================
     # ImageSelection
     #===========================================================================
-    url(r'^shared/album/selection/$',
+    url(r'^session/image-selection/create/$',
         cache_control(private=True)(
             login_required(
                 ImageSelectionCreateView.as_view())),
         name='image_selection_create'),
 
-#     url(r'^imageselection/list/$',
+#     url(r'^session/image-selection/list/$',
 #         cache_control(private=True)(
 #             login_required(
 #                 ImageSelectionListView.as_view())),
 #         name='imageselection_list'),
 #
-#     url(r'^imageselection/redirect/(?P<pk>\d+)/$',
+#     url(r'^session/image-selection/redirect/(?P<pk>\d+)/$',
 #         'lumina.views.imageselection_redirect',
 #         name='imageselection_redirect'),
 #
-#     url(r'^imageselection/detail/(?P<pk>\d+)/$',
+#     url(r'^session/image-selection/detail/(?P<pk>\d+)/$',
 #         cache_control(private=True)(
 #             login_required(ImageSelectionDetailView.as_view())),
 #         name='imageselection_detail'),
 #
-#     url(r'^imageselection/select_images/(?P<pk>\d+)/$',
+#     url(r'^session/image-selection/select_images/(?P<pk>\d+)/$',
 #         cache_control(private=True)(
 #             login_required(ImageSelectionForCustomerView.as_view())),
 #         name='imageselection_select_images'),
