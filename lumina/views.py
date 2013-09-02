@@ -703,30 +703,26 @@ class UserCreateView(CreateView):
     model = LuminaUser
     form_class = UserCreateForm
     template_name = 'lumina/base_create_update_form.html'
-    success_url = reverse_lazy('customer_list')
-    # FIXME: redirect to list of users for the selected customer
-    # success_url = reverse_lazy('customer_user_list',
-    #    kwargs={'customer_id': self.kwargs['customer_id']})
+
+    def get_success_url(self):
+        return reverse('customer_user_list', kwargs={'customer_id': self.kwargs['customer_id']})
 
     def form_valid(self, form):
-        ret = super(CustomerCreateView, self).form_valid(form)
-
-        # Create the profile module
-        new_user = LuminaUser.objects.get(pk=form.instance.id)
-        new_user.user_type = LuminaUser.CUSTOMER
-        new_user.customer_of = self.request.user
+        customer = self.request.user.all_my_customers().get(pk=self.kwargs['customer_id'])
+        form.instance.user_for_customer = customer
+        form.instance.user_type = LuminaUser.CUSTOMER
+        ret = super(UserCreateView, self).form_valid(form)
 
         # Set the password
+        new_user = LuminaUser.objects.get(pk=form.instance.id)
         new_user.set_password(form['password1'].value())
         new_user.save()
-
-        raise(Exception("Jajajajaja! Iluuuusooooo!"))
 
         messages.success(self.request, 'El cliente fue creado correctamente')
         return ret
 
     def get_context_data(self, **kwargs):
-        context = super(CustomerUpdateView, self).get_context_data(**kwargs)
+        context = super(UserCreateView, self).get_context_data(**kwargs)
         context['title'] = "Crear usuario"
         context['submit_label'] = "Crear"
         return context
