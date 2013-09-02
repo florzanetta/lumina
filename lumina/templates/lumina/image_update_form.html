@@ -14,7 +14,7 @@
 	    <table class="table">
             <tr>
                <td>Imagen:</td>
-               <td><img class="media-object" src="{% url 'image_thumb_64x64' object.pk %}"></td>
+               <td><img class="media-object" src="{ % url 'image_thumb_64x64' object.pk % }"></td>
             </tr>
 	        {{ form.as_table }}
 	        <tr>

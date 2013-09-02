@@ -73,11 +73,11 @@ class ImageCreateForm(forms.ModelForm):
         fields = ('image', 'session',)
 
 
-# class ImageUpdateForm(forms.ModelForm):
-#
-#     class Meta:
-#         model = Image
-#         exclude = ('user', 'image', 'size', 'original_filename', 'content_type',)
+class ImageUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Image
+        fields = ('image', 'session',)
 
 
 #===============================================================================

@@ -30,7 +30,7 @@ from lumina.models import Session, Image, LuminaUser, Customer,\
     SharedSessionByEmail
 from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm,\
-    SharedSessionByEmailCreateForm, ImageCreateForm
+    SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm
 
 
 #
@@ -585,29 +585,29 @@ class ImageCreateView(CreateView):
         return context
 
 
-# class ImageUpdateView(UpdateView):
-#     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
-#     model = Image
-#     form_class = ImageUpdateForm
-#     template_name = 'lumina/image_update_form.html'
-#
-#     #    def get_context_data(self, **kwargs):
-#     #        context = super(ImageUpdateView, self).get_context_data(**kwargs)
-#     #        context.update({'menu_image_update_flag': 'active'})
-#     #        return context
-#
-#     def get_queryset(self):
-#         return Image.objects.all_my_images(self.request.user)
-#
-#     def form_valid(self, form):
-#         ret = super(ImageUpdateView, self).form_valid(form)
-#         messages.success(self.request, 'La imagen fue actualizada correctamente')
-#         return ret
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(ImageUpdateView, self).get_context_data(**kwargs)
-#         context['form'].fields['album'].queryset = Album.objects.all_my_albums(self.request.user)
-#         return context
+class ImageUpdateView(UpdateView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
+    model = Image
+    form_class = ImageUpdateForm
+    template_name = 'lumina/image_update_form.html'
+
+    #    def get_context_data(self, **kwargs):
+    #        context = super(ImageUpdateView, self).get_context_data(**kwargs)
+    #        context.update({'menu_image_update_flag': 'active'})
+    #        return context
+
+    def get_queryset(self):
+        return self.request.user.studio.image_set.all()
+
+    def form_valid(self, form):
+        ret = super(ImageUpdateView, self).form_valid(form)
+        messages.success(self.request, 'La imagen fue actualizada correctamente')
+        return ret
+
+    def get_context_data(self, **kwargs):
+        context = super(ImageUpdateView, self).get_context_data(**kwargs)
+        context['form'].fields['session'].queryset = self.request.user.studio.session_set.all()
+        return context
 
 
 #===============================================================================
