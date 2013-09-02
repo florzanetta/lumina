@@ -71,9 +71,13 @@ class LuminaUser(AbstractUser):
     objects = LuminaUserManager()
 
     def is_photographer(self):
+        """Returns True if the user is a photographer"""
+        assert self.user_type in (LuminaUser.PHOTOGRAPHER, LuminaUser.CUSTOMER)
         return self.user_type == LuminaUser.PHOTOGRAPHER
 
     def is_for_customer(self):
+        """Returns True if the user is for a customer"""
+        assert self.user_type in (LuminaUser.PHOTOGRAPHER, LuminaUser.CUSTOMER)
         return self.user_type == LuminaUser.CUSTOMER
 
     def all_my_customers(self):
@@ -437,20 +441,24 @@ class ImageManager(models.Manager, ForUserManagerMixin):
         #    Q(imageselection__customer=user, imageselection__selected_images=F('id'))
         # )
 
-        try:
-            # The user owns the image?
-            return self.get(user=user, id=image_id)
-        except Image.DoesNotExist:
-            pass
+        if user.is_photographer():
+            try:
+                # The user owns the image?
+                return self.get(studio=user.studio, id=image_id)
+            except Image.DoesNotExist:
+                pass
 
-        try:
-            # The image was shared with the user?
-            return self.get(album__shared_with=user, id=image_id)
-        except Image.DoesNotExist:
-            pass
+        if user.is_for_customer():
+            try:
+                # The image was shared with the user?
+                return self.get(session__shared_with=user.user_for_customer, id=image_id)
+            except Image.DoesNotExist:
+                pass
 
         # Tha image was selected by the user?
-        return self.get(imageselection__customer=user, imageselection__selected_images=image_id)
+        # FIXME: REFACTOR: ***finish this when ImageSelections is refactored***
+        return self.get(imageselection__customer=user,
+                        imageselection__selected_images=image_id)
 
 
 class Image(models.Model):

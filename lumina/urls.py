@@ -126,9 +126,9 @@ urlpatterns = patterns(
     url(r'^image/(\d+)/thumb/64x64/$', 'lumina.views.image_thumb_64x64',
         name='image_thumb_64x64'),
 
-#     url(r'^image/(\d+)/download/$',
-#         'lumina.views.image_download',
-#         name='image_download'),
+    url(r'^image/(\d+)/download/$',
+        'lumina.views.image_download',
+        name='image_download'),
 
     #===========================================================================
     # Customer

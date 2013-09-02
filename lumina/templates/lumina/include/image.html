@@ -15,7 +15,7 @@
 			  {% if hide_download %}
 			  {% else %}
 	              &nbsp;
-	              <small><a href="{ % url 'image_download' image.pk % }"
+	              <small><a href="{% url 'image_download' image.pk %}"
 	                class="btn btn-primary btn-mini lumina_download_image">Bajar</a></small>
 			  {% endif %}
 

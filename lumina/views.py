@@ -155,31 +155,31 @@ def _image_thumb(request, image, max_size=None):
         return HttpResponseRedirect('/static/unknown-icon-64x64.png')
 
 
-# def _image_download(request, image):
-#     """Sends the original uploaded file to the user"""
-#     full_filename = default_storage.path(image.image.path)
-#     filename_to_user = image.original_filename
-#     filesize = os.path.getsize(full_filename)
-#     # content_type = mimetypes.guess_type(full_filename)[0]
-#     content_type = image.content_type
-#
-#     # TODO: send in chunks to avoid loading the file in memory
-#     # from django.core.servers.basehttp import FileWrapper
-#     #    with open(full_filename) as f:
-#     #        fw = FileWrapper(f)
-#     #        response = HttpResponse(fw, content_type=content_type)
-#     #        response['Content-Length'] = filesize
-#     #        response['Content-Disposition'] = 'attachment; filename="{0}"'.format(
-#     #            filename_to_user)
-#     #        return response
-#
-#     with open(full_filename) as f:
-#         file_contents = f.read()
-#     response = HttpResponse(file_contents, content_type=content_type)
-#     response['Content-Length'] = filesize
-#     response['Content-Disposition'] = 'attachment; filename="{0}"'.format(
-#         filename_to_user)
-#     return response
+def _image_download(request, image):
+    """Sends the original uploaded file to the user"""
+    full_filename = default_storage.path(image.image.path)
+    filename_to_user = image.original_filename
+    filesize = os.path.getsize(full_filename)
+    # content_type = mimetypes.guess_type(full_filename)[0]
+    content_type = image.content_type
+
+    # TODO: send in chunks to avoid loading the file in memory
+    # from django.core.servers.basehttp import FileWrapper
+    #    with open(full_filename) as f:
+    #        fw = FileWrapper(f)
+    #        response = HttpResponse(fw, content_type=content_type)
+    #        response['Content-Length'] = filesize
+    #        response['Content-Disposition'] = 'attachment; filename="{0}"'.format(
+    #            filename_to_user)
+    #        return response
+
+    with open(full_filename) as f:
+        file_contents = f.read()
+    response = HttpResponse(file_contents, content_type=content_type)
+    response['Content-Length'] = filesize
+    response['Content-Disposition'] = 'attachment; filename="{0}"'.format(
+        filename_to_user)
+    return response
 
 
 @login_required
@@ -196,11 +196,11 @@ def image_thumb(request, image_id, max_size=None):
     return _image_thumb(request, image, 64)
 
 
-# @login_required
-# @cache_control(private=True)
-# def image_download(request, image_id):
-#     image = Image.objects.get_for_download(request.user, int(image_id))
-#     return _image_download(request, image)
+@login_required
+@cache_control(private=True)
+def image_download(request, image_id):
+    image = Image.objects.get_for_download(request.user, int(image_id))
+    return _image_download(request, image)
 
 
 #===============================================================================
