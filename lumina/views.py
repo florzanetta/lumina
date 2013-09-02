@@ -733,10 +733,10 @@ class UserUpdateView(UpdateView):
     model = LuminaUser
     form_class = UserUpdateForm
     template_name = 'lumina/base_create_update_form.html'
-    success_url = reverse_lazy('customer_list')
-    # FIXME: redirect to list of users
-    # success_url = reverse_lazy('customer_user_list',
-    #    kwargs={'customer_id': self.kwargs['customer_id']})
+
+    def get_success_url(self):
+        customer = self.get_object().user_for_customer
+        return reverse('customer_user_list', kwargs={'customer_id': customer.id})
 
     def get_queryset(self):
         return self.request.user.get_all_users()
