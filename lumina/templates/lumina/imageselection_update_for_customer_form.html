@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>{% block title %}Lumina - Peticiones de selección de imágenes de album {{ object.album.name }}{% endblock %}</title>
+<title>{% block title %}Lumina - Peticiones de selección de imágenes de la sesión {{ object.session.name }}{% endblock %}</title>
 </head>
 <body>
 
@@ -15,26 +15,26 @@
 
 {% block content %}
 
-    <h3>Peticiones de selección de imágenes de album {{ object.album.name }}</h3>
+    <h3>Peticiones de selección de imágenes de la sesión '{{ object.session.name }}'</h3>
 
 	<small><strong>Estado:</strong>
 		{{ object.get_status_display }}</small><br>
 
 	<small><strong>Compartido con:</strong>
-		{{ object.customer|full_name_with_username }}</small><br>
+		{{ object.customer.name }}</small><br>
 
 	<small><strong>Cant. de imagenes permitidas:</strong>
 		{{ object.image_quantity }}</small><br>
 
-    <h5>Imágenes del album:</h5>
+    <h5>Imágenes la sesión:</h5>
 
        <form method="post">
-	    {% for image in object.album.image_set.all %}
+	    {% for image in object.session.image_set.all %}
 	    
 	        {% include 'lumina/include/image.html' with image=image checkbox_for_selection=True hide_download=True user=user only %}
 	        
 	    {% empty %}
-	        <p>El album no posee imagenes...</p>
+	        <p>La sesión no posee imagenes...</p>
 		    <hr>
 	    {% endfor %}
         <input type="submit" value="Seleccionar" class="btn btn-primary">

@@ -275,24 +275,30 @@ class SharedSessionByEmailCreateView(CreateView):
 # ImageSelection
 #===============================================================================
 
-# @login_required
-# @cache_control(private=True)
-# def imageselection_redirect(request, pk):
-#     imageselection_id = int(pk)
-#     imageselection = ImageSelection.objects.all_my_accessible_imageselections(
-#         request.user).get(id=imageselection_id)
-#     assert isinstance(imageselection, ImageSelection)
-#
-#     if imageselection.user == request.user:
-#         return HttpResponseRedirect(reverse('imageselection_detail',
-#                                             args=[imageselection_id]))
-#     else:
-#         if imageselection.status == ImageSelection.STATUS_IMAGES_SELECTED:
-#             return HttpResponseRedirect(reverse('imageselection_detail',
-#                                                 args=[imageselection_id]))
-#         else:
-#             return HttpResponseRedirect(reverse('imageselection_select_images',
-#                                                 args=[imageselection_id]))
+@login_required
+@cache_control(private=True)
+def imageselection_redirect(request, pk):
+    """
+    Redirects to the proper page, depending on:
+    - user's role (photograper / customre)
+    - ImageSelection state
+    """
+    imageselection_id = int(pk)
+    imageselection = ImageSelection.objects.all_my_accessible_imageselections(
+        request.user).get(id=imageselection_id)
+    assert isinstance(imageselection, ImageSelection)
+
+    if request.user.is_photographer():
+        # The photograper is always sent to the 'details' page
+        return HttpResponseRedirect(reverse('imageselection_detail', args=[imageselection_id]))
+    elif request.user.is_for_customer():
+        # The customer is redirected depending on the state of ImageSelection
+        if imageselection.status == ImageSelection.STATUS_IMAGES_SELECTED:
+            # The customer did the selection -> redirect to 'details' page
+            return HttpResponseRedirect(reverse('imageselection_detail', args=[imageselection_id]))
+        else:
+            return HttpResponseRedirect(reverse('imageselection_select_images',
+                                                args=[imageselection_id]))
 
 
 class ImageSelectionListView(ListView):
@@ -356,59 +362,60 @@ class ImageSelectionCreateView(CreateView):
         return context
 
 
-# class ImageSelectionForCustomerView(DetailView):
-#     """
-#     With this view, the customer selects the images he/she wants.
-#     """
-#     # Here we use DetailView instead of UpdateView because we
-#     # can't use a form to set the MtoM, so it's easier to use
-#     # the model instance + request values
-#     #
-#     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
-#     model = ImageSelection
-#     template_name = 'lumina/imageselection_update_for_customer_form.html'
-#
-#     def get_queryset(self):
-#         return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user,
-#                                                                          just_pending=True)
-#
-#     def post(self, request, *args, **kwargs):
-#         image_selection = self.get_object()
-#         assert isinstance(image_selection, ImageSelection)
-#         selected_images_ids = request.POST.getlist('selected_images')
-#         if len(selected_images_ids) != image_selection.image_quantity:
-#             messages.error(self.request,
-#                          'Debe seleccionar {} imagen/es'.format(image_selection.image_quantity))
-#             return HttpResponseRedirect(reverse('imageselection_select_images',
-#                                                 args=[image_selection.id]))
-#
-#         # use `str` to compare, to avoid conversion to `int`
-#         images = image_selection.album.image_set.all()
-#         allowed_images_id = [str(img.id) for img in images]
-#         invalid_ids=[img_id for img_id in selected_images_ids if img_id not in allowed_images_id]
-#
-#         if invalid_ids:
-#             # This was an attempt to submit ids for images on other's albums!
-#             raise(SuspiciousOperation("Invalid ids: {}".format(','.join(invalid_ids))))
-#
-#         images_by_id = dict([(img.id, img) for img in images])
-#         for img_id in selected_images_ids:
-#             img_id = int(img_id)
-#             image_selection.selected_images.add(images_by_id[img_id])
-#         image_selection.status = ImageSelection.STATUS_IMAGES_SELECTED
-#         image_selection.save()
-#
-#         subject = "El cliente ha realizado su selección"
-#         to_email = image_selection.album.user.email
-#         link = self.request.build_absolute_uri(
-#             reverse('imageselection_detail', args=[image_selection.id]))
-#         body = "El cliente ha seleccionado las imagenes del album.\n" + \
-#             "Para verlo ingrese a {}".format(link)
-#         send_email(subject, to_email, body)
-#
-#         messages.success(self.request, 'La seleccion fue guardada correctamente')
-#         return HttpResponseRedirect(reverse('imageselection_detail',
-#                                             args=[image_selection.id]))
+class ImageSelectionForCustomerView(DetailView):
+    """
+    With this view, the customer selects the images he/she wants.
+    """
+    # Here we use DetailView instead of UpdateView because we
+    # can't use a form to set the MtoM, so it's easier to use
+    # the model instance + request values
+    #
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
+    model = ImageSelection
+    template_name = 'lumina/imageselection_update_for_customer_form.html'
+
+    def get_queryset(self):
+        return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user,
+                                                                         just_pending=True)
+
+    def post(self, request, *args, **kwargs):
+        image_selection = self.get_object()
+        assert isinstance(image_selection, ImageSelection)
+        selected_images_ids = request.POST.getlist('selected_images')
+        if len(selected_images_ids) != image_selection.image_quantity:
+            messages.error(self.request,
+                         'Debe seleccionar {} imagen/es'.format(image_selection.image_quantity))
+            return HttpResponseRedirect(reverse('imageselection_select_images',
+                                                args=[image_selection.id]))
+
+        # use `str` to compare, to avoid conversion to `int`
+        images = image_selection.session.image_set.all()
+        allowed_images_id = [str(img.id) for img in images]
+        invalid_ids = [img_id for img_id in selected_images_ids if img_id not in allowed_images_id]
+
+        if invalid_ids:
+            # This was an attempt to submit ids for images on other's albums!
+            raise(SuspiciousOperation("Invalid ids: {}".format(','.join(invalid_ids))))
+
+        images_by_id = dict([(img.id, img) for img in images])
+        for img_id in selected_images_ids:
+            img_id = int(img_id)
+            image_selection.selected_images.add(images_by_id[img_id])
+        image_selection.status = ImageSelection.STATUS_IMAGES_SELECTED
+        image_selection.save()
+
+        subject = "El cliente ha realizado su selección"
+        for photographer in image_selection.studio.photographers.all():
+            to_email = photographer.email
+            link = self.request.build_absolute_uri(
+                reverse('imageselection_detail', args=[image_selection.id]))
+            body = "El cliente ha seleccionado las imagenes de la sesion.\n" + \
+                "Para verlo ingrese a {}".format(link)
+            send_email(subject, to_email, body)
+
+        messages.success(self.request, 'La seleccion fue guardada correctamente')
+        return HttpResponseRedirect(reverse('imageselection_detail',
+                                            args=[image_selection.id]))
 
 
 class ImageSelectionDetailView(DetailView):

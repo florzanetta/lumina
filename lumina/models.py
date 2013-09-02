@@ -400,11 +400,11 @@ class ImageManager(models.Manager, ForUserManagerMixin):
 
     def visible_images(self, user):
         """Returns the images the user can see"""
-        # FIXME: REFACTOR: add support for shared sessions & any other stuff
         if user.is_photographer():
             return self.filter(studio=user.studio)
         elif user.is_for_customer():
-            return self.filter(session_customer=user.user_for_customer)
+            # FIXME: REFACTOR: add support for shared sessions & any other stuff
+            return self.filter(session__customer=user.user_for_customer)
         else:
             raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
 

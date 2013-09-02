@@ -19,7 +19,7 @@
 		    </a>
 		    <div class="media-body">
 		        <div class="media-heading"><a
-		               href="{ % url 'imageselection_redirect' pet.id % }"><strong>Sesión</strong>:
+		               href="{% url 'imageselection_redirect' pet.id %}"><strong>Sesión</strong>:
 		               		{{ pet.session.name }}</a> <br>
                        <small><strong>Estado</strong>: {{ pet.get_status_display }}</small> <br>
 						<small><strong>Cant. de imagenes permitidas:</strong>
