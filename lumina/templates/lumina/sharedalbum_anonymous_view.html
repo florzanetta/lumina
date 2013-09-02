@@ -19,7 +19,7 @@
     {% for image in all_the_images %}
         <ul class="media-list">
             <li class="media"><a class="pull-left" href="javascript:void(0);"><img class="media-object"
-                    src="{ % url 'shared_album_image_thumb_64x64' object.random_hash image.pk % }">
+                    src="{% url 'shared_album_image_thumb_64x64' object.random_hash image.pk %}">
                 </a>
                 <div class="media-body">
                     <h6 class="media-heading"><a

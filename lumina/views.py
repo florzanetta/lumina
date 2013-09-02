@@ -147,14 +147,14 @@ def check_403(request):
     raise(PermissionDenied())
 
 
-# def _image_thumb(request, image, max_size=None):
-#     try:
-#         thumb = generate_thumbnail(image, max_size)
-#         return HttpResponse(thumb, content_type='image/jpg')
-#     except IOError:
-#         return HttpResponseRedirect('/static/unknown-icon-64x64.png')
-#
-#
+def _image_thumb(request, image, max_size=None):
+    try:
+        thumb = generate_thumbnail(image, max_size)
+        return HttpResponse(thumb, content_type='image/jpg')
+    except IOError:
+        return HttpResponseRedirect('/static/unknown-icon-64x64.png')
+
+
 # def _image_download(request, image):
 #     """Sends the original uploaded file to the user"""
 #     full_filename = default_storage.path(image.image.path)
@@ -180,22 +180,22 @@ def check_403(request):
 #     response['Content-Disposition'] = 'attachment; filename="{0}"'.format(
 #         filename_to_user)
 #     return response
-#
-#
-# @login_required
-# @cache_control(private=True)
-# def image_thumb_64x64(request, image_id):
-#     image = Image.objects.all_previsualisable(request.user).get(pk=image_id)
-#     return _image_thumb(request, image, 64)
-#
-#
-# @login_required
-# @cache_control(private=True)
-# def image_thumb(request, image_id, max_size=None):
-#     image = Image.objects.all_previsualisable(request.user).get(pk=image_id)
-#     return _image_thumb(request, image, 64)
-#
-#
+
+
+@login_required
+@cache_control(private=True)
+def image_thumb_64x64(request, image_id):
+    image = Image.objects.visible_images(request.user).get(pk=image_id)
+    return _image_thumb(request, image, 64)
+
+
+@login_required
+@cache_control(private=True)
+def image_thumb(request, image_id, max_size=None):
+    image = Image.objects.visible_images(request.user).get(pk=image_id)
+    return _image_thumb(request, image, 64)
+
+
 # @login_required
 # @cache_control(private=True)
 # def image_download(request, image_id):

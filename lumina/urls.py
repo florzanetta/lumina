@@ -120,12 +120,12 @@ urlpatterns = patterns(
             login_required(ImageUpdateView.as_view())),
         name='image_update'),
 
-#     url(r'^image/(\d+)/thumb/$', 'lumina.views.image_thumb',
-#         name='image_thumb'),
-#
-#     url(r'^image/(\d+)/thumb/64x64/$', 'lumina.views.image_thumb_64x64',
-#         name='image_thumb_64x64'),
-#
+    url(r'^image/(\d+)/thumb/$', 'lumina.views.image_thumb',
+        name='image_thumb'),
+
+    url(r'^image/(\d+)/thumb/64x64/$', 'lumina.views.image_thumb_64x64',
+        name='image_thumb_64x64'),
+
 #     url(r'^image/(\d+)/download/$',
 #         'lumina.views.image_download',
 #         name='image_download'),
