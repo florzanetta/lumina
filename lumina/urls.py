@@ -6,7 +6,8 @@ from django.views.decorators.cache import cache_control
 from lumina.views import SessionListView, SessionDetailView, SessionCreateView,\
     SessionUpdateView, CustomerListView, CustomerCreateView, CustomerUpdateView,\
     UserListView, ImageListView, UserCreateView, UserUpdateView,\
-    SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView
+    SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView,\
+    ImageCreateView
 
 
 # Uncomment the next two lines to enable the admin:
@@ -108,12 +109,12 @@ urlpatterns = patterns(
         cache_control(private=True)(
             login_required(ImageListView.as_view())),
         name='image_list'),
-#
-#     url(r'^image/create/$',
-#         cache_control(private=True)(
-#             login_required(ImageCreateView.as_view())),
-#         name='image_create'),
-#
+
+    url(r'^image/create/$',
+        cache_control(private=True)(
+            login_required(ImageCreateView.as_view())),
+        name='image_create'),
+
 #     url(r'^image/update/(?P<pk>\d+)/$',
 #         cache_control(private=True)(
 #             login_required(ImageUpdateView.as_view())),

@@ -93,8 +93,8 @@ JUAN_CUSTOMER_ID = 4
 
 PRIVATE_URLS = [
     reverse('album_list'),
-    reverse('album_detail', args=[1]),
-    reverse('album_detail', args=[2]),
+    reverse('session_detail', args=[1]),
+    reverse('session_detail', args=[2]),
     reverse('session_create'),
     reverse('album_update', args=[1]),
     reverse('album_update', args=[2]),
@@ -120,9 +120,9 @@ class BasicAccessTest(LuminaTestCase):
 
             all_the_images = []
             for album in Album.objects.all_visible(self._logged_in_user):
-                # Views to test: "album_detail", "album_update"
+                # Views to test: "session_detail", "album_update"
                 self.assertEqual(self.client.get(
-                    reverse("album_detail", args=[album.id])).status_code, 200)
+                    reverse("session_detail", args=[album.id])).status_code, 200)
                 all_the_images += list(album.image_set.all())
 
                 # If the user is the album's owner, the user must be able to update it
@@ -225,14 +225,14 @@ class PermissoinsTests(LuminaTestCase):
         self.assertNotContains(response, JUAN_ALBUM_UUID)
 
         # View it's own album
-        response = self.client.get(reverse('album_detail', args=[ADMIN_ALBUM_ID]))
-        self.assertTemplateUsed(response, 'lumina/album_detail.html')
+        response = self.client.get(reverse('session_detail', args=[ADMIN_ALBUM_ID]))
+        self.assertTemplateUsed(response, 'lumina/session_detail.html')
         self.assertContains(response, ADMIN_ALBUM_UUID)
         self.assertNotContains(response, JUAN_ALBUM_UUID)
 
         # View other's album
-        response = self.client.get(reverse('album_detail', args=[JUAN_ALBUM_ID]))
-        self.assertTemplateNotUsed(response, 'lumina/album_detail.html')
+        response = self.client.get(reverse('session_detail', args=[JUAN_ALBUM_ID]))
+        self.assertTemplateNotUsed(response, 'lumina/session_detail.html')
         self.assertEqual(response.status_code, 404)
 
         # Modify my album / other's album

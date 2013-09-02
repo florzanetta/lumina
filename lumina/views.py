@@ -30,7 +30,7 @@ from lumina.models import Session, Image, LuminaUser, Customer,\
     SharedSessionByEmail
 from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm,\
-    SharedSessionByEmailCreateForm
+    SharedSessionByEmailCreateForm, ImageCreateForm
 
 
 #
@@ -85,7 +85,7 @@ logger = logging.getLogger(__name__)
 #     response_data = {
 #         'img_count': img_count,
 #         'status': 'ok',
-#         'redirect': reverse('album_detail', args=[new_album.id]),
+#         'redirect': reverse('session_detail', args=[new_album.id]),
 #     }
 #     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
@@ -329,7 +329,7 @@ class SharedSessionByEmailCreateView(CreateView):
 #         subject = "Solicitud de seleccion de imagenes"
 #         to_email = form.instance.customer.email
 #         link = self.request.build_absolute_uri(
-#             reverse('album_detail', args=[form.instance.album.id]))
+#             reverse('session_detail', args=[form.instance.album.id]))
 #         message = u"Tiene una nueva solicitud para seleccionar fotografías.\n" + \
 #             "Para verlo ingrese a {}".format(link)
 #         send_email(subject, to_email, message)
@@ -340,7 +340,7 @@ class SharedSessionByEmailCreateView(CreateView):
 #         return ret
 #
 #     def get_success_url(self):
-#         return reverse('album_detail', args=[self.object.album.pk])
+#         return reverse('session_detail', args=[self.object.album.pk])
 #
 #     def get_context_data(self, **kwargs):
 #         context = super(ImageSelectionCreateView, self).get_context_data(**kwargs)
@@ -523,65 +523,68 @@ class ImageListView(ListView):
 
     def get_queryset(self):
         return Image.objects.visible_images(self.request.user)
-#
-#
-# class ImageCreateView(CreateView):
-#     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
-#     # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
-#     model = Image
-#     form_class = ImageCreateForm
-#     template_name = 'lumina/image_create_form.html'
-#
-#     def get_success_url(self):
-#         return reverse('album_detail', args=[self.object.album.pk])
-#
-#     def form_valid(self, form):
-#         form.instance.user = self.request.user
-#
-#         #    *** before super().form_valid()
-#         #    (Pdb) form.instance.image.name
-#         #    u'estado-del-arte.odt'
-#         #    *** after super().form_valid()
-#         #    (Pdb) form.instance.image.name
-#         #    u'images/2013/06/02/estado-del-arte_2.odt'
-#         form.instance.set_original_filename(form.instance.image.name)
-#
-#         #    *** befor and after super().form_valid() this works
-#         #    (Pdb) form.instance.image.size
-#         #    77052
-#         form.instance.size = form.instance.image.size
-#
-#         # FIXME: is NOT safe to trust the content type reported by the user
-#         #    *** befor super().form_valid() this works
-#         #    (Pdb) form.files['image'].content_type
-#         #    u'application/vnd.oasis.opendocument.text'
-#         form.instance.set_content_type(form.files['image'].content_type)
-#
-#         ret = super(ImageCreateView, self).form_valid(form)
-#         messages.success(self.request, 'La imagen fue creada correctamente')
-#
-#         #    *** after super().form_valid() `form.instance.image.name` has the
-#         #        filename from the filesystem, which WILL BE DIFFERENT from the
-#         #        original filename on the user's computer
-#         #    (Pdb) form.instance.image.name
-#         #    u'images/2013/06/02/estado-del-arte_2.odt'
-#
-#         return ret
-#
-#     def get_initial(self):
-#         initial = super(ImageCreateView, self).get_initial()
-#         if 'id_album' in self.request.GET:
-#             initial.update({
-#                 'album': self.request.GET['id_album'],
-#             })
-#         return initial
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(ImageCreateView, self).get_context_data(**kwargs)
-#         context['form'].fields['album'].queryset = Album.objects.all_my_albums(self.request.user)
-#         return context
-#
-#
+
+
+class ImageCreateView(CreateView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
+    # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
+    model = Image
+    form_class = ImageCreateForm
+    template_name = 'lumina/base_create_update_form.html'
+
+    def get_success_url(self):
+        return reverse('session_detail', args=[self.object.session.pk])
+
+    def form_valid(self, form):
+        form.instance.studio = self.request.user.studio
+
+        #    *** before super().form_valid()
+        #    (Pdb) form.instance.image.name
+        #    u'estado-del-arte.odt'
+        #    *** after super().form_valid()
+        #    (Pdb) form.instance.image.name
+        #    u'images/2013/06/02/estado-del-arte_2.odt'
+        form.instance.set_original_filename(form.instance.image.name)
+
+        #    *** befor and after super().form_valid() this works
+        #    (Pdb) form.instance.image.size
+        #    77052
+        form.instance.size = form.instance.image.size
+
+        # FIXME: is NOT safe to trust the content type reported by the user
+        #    *** befor super().form_valid() this works
+        #    (Pdb) form.files['image'].content_type
+        #    u'application/vnd.oasis.opendocument.text'
+        form.instance.set_content_type(form.files['image'].content_type)
+
+        ret = super(ImageCreateView, self).form_valid(form)
+        messages.success(self.request, 'La imagen fue creada correctamente')
+
+        #    *** after super().form_valid() `form.instance.image.name` has the
+        #        filename from the filesystem, which WILL BE DIFFERENT from the
+        #        original filename on the user's computer
+        #    (Pdb) form.instance.image.name
+        #    u'images/2013/06/02/estado-del-arte_2.odt'
+
+        return ret
+
+    def get_initial(self):
+        initial = super(ImageCreateView, self).get_initial()
+        if 'id_session' in self.request.GET:
+            initial.update({
+                'session': self.request.GET['id_session'],
+            })
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super(ImageCreateView, self).get_context_data(**kwargs)
+        context['form'].fields['session'].queryset = self.request.user.studio.session_set.all()
+        context['title'] = "Agregar imagen"
+        context['submit_label'] = "Agregar"
+        context['multipart'] = True
+        return context
+
+
 # class ImageUpdateView(UpdateView):
 #     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
 #     model = Image

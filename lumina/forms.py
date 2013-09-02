@@ -7,7 +7,8 @@ Created on Jun 1, 2013
 from django import forms
 from django.forms.widgets import CheckboxSelectMultiple
 
-from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail
+from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail,\
+    Image
 
 
 #===============================================================================
@@ -65,13 +66,13 @@ class SessionUpdateForm(forms.ModelForm):
 # Image
 #===============================================================================
 
-# class ImageCreateForm(forms.ModelForm):
-#
-#     class Meta:
-#         model = Image
-#         exclude = ('user', 'size', 'original_filename', 'content_type',)
-#
-#
+class ImageCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = Image
+        fields = ('image', 'session',)
+
+
 # class ImageUpdateForm(forms.ModelForm):
 #
 #     class Meta:
