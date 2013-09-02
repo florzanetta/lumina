@@ -2,7 +2,8 @@
 
 from django.db import models
 from django.core.urlresolvers import reverse
-from django.core.exceptions import PermissionDenied, ValidationError
+from django.core.exceptions import PermissionDenied, ValidationError,\
+    SuspiciousOperation
 from django.db.models import Q
 from django.contrib.auth.models import AbstractUser, UserManager
 
@@ -312,6 +313,17 @@ class ImageSelectionManager(models.Manager):
     Manager for the ImageSelection model
     """
 
+    def all_my_accessible_imageselections(self, user):
+        """
+        Returns all the ImageSelection instances including those for what the user
+        is the customer, and those for what the user is the owner of the album
+        """
+        if user.is_photographer():
+            return self.filter(studio=user.studio)
+        elif user.is_for_customer():
+            return self.filter(session__customer=user.user_for_customer)
+        raise(SuspiciousOperation())
+
     # FIXME: REFACTOR: refactor this (if needed)
     def pending_image_selections(self, user):
         """
@@ -319,14 +331,6 @@ class ImageSelectionManager(models.Manager):
         has to do the selection of the images.
         """
         return self.filter(customer=user, status=ImageSelection.STATUS_WAITING)
-
-    # FIXME: REFACTOR: refactor this (if needed)
-    def all_my_accessible_imageselections(self, user):
-        """
-        Returns all the ImageSelection instances including those for what the user
-        is the customer, and those for what the user is the owner of the album
-        """
-        return self.filter(Q(customer=user) | Q(album__user=user))
 
     def all_my_imageselections_as_customer(self, user, just_pending=False):
         """

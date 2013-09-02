@@ -409,40 +409,45 @@ class ImageSelectionCreateView(CreateView):
 #         messages.success(self.request, 'La seleccion fue guardada correctamente')
 #         return HttpResponseRedirect(reverse('imageselection_detail',
 #                                             args=[image_selection.id]))
-#
-#
-# class ImageSelectionDetailView(DetailView):
-#     """
-#     This view shows in read-only an ImageSelectoin instance.
-#
-#     This should be used for album's owner, and the customer (only
-#     after he/she has selected the images).
-#     """
-#     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-#     #    #django.views.generic.detail.DetailView
-#     model = ImageSelection
-#
-#     def get_queryset(self):
-#         return ImageSelection.objects.all_my_accessible_imageselections(self.request.user)
-#
-#     def get_context_data(self, **kwargs):
-#         ctx = super(ImageSelectionDetailView, self).get_context_data(**kwargs)
-#         image_selection = ctx['object']
-#         assert isinstance(image_selection, ImageSelection)
-#
-#         # Compare `id` because of the use of UserProxyManager
-#         if image_selection.user.id == self.request.user.id:
-#             # Show all to the photographer
-#             ctx['images_to_show'] = image_selection.album.image_set.all()
-#             ctx['selected_images'] = image_selection.selected_images.all()
-#         elif image_selection.customer.id == self.request.user.id:
-#             # Show only selected images to customer
-#             ctx['images_to_show'] = image_selection.selected_images.all()
-#         else:
-#             # the requested ImageSelection instance does NOT belong
-#             # to the photographer neither to the customer!
-#             raise(SuspiciousOperation())
-#         return ctx
+
+
+class ImageSelectionDetailView(DetailView):
+    """
+    This view shows in read-only an ImageSelectoin instance.
+
+    This should be used for album's owner, and the customer (only
+    after he/she has selected the images).
+    """
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.detail.DetailView
+    model = ImageSelection
+
+    def get_queryset(self):
+        return ImageSelection.objects.all_my_accessible_imageselections(self.request.user)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ImageSelectionDetailView, self).get_context_data(**kwargs)
+        image_selection = ctx['object']
+        assert isinstance(image_selection, ImageSelection)
+
+        # Compare `id` because of the use of UserProxyManager
+        if self.request.user.is_photographer():
+            # Show all to the photographer
+            if image_selection.session.studio != self.request.user.studio:
+                raise(SuspiciousOperation())
+            ctx['images_to_show'] = image_selection.session.image_set.all()
+            ctx['selected_images'] = image_selection.selected_images.all()
+
+        elif self.request.user.is_for_customer():
+            # Show only selected images to customer
+            if image_selection.session.customer != self.request.user.user_for_customer:
+                raise(SuspiciousOperation())
+            ctx['images_to_show'] = image_selection.selected_images.all()
+
+        else:
+            raise(SuspiciousOperation())
+
+        return ctx
 
 
 #===============================================================================

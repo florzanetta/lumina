@@ -8,7 +8,7 @@ from lumina.views import SessionListView, SessionDetailView, SessionCreateView,\
     UserListView, ImageListView, UserCreateView, UserUpdateView,\
     SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView,\
     ImageCreateView, ImageUpdateView, ImageSelectionCreateView,\
-    ImageSelectionListView
+    ImageSelectionListView, ImageSelectionDetailView
 
 
 # Uncomment the next two lines to enable the admin:
@@ -95,12 +95,12 @@ urlpatterns = patterns(
 #     url(r'^session/image-selection/redirect/(?P<pk>\d+)/$',
 #         'lumina.views.imageselection_redirect',
 #         name='imageselection_redirect'),
-#
-#     url(r'^session/image-selection/detail/(?P<pk>\d+)/$',
-#         cache_control(private=True)(
-#             login_required(ImageSelectionDetailView.as_view())),
-#         name='imageselection_detail'),
-#
+
+    url(r'^session/image-selection/detail/(?P<pk>\d+)/$',
+        cache_control(private=True)(
+            login_required(ImageSelectionDetailView.as_view())),
+        name='imageselection_detail'),
+
 #     url(r'^session/image-selection/select_images/(?P<pk>\d+)/$',
 #         cache_control(private=True)(
 #             login_required(ImageSelectionForCustomerView.as_view())),

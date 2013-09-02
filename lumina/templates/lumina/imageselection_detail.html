@@ -15,18 +15,18 @@
 
 {% block content %}
 
-    <h3>Peticiones de selección de imágenes de album {{ object.album.name }}</h3>
+    <h3>Peticiones de selección de imágenes de la sesión {{ object.session.name }}</h3>
 
 	<small><strong>Estado:</strong>
 		{{ object.get_status_display }}</small><br>
 
 	<small><strong>Compartido con:</strong>
-		{{ object.customer|full_name_with_username }}</small><br>
+		{{ object.customer.name }}</small><br>
 
 	<small><strong>Cant. de imagenes permitidas:</strong>
 		{{ object.image_quantity }}</small><br>
 
-    <h5>Imágenes del album:</h5>
+    <h5>Imágenes de la sesión:</h5>
 
     {% for image in images_to_show %}
         {% include 'lumina/include/image.html' with image=image nohr=True user=user only %}

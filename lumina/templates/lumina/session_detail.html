@@ -76,7 +76,7 @@
                    <td width="100%">
                         <div>
 	                        <i class="icon-user"></i>
-                                <a href="{ % url 'imageselection_detail' imageselection.id % }">{{ imageselection.customer.name }}</a>
+                                <a href="{% url 'imageselection_detail' imageselection.id %}">{{ imageselection.customer.name }}</a>
                         </div>
                         <div>
                             <em><small>{{ imageselection.get_status_display }}</small></em>
