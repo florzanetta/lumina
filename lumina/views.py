@@ -293,15 +293,15 @@ class SharedSessionByEmailCreateView(CreateView):
 #         else:
 #             return HttpResponseRedirect(reverse('imageselection_select_images',
 #                                                 args=[imageselection_id]))
-#
-#
-# class ImageSelectionListView(ListView):
-#     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-#     #    #django.views.generic.list.ListView
-#     model = ImageSelection
-#
-#     def get_queryset(self):
-#         return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user)
+
+
+class ImageSelectionListView(ListView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.list.ListView
+    model = ImageSelection
+
+    def get_queryset(self):
+        return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user)
 
 
 class ImageSelectionCreateView(CreateView):

@@ -328,13 +328,13 @@ class ImageSelectionManager(models.Manager):
         """
         return self.filter(Q(customer=user) | Q(album__user=user))
 
-    # FIXME: REFACTOR: refactor this (if needed)
     def all_my_imageselections_as_customer(self, user, just_pending=False):
         """
         Returns a queryset filtering the ImageSelections for the specified user.
         If just_pending=True, returns only the ImageSelections waiting for the actual selection.
         """
-        qs = self.filter(customer=user)
+        assert user.is_for_customer()
+        qs = self.filter(customer=user.user_for_customer)
         if just_pending:
             qs = qs.filter(status=ImageSelection.STATUS_WAITING)
         return qs
