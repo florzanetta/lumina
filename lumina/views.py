@@ -207,15 +207,15 @@ def check_403(request):
 # SharedSessionByEmail (ex: SharedAlbum)
 #===============================================================================
 
-# class SharedAlbumAnonymousView(DetailView):
-#     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-#     #    #django.views.generic.detail.DetailView
-#     model = SharedAlbum
-#     slug_url_kwarg = 'random_hash'
-#     slug_field = 'random_hash'
-#     template_name = 'lumina/sharedalbum_anonymous_view.html'
-#
-#
+class SharedSessionByEmailAnonymousView(DetailView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.detail.DetailView
+    model = SharedSessionByEmail
+    slug_url_kwarg = 'random_hash'
+    slug_field = 'random_hash'
+    template_name = 'lumina/sharedalbum_anonymous_view.html'
+
+
 # @cache_control(private=True)
 # def shared_album_image_thumb_64x64(request, random_hash, image_id):
 #     shared_album = SharedAlbum.objects.get(random_hash=random_hash)
@@ -243,9 +243,8 @@ class SharedSessionByEmailCreateView(CreateView):
 
         subject = "Nuevo album compartido con Ud."
         to_email = form.instance.shared_with
-#         link = self.request.build_absolute_uri(
-#             reverse('shared_album_view', args=[form.instance.random_hash]))
-        link = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        link = self.request.build_absolute_uri(
+            reverse('shared_session_by_email_view', args=[form.instance.random_hash]))
         body = "Tiene un nuevo album compartido.\nPara verlo ingrese a {}".format(link)
         send_email(subject, to_email, body)
 

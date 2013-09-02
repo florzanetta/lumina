@@ -283,7 +283,7 @@ class SharedSessionByEmail(models.Model):
 
     # FIXME: REFACTOR: refactor this (if needed)
     def __unicode__(self):
-        return u"Session {0} shared by email to {1}".format(self.album.name, self.shared_with)
+        return u"Session {0} shared by email to {1}".format(self.session.name, self.shared_with)
 
     # FIXME: REFACTOR: refactor this (if needed)
     def get_image_from_album(self, image_id):

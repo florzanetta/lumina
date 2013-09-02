@@ -22,6 +22,7 @@
     {% endfor %}
 
     {% if object.user == user %}
+        <!-- # FIXME: REFACTOR: refactor this -->
         <!-- the logged in user is the owner of the album -->
 
 	    <h5>
@@ -43,17 +44,17 @@
 
     {% endif %}
 
-    {% if object.user == user %}
+    {% if object.studio == user.studio %}
         <!-- the logged in user is the owner of the album -->
 
 	    <hr>
 	
 	    <h5>Compartida via email:</h5>
 	    <table class="table">
-	        {% for sharedalbum in object.shares_via_email.all %}
+	        {% for shared_by_email in object.shares_via_email.all %}
 	            <tr>
-	               <td width="5%"><a href="{ % url 'shared_album_view' sharedalbum.random_hash % }">Link</a></td>
-	               <td width="95%"><i class="icon-envelope"></i> {{ sharedalbum.shared_with }}</td>
+	               <td width="5%"><a href="{% url 'shared_session_by_email_view' shared_by_email.random_hash %}">Link</a></td>
+	               <td width="95%"><i class="icon-envelope"></i> {{ shared_by_email.shared_with }}</td>
 	            </tr>
 	        {% empty %}
 	            <tr><td>La sesión no ha sido compartido via email</td></tr>
@@ -64,6 +65,7 @@
 
 
     {% if object.user == user %}
+        <!-- # FIXME: REFACTOR: refactor this -->
         <!-- the logged in user is the owner of the album -->
 
         <hr>

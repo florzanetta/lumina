@@ -6,7 +6,7 @@ from django.views.decorators.cache import cache_control
 from lumina.views import SessionListView, SessionDetailView, SessionCreateView,\
     SessionUpdateView, CustomerListView, CustomerCreateView, CustomerUpdateView,\
     UserListView, ImageListView, UserCreateView, UserUpdateView,\
-    SharedSessionByEmailCreateView
+    SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView
 
 
 # Uncomment the next two lines to enable the admin:
@@ -53,12 +53,12 @@ urlpatterns = patterns(
     #===========================================================================
     # SharedSessionByEmail (ex: SharedAlbum)
     #===========================================================================
-#     url(r'^shared/album/anonymous/view/(?P<random_hash>[a-f0-9-]{36})/$',
-#         cache_control(private=True)(
-#             SharedAlbumAnonymousView.as_view()),
-#         name='shared_album_view'),
+    url(r'^shared/session/anonymous/view/(?P<random_hash>[a-f0-9-]{36})/$',
+        cache_control(private=True)(
+            SharedSessionByEmailAnonymousView.as_view()),
+        name='shared_session_by_email_view'),
 
-    url(r'^shared/album/create/$',
+    url(r'^shared/session/create/$',
         cache_control(private=True)(
             login_required(
                 SharedSessionByEmailCreateView.as_view())),

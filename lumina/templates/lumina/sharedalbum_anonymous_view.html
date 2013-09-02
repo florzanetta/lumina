@@ -4,34 +4,34 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>{% block title %}Lumina - Album: {{ object.album.name }}{% endblock %}</title>
+<title>{% block title %}Lumina - Sesión: {{ object.session.name }}{% endblock %}</title>
 </head>
 <body>
 
 {% block content %}
 
-    <h4>Album '{{ object.album.name }}'</h4>
+    <h4>Sesión '{{ object.session.name }}'</h4>
 
     <hr>
 
-    <h5>Imágenes del album:</h5>
-    {% with all_the_images=object.album.image_set.all %}
-    {% for image in object.album.image_set.all %}
+    <h5>Imágenes de la sesión:</h5>
+    {% with all_the_images=object.session.image_set.all %}
+    {% for image in all_the_images %}
         <ul class="media-list">
             <li class="media"><a class="pull-left" href="javascript:void(0);"><img class="media-object"
-                    src="{% url 'shared_album_image_thumb_64x64' object.random_hash image.pk %}">
+                    src="{ % url 'shared_album_image_thumb_64x64' object.random_hash image.pk % }">
                 </a>
                 <div class="media-body">
                     <h6 class="media-heading"><a
-                       href="{% url 'shared_album_image_download' object.random_hash image.pk %}">{{ image.image.url }}</a></h6>
+                       href="{ % url 'shared_album_image_download' object.random_hash image.pk % }">{{ image.image.url }}</a></h6>
                 </div>
             </li>
         </ul>
     {% empty %}
-        <p>No hay imagenes en el album</p>
+        <p>No hay imagenes en la sesión</p>
     {% endfor %}
 
-	{% dump_objects object object.album all_the_images %}
+	{% dump_objects object object.session all_the_images %}
 
     {% endwith %}
 
