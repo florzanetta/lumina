@@ -292,6 +292,7 @@ class ImageSelectionCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.studio = self.request.user.studio
+        form.instance.customer = form.instance.session.customer
         ret = super(ImageSelectionCreateView, self).form_valid(form)
 
         subject = "Solicitud de seleccion de imagenes"
@@ -315,8 +316,6 @@ class ImageSelectionCreateView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(ImageSelectionCreateView, self).get_context_data(**kwargs)
         context['form'].fields['session'].queryset = self.request.user.studio.session_set.all()
-        customer_qs = self.request.user.all_my_customers()
-        context['form'].fields['customer'].queryset = customer_qs
 
         context['title'] = "Solicitud de seleccion de fotos"
         context['submit_label'] = "Enviar solicitud"
