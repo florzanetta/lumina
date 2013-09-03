@@ -1,0 +1,23 @@
+[
+{
+    "pk": 1, 
+    "model": "lumina.studio", 
+    "fields": {
+        "name": "Professinoal Photo Studio"
+    }
+},
+{
+    "pk": 2, 
+    "model": "lumina.studio", 
+    "fields": {
+        "name": "Other Studio *****"
+    }
+},
+{
+    "pk": 3, 
+    "model": "lumina.studio", 
+    "fields": {
+        "name": "Estudio Fotogr\u00e1fico"
+    }
+}
+]

@@ -1,128 +1,191 @@
 [
 {
-    "pk": 999, 
-    "model": "lumina.luminauser", 
-    "fields": {
-        "username": "admin", 
-        "first_name": "Admin", 
-        "last_name": "Admin", 
-        "is_active": true, 
-        "user_type": "P", 
-        "is_superuser": true, 
-        "customer_of": null, 
-        "is_staff": true, 
-        "last_login": "2013-08-16T01:54:47.919Z", 
-        "groups": [], 
-        "user_permissions": [], 
-        "password": "pbkdf2_sha256$10000$dWR24mMtdvLn$BWwVHbHzSui6L9PP7EVAvumJWoRrJaJFWyIAU19rxhc=", 
-        "email": "admin@example.com", 
-        "date_joined": "2013-08-16T01:35:46Z"
-    }
-},
-{
     "pk": 1, 
     "model": "lumina.luminauser", 
     "fields": {
-        "username": "fotografo1", 
-        "first_name": "Galileo", 
-        "last_name": "Galilei", 
+        "username": "admin", 
+        "first_name": "\u00c1lbaro", 
+        "last_name": "Andrada", 
+        "user_for_customer": null, 
+        "is_active": true, 
+        "user_type": "P", 
+        "is_superuser": true, 
+        "is_staff": true, 
+        "last_login": "2013-09-03T01:11:47.234Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "studio": 1, 
+        "password": "pbkdf2_sha256$10000$YD2ArcYnthqo$+xauvQvr7PwRFDUJ+Gxeeav5vYLV1ceMaAtQoP7m7Fg=", 
+        "email": "admin@example.com", 
+        "date_joined": "2013-09-03T00:24:28Z"
+    }
+},
+{
+    "pk": 2, 
+    "model": "lumina.luminauser", 
+    "fields": {
+        "username": "juan", 
+        "first_name": "Juan *****", 
+        "last_name": "P\u00e9rez *****", 
+        "user_for_customer": null, 
         "is_active": true, 
         "user_type": "P", 
         "is_superuser": false, 
-        "customer_of": null, 
         "is_staff": false, 
-        "last_login": "2013-08-16T01:53:59.418Z", 
+        "last_login": "2013-09-03T01:11:24.758Z", 
         "groups": [], 
         "user_permissions": [], 
-        "password": "pbkdf2_sha256$10000$XtiwUrokw9kG$tNFt5o5C29s5zCAmhVMOcVBkvgbzHaqsq6fC6v4ZOGE=", 
-        "email": "gg@example.com", 
-        "date_joined": "2013-08-16T01:37:38Z"
+        "studio": 2, 
+        "password": "pbkdf2_sha256$10000$vkC79oBJjCuJ$fvGSp9uSqSnZddu9bKilb4RXpbssmR7piydgM874WP8=", 
+        "email": "juan@example.com", 
+        "date_joined": "2013-09-03T00:25:58Z"
     }
 },
 {
     "pk": 3, 
     "model": "lumina.luminauser", 
     "fields": {
-        "username": "cliente1", 
-        "first_name": "Roberto", 
-        "last_name": "Fontanarrosa", 
+        "username": "customer-ba07eb50-9fb5-4593-98", 
+        "first_name": "Albert *****", 
+        "last_name": "Einstein *****", 
+        "user_for_customer": 1, 
         "is_active": true, 
-        "user_type": "G", 
+        "user_type": "C", 
         "is_superuser": false, 
-        "customer_of": [
-            "fotografo1"
-        ], 
         "is_staff": false, 
-        "last_login": "2013-08-16T01:54:24Z", 
+        "last_login": "2013-09-03T00:30:04.932Z", 
         "groups": [], 
         "user_permissions": [], 
-        "password": "pbkdf2_sha256$10000$mFMUNPW96UPq$y4+zxly/ApEeaW/COrCNRurLkNlXiyPQS/3y7lZiZoo=", 
-        "email": "roberto@example.com", 
-        "date_joined": "2013-08-16T01:39:38Z"
+        "studio": null, 
+        "password": "pbkdf2_sha256$10000$03NB2hXOYsvd$A0vcyaAb9VzNoJluVCIsHd52rXIpny+D+gVVwmHG/Xw=", 
+        "email": "albert.einstein@example.com", 
+        "date_joined": "2013-09-03T00:30:04.933Z"
     }
 },
 {
     "pk": 4, 
     "model": "lumina.luminauser", 
     "fields": {
-        "username": "cliente2", 
-        "first_name": "Juan Jos\u00e9", 
-        "last_name": "Campanella", 
+        "username": "generic-user-1", 
+        "first_name": "Generic ******", 
+        "last_name": "User ******", 
+        "user_for_customer": 2, 
         "is_active": true, 
-        "user_type": "G", 
+        "user_type": "C", 
         "is_superuser": false, 
-        "customer_of": [
-            "fotografo1"
-        ], 
         "is_staff": false, 
-        "last_login": "2013-08-16T02:00:37Z", 
+        "last_login": "2013-09-03T00:42:51.948Z", 
         "groups": [], 
         "user_permissions": [], 
-        "password": "pbkdf2_sha256$10000$ndYmpv31OI8h$ZZhiljovLgN2KO9isLdYSzMOuSSWzZYmB3T3WYFYyF0=", 
-        "email": "jjcapanella@example.com", 
-        "date_joined": "2013-08-16T02:00:37Z"
+        "studio": null, 
+        "password": "pbkdf2_sha256$10000$z5fBPPETelzf$TNm4tA6eY0UoiSjnxOoL5xl7JXSFxWY4FCyVKUSuloY=", 
+        "email": "generic-user-1@example.com", 
+        "date_joined": "2013-09-03T00:42:51.948Z"
     }
 },
 {
     "pk": 5, 
     "model": "lumina.luminauser", 
     "fields": {
-        "username": "ERROR_PHOTOGRAPHER", 
-        "first_name": "ERROR_PHOTOGRAPHER", 
-        "last_name": "ERROR_PHOTOGRAPHER", 
+        "username": "generic-user-", 
+        "first_name": "Generic ******", 
+        "last_name": "User ******", 
+        "user_for_customer": 3, 
         "is_active": true, 
-        "user_type": "P", 
+        "user_type": "C", 
         "is_superuser": false, 
-        "customer_of": null, 
         "is_staff": false, 
-        "last_login": "2013-08-16T01:57:18Z", 
+        "last_login": "2013-09-03T00:43:15.151Z", 
         "groups": [], 
         "user_permissions": [], 
-        "password": "ERROR_PHOTOGRAPHER", 
-        "email": "ERROR_PHOTOGRAPHER@EXAMPLE.COM", 
-        "date_joined": "2013-08-16T01:57:18Z"
+        "studio": null, 
+        "password": "pbkdf2_sha256$10000$ykvztssjlgvp$G24nAWHDw5c3C3q4cWRAmfg5gdP2jfqm+Aq8vVuXRDM=", 
+        "email": "generic-user-2@example.com", 
+        "date_joined": "2013-09-03T00:43:15.151Z"
     }
 },
 {
     "pk": 6, 
     "model": "lumina.luminauser", 
     "fields": {
-        "username": "ERROR_CUSTOMER", 
-        "first_name": "ERROR_CUSTOMER", 
-        "last_name": "ERROR_CUSTOMER", 
+        "username": "customer-957a6230-3eac-4ee1-a4", 
+        "first_name": "Max", 
+        "last_name": "Planck", 
+        "user_for_customer": 2, 
         "is_active": true, 
-        "user_type": "G", 
+        "user_type": "C", 
         "is_superuser": false, 
-        "customer_of": [
-            "ERROR_PHOTOGRAPHER"
-        ], 
         "is_staff": false, 
-        "last_login": "2013-08-16T01:56:50Z", 
+        "last_login": "2013-09-03T00:46:35.306Z", 
         "groups": [], 
         "user_permissions": [], 
-        "password": "ERROR_CUSTOMER", 
-        "email": "ERROR_CUSTOMER@example.com", 
-        "date_joined": "2013-08-16T01:56:50Z"
+        "studio": null, 
+        "password": "pbkdf2_sha256$10000$ExnHKN6AKvuU$qRzwXQGxGyyoyWDqiHPPB2hlldbvecZ3LodEsArtISk=", 
+        "email": "max.planck@example.com", 
+        "date_joined": "2013-09-03T00:46:35.306Z"
+    }
+},
+{
+    "pk": 7, 
+    "model": "lumina.luminauser", 
+    "fields": {
+        "username": "fotografo1", 
+        "first_name": "Galileo", 
+        "last_name": "Galilei", 
+        "user_for_customer": null, 
+        "is_active": true, 
+        "user_type": "P", 
+        "is_superuser": true, 
+        "is_staff": false, 
+        "last_login": "2013-09-03T01:08:18.365Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "studio": 3, 
+        "password": "pbkdf2_sha256$10000$LL6bAUoLbeHQ$9j34WXewP76KzS20P2LikO+sd0Vs1QoI3XT6mLAVdwM=", 
+        "email": "galileo@example.com", 
+        "date_joined": "2013-09-03T00:52:56Z"
+    }
+},
+{
+    "pk": 8, 
+    "model": "lumina.luminauser", 
+    "fields": {
+        "username": "cliente1", 
+        "first_name": "Roberto", 
+        "last_name": "Fontanarrosa", 
+        "user_for_customer": 4, 
+        "is_active": true, 
+        "user_type": "C", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2013-09-03T00:55:29.948Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "studio": null, 
+        "password": "pbkdf2_sha256$10000$6TwxUg4BmgvA$0kW1xmBA3lE0/mPtTl/K6DVh5GqibDbiJD486NMl8CU=", 
+        "email": "roberto@example.com", 
+        "date_joined": "2013-09-03T00:55:16.858Z"
+    }
+},
+{
+    "pk": 9, 
+    "model": "lumina.luminauser", 
+    "fields": {
+        "username": "cliente2", 
+        "first_name": "Juan Jos\u00e9", 
+        "last_name": "Campanella", 
+        "user_for_customer": 5, 
+        "is_active": true, 
+        "user_type": "C", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2013-09-03T00:56:05Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "studio": null, 
+        "password": "pbkdf2_sha256$10000$HnTKJ91nUxPC$xbyIik81yly1NyVq3W1cTofkV0vy5ugS67tCCIgQxQQ=", 
+        "email": "jjcampanella@example.com", 
+        "date_joined": "2013-09-03T00:56:05Z"
     }
 }
 ]

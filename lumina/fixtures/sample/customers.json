@@ -1,0 +1,52 @@
+[
+{
+    "pk": 1, 
+    "model": "lumina.customer", 
+    "fields": {
+        "phone": "111-212-2113", 
+        "studio": 1, 
+        "name": "HBSC Bank *****", 
+        "address": "Some Address 1234\r\n"
+    }
+},
+{
+    "pk": 2, 
+    "model": "lumina.customer", 
+    "fields": {
+        "phone": "999-8888-7777", 
+        "studio": 2, 
+        "name": "Doh Customer ******", 
+        "address": "Tha eddress *****"
+    }
+},
+{
+    "pk": 3, 
+    "model": "lumina.customer", 
+    "fields": {
+        "phone": "999-9999-9999", 
+        "studio": 2, 
+        "name": "Other Customer *****", 
+        "address": "Other direction"
+    }
+},
+{
+    "pk": 4, 
+    "model": "lumina.customer", 
+    "fields": {
+        "phone": "222-11-21123", 
+        "studio": 3, 
+        "name": "Fontanarrosa & Cia", 
+        "address": "Bla bla bla 1234"
+    }
+},
+{
+    "pk": 5, 
+    "model": "lumina.customer", 
+    "fields": {
+        "phone": "123-2331-2312", 
+        "studio": 3, 
+        "name": "JJCampanella S.A.", 
+        "address": "Mi calle 1234\r\nBarrio Centro"
+    }
+}
+]

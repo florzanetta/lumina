@@ -60,15 +60,21 @@ with username 'admin' and password 'admin'):
 
 To add to the database some initial data (albums, images and shares), run:
 
-    python manage.py loaddata sample/users.json sample/albums.json sample/images.json
+    python manage.py loaddata sample/studios.json sample/customers.json sample/users.json sample/sessions.json sample/images.json
+
 
 The username/passwords to login are:
 
     * fotografo1/fotografo1
     * cliente1/cliente1 (customer of fotografo1)
     * cliente2/cliente2 (customer of fotografo1)
-    * admin/admin (Django superuser)
 
+There are other users, used in test cases:
+
+    * admin/admin (Django superuser)
+    * juan
+    * customer-ba07eb50-9fb5-4593-98
+    * customer-957a6230-3eac-4ee1-a4
 
 Defaults settings
 -----------------
@@ -99,10 +105,12 @@ To check **code coverage**, run:
 
 To re-generate **fixtures** for testing, run:
 
-    $ python manage.py dumpdata --format=json --indent=4 --natural lumina.LuminaUser > lumina/fixtures/tests/users.json
-    $ python manage.py dumpdata --format=json --indent=4 --natural lumina.Album > lumina/fixtures/tests/albums.json
-    $ python manage.py dumpdata --format=json --indent=4 --natural lumina.Image > lumina/fixtures/tests/images.json
-    $ python manage.py dumpdata --format=json --indent=4 --natural lumina.ImageSelection > lumina/fixtures/tests/imageselection-waiting-selection.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.Studio     > lumina/fixtures/sample/studios.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.Customer   > lumina/fixtures/sample/customers.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.LuminaUser > lumina/fixtures/sample/users.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.Session    > lumina/fixtures/sample/sessions.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.Image      > lumina/fixtures/sample/images.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.ImageSelection > lumina/fixtures/sample/imageselection-waiting-selection.json
 
 (remember to execute this with a **CLEAN** database: see *Reset of the database and uploads*).
 
@@ -110,14 +118,6 @@ You can ignore the error `UserWarning: Couldn't import from 'lumina.local_settin
 If you create a settings files for your environment, it won't appear anymore:
 
     $ touch lumina/local_settings.py
-
-
-To re-generate the fixtures of sample data:
-
-    python manage.py dumpdata --format=json --indent=4 --natural lumina.LuminaUser > lumina/fixtures/sample/users.json
-    python manage.py dumpdata --format=json --indent=4 --natural lumina.Album > lumina/fixtures/sample/albums.json
-    python manage.py dumpdata --format=json --indent=4 --natural lumina.Image > lumina/fixtures/sample/images.json
-
 
 
 Travis-CI

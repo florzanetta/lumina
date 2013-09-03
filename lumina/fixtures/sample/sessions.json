@@ -1,0 +1,80 @@
+[
+{
+    "pk": 1, 
+    "model": "lumina.session", 
+    "fields": {
+        "customer": 2, 
+        "photographer": [
+            "juan"
+        ], 
+        "studio": 2, 
+        "name": "City at night *****", 
+        "shared_with": []
+    }
+},
+{
+    "pk": 2, 
+    "model": "lumina.session", 
+    "fields": {
+        "customer": 3, 
+        "photographer": [
+            "juan"
+        ], 
+        "studio": 2, 
+        "name": "Town at the morning *****", 
+        "shared_with": []
+    }
+},
+{
+    "pk": 3, 
+    "model": "lumina.session", 
+    "fields": {
+        "customer": 4, 
+        "photographer": [
+            "fotografo1"
+        ], 
+        "studio": 3, 
+        "name": "Fotos de la selva", 
+        "shared_with": []
+    }
+},
+{
+    "pk": 4, 
+    "model": "lumina.session", 
+    "fields": {
+        "customer": 5, 
+        "photographer": [
+            "fotografo1"
+        ], 
+        "studio": 3, 
+        "name": "Aves", 
+        "shared_with": []
+    }
+},
+{
+    "pk": 5, 
+    "model": "lumina.session", 
+    "fields": {
+        "customer": 1, 
+        "photographer": [
+            "admin"
+        ], 
+        "studio": 1, 
+        "name": "Admin's album 1d300055-7b06-498d-bb33-43e263c6c95e *****", 
+        "shared_with": []
+    }
+},
+{
+    "pk": 6, 
+    "model": "lumina.session", 
+    "fields": {
+        "customer": 2, 
+        "photographer": [
+            "juan"
+        ], 
+        "studio": 2, 
+        "name": "Juan's Album 16436663-7ae0-4902-888d-e1c4da976c25 *****", 
+        "shared_with": []
+    }
+}
+]
