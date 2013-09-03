@@ -439,8 +439,10 @@ class SessionCreateView(CreateView):
 
     def get_form(self, form_class):
         form = super(SessionCreateView, self).get_form(form_class)
+        qs_customers = self.request.user.all_my_customers()
+        form.fields['customer'].queryset = qs_customers
+        form.fields['shared_with'].queryset = qs_customers
         form.fields['photographer'].queryset = self.request.user.studio.photographers.all()
-        form.fields['shared_with'].queryset = self.request.user.all_my_customers()
         return form
 
     def form_valid(self, form):
