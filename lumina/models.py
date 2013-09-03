@@ -75,7 +75,6 @@ class LuminaUser(AbstractUser):
     def all_my_customers(self):
         """Returns queryset of Customer"""
         assert self.user_type == LuminaUser.PHOTOGRAPHER
-        # FIXME: REFACTOR: check this!
         return Customer.objects.customers_of(self)
 
     def all_my_shared_sessions_by_email(self):
