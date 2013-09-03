@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied, ValidationError,\
     SuspiciousOperation
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.db.models import Q
 
 
 class LuminaUserManager(UserManager):
@@ -176,16 +177,27 @@ class SessionManager(models.Manager):
     Manager for the Session model
     """
 
+    def modificable_sessions(self, user):
+        """
+        Returns the sessions the user can modify
+        """
+        if user.is_photographer():
+            return self.filter(studio=user.studio)
+        return self.none()
+
     def visible_sessions(self, user):
         """
         Returns the sessions the user can see (this means, this method
         may return sessions the user can see but not modify)
         """
-        # FIXME: REFACTOR: add support for shared sessions
         if user.is_photographer():
             return self.filter(studio=user.studio)
         elif user.is_for_customer():
             return self.filter(shared_with=user.user_for_customer)
+            # Don't include ImageSelection
+            # return self.filter(Q(shared_with=user.user_for_customer) |
+            #                    Q(imageselection__customer=user.user_for_customer)
+            #                    ).distinct()
         else:
             raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
 
@@ -421,6 +433,7 @@ class ImageManager(models.Manager):
             try:
                 # If the image if from a shared session, return it
                 return self.get(session__shared_with=user.user_for_customer, id=image_id)
+
             except Image.DoesNotExist:
                 pass
 

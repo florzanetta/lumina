@@ -478,7 +478,7 @@ class SessionUpdateView(UpdateView):
         return form
 
     def get_queryset(self):
-        return Session.objects.visible_sessions(self.request.user)
+        return Session.objects.modificable_sessions(self.request.user)
 
     def form_valid(self, form):
         ret = super(SessionUpdateView, self).form_valid(form)
@@ -497,7 +497,7 @@ class SessionUploadPreviewsView(DetailView):
     template_name = "lumina/session_upload_previews.html"
 
     def get_queryset(self):
-        return Session.objects.visible_sessions(self.request.user)
+        return Session.objects.modificable_sessions(self.request.user)
 
 
 @csrf_exempt
