@@ -185,7 +185,7 @@ class SessionManager(models.Manager):
         if user.is_photographer():
             return self.filter(studio=user.studio)
         elif user.is_for_customer():
-            return self.filter(customer=user.user_for_customer)
+            return self.filter(shared_with=user.user_for_customer)
         else:
             raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
 
