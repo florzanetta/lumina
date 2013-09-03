@@ -438,17 +438,23 @@ class SessionDetailView(DetailView):
         return Session.objects.visible_sessions(self.request.user)
 
 
-class SessionCreateView(CreateView):
+class SessionCreateUpdateMixin():
+
+    def _setup_form(self, form):
+        qs_customers = self.request.user.all_my_customers()
+        form.fields['customer'].queryset = qs_customers
+        form.fields['shared_with'].queryset = qs_customers
+        form.fields['photographer'].queryset = self.request.user.studio.photographers.all()
+
+
+class SessionCreateView(CreateView, SessionCreateUpdateMixin):
     model = Session
     form_class = SessionCreateForm
     template_name = 'lumina/base_create_update_form.html'
 
     def get_form(self, form_class):
         form = super(SessionCreateView, self).get_form(form_class)
-        qs_customers = self.request.user.all_my_customers()
-        form.fields['customer'].queryset = qs_customers
-        form.fields['shared_with'].queryset = qs_customers
-        form.fields['photographer'].queryset = self.request.user.studio.photographers.all()
+        self._setup_form(form)
         return form
 
     def form_valid(self, form):
@@ -464,7 +470,7 @@ class SessionCreateView(CreateView):
         return context
 
 
-class SessionUpdateView(UpdateView):
+class SessionUpdateView(UpdateView, SessionCreateUpdateMixin):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = Session
     form_class = SessionUpdateForm
@@ -472,7 +478,7 @@ class SessionUpdateView(UpdateView):
 
     def get_form(self, form_class):
         form = super(SessionUpdateView, self).get_form(form_class)
-        form.fields['shared_with'].queryset = self.request.user.all_my_customers()
+        self._setup_form(form)
         return form
 
     def get_queryset(self):
