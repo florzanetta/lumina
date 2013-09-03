@@ -310,8 +310,7 @@ class ImageSelectionCreateView(CreateView):
         return ret
 
     def get_success_url(self):
-        # return reverse('session_detail', args=[self.object.album.pk])
-        return "/"
+        return reverse('session_detail', args=[self.object.session.id])
 
     def get_context_data(self, **kwargs):
         context = super(ImageSelectionCreateView, self).get_context_data(**kwargs)
