@@ -57,27 +57,35 @@ def send_email(subject, to_email, body):
 
 
 def home(request):
+    # 'auth_providers': request.user.social_auth.get_providers(),
     if request.user.is_authenticated():
         if request.user.is_photographer():
+            # ----- Photographer
             ctx = {
                 'session_count': Session.objects.visible_sessions(request.user).count(),
                 'image_count': Image.objects.visible_images(request.user).count(),
-                'shared_session_via_email_count': 999,
-#                 'shared_session_via_email_count': SharedAlbum.objects.all_my_shares(
-#                     request.user).count(),
-#                 'others_album_count': Album.objects.shared_with_me(request.user).count(),
-#                 # 'auth_providers': request.user.social_auth.get_providers(),
+                'shared_session_via_email_count':
+                    request.user.all_my_shared_sessions_by_email().count()
             }
+            return render_to_response(
+                'lumina/index_photographer.html', ctx,
+                context_instance=RequestContext(request))
         else:
+            # ----- Customer
             ctx = {
+                'session_count': Session.objects.visible_sessions(request.user).count(),
                 'image_selection_pending_count': ImageSelection.objects.pending_image_selections(
                     request.user).count(),
             }
+            return render_to_response(
+                'lumina/index_customer.html', ctx,
+                context_instance=RequestContext(request))
     else:
+        # ----- Anonymous
         ctx = {}
-    return render_to_response(
-        'lumina/index.html', ctx,
-        context_instance=RequestContext(request))
+        return render_to_response(
+            'lumina/index_anonymous.html', ctx,
+            context_instance=RequestContext(request))
 
 
 @login_required

@@ -1,0 +1,58 @@
+{% extends "lumina/base.html" %}
+{% load lumina_extras %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina Home{% endblock %}</title>
+</head>
+<body>
+
+{% block content %}
+
+    <h2>Bienvenido, {{ user.get_full_name }}!</h2>
+
+    <h4>Estadísticas</h4>
+
+    <p><span class="badge badge-info">{{ session_count }}</span>
+            sesion{{ session_count|pluralize:",es" }} ha sido compartida con Ud.</p>
+
+    <hr>
+
+    <h4>Peticiones de selección de fotos pendientes...</h4>
+    <p><span class="badge badge-info">{{ image_selection_pending_count }}</span>
+            Ud. posee {{ image_selection_pending_count }}
+            {{ image_selection_pending_count|pluralize:"petición,peticiones" }}
+            de selección de imagenes. <a href="{% url 'imageselection_list' %}">Haga clic aqui</a> para verlas...
+    </p>
+    <hr>
+
+    <!--
+    # Google OAuth doesn't work yet...
+    { % if 'google-oauth' in social_auth|non_empty_unicode_keys % }
+        <a href="{ % url 'socialauth_disconnect' 'google-oauth' % }"><img
+            alt="Twitter" src="/static/google-icon-16x16.png"> Disssociate from Google account</a>
+    { % else % }
+        <a href="{ % url 'socialauth_begin' 'google-oauth' % }"><img
+            alt="Twitter" src="/static/google-icon-16x16.png"> Associate Google account</a>
+    { % endif % }
+
+    &nbsp;
+    -->
+
+    {% if 'twitter' in social_auth|non_empty_unicode_keys %}
+    <!--
+        <a href="{% url 'socialauth_disconnect' 'twitter' %}"><img
+            alt="Twitter" src="/static/twitter-icon-16x16.jpg"> Disssociate from Twitter account</a>
+    -->
+    {% else %}
+        <a href="{% url 'socialauth_begin' 'twitter' %}"><img
+            alt="Twitter" src="/static/twitter-icon-16x16.jpg"> Associate Twitter account</a>
+    {% endif %}
+
+	{% dump_objects user user.social_auth.all social_auth social_auth.twitter %}
+
+{% endblock content %}
+
+</body>
+</html>

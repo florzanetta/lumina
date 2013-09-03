@@ -1,0 +1,24 @@
+{% extends "lumina/base.html" %}
+{% load lumina_extras %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina Home{% endblock %}</title>
+</head>
+<body>
+
+{% block content %}
+
+    <h2>Bienvenido!</h2>
+    <p>
+        Debes <a href="{% url 'django.contrib.auth.views.login' %}?next=/">iniciar sesión</a>
+        para poder utilizar el sistema...
+    </p>
+
+	{% dump_objects user user.social_auth.all social_auth social_auth.twitter %}
+
+{% endblock content %}
+
+</body>
+</html>
