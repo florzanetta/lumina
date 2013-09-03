@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.utils.html import format_html
+from django.contrib.auth.admin import UserAdmin
 
 from lumina.models import LuminaUser, Image, Session, SharedSessionByEmail, \
     ImageSelection, Studio, Customer
@@ -23,7 +24,7 @@ class SharedSessionByEmailAdmin(admin.ModelAdmin):
 admin.site.register(Customer)
 admin.site.register(Image)
 admin.site.register(ImageSelection)
-admin.site.register(LuminaUser)
+admin.site.register(LuminaUser, UserAdmin)
 admin.site.register(Session)
 admin.site.register(SharedSessionByEmail, SharedSessionByEmailAdmin)
 admin.site.register(Studio)
