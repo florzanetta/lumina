@@ -11,7 +11,7 @@
         "user_type": "P", 
         "is_superuser": true, 
         "is_staff": true, 
-        "last_login": "2013-09-03T03:42:42.208Z", 
+        "last_login": "2013-09-05T14:39:07.213Z", 
         "groups": [], 
         "user_permissions": [], 
         "studio": 1, 
@@ -158,7 +158,7 @@
         "user_type": "C", 
         "is_superuser": false, 
         "is_staff": false, 
-        "last_login": "2013-09-03T00:55:29.948Z", 
+        "last_login": "2013-09-05T14:37:52.793Z", 
         "groups": [], 
         "user_permissions": [], 
         "studio": null, 
@@ -206,6 +206,27 @@
         "studio": 3, 
         "password": "pbkdf2_sha256$10000$P64wLKUkg0Ev$tnPFNis2LoVky6dVzALfJ0jopfq8FBaryoYmZMa+C7E=", 
         "email": "etorricelli@example.com", 
+        "date_joined": "2013-09-03T03:42:50Z"
+    }
+},
+{
+    "pk": 11, 
+    "model": "lumina.luminauser", 
+    "fields": {
+        "username": "cliente3", 
+        "first_name": "Gasparo", 
+        "last_name": "Berti", 
+        "user_for_customer": 5, 
+        "is_active": true, 
+        "user_type": "C", 
+        "is_superuser": false, 
+        "is_staff": false, 
+        "last_login": "2013-09-03T03:42:50Z", 
+        "groups": [], 
+        "user_permissions": [], 
+        "studio": null, 
+        "password": "pbkdf2_sha256$10000$gW6y7qWUu3Ec$oRgHX2Chwlx84rgNFcEqijG6skkEbHgGtETUab/iaRM=", 
+        "email": "gberti@example.com", 
         "date_joined": "2013-09-03T03:42:50Z"
     }
 }

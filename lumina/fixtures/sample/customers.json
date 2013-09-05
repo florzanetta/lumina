@@ -35,7 +35,7 @@
     "fields": {
         "phone": "222-11-21123", 
         "studio": 3, 
-        "name": "Fontanarrosa & Cia", 
+        "name": "Fontanarrosa & Cia - Customer 'A'", 
         "address": "Bla bla bla 1234"
     }
 },
@@ -45,7 +45,7 @@
     "fields": {
         "phone": "123-2331-2312", 
         "studio": 3, 
-        "name": "JJCampanella S.A.", 
+        "name": "JJCampanella S.A. - Customer 'B'", 
         "address": "Mi calle 1234\r\nBarrio Centro"
     }
 }
