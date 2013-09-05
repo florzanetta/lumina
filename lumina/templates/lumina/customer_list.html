@@ -23,13 +23,11 @@
 		        </div>
 		        <div>
 		              <small>
-                          <i class="icon-user"></i> {{ customer.phone }}
+                          <i class="icon-comment"></i> {{ customer.phone }}
 		              </small>
 		        </div>
 		        <div>
-		              <small>
-                          <i class="icon-user"></i> <a href="{% url 'customer_user_list' customer.id %}">Listar Usuarios</a>
-		              </small>
+                  <a href="{% url 'customer_user_list' customer.id %}" class="btn btn-primary btn-mini">Listar Usuarios</a>
 		        </div>
 		    </div>
 		</div>
