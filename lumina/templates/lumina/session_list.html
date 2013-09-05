@@ -10,7 +10,7 @@
 
 {% block content %}
 
-	<h3>Albumes de '{{ user.get_full_name }}'</h3>
+	<h3>Albumes del estudio</h3>
 
     {% for a_session in object_list %}
 		<div class="media">
@@ -38,7 +38,9 @@
 		              </small>
 		        </div>
 		        <div>
-                    <i class="icon-user"></i> <small>Esta sessión pertenece a {{ a_session.photographer }}</small>
+                    <i class="icon-user"></i> <small><em>Cliente:</em> {{ a_session.customer }}</small>
+                    -
+                    <i class="icon-user"></i> <small><em>Fotógrafo:</em> {{ a_session.photographer }}</small>
 		        </div>
 		    </div>
 		</div>
