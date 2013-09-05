@@ -426,7 +426,8 @@ class SessionListView(ListView):
     model = Session
 
     def get_queryset(self):
-        return Session.objects.visible_sessions(self.request.user)
+        qs = Session.objects.visible_sessions(self.request.user)
+        return qs.order_by('customer__name', 'name')
 
 
 class SessionDetailView(DetailView):

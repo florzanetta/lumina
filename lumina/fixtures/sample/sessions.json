@@ -44,7 +44,7 @@
     "fields": {
         "customer": 5, 
         "photographer": [
-            "fotografo1"
+            "fotografo2"
         ], 
         "studio": 3, 
         "name": "Aves", 
@@ -74,6 +74,19 @@
         ], 
         "studio": 2, 
         "name": "Juan's Album 16436663-7ae0-4902-888d-e1c4da976c25 *****", 
+        "shared_with": []
+    }
+},
+{
+    "pk": 7, 
+    "model": "lumina.session", 
+    "fields": {
+        "customer": 5, 
+        "photographer": [
+            "fotografo1"
+        ], 
+        "studio": 3, 
+        "name": "Catalogo 2013", 
         "shared_with": []
     }
 }
