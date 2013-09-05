@@ -66,6 +66,7 @@ To add to the database some initial data (albums, images and shares), run:
 The username/passwords to login are:
 
     * fotografo1/fotografo1
+    * fotografo2/fotografo2 (both for the same Studio)
     * cliente1/cliente1 (user for customer 'A' of fotografo1)
     * cliente2/cliente2 (user for customer 'B' of fotografo1)
     * cliente3/cliente3 (user for customer 'B' of fotografo1)
