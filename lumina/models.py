@@ -201,6 +201,13 @@ class SessionManager(models.Manager):
         else:
             raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
 
+    def get_pending_uploads(self, user):
+        """
+        Returns the sessions that have pending uploads.
+        """
+        # FIXME: Implement this!
+        return self.modificable_sessions(user)
+
 
 # FIXME: REFACTOR: change uses of `Album` to `Session` in views, etc.
 class Session(models.Model):
