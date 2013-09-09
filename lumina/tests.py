@@ -10,6 +10,7 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate
+from lumina.models import SessionQuote, Studio, LuminaUser
 
 # from lumina.pil_utils import generate_thumbnail
 # from lumina.models import Image, Album, LuminaUser
@@ -349,6 +350,75 @@ MEDIA_ROOT_FOR_TESTING = os.path.join(os.path.split(
 #         self.assertEqual(Album.objects.all_visible(self.juan).count(), 1)
 #         self.assertEqual(Album.objects.all_visible(self.albert).count(), 0)
 #         self.assertEqual(Album.objects.all_visible(self.max).count(), 1)
+
+class SessionQuoteModelTests(TestCase):
+    fixtures = ['sample/studios.json', 'sample/customers.json',
+                'sample/users.json']
+
+    #     studio = models.ForeignKey(Studio, related_name='session_quotes')
+    #     # session = models.ForeignKey(Session)
+    #     customer = models.ForeignKey(Customer, related_name='session_quotes')
+    #     image_quantity = models.PositiveIntegerField()
+    #     status = models.CharField(max_length=1, choices=STATUS, default=STATUS_QUOTING)
+    #     cost = models.DecimalField(max_digits=10, decimal_places=2)
+    #     accepted_by = models.ForeignKey(LuminaUser, related_name='+', null=True, blank=True)
+    #     accepted_at = models.DateTimeField(null=True, blank=True)
+
+    def setUp(self):
+        self.studio = Studio.objects.get(pk=3)
+        self.photographer = LuminaUser.objects.get_by_natural_key('fotografo1')
+        self.user_for_customer = LuminaUser.objects.get_by_natural_key('cliente1')
+
+    def _create_quote(self):
+        quote = SessionQuote.objects.create(studio=self.studio,
+                                            customer=self.user_for_customer.user_for_customer,
+                                            image_quantity=10,
+                                            cost=12.34)
+        return quote
+
+    def test_cancel(self):
+        count = SessionQuote.objects.all().count()
+        q = self._create_quote()
+        self.assertEqual(SessionQuote.objects.all().count(), count + 1)
+        quote = SessionQuote.objects.get(pk=q.id)
+        quote.cancel(self.photographer)
+        SessionQuote.objects.get(pk=q.id,
+                                 status=SessionQuote.STATUS_CANCELED)
+
+    def test_confirm(self):
+        count = SessionQuote.objects.all().count()
+        q = self._create_quote()
+        self.assertEqual(SessionQuote.objects.all().count(), count + 1)
+        quote = SessionQuote.objects.get(pk=q.id)
+        quote.confirm(self.photographer)
+        SessionQuote.objects.get(pk=q.id,
+                                 status=SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
+
+    def test_accept(self):
+        count = SessionQuote.objects.all().count()
+        q = self._create_quote()
+        self.assertEqual(SessionQuote.objects.all().count(), count + 1)
+        quote = SessionQuote.objects.all().get(pk=q.id)
+
+        # accept() should fail befor confirm()
+        self.assertRaises(AssertionError, quote.accept, self.user_for_customer)
+
+        # accept() should sucess after confirm()
+        quote.confirm(self.photographer)
+        quote.accept(self.user_for_customer)
+
+    def test_reject(self):
+        count = SessionQuote.objects.all().count()
+        q = self._create_quote()
+        self.assertEqual(SessionQuote.objects.all().count(), count + 1)
+        quote = SessionQuote.objects.all().get(pk=q.id)
+
+        # accept() should fail befor confirm()
+        self.assertRaises(AssertionError, quote.reject, self.user_for_customer)
+
+        # accept() should sucess after confirm()
+        quote.confirm(self.photographer)
+        quote.reject(self.user_for_customer)
 
 #===============================================================================
 # Selenium
