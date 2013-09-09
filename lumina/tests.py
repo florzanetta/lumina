@@ -369,6 +369,9 @@ class SessionQuoteModelTests(TestCase):
         self.photographer = LuminaUser.objects.get_by_natural_key('fotografo1')
         self.user_for_customer = LuminaUser.objects.get_by_natural_key('cliente1')
 
+        self.other_photographer = LuminaUser.objects.get_by_natural_key('juan')
+        self.user_for_other_customer = LuminaUser.objects.get_by_natural_key('cliente2')
+
     def _create_quote(self):
         quote = SessionQuote.objects.create(studio=self.studio,
                                             customer=self.user_for_customer.user_for_customer,
@@ -381,6 +384,13 @@ class SessionQuoteModelTests(TestCase):
         q = self._create_quote()
         self.assertEqual(SessionQuote.objects.all().count(), count + 1)
         quote = SessionQuote.objects.get(pk=q.id)
+
+        # Check that doesn't work for invalid users
+        for invalid_user in (self.other_photographer,
+                             self.user_for_other_customer,
+                             self.user_for_customer):
+            self.assertRaises(AssertionError, quote.cancel, invalid_user)
+
         quote.cancel(self.photographer)
         SessionQuote.objects.get(pk=q.id,
                                  status=SessionQuote.STATUS_CANCELED)
@@ -390,6 +400,12 @@ class SessionQuoteModelTests(TestCase):
         q = self._create_quote()
         self.assertEqual(SessionQuote.objects.all().count(), count + 1)
         quote = SessionQuote.objects.get(pk=q.id)
+
+        for invalid_user in (self.other_photographer,
+                             self.user_for_other_customer,
+                             self.user_for_customer):
+            self.assertRaises(AssertionError, quote.confirm, invalid_user)
+
         quote.confirm(self.photographer)
         SessionQuote.objects.get(pk=q.id,
                                  status=SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
