@@ -9,7 +9,8 @@ from lumina.views import SessionListView, SessionDetailView, SessionCreateView, 
     SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView, \
     ImageCreateView, ImageUpdateView, ImageSelectionCreateView, \
     ImageSelectionListView, ImageSelectionDetailView, \
-    ImageSelectionForCustomerView, SessionUploadPreviewsView
+    ImageSelectionForCustomerView, SessionUploadPreviewsView,\
+    SessionQuoteCreateView
 
 
 admin.autodiscover()
@@ -175,9 +176,21 @@ urlpatterns = patterns(
             login_required(UserUpdateView.as_view())),
         name='customer_user_update'),
 
+
+    #===========================================================================
+    # SessionQuote
+    #===========================================================================
+
+    url(r'^quote/create/$',
+        cache_control(private=True)(
+            login_required(SessionQuoteCreateView.as_view())),
+        name='quote_create'),
+
+
     #===========================================================================
     # Rest API
     #===========================================================================
+
     url(r'^rest/', include('lumina.urls_rest')),
 
     #

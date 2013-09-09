@@ -8,7 +8,7 @@ from django import forms
 from django.forms.widgets import CheckboxSelectMultiple
 
 from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail,\
-    Image, ImageSelection
+    Image, ImageSelection, SessionQuote
 
 
 #===============================================================================
@@ -143,3 +143,24 @@ class UserUpdateForm(forms.ModelForm):
         if password1 != password2:
             raise forms.ValidationError('Los passwords no concuerdan')
         return self.cleaned_data
+
+
+#===============================================================================
+# Session
+#===============================================================================
+
+class SessionQuoteCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = SessionQuote
+        fields = ('customer', 'image_quantity', 'cost')
+
+#
+# class SessionUpdateForm(forms.ModelForm):
+#
+#     class Meta:
+#         model = Session
+#         fields = ('name', 'photographer', 'customer', 'shared_with', )
+#         widgets = {
+#             'shared_with': CheckboxSelectMultiple(),
+#         }

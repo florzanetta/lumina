@@ -26,11 +26,11 @@ from django.core.files.base import ContentFile
 
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Session, Image, LuminaUser, Customer, \
-    SharedSessionByEmail, ImageSelection
+    SharedSessionByEmail, ImageSelection, SessionQuote
 from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm, \
     SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm, \
-    ImageSelectionCreateForm
+    ImageSelectionCreateForm, SessionQuoteCreateForm
 
 
 #
@@ -772,3 +772,40 @@ class UserUpdateView(UpdateView):
         context['title'] = "Actualizar usuario"
         context['submit_label'] = "Actualizar"
         return context
+
+
+#===============================================================================
+# User
+#===============================================================================
+
+class SessionQuoteCreateUpdateMixin():
+
+    def _setup_form(self, form):
+        qs_customers = self.request.user.all_my_customers()
+        form.fields['customer'].queryset = qs_customers
+
+
+class SessionQuoteCreateView(CreateView, SessionQuoteCreateUpdateMixin):
+    model = SessionQuote
+    form_class = SessionQuoteCreateForm
+    template_name = 'lumina/base_create_update_form.html'
+
+    def get_form(self, form_class):
+        form = super(SessionQuoteCreateView, self).get_form(form_class)
+        self._setup_form(form)
+        return form
+
+    def form_valid(self, form):
+        form.instance.studio = self.request.user.studio
+        ret = super(SessionQuoteCreateView, self).form_valid(form)
+        messages.success(self.request, 'El presupuesto fue creado correctamente')
+        return ret
+
+    def get_context_data(self, **kwargs):
+        context = super(SessionQuoteCreateView, self).get_context_data(**kwargs)
+        context['title'] = "Crear presupuesto"
+        context['submit_label'] = "Crear"
+        return context
+
+    def get_success_url(self):
+        return reverse('home')
