@@ -504,7 +504,10 @@ class SessionQuoteManager(models.Manager):
         if user.is_photographer():
             return self.filter(studio=user.studio)
         elif user.is_for_customer():
-            return self.filter(customer=user.user_for_customer)
+            return self.filter(customer=user.user_for_customer,
+                               status__in=[SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE,
+                                           SessionQuote.STATUS_ACCEPTED,
+                                           SessionQuote.STATUS_REJECTED])
         else:
             raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
 
