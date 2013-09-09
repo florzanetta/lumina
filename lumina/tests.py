@@ -395,6 +395,12 @@ class SessionQuoteModelTests(TestCase):
         SessionQuote.objects.get(pk=q.id,
                                  status=SessionQuote.STATUS_CANCELED)
 
+        # Assert no more state transitions are allowed
+        self.assertRaises(AssertionError, quote.confirm, self.photographer)
+        self.assertRaises(AssertionError, quote.cancel, self.photographer)
+        self.assertRaises(AssertionError, quote.accept, self.user_for_customer)
+        self.assertRaises(AssertionError, quote.reject, self.user_for_customer)
+
     def test_confirm(self):
         count = SessionQuote.objects.all().count()
         q = self._create_quote()
@@ -407,9 +413,18 @@ class SessionQuoteModelTests(TestCase):
                              self.user_for_customer):
             self.assertRaises(AssertionError, quote.confirm, invalid_user)
 
+        # confirm()
         quote.confirm(self.photographer)
         SessionQuote.objects.get(pk=q.id,
                                  status=SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
+
+        # ----- cancel() -----
+
+        # Check that cancel() doesn't work for invalid users
+        for invalid_user in (self.other_photographer,
+                             self.user_for_other_customer,
+                             self.user_for_customer):
+            self.assertRaises(AssertionError, quote.cancel, invalid_user)
 
     def test_accept_reject(self):
         count = SessionQuote.objects.all().count()
