@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+
 from django.db import models
 from django.core.urlresolvers import reverse
-from django.core.exceptions import PermissionDenied, ValidationError,\
+from django.core.exceptions import PermissionDenied, ValidationError, \
     SuspiciousOperation
 from django.contrib.auth.models import AbstractUser, UserManager
-from django.db.models import Q
 
 
 class LuminaUserManager(UserManager):
@@ -484,3 +485,87 @@ class Image(models.Model):
     def set_original_filename(self, filename):
         """Set original filename, truncating if it's too large"""
         self.original_filename = filename[0:128]
+
+
+#===============================================================================
+# SessionQuote
+#===============================================================================
+
+class SessionQuote(models.Model):
+    """
+    """
+    STATUS_QUOTING = 'Q'
+    STATUS_WAITING_CUSTOMER_RESPONSE = 'S'
+    STATUS_ACCEPTED = 'A'
+    STATUS_REJECTED = 'R'
+    STATUS_CANCELED = 'E'
+    STATUS = (
+        (STATUS_QUOTING, u'Siendo creada'),
+        (STATUS_WAITING_CUSTOMER_RESPONSE, u'Esperando aceptacion de cliente'),
+        (STATUS_ACCEPTED, u'Aceptada'),
+        (STATUS_REJECTED, u'Rechazada'),
+        (STATUS_CANCELED, u'Cancelada'),
+    )
+
+    studio = models.ForeignKey(Studio, related_name='session_quotes')
+    # session = models.ForeignKey(Session)
+    customer = models.ForeignKey(Customer, related_name='session_quotes')
+    image_quantity = models.PositiveIntegerField()
+    status = models.CharField(max_length=1, choices=STATUS, default=STATUS_QUOTING)
+    cost = models.DecimalField(max_digits=10, decimal_places=2)
+    accepted_by = models.ForeignKey(LuminaUser, related_name='+', null=True, blank=True)
+    accepted_at = models.DateTimeField(null=True, blank=True)
+
+    def confirm(self, user):
+        """
+        The phtographer confirms the quote, and it is sent to the client
+        to be accepted (or rejected).
+        """
+        assert user.is_photographer()
+        assert user.studio == self.studio
+        assert self.status == SessionQuote.STATUS_QUOTING
+        self.status = SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE
+        self.save()
+        # FIXME: IMPLEMENT THIS
+
+    def cancel(self, user):
+        """
+        The phtographer cancels the quote.
+        """
+        assert user.is_photographer()
+        assert user.studio == self.studio
+        assert self.status in (
+                               SessionQuote.STATUS_QUOTING,
+                               SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE,
+                               SessionQuote.STATUS_ACCEPTED,
+                               )
+        self.status = SessionQuote.STATUS_CANCELED
+        self.save()
+        # FIXME: IMPLEMENT THIS
+
+    def accept(self, user):
+        """
+        The customer accept the quote.
+        """
+        assert user.is_for_customer()
+        assert user.user_for_customer.studio == self.studio
+        assert self.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE
+        self.status = SessionQuote.STATUS_ACCEPTED
+        self.accepted_by = user
+        self.accepted_at = datetime.datetime.now()
+        # FIXME: IMPLEMENT THIS
+
+    def reject(self, user):
+        """
+        The customer accept the quote.
+        """
+        assert user.is_for_customer()
+        assert user.user_for_customer.studio == self.studio
+        assert self.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE
+        self.status = SessionQuote.STATUS_REJECTED
+        self.accepted_by = user
+        self.accepted_at = datetime.datetime.now()
+        # FIXME: IMPLEMENT THIS
+
+    def __unicode__(self):
+        return u"Quote for {}".format(str(self.customer))
