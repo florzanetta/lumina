@@ -466,6 +466,15 @@ class SessionQuoteModelTests(TestCase):
         SessionQuote.objects.get(pk=q_reject.id,
                                  status=SessionQuote.STATUS_REJECTED)
 
+        # ----- cancel() -----
+
+        # Check that cancel() doesn't work for invalid users
+        for invalid_user in (self.other_photographer,
+                             self.user_for_other_customer,
+                             self.user_for_customer):
+            self.assertRaises(AssertionError, q_accept.cancel, invalid_user)
+            self.assertRaises(AssertionError, q_reject.cancel, invalid_user)
+
 #===============================================================================
 # Selenium
 #===============================================================================
