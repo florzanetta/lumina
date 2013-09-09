@@ -3,12 +3,12 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
-from lumina.views import SessionListView, SessionDetailView, SessionCreateView,\
-    SessionUpdateView, CustomerListView, CustomerCreateView, CustomerUpdateView,\
-    UserListView, ImageListView, UserCreateView, UserUpdateView,\
-    SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView,\
-    ImageCreateView, ImageUpdateView, ImageSelectionCreateView,\
-    ImageSelectionListView, ImageSelectionDetailView,\
+from lumina.views import SessionListView, SessionDetailView, SessionCreateView, \
+    SessionUpdateView, CustomerListView, CustomerCreateView, CustomerUpdateView, \
+    UserListView, ImageListView, UserCreateView, UserUpdateView, \
+    SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView, \
+    ImageCreateView, ImageUpdateView, ImageSelectionCreateView, \
+    ImageSelectionListView, ImageSelectionDetailView, \
     ImageSelectionForCustomerView, SessionUploadPreviewsView
 
 
@@ -49,13 +49,12 @@ urlpatterns = patterns(
         name='session_update'),
 
     url(r'^session/upload-previews/(?P<pk>\d+)/$',
-        cache_control(private=True)(
-            login_required(SessionUploadPreviewsView.as_view())),
+        cache_control(private=True)(login_required(SessionUploadPreviewsView.as_view())),
         name='session_upload_previews'),
 
-     url(r'^session/upload-previews/(?P<session_id>\d+)/upload/',
-         'lumina.views.session_upload_previews_upload',
-         name='session_upload_previews_upload'),
+    url(r'^session/upload-previews/(?P<session_id>\d+)/upload/',
+        'lumina.views.session_upload_previews_upload',
+        name='session_upload_previews_upload'),
 
 
     #===========================================================================

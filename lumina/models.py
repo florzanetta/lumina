@@ -90,8 +90,8 @@ class LuminaUser(AbstractUser):
         """
         assert self.user_type == LuminaUser.PHOTOGRAPHER
         return LuminaUser.objects.filter(user_type=LuminaUser.CUSTOMER,
-                                   user_for_customer=customer_id,
-                                   user_for_customer__studio=self.studio)
+                                         user_for_customer=customer_id,
+                                         user_for_customer__studio=self.studio)
 
     def get_all_users(self):
         """
@@ -99,7 +99,7 @@ class LuminaUser(AbstractUser):
         """
         assert self.user_type == LuminaUser.PHOTOGRAPHER
         return LuminaUser.objects.filter(user_type=LuminaUser.CUSTOMER,
-                                   user_for_customer__studio=self.studio)
+                                         user_for_customer__studio=self.studio)
 
     def __unicode__(self):
         return u"{} ({})".format(self.get_full_name(), self.username)
@@ -534,11 +534,9 @@ class SessionQuote(models.Model):
         """
         assert user.is_photographer()
         assert user.studio == self.studio
-        assert self.status in (
-                               SessionQuote.STATUS_QUOTING,
+        assert self.status in (SessionQuote.STATUS_QUOTING,
                                SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE,
-                               SessionQuote.STATUS_ACCEPTED,
-                               )
+                               SessionQuote.STATUS_ACCEPTED,)
         self.status = SessionQuote.STATUS_CANCELED
         self.save()
         # FIXME: IMPLEMENT THIS

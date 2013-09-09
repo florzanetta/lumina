@@ -101,10 +101,12 @@ CustomerUpdateForm = CustomerCreateForm
 #===============================================================================
 
 class UserCreateForm(forms.ModelForm):
-    password1 = forms.CharField(
-        max_length=20, required=True, widget=forms.PasswordInput(), label=u'Contrasena')
-    password2 = forms.CharField(
-      max_length=20, required=True, widget=forms.PasswordInput(), label=u'Contrasena (otra vez)')
+    password1 = forms.CharField(max_length=20, required=True,
+                                widget=forms.PasswordInput(),
+                                label=u'Contrasena')
+    password2 = forms.CharField(max_length=20, required=True,
+                                widget=forms.PasswordInput(),
+                                label=u'Contrasena (otra vez)')
 
     class Meta:
         model = LuminaUser

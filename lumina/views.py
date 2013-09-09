@@ -25,11 +25,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
 
 from lumina.pil_utils import generate_thumbnail
-from lumina.models import Session, Image, LuminaUser, Customer,\
+from lumina.models import Session, Image, LuminaUser, Customer, \
     SharedSessionByEmail, ImageSelection
 from lumina.forms import SessionCreateForm, SessionUpdateForm, \
-    CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm,\
-    SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm,\
+    CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm, \
+    SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm, \
     ImageSelectionCreateForm
 
 
@@ -65,7 +65,7 @@ def home(request):
                 'session_count': Session.objects.visible_sessions(request.user).count(),
                 'image_count': Image.objects.visible_images(request.user).count(),
                 'shared_session_via_email_count':
-                    request.user.all_my_shared_sessions_by_email().count()
+                request.user.all_my_shared_sessions_by_email().count()
             }
             return render_to_response(
                 'lumina/index_photographer.html', ctx,
@@ -343,7 +343,7 @@ class ImageSelectionForCustomerView(DetailView):
         selected_images_ids = request.POST.getlist('selected_images')
         if len(selected_images_ids) != image_selection.image_quantity:
             messages.error(self.request,
-                         'Debe seleccionar {} imagen/es'.format(image_selection.image_quantity))
+                           'Debe seleccionar {} imagen/es'.format(image_selection.image_quantity))
             return HttpResponseRedirect(reverse('imageselection_select_images',
                                                 args=[image_selection.id]))
 
