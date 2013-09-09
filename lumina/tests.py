@@ -411,43 +411,45 @@ class SessionQuoteModelTests(TestCase):
         SessionQuote.objects.get(pk=q.id,
                                  status=SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
 
-    def test_accept(self):
+    def test_accept_reject(self):
         count = SessionQuote.objects.all().count()
-        q = self._create_quote()
-        self.assertEqual(SessionQuote.objects.all().count(), count + 1)
-        quote = SessionQuote.objects.all().get(pk=q.id)
+        q_accept = self._create_quote()
+        q_reject = self._create_quote()
+        self.assertEqual(SessionQuote.objects.all().count(), count + 2)
+        q_accept = SessionQuote.objects.all().get(pk=q_accept.id)
+        q_reject = SessionQuote.objects.all().get(pk=q_reject.id)
 
-        # accept() should fail befor confirm()
-        self.assertRaises(AssertionError, quote.accept, self.user_for_customer)
+        # accept()/reject() should fail befor confirm()
+        self.assertRaises(AssertionError, q_accept.accept, self.user_for_customer)
+        self.assertRaises(AssertionError, q_reject.reject, self.user_for_customer)
 
-        # confirm() the quote
-        quote.confirm(self.photographer)
+        # confirm() the quotes
+        q_accept.confirm(self.photographer)
+        q_reject.confirm(self.photographer)
 
         # Check that doesn't work for invalid users
         for invalid_user in (self.other_photographer,
                              self.user_for_other_customer,
                              self.photographer):
             try:
-                quote.accept(invalid_user)
-                raise Exception("Didn't failed with uesr {}".format(invalid_user))
+                q_accept.accept(invalid_user)
+                raise Exception("accept() didn't failed with uesr {}".format(invalid_user))
+            except AssertionError:
+                pass
+
+            try:
+                q_reject.reject(invalid_user)
+                raise Exception("reject() didn't failed with uesr {}".format(invalid_user))
             except AssertionError:
                 pass
 
         # accept() should sucess after confirm()
-        quote.accept(self.user_for_customer)
-
-    def test_reject(self):
-        count = SessionQuote.objects.all().count()
-        q = self._create_quote()
-        self.assertEqual(SessionQuote.objects.all().count(), count + 1)
-        quote = SessionQuote.objects.all().get(pk=q.id)
-
-        # accept() should fail befor confirm()
-        self.assertRaises(AssertionError, quote.reject, self.user_for_customer)
-
-        # accept() should sucess after confirm()
-        quote.confirm(self.photographer)
-        quote.reject(self.user_for_customer)
+        q_accept.accept(self.user_for_customer)
+        q_reject.reject(self.user_for_customer)
+        SessionQuote.objects.get(pk=q_accept.id,
+                                 status=SessionQuote.STATUS_ACCEPTED)
+        SessionQuote.objects.get(pk=q_reject.id,
+                                 status=SessionQuote.STATUS_REJECTED)
 
 #===============================================================================
 # Selenium

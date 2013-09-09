@@ -546,12 +546,13 @@ class SessionQuote(models.Model):
         The customer accept the quote.
         """
         assert user.is_for_customer()
-        assert user.user_for_customer.studio == self.studio
         assert user.user_for_customer == self.customer
+        assert user.user_for_customer.studio == self.studio
         assert self.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE
         self.status = SessionQuote.STATUS_ACCEPTED
         self.accepted_by = user
         self.accepted_at = datetime.datetime.now()
+        self.save()
         # FIXME: IMPLEMENT THIS
 
     def reject(self, user):
@@ -559,11 +560,13 @@ class SessionQuote(models.Model):
         The customer accept the quote.
         """
         assert user.is_for_customer()
+        assert user.user_for_customer == self.customer
         assert user.user_for_customer.studio == self.studio
         assert self.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE
         self.status = SessionQuote.STATUS_REJECTED
         self.accepted_by = user
         self.accepted_at = datetime.datetime.now()
+        self.save()
         # FIXME: IMPLEMENT THIS
 
     def __unicode__(self):
