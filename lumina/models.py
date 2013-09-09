@@ -496,6 +496,18 @@ class SessionQuoteManager(models.Manager):
     Manager for the SessionQuote model
     """
 
+    def visible_sessionquote(self, user):
+        """
+        Returns the quotes the user can see (this means, this method
+        may return sessions the user can see but not modify)
+        """
+        if user.is_photographer():
+            return self.filter(studio=user.studio)
+        elif user.is_for_customer():
+            return self.filter(customer=user.user_for_customer)
+        else:
+            raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
+
     def get_waiting_for_customer_response(self, user):
         """
         Returns SessionQuotes in STATUS_WAITING_CUSTOMER_RESPONSE for the user.

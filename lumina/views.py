@@ -817,3 +817,13 @@ class SessionQuoteCreateView(CreateView, SessionQuoteCreateUpdateMixin):
 
     def get_success_url(self):
         return reverse('home')
+
+
+class SessionQuoteListView(ListView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.list.ListView
+    model = SessionQuote
+
+    def get_queryset(self):
+        qs = SessionQuote.objects.visible_sessionquote(self.request.user)
+        return qs.order_by('customer__name', 'id')

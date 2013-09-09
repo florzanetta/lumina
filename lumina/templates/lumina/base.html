@@ -45,6 +45,7 @@
 																						<li><a href="{% url 'session_create' %}">Agregar sesión</a></li>
 																						<li><a href="{% url 'shared_session_by_email_create' %}">Compartir sesión</a></li>
                                                                                         <li><a href="{% url 'quote_create' %}">Crear presupuesto</a></li>
+                                                                                        <li><a href="{% url 'quote_list' %}">Lista de presupuestos</a></li>
                                                                                 {% else %} <!-- user is client -->
 		                                                                                <li><a href="{% url 'imageselection_list' %}"
 		                                                                                    title="Lista de peticiones de seleccion de imagenes">Lista de peticiones...</a>

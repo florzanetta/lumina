@@ -1,0 +1,56 @@
+{% extends "lumina/base.html" %}
+{% load lumina_extras %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina - Presupuestos{% endblock %}</title>
+</head>
+<body>
+
+{% block content %}
+
+	<h3>Presupuestos del estudio</h3>
+
+    {% for a_quote in object_list %}
+
+        {% ifchanged a_quote.customer.id %} 
+            <h4>{{ a_quote.customer.name }}</h4>
+        {% endifchanged %}
+
+		<div class="media">
+		    <a class="pull-left" href="javascript:void(0);">
+		        <img class="media-object" src="/static/album-icon-64x64.png">
+		    </a>
+		    <div class="media-body">
+		        <div class="media-heading"><a
+		               href="{ % url 'session_detail' a_session.pk % }">{{ a_quote.customer }}</a>
+		        </div>
+		        <div>
+                        <small>
+                            <span class="badge badge-info">{{ a_quote.image_quantity }}</span>
+                            imagen{{ a_quote.image_quantity|pluralize:",es" }}
+                        </small>
+                      -
+                      <small>
+                          Estado: <span class="badge badge-info">{{ a_quote.get_status_display }}</span>
+                      </small>
+		        </div>
+		    </div>
+		</div>
+		<hr>
+    {% empty %}
+       <p>No hay presupuestos...</p>
+        <hr>
+    {% endfor %}
+
+    <p>
+        <a href="{% url 'quote_create' %}" class="btn btn-primary">Agregar presupuesto</a>
+    </p>
+
+    {% dump_objects user object_list %}
+
+{% endblock content %}
+
+</body>
+</html>
