@@ -799,12 +799,20 @@ class SessionQuoteCreateView(CreateView, SessionQuoteCreateUpdateMixin):
         form.instance.studio = self.request.user.studio
         ret = super(SessionQuoteCreateView, self).form_valid(form)
         messages.success(self.request, 'El presupuesto fue creado correctamente')
+        if 'confirm_button' in self.request.POST:
+            quote = SessionQuote.objects.get(pk=form.instance.id)
+            quote.confirm(self.request.user)
+            messages.success(self.request,
+                             'El presupuesto fue confirmado correctamente')
         return ret
 
     def get_context_data(self, **kwargs):
         context = super(SessionQuoteCreateView, self).get_context_data(**kwargs)
         context['title'] = "Crear presupuesto"
         context['submit_label'] = "Crear"
+        context['extra_buttons'] = [{'name': 'confirm_button',
+                                     'submit_label': 'Confirmar', }]
+
         return context
 
     def get_success_url(self):
