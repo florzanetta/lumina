@@ -401,6 +401,7 @@ class SessionQuoteModelTests(TestCase):
         self.assertEqual(SessionQuote.objects.all().count(), count + 1)
         quote = SessionQuote.objects.get(pk=q.id)
 
+        # Check that doesn't work for invalid users
         for invalid_user in (self.other_photographer,
                              self.user_for_other_customer,
                              self.user_for_customer):
@@ -419,8 +420,20 @@ class SessionQuoteModelTests(TestCase):
         # accept() should fail befor confirm()
         self.assertRaises(AssertionError, quote.accept, self.user_for_customer)
 
-        # accept() should sucess after confirm()
+        # confirm() the quote
         quote.confirm(self.photographer)
+
+        # Check that doesn't work for invalid users
+        for invalid_user in (self.other_photographer,
+                             self.user_for_other_customer,
+                             self.photographer):
+            try:
+                quote.accept(invalid_user)
+                raise Exception("Didn't failed with uesr {}".format(invalid_user))
+            except AssertionError:
+                pass
+
+        # accept() should sucess after confirm()
         quote.accept(self.user_for_customer)
 
     def test_reject(self):

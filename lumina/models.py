@@ -547,6 +547,7 @@ class SessionQuote(models.Model):
         """
         assert user.is_for_customer()
         assert user.user_for_customer.studio == self.studio
+        assert user.user_for_customer == self.customer
         assert self.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE
         self.status = SessionQuote.STATUS_ACCEPTED
         self.accepted_by = user
