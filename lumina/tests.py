@@ -434,6 +434,9 @@ class SessionQuoteModelTests(TestCase):
         q_accept = SessionQuote.objects.all().get(pk=q_accept.id)
         q_reject = SessionQuote.objects.all().get(pk=q_reject.id)
 
+        self.assertEqual(len(SessionQuote.objects.get_waiting_for_customer_response(
+            self.user_for_customer)), 0)
+
         # accept()/reject() should fail befor confirm()
         self.assertRaises(AssertionError, q_accept.accept, self.user_for_customer)
         self.assertRaises(AssertionError, q_reject.reject, self.user_for_customer)
@@ -441,6 +444,9 @@ class SessionQuoteModelTests(TestCase):
         # confirm() the quotes
         q_accept.confirm(self.photographer)
         q_reject.confirm(self.photographer)
+
+        self.assertEqual(len(SessionQuote.objects.get_waiting_for_customer_response(
+            self.user_for_customer)), 2)
 
         # Check that doesn't work for invalid users
         for invalid_user in (self.other_photographer,
@@ -474,6 +480,15 @@ class SessionQuoteModelTests(TestCase):
                              self.user_for_customer):
             self.assertRaises(AssertionError, q_accept.cancel, invalid_user)
             self.assertRaises(AssertionError, q_reject.cancel, invalid_user)
+
+    def test_get_waiting_for_customer_response(self):
+        try:
+            SessionQuote.objects.get_waiting_for_customer_response(self.photographer)
+            raise Exception("get_waiting_for_customer_response() didn't failed "
+                            "with uesr {}".format(self.photographer))
+        except AssertionError:
+            pass
+
 
 #===============================================================================
 # Selenium

@@ -491,6 +491,20 @@ class Image(models.Model):
 # SessionQuote
 #===============================================================================
 
+class SessionQuoteManager(models.Manager):
+    """
+    Manager for the SessionQuote model
+    """
+
+    def get_waiting_for_customer_response(self, user):
+        """
+        Returns SessionQuotes in STATUS_WAITING_CUSTOMER_RESPONSE for the user.
+        """
+        assert user.is_for_customer()
+        return self.filter(customer=user.user_for_customer,
+                           status=SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
+
+
 class SessionQuote(models.Model):
     """
     """
@@ -515,6 +529,8 @@ class SessionQuote(models.Model):
     cost = models.DecimalField(max_digits=10, decimal_places=2)
     accepted_by = models.ForeignKey(LuminaUser, related_name='+', null=True, blank=True)
     accepted_at = models.DateTimeField(null=True, blank=True)
+
+    objects = SessionQuoteManager()
 
     def confirm(self, user):
         """
