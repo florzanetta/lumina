@@ -545,11 +545,11 @@ class SessionQuote(models.Model):
     STATUS_REJECTED = 'R'
     STATUS_CANCELED = 'E'
     STATUS = (
-        (STATUS_QUOTING, u'Siendo creada'),
+        (STATUS_QUOTING, u'Siendo creado'),
         (STATUS_WAITING_CUSTOMER_RESPONSE, u'Esperando aceptacion de cliente'),
-        (STATUS_ACCEPTED, u'Aceptada'),
-        (STATUS_REJECTED, u'Rechazada'),
-        (STATUS_CANCELED, u'Cancelada'),
+        (STATUS_ACCEPTED, u'Aceptado'),
+        (STATUS_REJECTED, u'Rechazado'),
+        (STATUS_CANCELED, u'Cancelado'),
     )
 
     studio = models.ForeignKey(Studio, related_name='session_quotes')
