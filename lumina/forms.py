@@ -153,6 +153,6 @@ class SessionQuoteCreateForm(forms.ModelForm):
 
     class Meta:
         model = SessionQuote
-        fields = ('customer', 'image_quantity', 'cost')
+        fields = ('customer', 'image_quantity', 'cost', 'terms')
 
 SessionQuoteUpdateForm = SessionQuoteCreateForm

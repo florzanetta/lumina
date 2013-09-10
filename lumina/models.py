@@ -558,6 +558,7 @@ class SessionQuote(models.Model):
     image_quantity = models.PositiveIntegerField()
     status = models.CharField(max_length=1, choices=STATUS, default=STATUS_QUOTING)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
+    terms = models.TextField()
     accepted_rejected_by = models.ForeignKey(LuminaUser, related_name='+', null=True, blank=True)
     accepted_rejected_at = models.DateTimeField(null=True, blank=True)
 

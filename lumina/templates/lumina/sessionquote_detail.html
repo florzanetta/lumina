@@ -35,6 +35,13 @@
                     data-toggle="modal"><i class="icon-question-sign icon-white"></i> Ayuda</a>
             </td>
         </tr>
+        
+        <tr>
+            <th>Condiciones:</th>
+            <td><pre>{{ object.terms }}</pre></td>
+        </tr>
+
+        
         {% if object.status == 'A' %}
             <tr>
                 <th>
