@@ -11,6 +11,9 @@
 
     <h4>Presupuesto de sesion</h4>
 
+    <form action="." method="post">
+        {% csrf_token %}
+
     <table class="table">
         <tr>
             <th width="20%">Cliente:</th>
@@ -38,7 +41,12 @@
         
         <tr>
             <th>Condiciones:</th>
-            <td><pre>{{ object.terms }}</pre></td>
+            <td><pre>{{ object.terms }}</pre>
+            {% if show_accept_terms_checkbox %}
+                <label for="accept_terms"><input
+                    type="checkbox" id="accept_terms" name="accept_terms"> Acepto las condiciones</label>
+            {% endif %}
+            </td>
         </tr>
 
         
@@ -68,9 +76,6 @@
         {% endif %}
     </table>
 
-    {% if extra_buttons%}
-        <form action="." method="post">
-            {% csrf_token %}
         {% for extra_button in extra_buttons %}
             <input type="submit"
                 name="{{ extra_button.name }}"
@@ -79,7 +84,6 @@
                 {% if extra_button.confirm %}onclick="return confirm('¿Seguro?');"{% endif %}>
         {% endfor %}
         </form>
-    {% endif %}
 
     <div id="helpModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true">
       <div class="modal-header">
