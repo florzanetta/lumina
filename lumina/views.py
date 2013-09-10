@@ -73,7 +73,7 @@ def send_email_for_session_quote(quote, user, request):
         subject = "Ud. posee un nuevo presupuesto"
         to_email_list = [u.email for u in quote.customer.users.all()]
         body = ("Ud. posee un nuevo presupuesto.\n"
-                "Para verlo, acceda a {}."
+                "Para verlo, acceda a {}.\n"
                 "".format(link))
         send_emails(subject, to_email_list, body)
 
@@ -81,8 +81,8 @@ def send_email_for_session_quote(quote, user, request):
         subject = "Se ha enviado un presupuesto"
         to_email_list = [u.email for u in quote.studio.photographers.all()]
         body = ("Se ha enviado un presupuesto.\n"
-                "Cliente: {}.\
-                Enviado por: {}"
+                "Cliente: {}.\n"
+                "Enviado por: {}.\n"
                 "Para verlo, acceda a {}."
                 "".format(quote.customer, user, link))
         send_emails(subject, to_email_list, body)
