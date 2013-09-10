@@ -80,6 +80,7 @@
             <input type="submit"
                 name="{{ extra_button.name }}"
                 value="{{ extra_button.submit_label }}"
+                id="button_id_{{ extra_button.name }}"
                 class="btn btn-primary"
                 {% if extra_button.confirm %}onclick="return confirm('¿Seguro?');"{% endif %}>
         {% endfor %}
@@ -121,6 +122,27 @@
     </div>
 
 {% endblock content %}
+
+
+{% block javascript_bottom %} 
+
+<script type="text/javascript">
+
+$(function() {
+	$('#button_id_button_accept').attr('disabled', 'disabled');
+    $('#accept_terms').click(function() {
+        if ($(this).is(':checked')) {
+            $('#button_id_button_accept').removeAttr('disabled');
+        } else {
+            $('#button_id_button_accept').attr('disabled', 'disabled');
+        }
+    });
+});
+
+</script>
+
+{% endblock %}
+
 
 </body>
 </html>
