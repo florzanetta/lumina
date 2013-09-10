@@ -951,21 +951,21 @@ class SessionQuoteDetailView(DetailView):
                 buttons.append({'name': 'button_update',
                                 'submit_label': "Editar", })
                 buttons.append({'name': 'button_confirm',
-                                'submit_label': "Confirmar", })
+                                'submit_label': "Confirmar", 'confirm': True, })
                 buttons.append({'name': 'button_cancel',
-                                'submit_label': "Cancelar", })
+                                'submit_label': "Cancelar", 'confirm': True, })
 
         elif self.object.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE:
             # Waiting for customer accept()/reject().
             # Photographer always can cancel()
             if self.request.user.is_for_customer():
                 buttons.append({'name': 'button_accept',
-                                'submit_label': "Aceptar", })
+                                'submit_label': "Aceptar", 'confirm': True, })
                 buttons.append({'name': 'button_reject',
-                                'submit_label': "Rechazar", })
+                                'submit_label': "Rechazar", 'confirm': True, })
             else:
                 buttons.append({'name': 'button_cancel',
-                                'submit_label': "Cancelar", })
+                                'submit_label': "Cancelar", 'confirm': True, })
 
         elif self.object.status in (SessionQuote.STATUS_ACCEPTED,
                                     SessionQuote.STATUS_REJECTED):
@@ -974,7 +974,7 @@ class SessionQuoteDetailView(DetailView):
                 pass
             else:
                 buttons.append({'name': 'button_cancel',
-                                'submit_label': "Cancelar", })
+                                'submit_label': "Cancelar", 'confirm': True, })
 
         elif self.object.status == SessionQuote.STATUS_CANCELED:
             # Canceled

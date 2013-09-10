@@ -17,6 +17,10 @@
             <td width="80%">{{ object.customer.name }}</td>
         </tr>
         <tr>
+            <th>Costo:</th>
+            <td>$&nbsp;{{ object.cost }}</td>
+        </tr>
+        <tr>
             <th>Imágenes:</th>
             <td>{{ object.image_quantity }}</td>
         </tr>
@@ -40,8 +44,10 @@
             <input type="submit"
                 name="{{ extra_button.name }}"
                 value="{{ extra_button.submit_label }}"
-                class="btn btn-primary">
+                class="btn btn-primary"
+                {% if extra_button.confirm %}onclick="return confirm('¿Seguro?');"{% endif %}>
         {% endfor %}
+        </form>
     {% endif %}
 
     <div id="helpModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true">
@@ -68,8 +74,8 @@
                         </li>
                      </ul>
                 </li>
-                <li><strong>{{status_STATUS_ACCEPTED}}</strong>: el presupuesto ha sido aceptado por el cliente</li>
-                <li><strong>{{status_STATUS_REJECTED}}</strong>: el presupuesto ha sido rechazado por el clinete</li>
+                <li><strong>{{status_STATUS_ACCEPTED}}</strong>: el presupuesto ha sido aceptado por el cliente.</li>
+                <li><strong>{{status_STATUS_REJECTED}}</strong>: el presupuesto ha sido rechazado por el clinete.</li>
                 <li><strong>{{status_STATUS_CANCELED}}</strong>: el presupuesto ha sido cancelado por el fotógrafo.</li>
             </ul>
         </p>
