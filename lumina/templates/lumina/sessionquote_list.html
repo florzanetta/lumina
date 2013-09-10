@@ -24,7 +24,7 @@
 		    </a>
 		    <div class="media-body">
 		        <div class="media-heading"><a
-		               href="{ % url 'session_detail' a_session.pk % }">{{ a_quote.customer }}</a>
+		               href="{% url 'quote_detail' a_quote.id %}">{{ a_quote.customer.name }}</a>
 		        </div>
 		        <div>
                         <small>
@@ -44,9 +44,11 @@
         <hr>
     {% endfor %}
 
+    {% if user.is_photographer %}
     <p>
         <a href="{% url 'quote_create' %}" class="btn btn-primary">Agregar presupuesto</a>
     </p>
+    {% endif %}
 
     {% dump_objects user object_list %}
 

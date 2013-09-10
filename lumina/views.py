@@ -56,6 +56,16 @@ def send_email(subject, to_email, body):
         pass
 
 
+def send_email_for_session_quote(quote, user):
+    """
+    Send an email informing the change of status of SessionQuote.
+    The new status is taken from quote.status
+    """
+    # FIXME: implement!
+    logger.info("Sending email about SessionQuote status change. "
+                "'{}' -> {}".format(quote, quote.status))
+
+
 def home(request):
     # 'auth_providers': request.user.social_auth.get_providers(),
     if request.user.is_authenticated():
@@ -802,6 +812,7 @@ class SessionQuoteCreateView(CreateView, SessionQuoteCreateUpdateMixin):
         if 'confirm_button' in self.request.POST:
             quote = SessionQuote.objects.get(pk=form.instance.id)
             quote.confirm(self.request.user)
+            send_email_for_session_quote(quote, self.request.user)
             messages.success(self.request,
                              'El presupuesto fue confirmado correctamente')
         return ret
@@ -816,7 +827,7 @@ class SessionQuoteCreateView(CreateView, SessionQuoteCreateUpdateMixin):
         return context
 
     def get_success_url(self):
-        return reverse('home')
+        return reverse('home')  # TODO: redirect to list
 
 
 class SessionQuoteListView(ListView):
@@ -827,3 +838,91 @@ class SessionQuoteListView(ListView):
     def get_queryset(self):
         qs = SessionQuote.objects.visible_sessionquote(self.request.user)
         return qs.order_by('customer__name', 'id')
+
+
+class SessionQuoteDetailView(DetailView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.detail.DetailView
+    model = SessionQuote
+
+    def get_queryset(self):
+        return SessionQuote.objects.visible_sessionquote(self.request.user)
+
+    def get(self, request, *args, **kwargs):
+        """
+        If state == STATUS_QUOTING -> redirect to 'update' view.
+        If the user is customer, the 'update' view will give him an error, so
+        for simplicity, we won't consider that case here...
+        """
+        quote = self.get_object()
+        if quote.status == SessionQuote.STATUS_QUOTING:
+            return HttpResponseRedirect(reverse('quote_update',
+                                                args=[quote.id]))
+        return super(SessionQuoteDetailView, self).get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """
+        """
+        quote = self.get_object()
+        if 'button_accept' in request.POST:
+            quote.accept(request.user)
+            messages.success(self.request,
+                             'El presupuesto fue aceptado correctamente')
+            send_email_for_session_quote(quote, self.request.user)
+            return HttpResponseRedirect(reverse('quote_detail',
+                                                args=[quote.id]))
+        elif 'button_reject' in request.POST:
+            quote.reject(request.user)
+            messages.success(self.request,
+                             'El presupuesto fue rechazado correctamente')
+            send_email_for_session_quote(quote, self.request.user)
+            return HttpResponseRedirect(reverse('quote_detail',
+                                                args=[quote.id]))
+        elif 'button_cancel' in request.POST:
+            quote.cancel(request.user)
+            messages.success(self.request,
+                             'El presupuesto fue cancelado')
+            send_email_for_session_quote(quote, self.request.user)
+            return HttpResponseRedirect(reverse('quote_detail',
+                                                args=[quote.id]))
+        else:
+            raise(SuspiciousOperation())
+
+    def get_context_data(self, **kwargs):
+        context = super(SessionQuoteDetailView, self).get_context_data(**kwargs)
+        buttons = []
+
+        if self.object.status == SessionQuote.STATUS_QUOTING:
+            # This is an error. We should never get here
+            raise(SuspiciousOperation())
+
+        elif self.object.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE:
+            # Waiting for customer accept()/reject().
+            # Photographer always can cancel()
+            if self.request.user.is_for_customer():
+                buttons.append({'name': 'button_accept',
+                                'submit_label': "Aceptar", })
+                buttons.append({'name': 'button_reject',
+                                'submit_label': "Rechazar", })
+            else:
+                buttons.append({'name': 'button_cancel',
+                                'submit_label': "Cancelar", })
+
+        elif self.object.status in (SessionQuote.STATUS_ACCEPTED,
+                                    SessionQuote.STATUS_REJECTED):
+            # Accepted or rejected -> photographer always can cancel()
+            if self.request.user.is_for_customer():
+                pass
+            else:
+                buttons.append({'name': 'button_cancel',
+                                'submit_label': "Cancelar", })
+
+        elif self.object.status == SessionQuote.STATUS_CANCELED:
+            # Canceled
+            pass
+        else:
+            raise(Exception("Invalid 'status': {}".format(self.object.status)))
+
+        context['extra_buttons'] = buttons
+
+        return context

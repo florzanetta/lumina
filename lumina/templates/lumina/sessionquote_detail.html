@@ -1,0 +1,37 @@
+{% extends "lumina/base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina - Presupuesto de sesión{% endblock %}</title>
+</head>
+<body>
+
+{% block content %}
+
+    <h4>Presupuesto de sesion</h4>
+
+    <h5>Cliente:</h5>
+    <p>{{ object.customer.name }}</p>
+
+    <h5>Imágenes:</h5>
+    <p>{{ object.image_quantity }}</p>
+
+    <h5>Estado:</h5>
+    <p>{{ object.get_status_display }}</p>
+
+    {% if extra_buttons%}
+        <form action="." method="post">
+            {% csrf_token %}
+        {% for extra_button in extra_buttons %}
+            <input type="submit"
+                name="{{ extra_button.name }}"
+                value="{{ extra_button.submit_label }}"
+                class="btn btn-primary">
+        {% endfor %}
+    {% endif %}
+
+{% endblock content %}
+
+</body>
+</html>
