@@ -355,15 +355,6 @@ class SessionQuoteModelTests(TestCase):
     fixtures = ['sample/studios.json', 'sample/customers.json',
                 'sample/users.json']
 
-    #     studio = models.ForeignKey(Studio, related_name='session_quotes')
-    #     # session = models.ForeignKey(Session)
-    #     customer = models.ForeignKey(Customer, related_name='session_quotes')
-    #     image_quantity = models.PositiveIntegerField()
-    #     status = models.CharField(max_length=1, choices=STATUS, default=STATUS_QUOTING)
-    #     cost = models.DecimalField(max_digits=10, decimal_places=2)
-    #     accepted_by = models.ForeignKey(LuminaUser, related_name='+', null=True, blank=True)
-    #     accepted_at = models.DateTimeField(null=True, blank=True)
-
     def setUp(self):
         self.studio = Studio.objects.get(pk=3)
         self.photographer = LuminaUser.objects.get_by_natural_key('fotografo1')
@@ -464,10 +455,10 @@ class SessionQuoteModelTests(TestCase):
             except AssertionError:
                 pass
 
-        self.assertTrue(q_accept.accepted_by is None)
-        self.assertTrue(q_accept.accepted_at is None)
-        self.assertTrue(q_reject.accepted_by is None)
-        self.assertTrue(q_reject.accepted_at is None)
+        self.assertTrue(q_accept.accepted_rejected_by is None)
+        self.assertTrue(q_accept.accepted_rejected_at is None)
+        self.assertTrue(q_reject.accepted_rejected_by is None)
+        self.assertTrue(q_reject.accepted_rejected_at is None)
 
         # accept() should sucess after confirm()
         q_accept.accept(self.user_for_customer)
@@ -477,10 +468,10 @@ class SessionQuoteModelTests(TestCase):
         SessionQuote.objects.get(pk=q_reject.id,
                                  status=SessionQuote.STATUS_REJECTED)
 
-        self.assertTrue(q_accept.accepted_by is not None)
-        self.assertTrue(q_accept.accepted_at is not None)
-        self.assertTrue(q_reject.accepted_by is not None)
-        self.assertTrue(q_reject.accepted_at is not None)
+        self.assertTrue(q_accept.accepted_rejected_by is not None)
+        self.assertTrue(q_accept.accepted_rejected_at is not None)
+        self.assertTrue(q_reject.accepted_rejected_by is not None)
+        self.assertTrue(q_reject.accepted_rejected_at is not None)
 
         # ----- cancel() -----
 

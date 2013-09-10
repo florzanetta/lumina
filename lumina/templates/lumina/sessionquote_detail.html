@@ -41,9 +41,21 @@
                     Aceptado por:
                 </th>
                 <td>
-                    {{ object.accepted_by }}
+                    {{ object.accepted_rejected_by }}
                     -
-                    {{ object.accepted_at }}
+                    {{ object.accepted_rejected_at }}
+                </td>
+            </tr>
+        {% endif %}
+        {% if object.status == 'R' %}
+            <tr>
+                <th>
+                    Rechazado por:
+                </th>
+                <td>
+                    {{ object.accepted_rejected_by }}
+                    -
+                    {{ object.accepted_rejected_at }}
                 </td>
             </tr>
         {% endif %}
