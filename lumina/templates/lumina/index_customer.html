@@ -30,6 +30,17 @@
     </p>
     <hr>
 
+    <h4>Presupuestos por aprobar</h4>
+    <p><span class="badge badge-info">{{ quotes_pending_count }}</span>
+            Ud. posee {{ quotes_pending_count }}
+            presupuesto{{ quotes_pending_count|pluralize:"s" }}
+            pendientes de aprobar.
+            {% if quotes_pending_count %}
+                <a href="{% url 'quote_list' %}">Haga clic aqui</a> para verlos...
+            {% endif %}
+    </p>
+    <hr>
+
     <!--
     # Google OAuth doesn't work yet...
     { % if 'google-oauth' in social_auth|non_empty_unicode_keys % }
