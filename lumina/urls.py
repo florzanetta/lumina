@@ -10,7 +10,8 @@ from lumina.views import SessionListView, SessionDetailView, SessionCreateView, 
     ImageCreateView, ImageUpdateView, ImageSelectionCreateView, \
     ImageSelectionListView, ImageSelectionDetailView, \
     ImageSelectionForCustomerView, SessionUploadPreviewsView,\
-    SessionQuoteCreateView, SessionQuoteListView, SessionQuoteDetailView
+    SessionQuoteCreateView, SessionQuoteListView, SessionQuoteDetailView,\
+    SessionQuoteUpdateView
 
 
 admin.autodiscover()
@@ -196,6 +197,11 @@ urlpatterns = patterns(
         cache_control(private=True)(
             login_required(SessionQuoteDetailView.as_view())),
         name='quote_detail'),
+
+    url(r'^quote/update/(?P<pk>\d+)/$',
+        cache_control(private=True)(
+            login_required(SessionQuoteUpdateView.as_view())),
+        name='quote_update'),
 
     #===========================================================================
     # Rest API

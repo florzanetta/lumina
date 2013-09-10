@@ -30,7 +30,7 @@ from lumina.models import Session, Image, LuminaUser, Customer, \
 from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm, \
     SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm, \
-    ImageSelectionCreateForm, SessionQuoteCreateForm
+    ImageSelectionCreateForm, SessionQuoteCreateForm, SessionQuoteUpdateForm
 
 
 #
@@ -809,25 +809,65 @@ class SessionQuoteCreateView(CreateView, SessionQuoteCreateUpdateMixin):
         form.instance.studio = self.request.user.studio
         ret = super(SessionQuoteCreateView, self).form_valid(form)
         messages.success(self.request, 'El presupuesto fue creado correctamente')
-        if 'confirm_button' in self.request.POST:
-            quote = SessionQuote.objects.get(pk=form.instance.id)
-            quote.confirm(self.request.user)
-            send_email_for_session_quote(quote, self.request.user)
-            messages.success(self.request,
-                             'El presupuesto fue confirmado correctamente')
+        # if 'confirm_button' in self.request.POST:
+        #     quote = SessionQuote.objects.get(pk=form.instance.id)
+        #     quote.confirm(self.request.user)
+        #     send_email_for_session_quote(quote, self.request.user)
+        #     messages.success(self.request,
+        #                      'El presupuesto fue confirmado correctamente')
         return ret
 
     def get_context_data(self, **kwargs):
         context = super(SessionQuoteCreateView, self).get_context_data(**kwargs)
         context['title'] = "Crear presupuesto"
         context['submit_label'] = "Crear"
-        context['extra_buttons'] = [{'name': 'confirm_button',
-                                     'submit_label': 'Confirmar', }]
-
+        # context['extra_buttons'] = [{'name': 'confirm_button',
+        #                              'submit_label': 'Confirmar', }]
         return context
 
     def get_success_url(self):
-        return reverse('home')  # TODO: redirect to list
+        return reverse('quote_detail', args=[self.object.id])
+
+
+class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
+    model = SessionQuote
+    form_class = SessionQuoteUpdateForm
+    template_name = 'lumina/base_create_update_form.html'
+
+    def get_form(self, form_class):
+        form = super(SessionQuoteUpdateView, self).get_form(form_class)
+        self._setup_form(form)
+        return form
+
+    def get_queryset(self):
+        return SessionQuote.objects.modificable_sessionquote(self.request.user)
+
+    def form_valid(self, form):
+        ret = super(SessionQuoteUpdateView, self).form_valid(form)
+
+        # if 'confirm_button' in self.request.POST:
+        #     quote = SessionQuote.objects.get(pk=form.instance.id)
+        #     quote.confirm(self.request.user)
+        #     send_email_for_session_quote(quote, self.request.user)
+        #     messages.success(self.request,
+        #                      'El presupuesto fue confirmado correctamente')
+        # else:
+        #     messages.success(self.request, 'El presupuesto fue actualizado correctamente')
+
+        messages.success(self.request, 'El presupuesto fue actualizado correctamente')
+        return ret
+
+    def get_context_data(self, **kwargs):
+        context = super(SessionQuoteUpdateView, self).get_context_data(**kwargs)
+        context['title'] = "Actualizar presupuesto"
+        context['submit_label'] = "Actualizar"
+        # context['extra_buttons'] = [{'name': 'confirm_button',
+        #                              'submit_label': 'Confirmar', }]
+        return context
+
+    def get_success_url(self):
+        return reverse('quote_detail', args=[self.object.id])
 
 
 class SessionQuoteListView(ListView):
@@ -848,23 +888,33 @@ class SessionQuoteDetailView(DetailView):
     def get_queryset(self):
         return SessionQuote.objects.visible_sessionquote(self.request.user)
 
-    def get(self, request, *args, **kwargs):
-        """
-        If state == STATUS_QUOTING -> redirect to 'update' view.
-        If the user is customer, the 'update' view will give him an error, so
-        for simplicity, we won't consider that case here...
-        """
-        quote = self.get_object()
-        if quote.status == SessionQuote.STATUS_QUOTING:
-            return HttpResponseRedirect(reverse('quote_update',
-                                                args=[quote.id]))
-        return super(SessionQuoteDetailView, self).get(request, *args, **kwargs)
+    # def get(self, request, *args, **kwargs):
+    #     """
+    #     If state == STATUS_QUOTING -> redirect to 'update' view.
+    #     If the user is customer, the 'update' view will give him an error, so
+    #     for simplicity, we won't consider that case here...
+    #     """
+    #     quote = self.get_object()
+    #     if quote.status == SessionQuote.STATUS_QUOTING:
+    #         return HttpResponseRedirect(reverse('quote_update',
+    #                                             args=[quote.id]))
+    #     return super(SessionQuoteDetailView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """
         """
         quote = self.get_object()
-        if 'button_accept' in request.POST:
+        if 'button_update' in request.POST:
+            return HttpResponseRedirect(reverse('quote_update',
+                                                args=[quote.id]))
+        elif 'button_confirm' in request.POST:
+            quote.confirm(request.user)
+            messages.success(self.request,
+                             'El presupuesto fue confirmado correctamente')
+            send_email_for_session_quote(quote, self.request.user)
+            return HttpResponseRedirect(reverse('quote_detail',
+                                                args=[quote.id]))
+        elif 'button_accept' in request.POST:
             quote.accept(request.user)
             messages.success(self.request,
                              'El presupuesto fue aceptado correctamente')
@@ -893,8 +943,17 @@ class SessionQuoteDetailView(DetailView):
         buttons = []
 
         if self.object.status == SessionQuote.STATUS_QUOTING:
-            # This is an error. We should never get here
-            raise(SuspiciousOperation())
+            # The photographer did not finished the Quote
+            if self.request.user.is_for_customer():
+                # The customer shouln't see this Quote
+                raise(SuspiciousOperation())
+            else:
+                buttons.append({'name': 'button_update',
+                                'submit_label': "Editar", })
+                buttons.append({'name': 'button_confirm',
+                                'submit_label': "Confirmar", })
+                buttons.append({'name': 'button_cancel',
+                                'submit_label': "Cancelar", })
 
         elif self.object.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE:
             # Waiting for customer accept()/reject().

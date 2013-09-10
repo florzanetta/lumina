@@ -511,6 +511,22 @@ class SessionQuoteManager(models.Manager):
         else:
             raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
 
+    def modificable_sessionquote(self, user):
+        """
+        Returns the sessions the user can modify. By modifications I mean changing the fields
+        values using a *form*. IE: calling `modificable_sessionquote()` with a customer will
+        return an EMPTY result, since customers can't modify quotes using form.
+
+        Customers can modify quote instances with accept()/reject(), but since this case does not
+        uses forms, this method won't return that instances.
+        """
+        if user.is_photographer():
+            valid_statuses = (SessionQuote.STATUS_QUOTING,
+                              SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE,
+                              SessionQuote.STATUS_ACCEPTED)
+            return self.filter(studio=user.studio, status__in=valid_statuses)
+        return self.none()
+
     def get_waiting_for_customer_response(self, user):
         """
         Returns SessionQuotes in STATUS_WAITING_CUSTOMER_RESPONSE for the user.

@@ -155,12 +155,4 @@ class SessionQuoteCreateForm(forms.ModelForm):
         model = SessionQuote
         fields = ('customer', 'image_quantity', 'cost')
 
-#
-# class SessionUpdateForm(forms.ModelForm):
-#
-#     class Meta:
-#         model = Session
-#         fields = ('name', 'photographer', 'customer', 'shared_with', )
-#         widgets = {
-#             'shared_with': CheckboxSelectMultiple(),
-#         }
+SessionQuoteUpdateForm = SessionQuoteCreateForm
