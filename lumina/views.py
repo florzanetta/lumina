@@ -809,20 +809,12 @@ class SessionQuoteCreateView(CreateView, SessionQuoteCreateUpdateMixin):
         form.instance.studio = self.request.user.studio
         ret = super(SessionQuoteCreateView, self).form_valid(form)
         messages.success(self.request, 'El presupuesto fue creado correctamente')
-        # if 'confirm_button' in self.request.POST:
-        #     quote = SessionQuote.objects.get(pk=form.instance.id)
-        #     quote.confirm(self.request.user)
-        #     send_email_for_session_quote(quote, self.request.user)
-        #     messages.success(self.request,
-        #                      'El presupuesto fue confirmado correctamente')
         return ret
 
     def get_context_data(self, **kwargs):
         context = super(SessionQuoteCreateView, self).get_context_data(**kwargs)
         context['title'] = "Crear presupuesto"
         context['submit_label'] = "Crear"
-        # context['extra_buttons'] = [{'name': 'confirm_button',
-        #                              'submit_label': 'Confirmar', }]
         return context
 
     def get_success_url(self):
@@ -845,16 +837,6 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
 
     def form_valid(self, form):
         ret = super(SessionQuoteUpdateView, self).form_valid(form)
-
-        # if 'confirm_button' in self.request.POST:
-        #     quote = SessionQuote.objects.get(pk=form.instance.id)
-        #     quote.confirm(self.request.user)
-        #     send_email_for_session_quote(quote, self.request.user)
-        #     messages.success(self.request,
-        #                      'El presupuesto fue confirmado correctamente')
-        # else:
-        #     messages.success(self.request, 'El presupuesto fue actualizado correctamente')
-
         messages.success(self.request, 'El presupuesto fue actualizado correctamente')
         return ret
 
@@ -887,18 +869,6 @@ class SessionQuoteDetailView(DetailView):
 
     def get_queryset(self):
         return SessionQuote.objects.visible_sessionquote(self.request.user)
-
-    # def get(self, request, *args, **kwargs):
-    #     """
-    #     If state == STATUS_QUOTING -> redirect to 'update' view.
-    #     If the user is customer, the 'update' view will give him an error, so
-    #     for simplicity, we won't consider that case here...
-    #     """
-    #     quote = self.get_object()
-    #     if quote.status == SessionQuote.STATUS_QUOTING:
-    #         return HttpResponseRedirect(reverse('quote_update',
-    #                                             args=[quote.id]))
-    #     return super(SessionQuoteDetailView, self).get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         """
