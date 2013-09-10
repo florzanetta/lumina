@@ -54,9 +54,11 @@
         <hr>
     {% endfor %}
 
+    {% if user.is_photographer %}
     <p>
         <a href="{% url 'session_create' %}" class="btn btn-primary">Agregar sesión</a>
     </p>
+    {% endif %}
 
     {% dump_objects user object_list %}
 
