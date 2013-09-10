@@ -464,6 +464,11 @@ class SessionQuoteModelTests(TestCase):
             except AssertionError:
                 pass
 
+        self.assertTrue(q_accept.accepted_by is None)
+        self.assertTrue(q_accept.accepted_at is None)
+        self.assertTrue(q_reject.accepted_by is None)
+        self.assertTrue(q_reject.accepted_at is None)
+
         # accept() should sucess after confirm()
         q_accept.accept(self.user_for_customer)
         q_reject.reject(self.user_for_customer)
@@ -471,6 +476,11 @@ class SessionQuoteModelTests(TestCase):
                                  status=SessionQuote.STATUS_ACCEPTED)
         SessionQuote.objects.get(pk=q_reject.id,
                                  status=SessionQuote.STATUS_REJECTED)
+
+        self.assertTrue(q_accept.accepted_by is not None)
+        self.assertTrue(q_accept.accepted_at is not None)
+        self.assertTrue(q_reject.accepted_by is not None)
+        self.assertTrue(q_reject.accepted_at is not None)
 
         # ----- cancel() -----
 

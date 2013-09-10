@@ -35,6 +35,18 @@
                     data-toggle="modal"><i class="icon-question-sign icon-white"></i> Ayuda</a>
             </td>
         </tr>
+        {% if object.status == 'A' %}
+            <tr>
+                <th>
+                    Aceptado por:
+                </th>
+                <td>
+                    {{ object.accepted_by }}
+                    -
+                    {{ object.accepted_at }}
+                </td>
+            </tr>
+        {% endif %}
     </table>
 
     {% if extra_buttons%}
