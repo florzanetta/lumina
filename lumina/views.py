@@ -1027,7 +1027,7 @@ class SessionQuoteDetailView(DetailView):
         context = super(SessionQuoteDetailView, self).get_context_data(**kwargs)
         buttons = []
 
-        can_modify_alternatives = self.object.get_selected_quote in (0, None)
+        can_modify_alternatives = self.object.get_selected_quote() in (0, None)
 
         if self.object.status == SessionQuote.STATUS_QUOTING:
             # The photographer did not finished the Quote
@@ -1056,12 +1056,7 @@ class SessionQuoteDetailView(DetailView):
                                     'submit_label': "Editar presup. alternativos", })
 
         elif self.object.status == SessionQuote.STATUS_REJECTED:
-            # Accepted or rejected -> photographer always can cancel()
-            if self.request.user.is_for_customer():
-                pass
-            else:
-                buttons.append({'name': 'button_cancel',
-                                'submit_label': "Cancelar", 'confirm': True, })
+            pass
 
         elif self.object.status == SessionQuote.STATUS_ACCEPTED:
             # Accepted or rejected -> photographer always can cancel()
