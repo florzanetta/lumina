@@ -19,58 +19,6 @@
     
         {% include 'lumina/include/sessionquote_details_readonly.html' %}
         
-        <!--
-        <tr>
-            <th width="20%">Cliente:</th>
-            <td width="80%">{{ object.customer.name }}</td>
-        </tr>
-        <tr>
-            <th>Imágenes:</th>
-            <td>{{ object.image_quantity|intcomma }}</td>
-        </tr>
-        <tr>
-            <th>Costo:</th>
-            <td>$&nbsp;{{ object.cost|intcomma }}</td>
-        </tr>
-        <tr>
-            <th>
-                Estado:
-            </th>
-            <td>{{ object.get_status_display }}
-                &nbsp;&nbsp;
-                <a href="#helpModal" role="button"
-                    class="btn btn-primary btn-mini"
-                    data-toggle="modal"><i class="icon-question-sign icon-white"></i> Ayuda</a>
-            </td>
-        </tr>
-
-        <tr>
-            <th>Condiciones:</th>
-            <td><pre>{{ object.terms }}</pre>
-            {% if show_accept_terms_checkbox %}
-                <label for="accept_terms"><input
-                    type="checkbox" id="accept_terms" name="accept_terms"> Acepto las condiciones</label>
-            {% endif %}
-            </td>
-        </tr>
-        -->
-
-        <tr>
-            <th>Presupuesto alternativos:</th>
-            <td>
-                {% if object.quote_alternatives.all %}
-                    <table class="table table-condensed table-hover table-bordered">
-                        {% for alt in object.quote_alternatives.all %}
-                            <tr><td>{{ alt.image_quantity|intcomma }}</td><td>$ {{ alt.cost|intcomma }}</td></tr>
-                        {% endfor %}
-                    </table>
-                {% else %}
-                    <em>Sin presupuestos alternativos</em>
-                {% endif %}
-                
-            </td>
-        </tr>
-        
         {% if object.status == 'A' %}
             <tr>
                 <th>
@@ -103,7 +51,9 @@
                 value="{{ extra_button.submit_label }}"
                 id="button_id_{{ extra_button.name }}"
                 class="btn btn-primary"
-                {% if extra_button.confirm %}onclick="return confirm('¿Seguro?');"{% endif %}>
+                {% if extra_button.confirm %} onclick="return confirm('¿Seguro?');" {% endif %}
+                {% if extra_button.custom_confirm %} onclick="return custom_confirm();" {% endif %}
+            >
         {% endfor %}
         </form>
 
@@ -116,8 +66,22 @@
 
 <script type="text/javascript">
 
+function custom_confirm() {
+	$('input[name=radioName]:checked', '#myForm').val()
+	// $("input[name=selected_quote]:radio").attr('disabled', 'disabled');
+	var value = $('input[name=selected_quote]:checked').val();
+	if (typeof value === "undefined") {
+		alert('Debe seleccionar alguna alternativa');
+		return false;
+	}
+	return confirm('¿Seguro?');
+}
+
 $(function() {
+	// Initial setup -> all disabled
 	$('#button_id_button_accept').attr('disabled', 'disabled');
+
+	// Callback
     $('#accept_terms').click(function() {
         if ($(this).is(':checked')) {
             $('#button_id_button_accept').removeAttr('disabled');

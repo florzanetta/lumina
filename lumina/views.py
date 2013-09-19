@@ -969,6 +969,10 @@ class SessionQuoteListView(ListView):
 
 
 class SessionQuoteDetailView(DetailView):
+    """
+    This view allows the users (both photographers & customers)
+    to see the Quote and, for the customer, accept or reject.
+    """
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
     #    #django.views.generic.detail.DetailView
     model = SessionQuote
@@ -982,21 +986,28 @@ class SessionQuoteDetailView(DetailView):
         quote = self.get_object()
         if 'button_update' in request.POST:
             return HttpResponseRedirect(reverse('quote_update', args=[quote.id]))
+
         elif 'button_confirm' in request.POST:
             quote.confirm(request.user)
             messages.success(self.request,
                              'El presupuesto fue confirmado correctamente')
             send_email_for_session_quote(quote, self.request.user, self.request)
             return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
+
         elif 'button_accept' in request.POST:
             if 'accept_terms' not in request.POST:
                 messages.error(self.request, 'Debe aceptar las condiciones')
                 return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
-            quote.accept(request.user)
-            messages.success(self.request,
-                             'El presupuesto fue aceptado correctamente')
-            send_email_for_session_quote(quote, self.request.user, self.request)
-            return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
+            alternative = request.POST['selected_quote']
+            if alternative == '0':
+                quote.accept(request.user)
+                messages.success(self.request,
+                                 'El presupuesto fue aceptado correctamente')
+                send_email_for_session_quote(quote, self.request.user, self.request)
+                return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
+            else:
+                raise(Exception("Not implemented yet"))
+
         elif 'button_reject' in request.POST:
             quote.reject(request.user)
             messages.success(self.request,
@@ -1040,7 +1051,7 @@ class SessionQuoteDetailView(DetailView):
             # Photographer always can cancel()
             if self.request.user.is_for_customer():
                 buttons.append({'name': 'button_accept',
-                                'submit_label': "Aceptar", 'confirm': True, })
+                                'submit_label': "Aceptar", 'custom_confirm': True, })
                 buttons.append({'name': 'button_reject',
                                 'submit_label': "Rechazar", 'confirm': True, })
                 context['show_accept_terms_checkbox'] = True
