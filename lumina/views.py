@@ -1062,7 +1062,7 @@ class SessionQuoteDetailView(DetailView):
             # Accepted or rejected -> photographer always can cancel()
             if self.request.user.is_for_customer():
                 buttons.append({'name': 'button_go_to_choose_quote',
-                                'submit_label': "Respdoner presupuesto (aceptar/rechazar)", })
+                                'submit_label': "Cambiar alternativa de presupuesto", })
             else:
                 buttons.append({'name': 'button_cancel',
                                 'submit_label': "Cancelar", 'confirm': True, })
@@ -1104,13 +1104,19 @@ class SessionQuoteAlternativeSelectView(DetailView):
                 messages.error(self.request, 'Debe aceptar las condiciones')
                 return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
             alternative = request.POST['selected_quote']
+
             if alternative == '0':
-                quote.accept(request.user, None)
+                params = None
             else:
                 alt_quantity, alt_cost = alternative.split('_')
-                alt_quantity = int(alt_quantity)
-                alt_cost = decimal.Decimal(alt_cost)
-                quote.accept(request.user, [alt_quantity, alt_cost])
+                params = [int(alt_quantity), decimal.Decimal(alt_cost)]
+
+            if quote.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE:
+                quote.accept(request.user, params)
+            elif quote.status == SessionQuote.STATUS_ACCEPTED:
+                quote.update_quote_alternative(request.user, params)
+            else:
+                raise(SuspiciousOperation())
 
             messages.success(self.request,
                              'El presupuesto fue aceptado correctamente')
@@ -1139,7 +1145,9 @@ class SessionQuoteAlternativeSelectView(DetailView):
 
         elif self.object.status == SessionQuote.STATUS_ACCEPTED:
             # Accepted or rejected -> photographer always can cancel()
-            pass
+            selected_quote = self.object.get_selected_quote()
+            assert selected_quote >= 0
+            context['selected_quote'] = selected_quote
 
         else:
             raise(Exception("Invalid 'status': {}".format(self.object.status)))

@@ -633,6 +633,40 @@ class SessionQuote(models.Model):
         self.save()
         # FIXME: IMPLEMENT THIS
 
+    def update_quote_alternative(self, user, alternative_data):
+        """
+        The customer change the selected alternative quote.
+
+        `alternative_data` is a list of `ints`:
+         - (yyy, zzz) -> to identify the alternative quote, being
+             `yyy` the quantity (int) and `zzz` the cost (decimal.Decimal).
+        """
+        assert user.is_for_customer()
+        assert user.user_for_customer == self.customer
+        assert user.user_for_customer.studio == self.studio
+        assert self.status == SessionQuote.STATUS_ACCEPTED
+
+        assert type(alternative_data) in (list, tuple)
+        assert len(alternative_data) == 2
+
+        alt_quantity, alt_cost = alternative_data
+        assert type(alt_quantity) == int
+        assert type(alt_cost) == decimal.Decimal
+
+        sqa = self.quote_alternatives.get(image_quantity=alt_quantity,
+                                          cost=alt_cost)
+        self.accepted_quote_alternative = sqa
+        # done!
+
+        # TODO: save history
+
+        # change state after checks
+        self.accepted_rejected_by = user
+        self.accepted_rejected_at = datetime.datetime.now()
+
+        self.save()
+        # FIXME: IMPLEMENT THIS
+
     def reject(self, user):
         """
         The customer accept the quote.
