@@ -1,15 +1,4 @@
 {% load humanize %}
-<!--
-{#                                                                                            #}
-{# If you include this snippet, you should include 'sessionquote_details_readonly.html' too.  #}
-{#                                                                                            #}
-{#  Parameters:                                                                               #}
-{#                                                                                            #}
-{#  Uses:                                                                                     #}
-{#   - object                                                                                 #}
-{#   - selected_quote                                                                         #}
-{#                                                                                            #}
--->
     <tr>
         <th width="20%">Cliente:</th>
         <td width="80%">{{ object.customer.name }}</td>
@@ -18,11 +7,22 @@
         <th>
             Estado:
         </th>
-        <td>{{ object.get_status_display }}
-            &nbsp;&nbsp;
-            <a href="#helpModal" role="button"
-                class="btn btn-primary btn-mini"
-                data-toggle="modal"><i class="icon-question-sign icon-white"></i> Ayuda</a>
+        <td>
+            {% if object.get_status_display == status_STATUS_ACCEPTED %}
+                <span class="label label-success"><i class="icon-ok icon-white"></i>
+                    {{ object.get_status_display }}</span>
+            {% elif object.get_status_display == status_STATUS_REJECTED %}
+                <span class="label label-important"><i class="icon-remove icon-white"></i>
+                    {{ object.get_status_display }}</span>
+            {% elif object.get_status_display == status_STATUS_WAITING_CUSTOMER_RESPONSE %}
+                <span class="label label-warning"><i class="icon-time icon-white"></i>
+                    {{ object.get_status_display }}</span>
+            {% else %}
+                <span class="label">{{ object.get_status_display }}</span>
+            {% endif %}
+            &nbsp;&nbsp;&nbsp;
+            <small><a href="#helpModal" data-toggle="modal"><i
+                class="icon-question-sign"></i> Ayuda</a></small>
         </td>
     </tr>
 

@@ -32,13 +32,13 @@
             <td>
                 <table class="table table-condensed table-hover table-bordered">
                     <tr>
-                        <th width="40%" style="text-align: right;">&nbsp;</th>
+                        <td width="40%" style="text-align: right;">&nbsp;</td>
                         <th width="30%" style="text-align: right;">Cant. de fotograias</th>
                         <th width="30%" style="text-align: right;">Costo</th>
                         <th width="5%" style="text-align: right;">&nbsp;</th>
                     </tr>
-                    <tr>
-                        <th width="40%" style="text-align: right;">Presupuesto original:</th>
+                    <tr class="info">
+                        <td width="40%" style="text-align: right; font-weight: bold;">Presupuesto original:</td>
                         <td width="30%" style="text-align: right;">{{ object.image_quantity|intcomma }}</td>
                         <td width="30%" style="text-align: right;">$ {{ object.cost|intcomma }}</td>
                         <td width="5%" style="text-align: right;"><input
@@ -47,8 +47,8 @@
                         </td>
                     </tr>
                     {% for alt in object.quote_alternatives.all %}
-                        <tr>
-                            <th style="text-align: right;">Alternativa:</th>
+                        <tr class="warning">
+                            <td style="text-align: right; font-weight: bold;">Alternativa:</td>
                             <td style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
                             <td style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
                             <td width="5%" style="text-align: right;"><input type="radio" name="selected_quote" value="{{alt.image_quantity}}_{{alt.cost}}"></td>
