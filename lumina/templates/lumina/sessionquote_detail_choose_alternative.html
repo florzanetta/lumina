@@ -25,6 +25,8 @@
             {% include 'lumina/include/sessionquote_details_readonly.html' with hide_alternatives=True %}
         {% endif %}
     
+        {% if available_alternatives %}
+        <!-- {# Hide if there isn't any valid alternative to choose #} -->
         <tr>
             <th>&nbsp;</th>
             <td>
@@ -32,6 +34,7 @@
                     type="checkbox" id="accept_terms" name="accept_terms" style="vertical-align: baseline;"> Acepto las condiciones</label>
             </td>
         </tr>
+        {% endif %}
 
         <tr>
             <th>
@@ -57,17 +60,21 @@
                             <td width="30%" style="text-align: right;">$ {{ object.cost|intcomma }}</td>
                             <td width="5%" style="text-align: right;"><input
                                 type="radio" name="selected_quote" value="0"
-                                {% if object.quote_alternatives.all.count == 0 %}checked=checked{% endif %}>
+                                {% if available_alternatives.count == 0 %}checked=checked{% endif %}>
                             </td>
                         </tr>
                     {% endif %}
-                    {% for alt in object.quote_alternatives.all %}
+                    {% for alt in available_alternatives %}
                         <tr>
                             <td style="text-align: right; font-weight: bold;">Alternativa:</td>
                             <td style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
                             <td style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
                             <td width="5%" style="text-align: right;"><input
                                 type="radio" name="selected_quote" value="{{alt.image_quantity}}_{{alt.cost}}"></td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4">No hay alternativas adicionales</td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -80,6 +87,8 @@
         
             <input type="submit" id="button_id_button_accept" name="button_accept"
                 value="Cambiar alternativa de presupuesto" class="btn btn-primary" onclick="return custom_confirm();">
+            
+            <a href="{% url 'quote_detail' object.id %}" class="btn btn-primary">Cancelar</a>
             
         {% else %}
         

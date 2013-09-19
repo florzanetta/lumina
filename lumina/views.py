@@ -1137,6 +1137,8 @@ class SessionQuoteAlternativeSelectView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(SessionQuoteAlternativeSelectView, self).get_context_data(**kwargs)
 
+        context['available_alternatives'] = self.object.get_valid_alternatives()
+
         if not self.request.user.is_for_customer():
             raise(Exception("The user is not a customer! User: {}".format(self.request.user)))
 

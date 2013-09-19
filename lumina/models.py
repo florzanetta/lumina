@@ -703,6 +703,21 @@ class SessionQuote(models.Model):
         else:
             return None
 
+    def get_valid_alternatives(self):
+        """
+        Return the valid quotes alternatives.
+        """
+        if self.status == self.STATUS_WAITING_CUSTOMER_RESPONSE:
+            return self.quote_alternatives.all().order_by('image_quantity')
+        if self.status == self.STATUS_ACCEPTED:
+            current = self.get_selected_quote()
+            if current == 0:
+                return self.quote_alternatives.all().order_by('image_quantity')
+            current_quantity = self.accepted_quote_alternative.image_quantity
+            return self.quote_alternatives.filter(image_quantity__gt=current_quantity) \
+                .order_by('image_quantity')
+        raise(Exception("Invalid state: {}".format(self.status)))
+
     def __unicode__(self):
         return u"Quote for {}".format(str(self.customer))
 
