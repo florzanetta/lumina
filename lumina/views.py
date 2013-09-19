@@ -1076,6 +1076,7 @@ class SessionQuoteDetailView(DetailView):
 
         context['extra_buttons'] = buttons
 
+        # Status de SessionQuote (reusado más abajo)
         statuses_dict = dict(SessionQuote.STATUS)
         context['status_STATUS_QUOTING'] = statuses_dict[SessionQuote.STATUS_QUOTING]
         context['status_STATUS_WAITING_CUSTOMER_RESPONSE'] = statuses_dict[
@@ -1124,6 +1125,16 @@ class SessionQuoteAlternativeUpdateView(UpdateView, SessionQuoteCreateUpdateMixi
                                                                 instance=self.object)
         else:
             context['formset'] = SessionQuoteAlternativeFormSet(instance=self.object)
+
+        # Status de SessionQuote (reusado más abajo)
+        statuses_dict = dict(SessionQuote.STATUS)
+        context['status_STATUS_QUOTING'] = statuses_dict[SessionQuote.STATUS_QUOTING]
+        context['status_STATUS_WAITING_CUSTOMER_RESPONSE'] = statuses_dict[
+            SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE]
+        context['status_STATUS_ACCEPTED'] = statuses_dict[SessionQuote.STATUS_ACCEPTED]
+        context['status_STATUS_REJECTED'] = statuses_dict[SessionQuote.STATUS_REJECTED]
+        context['status_STATUS_CANCELED'] = statuses_dict[SessionQuote.STATUS_CANCELED]
+
         return context
 
     def get_success_url(self):
