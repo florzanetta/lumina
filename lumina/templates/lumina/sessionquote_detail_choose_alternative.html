@@ -17,28 +17,8 @@
 
     <table class="table">
     
-    <tr>
-        <th width="20%">Cliente:</th>
-        <td width="80%">{{ object.customer.name }}</td>
-    </tr>
-    <tr>
-        <th>
-            Estado:
-        </th>
-        <td>{{ object.get_status_display }}
-            &nbsp;&nbsp;
-            <a href="#helpModal" role="button"
-                class="btn btn-primary btn-mini"
-                data-toggle="modal"><i class="icon-question-sign icon-white"></i> Ayuda</a>
-        </td>
-    </tr>
-
-        <tr>
-            <th>Condiciones:</th>
-            <td><pre>{{ object.terms }}</pre>
-            </td>
-        </tr>
-
+    {% include 'lumina/include/sessionquote_details_readonly.html' %}
+    
         <tr>
             <th>&nbsp;</th>
             <td>
@@ -78,30 +58,6 @@
             </td>
         </tr>
         
-        {% if object.status == 'A' %}
-            <tr>
-                <th>
-                    Aceptado por:
-                </th>
-                <td>
-                    {{ object.accepted_rejected_by }}
-                    -
-                    {{ object.accepted_rejected_at }}
-                </td>
-            </tr>
-        {% endif %}
-        {% if object.status == 'R' %}
-            <tr>
-                <th>
-                    Rechazado por:
-                </th>
-                <td>
-                    {{ object.accepted_rejected_by }}
-                    -
-                    {{ object.accepted_rejected_at }}
-                </td>
-            </tr>
-        {% endif %}
     </table>
 
         <input type="submit" id="button_id_button_accept" name="button_accept"
