@@ -1,4 +1,5 @@
 {% extends "lumina/base.html" %}
+{% load humanize %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,12 +21,12 @@
             <td width="80%">{{ object.customer.name }}</td>
         </tr>
         <tr>
-            <th>Costo:</th>
-            <td>$&nbsp;{{ object.cost }}</td>
+            <th>Imágenes:</th>
+            <td>{{ object.image_quantity|intcomma }}</td>
         </tr>
         <tr>
-            <th>Imágenes:</th>
-            <td>{{ object.image_quantity }}</td>
+            <th>Costo:</th>
+            <td>$&nbsp;{{ object.cost|intcomma }}</td>
         </tr>
         <tr>
             <th>
@@ -49,6 +50,21 @@
             </td>
         </tr>
 
+        <tr>
+            <th>Presupuesto alternativos:</th>
+            <td>
+                {% if object.quote_alternatives.all %}
+                    <table class="table table-condensed table-hover table-bordered">
+                        {% for alt in object.quote_alternatives.all %}
+                            <tr><td>{{ alt.image_quantity|intcomma }}</td><td>$ {{ alt.cost|intcomma }}</td></tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <em>Sin presupuestos alternativos</em>
+                {% endif %}
+                
+            </td>
+        </tr>
         
         {% if object.status == 'A' %}
             <tr>
