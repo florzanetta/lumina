@@ -561,6 +561,9 @@ class SessionQuote(models.Model):
     terms = models.TextField()
     accepted_rejected_by = models.ForeignKey(LuminaUser, related_name='+', null=True, blank=True)
     accepted_rejected_at = models.DateTimeField(null=True, blank=True)
+    accepted_quote_alternative = models.ForeignKey('SessionQuoteAlternative',
+                                                   related_name='+',
+                                                   null=True, blank=True)
 
     objects = SessionQuoteManager()
 
@@ -619,3 +622,11 @@ class SessionQuote(models.Model):
 
     def __unicode__(self):
         return u"Quote for {}".format(str(self.customer))
+
+
+class SessionQuoteAlternative(models.Model):
+    """
+    """
+    session_quote = models.ForeignKey(SessionQuote, related_name='quote_alternatives')
+    image_quantity = models.PositiveIntegerField()
+    cost = models.DecimalField(max_digits=10, decimal_places=2)
