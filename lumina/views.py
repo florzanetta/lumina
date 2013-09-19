@@ -30,7 +30,8 @@ from lumina.models import Session, Image, LuminaUser, Customer, \
 from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm, \
     SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm, \
-    ImageSelectionCreateForm, SessionQuoteCreateForm, SessionQuoteUpdateForm
+    ImageSelectionCreateForm, SessionQuoteCreateForm, SessionQuoteUpdateForm, \
+    SessionQuoteAlternativeFormSet
 
 
 #
@@ -924,9 +925,20 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
         return SessionQuote.objects.modificable_sessionquote(self.request.user)
 
     def form_valid(self, form):
-        ret = super(SessionQuoteUpdateView, self).form_valid(form)
-        messages.success(self.request, 'El presupuesto fue actualizado correctamente')
-        return ret
+        # from Django docs:
+        # > This method is called when valid form data has been POSTed.
+        # > It should return an HttpResponse.
+
+        context = self.get_context_data()
+        formset = context['formset']
+        if formset.is_valid():
+            ret = super(SessionQuoteUpdateView, self).form_valid(form)
+            formset.instance = self.object
+            formset.save()
+            messages.success(self.request, 'El presupuesto fue actualizado correctamente')
+            return ret
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
 
     def get_context_data(self, **kwargs):
         context = super(SessionQuoteUpdateView, self).get_context_data(**kwargs)
@@ -934,6 +946,12 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
         context['submit_label'] = "Actualizar"
         # context['extra_buttons'] = [{'name': 'confirm_button',
         #                              'submit_label': 'Confirmar', }]
+        context['formset_title'] = "Cotizaciones alternativas"
+        if self.request.POST:
+            context['formset'] = SessionQuoteAlternativeFormSet(self.request.POST,
+                                                                instance=self.object)
+        else:
+            context['formset'] = SessionQuoteAlternativeFormSet(instance=self.object)
         return context
 
     def get_success_url(self):

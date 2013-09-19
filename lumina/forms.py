@@ -6,9 +6,10 @@ Created on Jun 1, 2013
 
 from django import forms
 from django.forms.widgets import CheckboxSelectMultiple
+from django.forms.models import inlineformset_factory
 
-from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail,\
-    Image, ImageSelection, SessionQuote
+from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail, \
+    Image, ImageSelection, SessionQuote, SessionQuoteAlternative
 
 
 #===============================================================================
@@ -39,7 +40,7 @@ class ImageSelectionCreateForm(forms.ModelForm):
     class Meta:
         model = ImageSelection
         fields = ('session', 'image_quantity',)
-        #exclude = ('user', 'status', 'selected_images')
+        # exclude = ('user', 'status', 'selected_images')
 
 
 #===============================================================================
@@ -50,14 +51,14 @@ class SessionCreateForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        fields = ('name', 'photographer', 'customer', 'shared_with', )
+        fields = ('name', 'photographer', 'customer', 'shared_with',)
 
 
 class SessionUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        fields = ('name', 'photographer', 'customer', 'shared_with', )
+        fields = ('name', 'photographer', 'customer', 'shared_with',)
         widgets = {
             'shared_with': CheckboxSelectMultiple(),
         }
@@ -146,7 +147,7 @@ class UserUpdateForm(forms.ModelForm):
 
 
 #===============================================================================
-# Session
+# SessionQuote
 #===============================================================================
 
 class SessionQuoteCreateForm(forms.ModelForm):
@@ -155,4 +156,32 @@ class SessionQuoteCreateForm(forms.ModelForm):
         model = SessionQuote
         fields = ('customer', 'image_quantity', 'cost', 'terms')
 
-SessionQuoteUpdateForm = SessionQuoteCreateForm
+
+class SessionQuoteUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = SessionQuote
+        fields = ('customer', 'image_quantity', 'cost', 'terms')
+
+
+#===============================================================================
+# SessionQuoteAlternative
+#===============================================================================
+
+# inline formset + class based views -> http://haineault.com/blog/155/
+
+# from django.forms.models import BaseModelFormSet
+# class BaseSessionQuoteAlternativeFormSet(BaseModelFormSet):
+#     def __init__(self, *args, **kwargs):
+#         super(BaseSessionQuoteAlternativeFormSet, self).__init__(*args, **kwargs)
+#         self.queryset = Author.objects.filter()
+#
+# SessionQuoteAlternativeFormSet = modelformset_factory(SessionQuoteAlternative,
+#                                                       formset=BaseSessionQuoteAlternativeFormSet)
+
+# SessionQuoteAlternativeFormSet = modelformset_factory(SessionQuoteAlternative)
+
+SessionQuoteAlternativeFormSet = inlineformset_factory(SessionQuote,
+                                                       SessionQuoteAlternative,
+                                                       can_delete=True,
+                                                       extra=3)

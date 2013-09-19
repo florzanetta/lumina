@@ -14,6 +14,12 @@
         {% csrf_token %}
 	    <table class="table">
 	        {{ form.as_table }}
+            {% if formset %}
+                <tr>
+                    <td colspan="2"><h5>{{ formset_title }}</h5></td>
+                </tr>
+                {{ formset.as_table }}
+            {% endif %}
 	        <tr>
                <td> </td>
 	           <td>
