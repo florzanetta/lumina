@@ -1095,6 +1095,7 @@ class SessionQuoteAlternativeUpdateView(UpdateView, SessionQuoteCreateUpdateMixi
     template_name = 'lumina/sessionquotealternative_update.html'
 
     def get_queryset(self):
+        # TODO: this query should be more specific
         return SessionQuote.objects.modificable_sessionquote(self.request.user)
 
     def form_valid(self, form):
