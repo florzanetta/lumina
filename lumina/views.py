@@ -32,6 +32,7 @@ from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm, \
     ImageSelectionCreateForm, SessionQuoteCreateForm, SessionQuoteUpdateForm, \
     SessionQuoteAlternativeFormSet, SessionQuoteUpdateForAlternativesForm
+import decimal
 
 
 #
@@ -1000,13 +1001,17 @@ class SessionQuoteDetailView(DetailView):
                 return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
             alternative = request.POST['selected_quote']
             if alternative == '0':
-                quote.accept(request.user)
-                messages.success(self.request,
-                                 'El presupuesto fue aceptado correctamente')
-                send_email_for_session_quote(quote, self.request.user, self.request)
-                return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
+                quote.accept(request.user, None)
             else:
-                raise(Exception("Not implemented yet"))
+                alt_quantity, alt_cost = alternative.split('_')
+                alt_quantity = int(alt_quantity)
+                alt_cost = decimal.Decimal(alt_cost)
+                quote.accept(request.user, [alt_quantity, alt_cost])
+
+            messages.success(self.request,
+                             'El presupuesto fue aceptado correctamente')
+            send_email_for_session_quote(quote, self.request.user, self.request)
+            return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
 
         elif 'button_reject' in request.POST:
             quote.reject(request.user)

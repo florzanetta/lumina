@@ -15,14 +15,18 @@
         <th width="20%">Cliente:</th>
         <td width="80%">{{ object.customer.name }}</td>
     </tr>
-    <tr>
-        <th>Imágenes:</th>
-        <td>{{ object.image_quantity|intcomma }}</td>
-    </tr>
-    <tr>
-        <th>Costo:</th>
-        <td>$&nbsp;{{ object.cost|intcomma }}</td>
-    </tr>
+    {% if object.quote_alternatives.all %}
+        <!-- there are alternatives... won't show original value here to avoid confusion -->
+    {% else %}
+        <tr>
+            <th>Imágenes:</th>
+            <td>{{ object.image_quantity|intcomma }}</td>
+        </tr>
+        <tr>
+            <th>Costo:</th>
+            <td>$&nbsp;{{ object.cost|intcomma }}</td>
+        </tr>
+    {% endif %}
     <tr>
         <th>
             Estado:
