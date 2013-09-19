@@ -1027,6 +1027,8 @@ class SessionQuoteDetailView(DetailView):
         context = super(SessionQuoteDetailView, self).get_context_data(**kwargs)
         buttons = []
 
+        can_modify_alternatives = self.object.get_selected_quote in (0, None)
+
         if self.object.status == SessionQuote.STATUS_QUOTING:
             # The photographer did not finished the Quote
             if self.request.user.is_for_customer():
@@ -1049,8 +1051,9 @@ class SessionQuoteDetailView(DetailView):
             else:
                 buttons.append({'name': 'button_cancel',
                                 'submit_label': "Cancelar", 'confirm': True, })
-                buttons.append({'name': 'button_update_quote_alternatives',
-                                'submit_label': "Editar presup. alternativos", })
+                if can_modify_alternatives:
+                    buttons.append({'name': 'button_update_quote_alternatives',
+                                    'submit_label': "Editar presup. alternativos", })
 
         elif self.object.status == SessionQuote.STATUS_REJECTED:
             # Accepted or rejected -> photographer always can cancel()
@@ -1067,8 +1070,9 @@ class SessionQuoteDetailView(DetailView):
             else:
                 buttons.append({'name': 'button_cancel',
                                 'submit_label': "Cancelar", 'confirm': True, })
-                buttons.append({'name': 'button_update_quote_alternatives',
-                                'submit_label': "Editar presup. alternativos", })
+                if can_modify_alternatives:
+                    buttons.append({'name': 'button_update_quote_alternatives',
+                                    'submit_label': "Editar presup. alternativos", })
 
         elif self.object.status == SessionQuote.STATUS_CANCELED:
             # Canceled
@@ -1077,6 +1081,7 @@ class SessionQuoteDetailView(DetailView):
         else:
             raise(Exception("Invalid 'status': {}".format(self.object.status)))
 
+        context['selected_quote'] = self.object.get_selected_quote
         context['extra_buttons'] = buttons
         _put_session_statuses_in_context(context)
 
@@ -1090,6 +1095,7 @@ class SessionQuoteAlternativeSelectView(DetailView):
     This is kind a 'read-write' view... The 'read-only' view is SessionQuoteDetailView
     """
     model = SessionQuote
+    template_name = 'lumina/sessionquote_detail_choose_alternative.html'
 
     def get_queryset(self):
         # TODO: we should not use `visible_sessionquote()`

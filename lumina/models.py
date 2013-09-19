@@ -647,6 +647,21 @@ class SessionQuote(models.Model):
         self.save()
         # FIXME: IMPLEMENT THIS
 
+    def get_selected_quote(self):
+        """
+        Returns an `int` repesenting the selected quote, or None.
+         - returns '0' if the original quote was selected.
+         - returns the `id` of SessionQuoteAlternative if an alternative was selected
+         - otherwise returns None
+        """
+        if self.accepted_rejected_at:
+            if self.accepted_quote_alternative is None:
+                return 0
+            else:
+                return self.accepted_quote_alternative.id
+        else:
+            return None
+
     def __unicode__(self):
         return u"Quote for {}".format(str(self.customer))
 

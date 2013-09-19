@@ -61,5 +61,40 @@
 
 {% endblock content %}
 
+
+{% block javascript_bottom %} 
+
+<script type="text/javascript">
+
+function custom_confirm() {
+	$('input[name=radioName]:checked', '#myForm').val()
+	// $("input[name=selected_quote]:radio").attr('disabled', 'disabled');
+	var value = $('input[name=selected_quote]:checked').val();
+	if (typeof value === "undefined") {
+		alert('Debe seleccionar alguna alternativa');
+		return false;
+	}
+	return confirm('¿Seguro?');
+}
+
+$(function() {
+	// Initial setup -> all disabled
+	$('#button_id_button_accept').attr('disabled', 'disabled');
+
+	// Callback
+    $('#accept_terms').click(function() {
+        if ($(this).is(':checked')) {
+            $('#button_id_button_accept').removeAttr('disabled');
+        } else {
+            $('#button_id_button_accept').attr('disabled', 'disabled');
+        }
+    });
+});
+
+</script>
+
+{% endblock %}
+
+
 </body>
 </html>

@@ -4,29 +4,16 @@
 {# If you include this snippet, you should include 'sessionquote_details_readonly.html' too.  #}
 {#                                                                                            #}
 {#  Parameters:                                                                               #}
-{#   - show_accept_terms_checkbox                                                             #}
 {#                                                                                            #}
 {#  Uses:                                                                                     #}
 {#   - object                                                                                 #}
-{#   - show_accept_terms_checkbox                                                             #}
+{#   - selected_quote                                                                         #}
 {#                                                                                            #}
 -->
     <tr>
         <th width="20%">Cliente:</th>
         <td width="80%">{{ object.customer.name }}</td>
     </tr>
-    {% if object.quote_alternatives.all %}
-        <!-- there are alternatives... won't show original value here to avoid confusion -->
-    {% else %}
-        <tr>
-            <th>Imágenes:</th>
-            <td>{{ object.image_quantity|intcomma }}</td>
-        </tr>
-        <tr>
-            <th>Costo:</th>
-            <td>$&nbsp;{{ object.cost|intcomma }}</td>
-        </tr>
-    {% endif %}
     <tr>
         <th>
             Estado:
@@ -42,10 +29,6 @@
         <tr>
             <th>Condiciones:</th>
             <td><pre>{{ object.terms }}</pre>
-            {% if show_accept_terms_checkbox %}
-                <label for="accept_terms"><input
-                    type="checkbox" id="accept_terms" name="accept_terms"> Acepto las condiciones</label>
-            {% endif %}
             </td>
         </tr>
 
@@ -57,29 +40,32 @@
                         <th width="40%" style="text-align: right;">&nbsp;</th>
                         <th width="30%" style="text-align: right;">Cant. de fotograias</th>
                         <th width="30%" style="text-align: right;">Costo</th>
-                        {% if show_accept_terms_checkbox %}
-                            <th width="5%" style="text-align: right;">&nbsp;</th>
-                        {% endif %}
+                        <th width="5%" style="text-align: center;">&nbsp;</th>
                     </tr>
-                    <tr>
-                        <th width="40%" style="text-align: right;">Presupuesto original:</th>
+                    <tr {% if selected_quote == 0 %}class="success"{% endif %}>
+                        <td width="40%" style="text-align: right; font-weight: bold;">Presupuesto original:</td>
                         <td width="30%" style="text-align: right;">{{ object.image_quantity|intcomma }}</td>
                         <td width="30%" style="text-align: right;">$ {{ object.cost|intcomma }}</td>
-                        {% if show_accept_terms_checkbox %}
-                            <td width="5%" style="text-align: right;"><input
-                                type="radio" name="selected_quote" value="0"
-                                {% if object.quote_alternatives.all.count == 0 %}checked=checked{% endif %}
-                                ></td>
-                        {% endif %}
+                        <td width="5%" style="text-align: center;">
+                            {% if selected_quote == 0 %}
+                                <i class="icon-ok"></i>
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </td>
                     </tr>
                     {% for alt in object.quote_alternatives.all %}
-                        <tr>
-                            <th style="text-align: right;">Alternativa:</th>
+                        <tr {% if selected_quote == alt.id %}class="success"{% endif %}>
+                            <td style="text-align: right; font-weight: bold;">Alternativa:</td>
                             <td style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
                             <td style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
-                            {% if show_accept_terms_checkbox %}
-                                <td width="5%" style="text-align: right;"><input type="radio" name="selected_quote" value="{{alt.image_quantity}}_{{alt.cost}}"></td>
-                            {% endif %}
+                            <td width="5%" style="text-align: center;">
+                                {% if selected_quote == alt.id %}
+                                    <i class="icon-ok"></i>
+                                {% else %}
+                                    &nbsp;
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
