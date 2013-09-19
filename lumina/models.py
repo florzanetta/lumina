@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied, ValidationError, \
     SuspiciousOperation
 from django.contrib.auth.models import AbstractUser, UserManager
+from types import NoneType
 
 
 class LuminaUserManager(UserManager):
@@ -597,8 +598,8 @@ class SessionQuote(models.Model):
         """
         The customer accept the quote.
 
-        `alternative_data` could be an `int` or a list of two `ints`:
-         - 0 -> to indentify the original quote
+        `alternative_data` could be `None` or a list of two `ints`:
+         - None -> to indentify the original quote
          - (yyy, zzz) -> to identify the alternative quote, being
              `yyy` the quantity (int) and `zzz` the cost (decimal.Decimal).
         """
@@ -607,10 +608,10 @@ class SessionQuote(models.Model):
         assert user.user_for_customer.studio == self.studio
         assert self.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE
 
-        assert type(alternative_data) in (int, list, tuple)
+        assert type(alternative_data) in (NoneType, list, tuple)
 
-        if type(alternative_data) == int:
-            assert alternative_data == 0
+        if alternative_data is None:
+            pass
             # done!
         elif type(alternative_data) in (list, tuple):
             assert len(alternative_data) == 2

@@ -449,7 +449,7 @@ class SessionQuoteModelTests(TestCase):
             self.user_for_customer)), 0)
 
         # accept()/reject() should fail befor confirm()
-        self.assertRaises(AssertionError, q_accept.accept, self.user_for_customer, 0)
+        self.assertRaises(AssertionError, q_accept.accept, self.user_for_customer, None)
         self.assertRaises(AssertionError, q_reject.reject, self.user_for_customer)
 
         # confirm() the quotes
@@ -464,7 +464,7 @@ class SessionQuoteModelTests(TestCase):
                              self.user_for_other_customer,
                              self.photographer):
             try:
-                q_accept.accept(invalid_user, 0)
+                q_accept.accept(invalid_user, None)
                 raise Exception("accept() didn't failed with uesr {}".format(invalid_user))
             except AssertionError:
                 pass
@@ -481,7 +481,7 @@ class SessionQuoteModelTests(TestCase):
         self.assertTrue(q_reject.accepted_rejected_at is None)
 
         # accept() should sucess after confirm()
-        q_accept.accept(self.user_for_customer, 0)
+        q_accept.accept(self.user_for_customer, None)
         q_reject.reject(self.user_for_customer)
         SessionQuote.objects.get(pk=q_accept.id,
                                  status=SessionQuote.STATUS_ACCEPTED)
@@ -524,7 +524,7 @@ class SessionQuoteModelTests(TestCase):
         self.assertEqual(q_accept_1.status, SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
         self.assertEqual(q_accept_2.status, SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
 
-        q_accept_1.accept(self.user_for_customer, 0)
+        q_accept_1.accept(self.user_for_customer, None)
 
         self.assertEqual(q_accept_1.status, SessionQuote.STATUS_ACCEPTED)
         self.assertEqual(q_accept_2.status, SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
@@ -537,9 +537,9 @@ class SessionQuoteModelTests(TestCase):
         _c()
         self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, '0')
         _c()
-        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, 1)
+        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, 0)
         _c()
-        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, None)
+        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, 1)
         _c()
         self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, (1, 2, 3))
         _c()
