@@ -655,10 +655,13 @@ class SessionQuote(models.Model):
          - otherwise returns None
         """
         if self.accepted_rejected_at:
-            if self.accepted_quote_alternative is None:
-                return 0
+            if self.status == self.STATUS_ACCEPTED:
+                if self.accepted_quote_alternative is None:
+                    return 0
+                else:
+                    return self.accepted_quote_alternative.id
             else:
-                return self.accepted_quote_alternative.id
+                return None
         else:
             return None
 
