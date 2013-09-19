@@ -547,11 +547,11 @@ class SessionQuote(models.Model):
     STATUS_REJECTED = 'R'
     STATUS_CANCELED = 'E'
     STATUS = (
-        (STATUS_QUOTING, u'Siendo creado'),
+        (STATUS_QUOTING, u'Siendo creado por fotografo'),
         (STATUS_WAITING_CUSTOMER_RESPONSE, u'Esperando aceptacion de cliente'),
-        (STATUS_ACCEPTED, u'Aceptado'),
-        (STATUS_REJECTED, u'Rechazado'),
-        (STATUS_CANCELED, u'Cancelado'),
+        (STATUS_ACCEPTED, u'Aceptado por el cliente'),
+        (STATUS_REJECTED, u'Rechazado por el cliente'),
+        (STATUS_CANCELED, u'Cancelado por fotografo'),
     )
 
     studio = models.ForeignKey(Studio, related_name='session_quotes')
@@ -655,13 +655,17 @@ class SessionQuote(models.Model):
          - otherwise returns None
         """
         if self.accepted_rejected_at:
-            if self.status == self.STATUS_ACCEPTED:
-                if self.accepted_quote_alternative is None:
-                    return 0
-                else:
-                    return self.accepted_quote_alternative.id
-            else:
+            # A selection was made by the customer (accept or reject)
+
+            # If was rejected by the user...
+            if self.status == self.STATUS_REJECTED:
                 return None
+
+            # The item was accepted. Now may be 'STATUS_ACCEPTED' or 'STATUS_CANCELED'
+            if self.accepted_quote_alternative is None:
+                return 0
+            else:
+                return self.accepted_quote_alternative.id
         else:
             return None
 
