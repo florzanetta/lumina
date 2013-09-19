@@ -10,7 +10,10 @@ from django.test import TestCase
 from django.test.utils import override_settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth import authenticate
-from lumina.models import SessionQuote, Studio, LuminaUser
+from lumina.models import SessionQuote, Studio, LuminaUser, \
+    SessionQuoteAlternative
+import decimal
+from lumina.forms import SessionQuoteAlternativeFormSet
 
 # from lumina.pil_utils import generate_thumbnail
 # from lumina.models import Image, Album, LuminaUser
@@ -370,6 +373,16 @@ class SessionQuoteModelTests(TestCase):
                                             cost=12.34)
         return quote
 
+    def _create_quote_alternatives(self, quote):
+        return (
+            SessionQuoteAlternative.objects.create(session_quote=quote,
+                                                   image_quantity=10,
+                                                   cost=decimal.Decimal('110.11')),
+            SessionQuoteAlternative.objects.create(session_quote=quote,
+                                                   image_quantity=20,
+                                                   cost=decimal.Decimal('220.22'))
+        )
+
     def test_cancel(self):
         count = SessionQuote.objects.all().count()
         q = self._create_quote()
@@ -389,7 +402,7 @@ class SessionQuoteModelTests(TestCase):
         # Assert no more state transitions are allowed
         self.assertRaises(AssertionError, quote.confirm, self.photographer)
         self.assertRaises(AssertionError, quote.cancel, self.photographer)
-        self.assertRaises(AssertionError, quote.accept, self.user_for_customer)
+        self.assertRaises(AssertionError, quote.accept, self.user_for_customer, 0)
         self.assertRaises(AssertionError, quote.reject, self.user_for_customer)
 
     def test_confirm(self):
@@ -419,17 +432,24 @@ class SessionQuoteModelTests(TestCase):
 
     def test_accept_reject(self):
         count = SessionQuote.objects.all().count()
+
         q_accept = self._create_quote()
+        self._create_quote_alternatives(q_accept)
         q_reject = self._create_quote()
+        self._create_quote_alternatives(q_reject)
+
         self.assertEqual(SessionQuote.objects.all().count(), count + 2)
         q_accept = SessionQuote.objects.all().get(pk=q_accept.id)
         q_reject = SessionQuote.objects.all().get(pk=q_reject.id)
+
+        self.assertEqual(q_accept.quote_alternatives.count(), 2)
+        self.assertEqual(q_reject.quote_alternatives.count(), 2)
 
         self.assertEqual(len(SessionQuote.objects.get_waiting_for_customer_response(
             self.user_for_customer)), 0)
 
         # accept()/reject() should fail befor confirm()
-        self.assertRaises(AssertionError, q_accept.accept, self.user_for_customer)
+        self.assertRaises(AssertionError, q_accept.accept, self.user_for_customer, 0)
         self.assertRaises(AssertionError, q_reject.reject, self.user_for_customer)
 
         # confirm() the quotes
@@ -444,7 +464,7 @@ class SessionQuoteModelTests(TestCase):
                              self.user_for_other_customer,
                              self.photographer):
             try:
-                q_accept.accept(invalid_user)
+                q_accept.accept(invalid_user, 0)
                 raise Exception("accept() didn't failed with uesr {}".format(invalid_user))
             except AssertionError:
                 pass
@@ -461,7 +481,7 @@ class SessionQuoteModelTests(TestCase):
         self.assertTrue(q_reject.accepted_rejected_at is None)
 
         # accept() should sucess after confirm()
-        q_accept.accept(self.user_for_customer)
+        q_accept.accept(self.user_for_customer, 0)
         q_reject.reject(self.user_for_customer)
         SessionQuote.objects.get(pk=q_accept.id,
                                  status=SessionQuote.STATUS_ACCEPTED)
@@ -481,6 +501,62 @@ class SessionQuoteModelTests(TestCase):
                              self.user_for_customer):
             self.assertRaises(AssertionError, q_accept.cancel, invalid_user)
             self.assertRaises(AssertionError, q_reject.cancel, invalid_user)
+
+    def test_accept_alternative_quote(self):
+        count = SessionQuote.objects.all().count()
+        # q1
+        q_accept_1 = self._create_quote()
+        self._create_quote_alternatives(q_accept_1)
+        q_accept_1 = SessionQuote.objects.all().get(pk=q_accept_1.id)
+        self.assertEqual(q_accept_1.status, SessionQuote.STATUS_QUOTING)
+
+        # q2
+        q_accept_2 = self._create_quote()
+        self._create_quote_alternatives(q_accept_2)
+        q_accept_2 = SessionQuote.objects.all().get(pk=q_accept_2.id)
+        self.assertEqual(q_accept_2.status, SessionQuote.STATUS_QUOTING)
+
+        # checks
+        self.assertEqual(SessionQuote.objects.all().count(), count + 2)
+
+        q_accept_1.confirm(self.photographer)
+        q_accept_2.confirm(self.photographer)
+        self.assertEqual(q_accept_1.status, SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
+        self.assertEqual(q_accept_2.status, SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
+
+        q_accept_1.accept(self.user_for_customer, 0)
+
+        self.assertEqual(q_accept_1.status, SessionQuote.STATUS_ACCEPTED)
+        self.assertEqual(q_accept_2.status, SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
+
+        def _c():
+            self.assertEqual(q_accept_2.status, SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE,
+                             'Invalid status: ' + q_accept_2.get_status_display())
+
+        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, 'some_string')
+        _c()
+        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, '0')
+        _c()
+        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, 1)
+        _c()
+        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, None)
+        _c()
+        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, (1, 2, 3))
+        _c()
+        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, [1, 2, 3])
+        _c()
+        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, (1, 2))
+        _c()
+        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, (1, 2.2))
+        _c()
+
+        self.assertRaises(SessionQuoteAlternative.DoesNotExist,
+                          q_accept_2.accept,
+                          self.user_for_customer,
+                          [10, decimal.Decimal('220.22')])
+
+        q_accept_2.accept(self.user_for_customer, (20, decimal.Decimal('220.22')))
+        self.assertEqual(q_accept_2.status, SessionQuote.STATUS_ACCEPTED)
 
     def test_get_waiting_for_customer_response(self):
         try:

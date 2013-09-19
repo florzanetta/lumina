@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+import decimal
 
 from django.db import models
 from django.core.urlresolvers import reverse
@@ -592,17 +593,42 @@ class SessionQuote(models.Model):
         self.save()
         # FIXME: IMPLEMENT THIS
 
-    def accept(self, user):
+    def accept(self, user, alternative_data):
         """
         The customer accept the quote.
+
+        `alternative_data` could be an `int` or a list of two `ints`:
+         - 0 -> to indentify the original quote
+         - (yyy, zzz) -> to identify the alternative quote, being
+             `yyy` the quantity (int) and `zzz` the cost (decimal.Decimal).
         """
         assert user.is_for_customer()
         assert user.user_for_customer == self.customer
         assert user.user_for_customer.studio == self.studio
         assert self.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE
+
+        assert type(alternative_data) in (int, list, tuple)
+
+        if type(alternative_data) == int:
+            assert alternative_data == 0
+            # done!
+        elif type(alternative_data) in (list, tuple):
+            assert len(alternative_data) == 2
+            alt_quantity, alt_cost = alternative_data
+            assert type(alt_quantity) == int
+            assert type(alt_cost) == decimal.Decimal
+            sqa = self.quote_alternatives.get(image_quantity=alt_quantity,
+                                              cost=alt_cost)
+            self.accepted_quote_alternative = sqa
+            # done!
+        else:
+            raise(Exception('Invalid alternative_data'))
+
+        # change state after checks
         self.status = SessionQuote.STATUS_ACCEPTED
         self.accepted_rejected_by = user
         self.accepted_rejected_at = datetime.datetime.now()
+
         self.save()
         # FIXME: IMPLEMENT THIS
 
