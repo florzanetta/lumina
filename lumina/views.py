@@ -171,6 +171,17 @@ def _customer_home(request):
         context_instance=RequestContext(request))
 
 
+def _put_session_statuses_in_context(context):
+    # Status de SessionQuote (reusado más abajo)
+    statuses_dict = dict(SessionQuote.STATUS)
+    context['status_STATUS_QUOTING'] = statuses_dict[SessionQuote.STATUS_QUOTING]
+    context['status_STATUS_WAITING_CUSTOMER_RESPONSE'] = statuses_dict[
+        SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE]
+    context['status_STATUS_ACCEPTED'] = statuses_dict[SessionQuote.STATUS_ACCEPTED]
+    context['status_STATUS_REJECTED'] = statuses_dict[SessionQuote.STATUS_REJECTED]
+    context['status_STATUS_CANCELED'] = statuses_dict[SessionQuote.STATUS_CANCELED]
+
+
 def home(request):
     # 'auth_providers': request.user.social_auth.get_providers(),
     if not request.user.is_authenticated():
@@ -973,6 +984,8 @@ class SessionQuoteDetailView(DetailView):
     """
     This view allows the users (both photographers & customers)
     to see the Quote and, for the customer, accept or reject.
+
+    This is kind a 'read-only' view... The 'read-write' view is SessionQuoteAlternativeSelectView
     """
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
     #    #django.views.generic.detail.DetailView
@@ -982,8 +995,6 @@ class SessionQuoteDetailView(DetailView):
         return SessionQuote.objects.visible_sessionquote(self.request.user)
 
     def post(self, request, *args, **kwargs):
-        """
-        """
         quote = self.get_object()
         if 'button_update' in request.POST:
             return HttpResponseRedirect(reverse('quote_update', args=[quote.id]))
@@ -995,31 +1006,9 @@ class SessionQuoteDetailView(DetailView):
             send_email_for_session_quote(quote, self.request.user, self.request)
             return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
 
-        elif 'button_accept' in request.POST:
-            if 'accept_terms' not in request.POST:
-                messages.error(self.request, 'Debe aceptar las condiciones')
-                return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
-            alternative = request.POST['selected_quote']
-            if alternative == '0':
-                quote.accept(request.user, None)
-            else:
-                alt_quantity, alt_cost = alternative.split('_')
-                alt_quantity = int(alt_quantity)
-                alt_cost = decimal.Decimal(alt_cost)
-                quote.accept(request.user, [alt_quantity, alt_cost])
+        elif 'button_go_to_choose_quote' in request.POST:
+            return HttpResponseRedirect(reverse('quote_choose_alternative', args=[quote.id]))
 
-            messages.success(self.request,
-                             'El presupuesto fue aceptado correctamente')
-            send_email_for_session_quote(quote, self.request.user, self.request)
-            return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
-
-        elif 'button_reject' in request.POST:
-            quote.reject(request.user)
-            messages.success(self.request,
-                             'El presupuesto fue rechazado correctamente')
-            send_email_for_session_quote(quote, self.request.user, self.request)
-            return HttpResponseRedirect(reverse('quote_detail',
-                                                args=[quote.id]))
         elif 'button_cancel' in request.POST:
             quote.cancel(request.user)
             messages.success(self.request,
@@ -1055,11 +1044,8 @@ class SessionQuoteDetailView(DetailView):
             # Waiting for customer accept()/reject().
             # Photographer always can cancel()
             if self.request.user.is_for_customer():
-                buttons.append({'name': 'button_accept',
-                                'submit_label': "Aceptar", 'custom_confirm': True, })
-                buttons.append({'name': 'button_reject',
-                                'submit_label': "Rechazar", 'confirm': True, })
-                context['show_accept_terms_checkbox'] = True
+                buttons.append({'name': 'button_go_to_choose_quote',
+                                'submit_label': "Respdoner presupuesto (aceptar/rechazar)", })
             else:
                 buttons.append({'name': 'button_cancel',
                                 'submit_label': "Cancelar", 'confirm': True, })
@@ -1087,22 +1073,87 @@ class SessionQuoteDetailView(DetailView):
         elif self.object.status == SessionQuote.STATUS_CANCELED:
             # Canceled
             pass
+
         else:
             raise(Exception("Invalid 'status': {}".format(self.object.status)))
 
         context['extra_buttons'] = buttons
-
-        # Status de SessionQuote (reusado más abajo)
-        statuses_dict = dict(SessionQuote.STATUS)
-        context['status_STATUS_QUOTING'] = statuses_dict[SessionQuote.STATUS_QUOTING]
-        context['status_STATUS_WAITING_CUSTOMER_RESPONSE'] = statuses_dict[
-            SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE]
-        context['status_STATUS_ACCEPTED'] = statuses_dict[SessionQuote.STATUS_ACCEPTED]
-        context['status_STATUS_REJECTED'] = statuses_dict[SessionQuote.STATUS_REJECTED]
-        context['status_STATUS_CANCELED'] = statuses_dict[SessionQuote.STATUS_CANCELED]
+        _put_session_statuses_in_context(context)
 
         return context
 
+
+class SessionQuoteAlternativeSelectView(DetailView):
+    """
+    This view allows the select a quote alternative to customers.
+
+    This is kind a 'read-write' view... The 'read-only' view is SessionQuoteDetailView
+    """
+    model = SessionQuote
+
+    def get_queryset(self):
+        # TODO: we should not use `visible_sessionquote()`
+        return SessionQuote.objects.visible_sessionquote(self.request.user)
+
+    def post(self, request, *args, **kwargs):
+        quote = self.get_object()
+        if 'button_accept' in request.POST:
+            if 'accept_terms' not in request.POST:
+                messages.error(self.request, 'Debe aceptar las condiciones')
+                return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
+            alternative = request.POST['selected_quote']
+            if alternative == '0':
+                quote.accept(request.user, None)
+            else:
+                alt_quantity, alt_cost = alternative.split('_')
+                alt_quantity = int(alt_quantity)
+                alt_cost = decimal.Decimal(alt_cost)
+                quote.accept(request.user, [alt_quantity, alt_cost])
+
+            messages.success(self.request,
+                             'El presupuesto fue aceptado correctamente')
+            send_email_for_session_quote(quote, self.request.user, self.request)
+            return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
+
+        elif 'button_reject' in request.POST:
+            quote.reject(request.user)
+            messages.success(self.request,
+                             'El presupuesto fue rechazado correctamente')
+            send_email_for_session_quote(quote, self.request.user, self.request)
+            return HttpResponseRedirect(reverse('quote_detail',
+                                                args=[quote.id]))
+
+        else:
+            raise(SuspiciousOperation())
+
+    def get_context_data(self, **kwargs):
+        context = super(SessionQuoteAlternativeSelectView, self).get_context_data(**kwargs)
+        buttons = []
+
+        if not self.request.user.is_for_customer():
+            raise(Exception("The user is not a customer! User: {}".format(self.request.user)))
+
+        if self.object.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE:
+            context['show_accept_terms_checkbox'] = True
+            buttons.append({'name': 'button_accept',
+                            'submit_label': "Aceptar", 'custom_confirm': True, })
+            buttons.append({'name': 'button_reject',
+                            'submit_label': "Rechazar", 'confirm': True, })
+
+        elif self.object.status == SessionQuote.STATUS_ACCEPTED:
+            # Accepted or rejected -> photographer always can cancel()
+            pass
+
+        else:
+            raise(Exception("Invalid 'status': {}".format(self.object.status)))
+
+        context['extra_buttons'] = buttons
+        _put_session_statuses_in_context(context)
+
+        return context
+
+
+# ------------------------------------------------------------------------------------------
 
 class SessionQuoteAlternativeUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
@@ -1143,14 +1194,7 @@ class SessionQuoteAlternativeUpdateView(UpdateView, SessionQuoteCreateUpdateMixi
         else:
             context['formset'] = SessionQuoteAlternativeFormSet(instance=self.object)
 
-        # Status de SessionQuote (reusado más abajo)
-        statuses_dict = dict(SessionQuote.STATUS)
-        context['status_STATUS_QUOTING'] = statuses_dict[SessionQuote.STATUS_QUOTING]
-        context['status_STATUS_WAITING_CUSTOMER_RESPONSE'] = statuses_dict[
-            SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE]
-        context['status_STATUS_ACCEPTED'] = statuses_dict[SessionQuote.STATUS_ACCEPTED]
-        context['status_STATUS_REJECTED'] = statuses_dict[SessionQuote.STATUS_REJECTED]
-        context['status_STATUS_CANCELED'] = statuses_dict[SessionQuote.STATUS_CANCELED]
+        _put_session_statuses_in_context(context)
 
         return context
 
