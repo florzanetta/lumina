@@ -1134,17 +1134,12 @@ class SessionQuoteAlternativeSelectView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(SessionQuoteAlternativeSelectView, self).get_context_data(**kwargs)
-        buttons = []
 
         if not self.request.user.is_for_customer():
             raise(Exception("The user is not a customer! User: {}".format(self.request.user)))
 
         if self.object.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE:
-            context['show_accept_terms_checkbox'] = True
-            buttons.append({'name': 'button_accept',
-                            'submit_label': "Aceptar", 'custom_confirm': True, })
-            buttons.append({'name': 'button_reject',
-                            'submit_label': "Rechazar", 'confirm': True, })
+            pass
 
         elif self.object.status == SessionQuote.STATUS_ACCEPTED:
             # Accepted or rejected -> photographer always can cancel()
@@ -1153,7 +1148,6 @@ class SessionQuoteAlternativeSelectView(DetailView):
         else:
             raise(Exception("Invalid 'status': {}".format(self.object.status)))
 
-        context['extra_buttons'] = buttons
         _put_session_statuses_in_context(context)
 
         return context
