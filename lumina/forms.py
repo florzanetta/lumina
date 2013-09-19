@@ -78,7 +78,7 @@ class ImageUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Image
-        fields = ('image', 'session',)
+        fields = ('session',)
 
 
 #===============================================================================
