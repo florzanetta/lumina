@@ -708,11 +708,15 @@ class SessionQuote(models.Model):
         Return the valid quotes alternatives.
         """
         if self.status == self.STATUS_WAITING_CUSTOMER_RESPONSE:
+            # The customer hasn't choosed any alternative. Show'em all
             return self.quote_alternatives.all().order_by('image_quantity')
         if self.status == self.STATUS_ACCEPTED:
             current = self.get_selected_quote()
             if current == 0:
+                # The customer has choosed the default alternative. Show'em all
                 return self.quote_alternatives.all().order_by('image_quantity')
+            # The customer has choosed an alternative. Show the alternatives with
+            #  more photos than the current alternative
             current_quantity = self.accepted_quote_alternative.image_quantity
             return self.quote_alternatives.filter(image_quantity__gt=current_quantity) \
                 .order_by('image_quantity')
