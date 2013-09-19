@@ -1,0 +1,43 @@
+{% load humanize %}
+<!--
+{#                                                                                            #}
+{# If you include this snippet, you should include 'sessionquote_details_readonly.html' too.  #}
+{#                                                                                            #}
+{#  Uses:                                                                                     #}
+{#   - object                                                                                 #}
+{#   - show_accept_terms_checkbox                                                             #}
+{#                                                                                            #}
+-->
+    <tr>
+        <th width="20%">Cliente:</th>
+        <td width="80%">{{ object.customer.name }}</td>
+    </tr>
+    <tr>
+        <th>Imágenes:</th>
+        <td>{{ object.image_quantity|intcomma }}</td>
+    </tr>
+    <tr>
+        <th>Costo:</th>
+        <td>$&nbsp;{{ object.cost|intcomma }}</td>
+    </tr>
+    <tr>
+        <th>
+            Estado:
+        </th>
+        <td>{{ object.get_status_display }}
+            &nbsp;&nbsp;
+            <a href="#helpModal" role="button"
+                class="btn btn-primary btn-mini"
+                data-toggle="modal"><i class="icon-question-sign icon-white"></i> Ayuda</a>
+        </td>
+    </tr>
+        <tr>
+            <th>Condiciones:</th>
+            <td><pre>{{ object.terms }}</pre>
+            {% if show_accept_terms_checkbox %}
+                <label for="accept_terms"><input
+                    type="checkbox" id="accept_terms" name="accept_terms"> Acepto las condiciones</label>
+            {% endif %}
+            </td>
+        </tr>
+    

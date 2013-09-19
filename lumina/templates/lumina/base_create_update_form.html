@@ -13,6 +13,9 @@
     <form action="." method="post" {% if multipart %}enctype="multipart/form-data"{% endif %}>
         {% csrf_token %}
 	    <table class="table">
+            {% block pre_form_content %}
+            {% endblock pre_form_content %}
+            
 	        {{ form.as_table }}
             {% if formset %}
                 <tr>
@@ -34,6 +37,10 @@
                </td>
 	        </tr>
 		</table>
+        
+        {% block post_table_content %}
+        {% endblock post_table_content %}
+
     </form>
 
 {% endblock content %}

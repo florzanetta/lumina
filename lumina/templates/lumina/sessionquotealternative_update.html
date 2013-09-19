@@ -1,0 +1,24 @@
+{% extends "lumina/base_create_update_form.html" %}
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina - {{ title }}{% endblock %}</title>
+</head>
+<body>
+
+<table>
+{% block pre_form_content %}
+
+    {% include 'lumina/include/sessionquote_details_readonly.html' %}
+
+{% endblock pre_form_content %}
+</table>
+
+{% block post_table_content %}
+    {% include 'lumina/include/sessionquote_details_help.html' %}
+{% endblock post_table_content %}
+
+</body>
+</html>

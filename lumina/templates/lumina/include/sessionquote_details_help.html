@@ -1,0 +1,37 @@
+<!--
+{# This snippet is to facilitate the use of 'sessionquote_details_readonly.html' #}
+-->
+    <div id="helpModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="helpModalLabel">Estados</h3>
+      </div>
+      <div class="modal-body">
+        <p>
+            <ul>
+                <li><strong>{{status_STATUS_QUOTING}}</strong>: el fotografo está en proceso de carga de los términos,
+                    condiciones, costos, etc.
+                     <ul>
+                        <li>el fotografo debe <strong>Confirmar</strong> el presupuesto para que
+                            pase al siguiente estado: {{status_STATUS_WAITING_CUSTOMER_RESPONSE}}
+                        </li>
+                     </ul>
+                </li>
+                <li><strong>{{status_STATUS_WAITING_CUSTOMER_RESPONSE}}</strong>: el fotógrafo ha finalizado la especificación
+                    del presupuesto... El cliente debe aceptar o rechazar las condiciones.
+                     <ul>
+                        <li>el cliente debe <strong>Aceptar</strong> or <strong>Rechazar</strong> el presupuesto para que
+                            pase a alguno de los siguientes estados: {{status_STATUS_ACCEPTED}} o {{status_STATUS_REJECTED}}
+                        </li>
+                     </ul>
+                </li>
+                <li><strong>{{status_STATUS_ACCEPTED}}</strong>: el presupuesto ha sido aceptado por el cliente.</li>
+                <li><strong>{{status_STATUS_REJECTED}}</strong>: el presupuesto ha sido rechazado por el clinete.</li>
+                <li><strong>{{status_STATUS_CANCELED}}</strong>: el presupuesto ha sido cancelado por el fotógrafo.</li>
+            </ul>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+      </div>
+    </div>

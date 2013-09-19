@@ -31,7 +31,7 @@ from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm, \
     SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm, \
     ImageSelectionCreateForm, SessionQuoteCreateForm, SessionQuoteUpdateForm, \
-    SessionQuoteAlternativeFormSet
+    SessionQuoteAlternativeFormSet, SessionQuoteUpdateForAlternativesForm
 
 
 #
@@ -1011,6 +1011,10 @@ class SessionQuoteDetailView(DetailView):
             send_email_for_session_quote(quote, self.request.user, self.request)
             return HttpResponseRedirect(reverse('quote_detail',
                                                 args=[quote.id]))
+
+        elif 'button_update_quote_alternatives' in request.POST:
+            return HttpResponseRedirect(reverse('quote_update_alternatives', args=[quote.id]))
+
         else:
             raise(SuspiciousOperation())
 
@@ -1043,15 +1047,26 @@ class SessionQuoteDetailView(DetailView):
             else:
                 buttons.append({'name': 'button_cancel',
                                 'submit_label': "Cancelar", 'confirm': True, })
+                buttons.append({'name': 'button_update_quote_alternatives',
+                                'submit_label': "Editar presup. alternativos", })
 
-        elif self.object.status in (SessionQuote.STATUS_ACCEPTED,
-                                    SessionQuote.STATUS_REJECTED):
+        elif self.object.status == SessionQuote.STATUS_REJECTED:
             # Accepted or rejected -> photographer always can cancel()
             if self.request.user.is_for_customer():
                 pass
             else:
                 buttons.append({'name': 'button_cancel',
                                 'submit_label': "Cancelar", 'confirm': True, })
+
+        elif self.object.status == SessionQuote.STATUS_ACCEPTED:
+            # Accepted or rejected -> photographer always can cancel()
+            if self.request.user.is_for_customer():
+                pass
+            else:
+                buttons.append({'name': 'button_cancel',
+                                'submit_label': "Cancelar", 'confirm': True, })
+                buttons.append({'name': 'button_update_quote_alternatives',
+                                'submit_label': "Editar presup. alternativos", })
 
         elif self.object.status == SessionQuote.STATUS_CANCELED:
             # Canceled
@@ -1070,3 +1085,46 @@ class SessionQuoteDetailView(DetailView):
         context['status_STATUS_CANCELED'] = statuses_dict[SessionQuote.STATUS_CANCELED]
 
         return context
+
+
+class SessionQuoteAlternativeUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
+    model = SessionQuote
+    form_class = SessionQuoteUpdateForAlternativesForm
+    template_name = 'lumina/sessionquotealternative_update.html'
+
+    def get_queryset(self):
+        return SessionQuote.objects.modificable_sessionquote(self.request.user)
+
+    def form_valid(self, form):
+        # from Django docs:
+        # > This method is called when valid form data has been POSTed.
+        # > It should return an HttpResponse.
+
+        context = self.get_context_data()
+        formset = context['formset']
+        if formset.is_valid():
+            ret = super(SessionQuoteAlternativeUpdateView, self).form_valid(form)
+            formset.instance = self.object
+            formset.save()
+            messages.success(self.request, 'El presupuesto fue actualizado correctamente')
+            return ret
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
+    def get_context_data(self, **kwargs):
+        context = super(SessionQuoteAlternativeUpdateView, self).get_context_data(**kwargs)
+        context['title'] = "Actualizar presupuesto"
+        context['submit_label'] = "Actualizar"
+        # context['extra_buttons'] = [{'name': 'confirm_button',
+        #                              'submit_label': 'Confirmar', }]
+        context['formset_title'] = "Cotizaciones alternativas"
+        if self.request.POST:
+            context['formset'] = SessionQuoteAlternativeFormSet(self.request.POST,
+                                                                instance=self.object)
+        else:
+            context['formset'] = SessionQuoteAlternativeFormSet(instance=self.object)
+        return context
+
+    def get_success_url(self):
+        return reverse('quote_detail', args=[self.object.id])
