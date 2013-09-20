@@ -985,6 +985,9 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
 
         if self.object.status == SessionQuote.STATUS_QUOTING:
             context['submit_label'] = "Actualizar"
+            context['full_edit'] = True
+        else:
+            context['full_edit'] = False
 
         buttons = context.get('extra_buttons', [])
         buttons.append({'link_url': reverse('quote_detail', args=[self.object.id]),
