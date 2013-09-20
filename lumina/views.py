@@ -1222,7 +1222,15 @@ class SessionQuoteAlternativeCreateView(CreateView):
 
     def form_valid(self, form):
         session_quote_id = self.kwargs['session_quote_id']
-        form.instance.session_quote = SessionQuote.objects.get(pk=session_quote_id)
+        session_quote = SessionQuote.objects.get(pk=session_quote_id)
+        # check unique
+        qs = session_quote.quote_alternatives
+        if qs.filter(image_quantity=form.instance.image_quantity).count() != 0:
+            messages.error(self.request,
+                           'Ya existe una alternativa para la cantidad de fotos ingresada')
+            return self.render_to_response(self.get_context_data(form=form))
+
+        form.instance.session_quote = session_quote
         ret = super(SessionQuoteAlternativeCreateView, self).form_valid(form)
         messages.success(self.request, 'La alternativa fue creada correctamente')
         return ret
