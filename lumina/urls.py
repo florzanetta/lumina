@@ -12,7 +12,7 @@ from lumina.views import SessionListView, SessionDetailView, SessionCreateView, 
     ImageSelectionForCustomerView, SessionUploadPreviewsView,\
     SessionQuoteCreateView, SessionQuoteListView, SessionQuoteDetailView,\
     SessionQuoteUpdateView, SessionQuoteAlternativeUpdateView,\
-    SessionQuoteAlternativeSelectView
+    SessionQuoteAlternativeSelectView, SessionQuoteAlternativeCreateView
 
 
 admin.autodiscover()
@@ -218,6 +218,12 @@ urlpatterns = patterns(
         cache_control(private=True)(
             login_required(SessionQuoteAlternativeSelectView.as_view())),
         name='quote_choose_alternative'),
+
+    url(r'^quote/alternatives/create/(?P<session_quote_id>\d+)/$',
+        cache_control(private=True)(
+            login_required(SessionQuoteAlternativeCreateView.as_view())),
+        name='quote_alternatives_create'),
+
 
 
     #===========================================================================

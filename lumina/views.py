@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import uuid
+import decimal
 
 import mailer
 
@@ -26,13 +27,13 @@ from django.core.files.base import ContentFile
 
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Session, Image, LuminaUser, Customer, \
-    SharedSessionByEmail, ImageSelection, SessionQuote
+    SharedSessionByEmail, ImageSelection, SessionQuote, SessionQuoteAlternative
 from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm, \
     SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm, \
     ImageSelectionCreateForm, SessionQuoteCreateForm, SessionQuoteUpdateForm, \
-    SessionQuoteAlternativeFormSet, SessionQuoteUpdateForAlternativesForm
-import decimal
+    SessionQuoteAlternativeFormSet, SessionQuoteUpdateForAlternativesForm, \
+    SessionQuoteAlternativeCreateForm
 
 
 #
@@ -1206,3 +1207,37 @@ class SessionQuoteAlternativeUpdateView(UpdateView, SessionQuoteCreateUpdateMixi
 
     def get_success_url(self):
         return reverse('quote_detail', args=[self.object.id])
+
+
+class SessionQuoteAlternativeCreateView(CreateView):
+    model = SessionQuoteAlternative
+    form_class = SessionQuoteAlternativeCreateForm
+    template_name = 'lumina/base_create_update_form.html'
+
+    def get_initial(self):
+        initial = super(SessionQuoteAlternativeCreateView, self).get_initial()
+        session_quote_id = self.kwargs['session_quote_id']
+        initial.update({'session_quote': SessionQuote.objects.get(pk=session_quote_id)})
+        return initial
+
+    def form_valid(self, form):
+        session_quote_id = self.kwargs['session_quote_id']
+        form.instance.session_quote = SessionQuote.objects.get(pk=session_quote_id)
+        ret = super(SessionQuoteAlternativeCreateView, self).form_valid(form)
+        messages.success(self.request, 'La alternativa fue creada correctamente')
+        return ret
+
+    def get_context_data(self, **kwargs):
+        context = super(SessionQuoteAlternativeCreateView, self).get_context_data(**kwargs)
+        context['title'] = "Crear alternativa de presupuesto"
+        context['submit_label'] = "Crear"
+
+        buttons = context.get('extra_buttons', [])
+        buttons.append({'link_url': reverse('quote_update',
+                                            args=[self.kwargs['session_quote_id']]),
+                        'link_label': "Volver", })
+        context['extra_buttons'] = buttons
+        return context
+
+    def get_success_url(self):
+        return reverse('quote_update', args=[self.kwargs['session_quote_id']])

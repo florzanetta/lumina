@@ -41,6 +41,14 @@
                 {% empty %}
                     <tr><td colspan="4"><em>Sin alternativas</em></td></tr>
                 {% endfor %}
+                
+                    <tr><td colspan="4">
+                    
+                        <a href="{% url 'quote_alternatives_create' object.id %}"
+                            class="btn btn-primary">Crear alternativa</a>
+                    
+                    </td></tr>
+                
              </table>
         </td>
     </tr>

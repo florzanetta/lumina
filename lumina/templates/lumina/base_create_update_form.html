@@ -32,12 +32,19 @@
 	           <td>
                    <input type="submit" name="default_button"
                         value="{{ submit_label }}" class="btn btn-primary">
+
                    {% for extra_button in extra_buttons %}
-                        <input type="submit"
-                            name="{{ extra_button.name }}"
-                            value="{{ extra_button.submit_label }}"
-                            class="btn btn-primary">
+                        {% if 'link_url' in extra_button %}
+                            <a href="{{ extra_button.link_url}}"
+                                class="btn btn-primary">{{ extra_button.link_label }}</a>
+                        {% else %}
+                            <input type="submit"
+                                name="{{ extra_button.name }}"
+                                value="{{ extra_button.submit_label }}"
+                                class="btn btn-primary">
+                        {% endif %}
                    {% endfor %}
+
                </td>
 	        </tr>
 		</table>

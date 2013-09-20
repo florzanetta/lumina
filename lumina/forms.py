@@ -192,3 +192,10 @@ SessionQuoteAlternativeFormSet = inlineformset_factory(SessionQuote,
                                                        SessionQuoteAlternative,
                                                        can_delete=True,
                                                        extra=3)
+
+
+class SessionQuoteAlternativeCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = SessionQuoteAlternative
+        fields = ('image_quantity', 'cost')
