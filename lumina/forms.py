@@ -164,7 +164,7 @@ class SessionQuoteUpdateForm(forms.ModelForm):
         fields = ('customer', 'image_quantity', 'cost', 'terms')
 
 
-class SessionQuoteUpdateForAlternativesForm(forms.ModelForm):
+class SessionQuoteUpdate2Form(forms.ModelForm):
 
     class Meta:
         model = SessionQuote

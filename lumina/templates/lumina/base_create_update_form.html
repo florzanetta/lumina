@@ -27,11 +27,17 @@
             {% block post_form_content %}
             {% endblock post_form_content %}
 
+            {% if hide_buttons_at_footer %}
+            {% else %}
+
 	        <tr>
                <td> </td>
 	           <td>
+    
+                {% if submit_label %}
                    <input type="submit" name="default_button"
                         value="{{ submit_label }}" class="btn btn-primary">
+                {% endif %}
 
                    {% for extra_button in extra_buttons %}
                         {% if 'link_url' in extra_button %}
@@ -47,6 +53,9 @@
 
                </td>
 	        </tr>
+
+            {% endif %}
+
 		</table>
         
         {% block post_table_content %}
