@@ -41,9 +41,16 @@
                 <td width="30%" style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
                 <td width="30%" style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
                 <td width="5%" style="text-align: center;">
+                    {% if object.accepted_quote_alternative == alt %}
+                        <a href="javascript:void(0);" data-toggle="tooltip"
+                            class="with_tooltip"
+                            title="No puede eliminarse. Un cliente ha elegido esta alternativa"><i
+                                class="icon-info-sign"></i></a>
+                    {% else %}
                     <input type="submit" name="delete_alternative_{{ alt.id }}"
                         value="Borrar" class="btn btn-mini btn-danger"
                         onclick="return confirm('Seguro?');">
+                    {% endif %}
                 </td>
             </tr>
         {% empty %}
@@ -64,6 +71,16 @@
     {% endif %}
 
     {% endblock post_table_content %}
+
+{% block javascript_bottom %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.with_tooltip').tooltip();
+});
+</script>
+ 
+{% endblock %}
 
 </body>
 </html>
