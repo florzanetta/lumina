@@ -565,6 +565,7 @@ class SessionQuote(models.Model):
     accepted_rejected_at = models.DateTimeField(null=True, blank=True)
     accepted_quote_alternative = models.ForeignKey('SessionQuoteAlternative',
                                                    related_name='+',
+                                                   on_delete=models.PROTECT,
                                                    null=True, blank=True)
 
     objects = SessionQuoteManager()
