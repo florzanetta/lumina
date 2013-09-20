@@ -734,4 +734,4 @@ class SessionQuoteAlternative(models.Model):
     cost = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
-        unique_together = ("session_quote", "image_quantity", "cost")
+        unique_together = ("session_quote", "image_quantity")
