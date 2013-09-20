@@ -1,0 +1,54 @@
+{% extends "lumina/base_create_update_form.html" %}
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}Lumina - {{ title }}{% endblock %}</title>
+</head>
+<body>
+
+<table>
+
+    {% block post_table_content %}
+    
+    <hr>
+
+    <tr>
+        <td colspan="2"><h4>Alternativas</h4></td>
+    </tr>
+
+    <tr>
+        <td colspan="2">
+            <table class="table table-condensed table-hover table-bordered">
+                <tr>
+                    <th width="40%" style="text-align: right;">&nbsp;</th>
+                    <th width="30%" style="text-align: right;">Cant. de fotografias</th>
+                    <th width="30%" style="text-align: right;">Costo</th>
+                    <th width="5%" style="text-align: center;">&nbsp;</th>
+                </tr>
+                {% for alt in object.quote_alternatives.all %}
+                    <tr>
+                        <td width="40%" style="text-align: right; font-weight: bold;">Alternativa:</td>
+                        <td width="30%" style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
+                        <td width="30%" style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
+                        <td width="5%" style="text-align: center;">
+                            <input type="submit" name="delete_alternative_{{ alt.id }}"
+                                value="Borrar" class="btn btn-mini btn-danger"
+                                onclick="return confirm('Seguro?');">
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4"><em>Sin alternativas</em></td></tr>
+                {% endfor %}
+             </table>
+        </td>
+    </tr>
+
+    <!-- form to add alternatives -->
+    {% endblock post_table_content %}
+
+</table>
+
+</body>
+</html>

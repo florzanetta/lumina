@@ -923,10 +923,13 @@ class SessionQuoteCreateView(CreateView, SessionQuoteCreateUpdateMixin):
 
 
 class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
+    """
+    Allows the photographer modify a Quote.
+    """
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = SessionQuote
     form_class = SessionQuoteUpdateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/sessionquote_update_form.html'
 
     def get_form(self, form_class):
         form = super(SessionQuoteUpdateView, self).get_form(form_class)
@@ -941,29 +944,25 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
         # > This method is called when valid form data has been POSTed.
         # > It should return an HttpResponse.
 
-        context = self.get_context_data()
-        formset = context['formset']
-        if formset.is_valid():
-            ret = super(SessionQuoteUpdateView, self).form_valid(form)
-            formset.instance = self.object
-            formset.save()
-            messages.success(self.request, 'El presupuesto fue actualizado correctamente')
-            return ret
-        else:
-            return self.render_to_response(self.get_context_data(form=form))
+        if 'default_button' in self.request.POST:
+            return super(SessionQuoteUpdateView, self).form_valid(form)
+
+        delete_alternative = [k for k in self.request.POST.keys()
+                              if k.startswith('delete_alternative_')]
+
+        if delete_alternative:
+            assert len(delete_alternative) == 1
+            alt_to_delete = delete_alternative[0].split('_')[2]
+            to_delete = self.object.quote_alternatives.get(pk=int(alt_to_delete))
+            to_delete.delete()
+            return HttpResponseRedirect(reverse('quote_update', args=[self.object.id]))
+
+        raise(Exception("ALTERNATIVA"))
 
     def get_context_data(self, **kwargs):
         context = super(SessionQuoteUpdateView, self).get_context_data(**kwargs)
         context['title'] = "Actualizar presupuesto"
         context['submit_label'] = "Actualizar"
-        # context['extra_buttons'] = [{'name': 'confirm_button',
-        #                              'submit_label': 'Confirmar', }]
-        context['formset_title'] = "Cotizaciones alternativas"
-        if self.request.POST:
-            context['formset'] = SessionQuoteAlternativeFormSet(self.request.POST,
-                                                                instance=self.object)
-        else:
-            context['formset'] = SessionQuoteAlternativeFormSet(instance=self.object)
         return context
 
     def get_success_url(self):
@@ -1028,6 +1027,7 @@ class SessionQuoteDetailView(DetailView):
         buttons = []
 
         ph_can_modify_alternatives = self.object.get_selected_quote() in (0, None)
+        ph_can_modify_alternatives = True
 
         if self.object.status == SessionQuote.STATUS_QUOTING:
             # The photographer did not finished the Quote

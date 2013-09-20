@@ -23,6 +23,10 @@
                 </tr>
                 {{ formset.as_table }}
             {% endif %}
+            
+            {% block post_form_content %}
+            {% endblock post_form_content %}
+
 	        <tr>
                <td> </td>
 	           <td>
