@@ -736,3 +736,4 @@ class SessionQuoteAlternative(models.Model):
 
     class Meta:
         unique_together = ("session_quote", "image_quantity")
+        ordering = ["image_quantity"]
