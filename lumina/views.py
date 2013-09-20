@@ -958,12 +958,20 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
             to_delete.delete()
             return HttpResponseRedirect(reverse('quote_update', args=[self.object.id]))
 
+        # FIXME: add an error messages and do a redirect instead of this
         raise(Exception("ALTERNATIVA"))
 
     def get_context_data(self, **kwargs):
         context = super(SessionQuoteUpdateView, self).get_context_data(**kwargs)
         context['title'] = "Actualizar presupuesto"
         context['submit_label'] = "Actualizar"
+
+        buttons = context.get('extra_buttons', [])
+        buttons.append({'link_url': reverse('quote_detail',
+                                            args=[self.object.id]),
+                        'link_label': "Volver", })
+        context['extra_buttons'] = buttons
+
         return context
 
     def get_success_url(self):
@@ -1027,9 +1035,6 @@ class SessionQuoteDetailView(DetailView):
         context = super(SessionQuoteDetailView, self).get_context_data(**kwargs)
         buttons = []
 
-        ph_can_modify_alternatives = self.object.get_selected_quote() in (0, None)
-        ph_can_modify_alternatives = True
-
         if self.object.status == SessionQuote.STATUS_QUOTING:
             # The photographer did not finished the Quote
             if self.request.user.is_for_customer():
@@ -1052,9 +1057,8 @@ class SessionQuoteDetailView(DetailView):
             else:
                 buttons.append({'name': 'button_cancel',
                                 'submit_label': "Cancelar", 'confirm': True, })
-                if ph_can_modify_alternatives:
-                    buttons.append({'name': 'button_update_quote_alternatives',
-                                    'submit_label': "Editar presup. alternativos", })
+                buttons.append({'name': 'button_update_quote_alternatives',
+                                'submit_label': "Editar presup. alternativos", })
 
         elif self.object.status == SessionQuote.STATUS_REJECTED:
             pass
@@ -1067,9 +1071,8 @@ class SessionQuoteDetailView(DetailView):
             else:
                 buttons.append({'name': 'button_cancel',
                                 'submit_label': "Cancelar", 'confirm': True, })
-                if ph_can_modify_alternatives:
-                    buttons.append({'name': 'button_update_quote_alternatives',
-                                    'submit_label': "Editar presup. alternativos", })
+                buttons.append({'name': 'button_update_quote_alternatives',
+                                'submit_label': "Editar presup. alternativos", })
 
         elif self.object.status == SessionQuote.STATUS_CANCELED:
             # Canceled
