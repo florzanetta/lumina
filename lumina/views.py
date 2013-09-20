@@ -974,6 +974,9 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
             alt_to_delete = delete_alternative[0].split('_')[2]
             to_delete = self.object.quote_alternatives.get(pk=int(alt_to_delete))
             to_delete.delete()
+            # This delete is super-safe because the foreign-key is set to 'PROTECT'.
+            # If the customer changes his/her alternative to the one being deleted,
+            # the DB will refuse this delete automatically :-D
             return HttpResponseRedirect(reverse('quote_update', args=[self.object.id]))
 
         # FIXME: add an error messages and do a redirect instead of this
