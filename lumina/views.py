@@ -993,6 +993,7 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
         buttons.append({'link_url': reverse('quote_detail', args=[self.object.id]),
                         'link_label': "Volver", })
         context['extra_buttons'] = buttons
+        _put_session_statuses_in_context(context)
         return context
 
     def get_success_url(self):
