@@ -38,9 +38,9 @@
         <p>No hay imagenes para mostrar...</p>
     {% endfor %}
 
-    {% if show_download_all_customer_images_button %}
-        <a href="{% url 'image_selection_download_all' object.pk %}"
-            class="btn btn-primary">Bajar todas las imágenes</a>
+    {% if show_download_selected_as_zip_button %}
+        <a href="{% url 'image_selection_download_selected_as_zip' object.pk %}"
+            class="btn btn-primary">Bajar las imagenes seleccionadas</a>
     {% endif %}
 
 {% endblock content %}

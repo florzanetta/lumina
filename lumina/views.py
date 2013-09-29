@@ -312,16 +312,15 @@ def image_download(request, image_id):
 
 @login_required
 @cache_control(private=True)
-def image_selection_download_all(request, image_selecion_id):
+def image_selection_download_selected_as_zip(request, image_selecion_id):
     """
     Download all the images that a customer has selected in
     a ImageSelection instance.
     """
-    if not request.user.is_for_customer():
-        raise(SuspiciousOperation("User isn't customer"))
-
-    qs = ImageSelection.objects.all_my_imageselections_as_customer(request.user)
+    qs = ImageSelection.objects.all_my_accessible_imageselections(request.user)
     image_selection = qs.get(pk=image_selecion_id)
+    assert image_selection.status == ImageSelection.STATUS_IMAGES_SELECTED
+
     images = image_selection.selected_images.all()
     return _image_download_as_zip(request, images)
 
@@ -564,13 +563,16 @@ class ImageSelectionDetailView(DetailView):
                 raise(SuspiciousOperation())
             ctx['images_to_show'] = image_selection.session.image_set.all()
             ctx['selected_images'] = image_selection.selected_images.all()
+            if image_selection.status == ImageSelection.STATUS_IMAGES_SELECTED:
+                ctx['show_download_selected_as_zip_button'] = True
 
         elif self.request.user.is_for_customer():
             # Show only selected images to customer
             if image_selection.session.customer != self.request.user.user_for_customer:
                 raise(SuspiciousOperation())
             ctx['images_to_show'] = image_selection.selected_images.all()
-            ctx['show_download_all_customer_images_button'] = True
+            if image_selection.status == ImageSelection.STATUS_IMAGES_SELECTED:
+                ctx['show_download_selected_as_zip_button'] = True
 
         else:
             raise(SuspiciousOperation())

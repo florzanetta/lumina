@@ -145,8 +145,8 @@ urlpatterns = patterns(
         name='image_download'),
 
     url(r'^image/image_selection/(\d+)/download_all/$',
-        'lumina.views.image_selection_download_all',
-        name='image_selection_download_all'),
+        'lumina.views.image_selection_download_selected_as_zip',
+        name='image_selection_download_selected_as_zip'),
 
     #===========================================================================
     # Customer
