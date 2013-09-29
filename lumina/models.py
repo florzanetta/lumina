@@ -195,6 +195,8 @@ class Customer(models.Model):
 
     ingresos_brutos = models.CharField(max_length=20, blank=True, null=True)
 
+    notes = models.TextField(blank=True, null=True)
+
     objects = CustomerManager()
 
     def __unicode__(self):
