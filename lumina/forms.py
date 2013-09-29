@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 '''
 Created on Jun 1, 2013
 
@@ -117,7 +119,8 @@ class UserCreateForm(forms.ModelForm):
     class Meta:
         model = LuminaUser
         fields = (
-            'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2'
+            'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
+            'phone', 'cellphone', 'alternative_email', 'notes'
         )
 
     def clean(self):
@@ -131,15 +134,18 @@ class UserCreateForm(forms.ModelForm):
 
 class UserUpdateForm(forms.ModelForm):
     password1 = forms.CharField(
-        max_length=20, required=False, widget=forms.PasswordInput(), label=u'Contrasena')
+        max_length=20, required=False, widget=forms.PasswordInput(), label=u'Contrasena',
+        help_text="Ingrese la nueva contraseña (si desea cambiarla)")
     password2 = forms.CharField(
         max_length=20, required=False, widget=forms.PasswordInput(),
-        label=u'Contrasena (otra vez)')
+        label=u'Contrasena (otra vez)',
+        help_text="Repita la nueva contraseña (si desea cambiarla)")
 
     class Meta:
         model = LuminaUser
         fields = (
-            'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2'
+            'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
+            'phone', 'cellphone', 'alternative_email', 'notes'
         )
 
     def clean(self):

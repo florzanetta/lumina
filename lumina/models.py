@@ -65,6 +65,11 @@ class LuminaUser(AbstractUser):
     # REFACTOR: `user_for_customer` is a new attribute
     user_for_customer = models.ForeignKey('Customer', null=True, blank=True, related_name='users')
 
+    phone = models.CharField(max_length=20, null=True, blank=True)
+    cellphone = models.CharField(max_length=20, null=True, blank=True)
+    alternative_email = models.EmailField(null=True, blank=True)
+    notes = models.TextField(blank=True, null=True)
+
     objects = LuminaUserManager()
 
     def is_photographer(self):
