@@ -174,8 +174,8 @@ class Customer(models.Model):
     # city = models.ForeignKey('cities_light.City', blank=True, null=True)
     city = models.CharField(max_length=40, blank=True, null=True)
 
+    cuit = models.CharField(max_length=13, blank=True, null=True)
     # iva = models.TextField(blank=True)
-    # cuit = models.TextField(blank=True)
     # ingresos_brutos = models.TextField(blank=True)
 
     objects = CustomerManager()

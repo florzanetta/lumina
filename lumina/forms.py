@@ -8,6 +8,8 @@ from django import forms
 from django.forms.widgets import CheckboxSelectMultiple
 from django.forms.models import inlineformset_factory
 
+from localflavor.ar.forms import ARCUITField
+
 from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail, \
     Image, ImageSelection, SessionQuote, SessionQuoteAlternative
 
@@ -88,10 +90,13 @@ class ImageUpdateForm(forms.ModelForm):
 
 class CustomerCreateForm(forms.ModelForm):
 
+    cuit = ARCUITField(max_length=13, min_length=0, required=False,
+                       help_text="Formato: XX-XXXXXXXX-X")
+
     class Meta:
         model = Customer
         fields = (
-            'name', 'address', 'phone', 'city',
+            'name', 'address', 'phone', 'city', 'cuit'
         )
 
 CustomerUpdateForm = CustomerCreateForm
