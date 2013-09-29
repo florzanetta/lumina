@@ -96,7 +96,7 @@ class CustomerCreateForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = (
-            'name', 'address', 'phone', 'city', 'cuit'
+            'name', 'address', 'phone', 'city', 'iva', 'cuit'
         )
 
 CustomerUpdateForm = CustomerCreateForm

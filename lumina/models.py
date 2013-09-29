@@ -3,12 +3,13 @@
 import datetime
 import decimal
 
+from types import NoneType
+
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied, ValidationError, \
     SuspiciousOperation
 from django.contrib.auth.models import AbstractUser, UserManager
-from types import NoneType
 
 
 class LuminaUserManager(UserManager):
@@ -153,6 +154,19 @@ class CustomerManager(models.Manager):
         return self.filter(studio=photographer.studio)
 
 
+IVA_RESPONSABLE_INSCRIPTO = 'R'
+IVA_RESPONSABLE_MONOTRIBUTO = 'M'
+IVA_RESPONSABLE_EXCENTO = 'E'
+IVA_CONSUMIDOR_FINAL = 'F'
+
+IVA_TYPES = (
+    (IVA_RESPONSABLE_INSCRIPTO, "Responsable Inscripto"),
+    (IVA_RESPONSABLE_MONOTRIBUTO, "Responsable Monotributo"),
+    (IVA_RESPONSABLE_EXCENTO, "Responsable Excento"),
+    (IVA_CONSUMIDOR_FINAL, "Consumidor Final"),
+)
+
+
 class Customer(models.Model):
     """
     A Customer (as the organization that pay to the photographer).
@@ -175,7 +189,10 @@ class Customer(models.Model):
     city = models.CharField(max_length=40, blank=True, null=True)
 
     cuit = models.CharField(max_length=13, blank=True, null=True)
-    # iva = models.TextField(blank=True)
+
+    iva = models.CharField(max_length=1, choices=IVA_TYPES, default=None,
+                           blank=True, null=True)
+
     # ingresos_brutos = models.TextField(blank=True)
 
     objects = CustomerManager()
