@@ -3,6 +3,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
+import autocomplete_light
+
 from lumina.views import SessionListView, SessionDetailView, SessionCreateView, \
     SessionUpdateView, CustomerListView, CustomerCreateView, CustomerUpdateView, \
     UserListView, ImageListView, UserCreateView, UserUpdateView, \
@@ -14,7 +16,7 @@ from lumina.views import SessionListView, SessionDetailView, SessionCreateView, 
     SessionQuoteUpdateView, \
     SessionQuoteAlternativeSelectView, SessionQuoteAlternativeCreateView
 
-
+autocomplete_light.autodiscover()  # BEFORE admin.autodiscover()
 admin.autodiscover()
 
 # TODO: See: http://django-braces.readthedocs.org/en/latest/index.html#loginrequiredmixin
@@ -243,4 +245,9 @@ urlpatterns = patterns(
     # django-social-auth
     #
     url(r'^social_auth/', include('social_auth.urls')),
+
+    #
+    # autocomplete_light
+    #
+    url(r'^autocomplete/', include('autocomplete_light.urls')),
 )

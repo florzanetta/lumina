@@ -170,6 +170,9 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
+    # 'localflavor',
+    'cities_light',
+    'autocomplete_light',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'lumina',

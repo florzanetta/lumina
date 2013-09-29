@@ -85,6 +85,16 @@ Defaults settings
     MEDIA_ROOT = os.path.expanduser('~/lumina/uploads/')
 
 
+Data for `cities_light` app
+---------------------------
+
+We are using `cities_light` to handle the customer city/state/country. To get
+the full list of city/state/country from internet, you need to run:
+
+    $ python manage.py cities_light
+
+Clic [here](https://github.com/yourlabs/django-cities-light) for more info about `django-cities-light`.
+
 Testing
 -------
 
