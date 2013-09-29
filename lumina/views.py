@@ -6,6 +6,9 @@ import logging
 import os
 import uuid
 import decimal
+import zipfile
+
+from StringIO import StringIO
 
 import mailer
 
@@ -255,6 +258,37 @@ def _image_download(request, image):
     return response
 
 
+def _image_download_as_zip(request, images):
+    """
+    Sends many images to the client.
+
+    This methos does NOT check permissions!
+    """
+    # FIXME: this sholdn't be done in-memory
+    # FIXME: this should be done asynchronously
+    response = HttpResponse(mimetype='application/zip')
+
+    #
+    # From https://code.djangoproject.com/wiki/CookBookDynamicZip
+    #
+
+    response['Content-Disposition'] = 'filename=all.zip'
+    #now add them to a zip file
+    #note the zip only exist in memory as you add to it
+    zip_buffer = StringIO()
+    zip_file = zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED)
+    for an_image in images:
+        zip_file.writestr(an_image.original_filename, an_image.image.read())
+
+    zip_file.close()
+    zip_buffer.flush()
+    #the import detail--we return the content of the buffer
+    ret_zip = zip_buffer.getvalue()
+    zip_buffer.close()
+    response.write(ret_zip)
+    return response
+
+
 @login_required
 @cache_control(private=True)
 def image_thumb_64x64(request, image_id):
@@ -274,6 +308,22 @@ def image_thumb(request, image_id, max_size=None):
 def image_download(request, image_id):
     image = Image.objects.get_for_download(request.user, int(image_id))
     return _image_download(request, image)
+
+
+@login_required
+@cache_control(private=True)
+def image_selection_download_all(request, image_selecion_id):
+    """
+    Download all the images that a customer has selected in
+    a ImageSelection instance.
+    """
+    if not request.user.is_for_customer():
+        raise(SuspiciousOperation("User isn't customer"))
+
+    qs = ImageSelection.objects.all_my_imageselections_as_customer(request.user)
+    image_selection = qs.get(pk=image_selecion_id)
+    images = image_selection.selected_images.all()
+    return _image_download_as_zip(request, images)
 
 
 #===============================================================================
@@ -520,6 +570,7 @@ class ImageSelectionDetailView(DetailView):
             if image_selection.session.customer != self.request.user.user_for_customer:
                 raise(SuspiciousOperation())
             ctx['images_to_show'] = image_selection.selected_images.all()
+            ctx['show_download_all_customer_images_button'] = True
 
         else:
             raise(SuspiciousOperation())

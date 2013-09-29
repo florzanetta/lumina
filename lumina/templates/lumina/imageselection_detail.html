@@ -38,6 +38,11 @@
         <p>No hay imagenes para mostrar...</p>
     {% endfor %}
 
+    {% if show_download_all_customer_images_button %}
+        <a href="{% url 'image_selection_download_all' object.pk %}"
+            class="btn btn-primary">Bajar todas las imágenes</a>
+    {% endif %}
+
 {% endblock content %}
 
 {% block javascript_bottom %}
