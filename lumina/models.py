@@ -162,8 +162,21 @@ class Customer(models.Model):
     """
     name = models.CharField(max_length=100)
     studio = models.ForeignKey(Studio, related_name='customers')
+
+    # Customer additional information (contact, biling, etc.)
     address = models.TextField(blank=True)
     phone = models.CharField(max_length=20, blank=True)
+
+    # company_name = models.TextField(blank=True)
+    # address = models.TextField(blank=True)
+
+    # https://github.com/yourlabs/django-cities-light
+    # city = models.ForeignKey('cities_light.City', blank=True, null=True)
+    city = models.CharField(max_length=40, blank=True, null=True)
+
+    # iva = models.TextField(blank=True)
+    # cuit = models.TextField(blank=True)
+    # ingresos_brutos = models.TextField(blank=True)
 
     objects = CustomerManager()
 
