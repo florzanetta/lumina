@@ -193,7 +193,7 @@ class Customer(models.Model):
     iva = models.CharField(max_length=1, choices=IVA_TYPES, default=None,
                            blank=True, null=True)
 
-    # ingresos_brutos = models.TextField(blank=True)
+    ingresos_brutos = models.CharField(max_length=20, blank=True, null=True)
 
     objects = CustomerManager()
 
