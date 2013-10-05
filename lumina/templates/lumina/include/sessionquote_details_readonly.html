@@ -3,6 +3,14 @@
         <th width="20%">Cliente:</th>
         <td width="80%">{{ object.customer.name }}</td>
     </tr>
+    
+    {% if object.session and user.is_photographer %}
+    <tr>
+        <th width="20%">Sesión:</th>
+        <td width="80%"><a href="{% url 'session_detail' object.session.id %}">{{ object.session.name }}</a></td>
+    </tr>
+    {% endif %}
+
     <tr>
         <th>
             Estado:

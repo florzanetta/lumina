@@ -1143,6 +1143,10 @@ class SessionQuoteDetailView(DetailView):
         elif 'button_update_quote_alternatives' in request.POST:
             return HttpResponseRedirect(reverse('quote_update', args=[quote.id]))
 
+        elif 'button_create_session' in request.POST:
+            new_session = quote.create_session(request.user)
+            return HttpResponseRedirect(reverse('session_update', args=[new_session.id]))
+
         else:
             raise(SuspiciousOperation())
 
@@ -1189,6 +1193,9 @@ class SessionQuoteDetailView(DetailView):
                                 'submit_label': "Cancelar presupuesto", 'confirm': True, })
                 buttons.append({'name': 'button_update_quote_alternatives',
                                 'submit_label': "Editar presup. alternativos", })
+                if self.object.session is None:
+                    buttons.append({'name': 'button_create_session',
+                                    'submit_label': "Crear sesión", })
 
         elif self.object.status == SessionQuote.STATUS_CANCELED:
             # Canceled

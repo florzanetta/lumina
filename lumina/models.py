@@ -617,7 +617,6 @@ class SessionQuote(models.Model):
     )
 
     studio = models.ForeignKey(Studio, related_name='session_quotes')
-    # session = models.ForeignKey(Session)
     customer = models.ForeignKey(Customer, related_name='session_quotes')
     image_quantity = models.PositiveIntegerField()
     status = models.CharField(max_length=1, choices=STATUS, default=STATUS_QUOTING)
@@ -635,6 +634,8 @@ class SessionQuote(models.Model):
         max_digits=10, decimal_places=2, verbose_name="entrega inicial pactada")
     #    actual_down_payment = models.DecimalField(max_digits=10, decimal_places=2,
     #        verbose_name="entrega inicial realizada")
+
+    session = models.ForeignKey(Session, related_name='quotes', null=True, blank=True)
 
     objects = SessionQuoteManager()
 
@@ -790,6 +791,23 @@ class SessionQuote(models.Model):
             return self.quote_alternatives.filter(image_quantity__gt=current_quantity) \
                 .order_by('image_quantity')
         raise(Exception("Invalid state: {}".format(self.status)))
+
+    def create_session(self, user):
+        assert user.is_photographer()
+        assert user.studio == self.studio
+        assert self.status == SessionQuote.STATUS_ACCEPTED
+
+        new_session = Session()
+        new_session.name = "(sesión para presupuesto #{})".format(self.id)
+        new_session.studio = self.studio
+        new_session.photographer = user
+        new_session.customer = self.customer
+        new_session.save()
+
+        self.session = new_session
+        self.save()
+
+        return new_session
 
     def __unicode__(self):
         return u"Quote for {}".format(str(self.customer))
