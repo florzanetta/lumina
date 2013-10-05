@@ -99,10 +99,15 @@
 							                                {% endif %} 
 
 
-														<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Otros <b class="caret"></b></a>
+														<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Configuración<b class="caret"></b></a>
 														    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 																	<!-- Items de drop-down  -->
-																	<li><a href="{% url 'customer_user_preferences_update' user.preferences.id %}">Preferencias</a></li>
+                                                                    <li><a href="{% url 'customer_user_preferences_update' user.preferences.id %}">Preferencias</a></li>
+                                                                    {% if user|user_is_photographer %}
+                                                                        <li><a href="{% url 'admin:lumina_customertype_changelist' %}" target="_blank">Tipos de clientes</a></li>
+                                                                        <li><a href="{% url 'admin:lumina_sessiontype_changelist' %}" target="_blank">Tipos de sessiones</a></li>
+                                                                        <li><a href="{% url 'admin:lumina_previewsize_changelist' %}" target="_blank">Tamaños de previsualizacion</a></li>
+                                                                    {% endif %}
 														    </ul>
 														</li>
 
