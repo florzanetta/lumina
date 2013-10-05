@@ -12,6 +12,10 @@ from django.core.exceptions import PermissionDenied, ValidationError, \
 from django.contrib.auth.models import AbstractUser, UserManager
 
 
+#===============================================================================
+# LuminaUser
+#===============================================================================
+
 class LuminaUserManager(UserManager):
     """
     Manager for the LuminaUser model
@@ -111,6 +115,21 @@ class LuminaUser(AbstractUser):
 
     def __unicode__(self):
         return u"{} ({})".format(self.get_full_name(), self.username)
+
+
+#===============================================================================
+# UserPreference
+#===============================================================================
+
+class UserPreferences(models.Model):
+    send_emails = models.BooleanField(default=True)
+    user = models.OneToOneField(LuminaUser, related_name='preferences')
+
+    def __unicode__(self):
+        if self.user:
+            return u"User preferences for {}".format(self.user.get_full_name())
+        else:
+            return u"User preferences"
 
 
 #===============================================================================

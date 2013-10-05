@@ -13,7 +13,8 @@ from django.forms.models import inlineformset_factory
 from localflavor.ar.forms import ARCUITField
 
 from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail, \
-    Image, ImageSelection, SessionQuote, SessionQuoteAlternative
+    Image, ImageSelection, SessionQuote, SessionQuoteAlternative,\
+    UserPreferences
 
 
 #===============================================================================
@@ -102,6 +103,17 @@ class CustomerCreateForm(forms.ModelForm):
         )
 
 CustomerUpdateForm = CustomerCreateForm
+
+
+#===============================================================================
+# UserPreferences
+#===============================================================================
+
+class UserPreferencesUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = UserPreferences
+        fields = ('send_emails', )
 
 
 #===============================================================================

@@ -4,14 +4,18 @@
     "model": "lumina.luminauser", 
     "fields": {
         "username": "admin", 
+        "cellphone": null, 
         "first_name": "\u00c1lbaro", 
         "last_name": "Andrada", 
         "user_for_customer": null, 
+        "phone": null, 
+        "notes": null, 
         "is_active": true, 
         "user_type": "P", 
         "is_superuser": true, 
         "is_staff": true, 
-        "last_login": "2013-09-05T14:39:07.213Z", 
+        "last_login": "2013-10-05T19:02:51.364Z", 
+        "alternative_email": null, 
         "groups": [], 
         "user_permissions": [], 
         "studio": 1, 
@@ -25,14 +29,18 @@
     "model": "lumina.luminauser", 
     "fields": {
         "username": "juan", 
+        "cellphone": null, 
         "first_name": "Juan *****", 
         "last_name": "P\u00e9rez *****", 
         "user_for_customer": null, 
+        "phone": null, 
+        "notes": null, 
         "is_active": true, 
         "user_type": "P", 
         "is_superuser": false, 
         "is_staff": false, 
         "last_login": "2013-09-03T01:11:24.758Z", 
+        "alternative_email": null, 
         "groups": [], 
         "user_permissions": [], 
         "studio": 2, 
@@ -46,14 +54,18 @@
     "model": "lumina.luminauser", 
     "fields": {
         "username": "customer-ba07eb50-9fb5-4593-98", 
+        "cellphone": null, 
         "first_name": "Albert *****", 
         "last_name": "Einstein *****", 
         "user_for_customer": 1, 
+        "phone": null, 
+        "notes": null, 
         "is_active": true, 
         "user_type": "C", 
         "is_superuser": false, 
         "is_staff": false, 
         "last_login": "2013-09-03T00:30:04.932Z", 
+        "alternative_email": null, 
         "groups": [], 
         "user_permissions": [], 
         "studio": null, 
@@ -67,14 +79,18 @@
     "model": "lumina.luminauser", 
     "fields": {
         "username": "generic-user-1", 
+        "cellphone": null, 
         "first_name": "Generic ******", 
         "last_name": "User ******", 
         "user_for_customer": 2, 
+        "phone": null, 
+        "notes": null, 
         "is_active": true, 
         "user_type": "C", 
         "is_superuser": false, 
         "is_staff": false, 
         "last_login": "2013-09-03T00:42:51.948Z", 
+        "alternative_email": null, 
         "groups": [], 
         "user_permissions": [], 
         "studio": null, 
@@ -88,14 +104,18 @@
     "model": "lumina.luminauser", 
     "fields": {
         "username": "generic-user-", 
+        "cellphone": null, 
         "first_name": "Generic ******", 
         "last_name": "User ******", 
         "user_for_customer": 3, 
+        "phone": null, 
+        "notes": null, 
         "is_active": true, 
         "user_type": "C", 
         "is_superuser": false, 
         "is_staff": false, 
         "last_login": "2013-09-03T00:43:15.151Z", 
+        "alternative_email": null, 
         "groups": [], 
         "user_permissions": [], 
         "studio": null, 
@@ -109,14 +129,18 @@
     "model": "lumina.luminauser", 
     "fields": {
         "username": "customer-957a6230-3eac-4ee1-a4", 
+        "cellphone": null, 
         "first_name": "Max", 
         "last_name": "Planck", 
         "user_for_customer": 2, 
+        "phone": null, 
+        "notes": null, 
         "is_active": true, 
         "user_type": "C", 
         "is_superuser": false, 
         "is_staff": false, 
         "last_login": "2013-09-03T00:46:35.306Z", 
+        "alternative_email": null, 
         "groups": [], 
         "user_permissions": [], 
         "studio": null, 
@@ -130,14 +154,18 @@
     "model": "lumina.luminauser", 
     "fields": {
         "username": "fotografo1", 
+        "cellphone": null, 
         "first_name": "Galileo", 
         "last_name": "Galilei", 
         "user_for_customer": null, 
+        "phone": null, 
+        "notes": null, 
         "is_active": true, 
         "user_type": "P", 
         "is_superuser": true, 
         "is_staff": false, 
         "last_login": "2013-09-03T03:45:15.632Z", 
+        "alternative_email": null, 
         "groups": [], 
         "user_permissions": [], 
         "studio": 3, 
@@ -151,14 +179,18 @@
     "model": "lumina.luminauser", 
     "fields": {
         "username": "cliente1", 
+        "cellphone": null, 
         "first_name": "Roberto", 
         "last_name": "Fontanarrosa", 
         "user_for_customer": 4, 
+        "phone": null, 
+        "notes": null, 
         "is_active": true, 
         "user_type": "C", 
         "is_superuser": false, 
         "is_staff": false, 
         "last_login": "2013-09-05T14:37:52.793Z", 
+        "alternative_email": null, 
         "groups": [], 
         "user_permissions": [], 
         "studio": null, 
@@ -172,14 +204,18 @@
     "model": "lumina.luminauser", 
     "fields": {
         "username": "cliente2", 
+        "cellphone": null, 
         "first_name": "Juan Jos\u00e9", 
         "last_name": "Campanella", 
         "user_for_customer": 5, 
+        "phone": null, 
+        "notes": null, 
         "is_active": true, 
         "user_type": "C", 
         "is_superuser": false, 
         "is_staff": false, 
         "last_login": "2013-09-03T00:56:05Z", 
+        "alternative_email": null, 
         "groups": [], 
         "user_permissions": [], 
         "studio": null, 
@@ -193,14 +229,18 @@
     "model": "lumina.luminauser", 
     "fields": {
         "username": "fotografo2", 
+        "cellphone": null, 
         "first_name": "Evangelista", 
         "last_name": "Torricelli", 
         "user_for_customer": null, 
+        "phone": null, 
+        "notes": null, 
         "is_active": true, 
         "user_type": "P", 
         "is_superuser": false, 
         "is_staff": false, 
         "last_login": "2013-09-03T03:42:50Z", 
+        "alternative_email": null, 
         "groups": [], 
         "user_permissions": [], 
         "studio": 3, 
@@ -214,20 +254,134 @@
     "model": "lumina.luminauser", 
     "fields": {
         "username": "cliente3", 
+        "cellphone": null, 
         "first_name": "Gasparo", 
         "last_name": "Berti", 
         "user_for_customer": 5, 
+        "phone": null, 
+        "notes": null, 
         "is_active": true, 
         "user_type": "C", 
         "is_superuser": false, 
         "is_staff": false, 
         "last_login": "2013-09-03T03:42:50Z", 
+        "alternative_email": null, 
         "groups": [], 
         "user_permissions": [], 
         "studio": null, 
         "password": "pbkdf2_sha256$10000$gW6y7qWUu3Ec$oRgHX2Chwlx84rgNFcEqijG6skkEbHgGtETUab/iaRM=", 
         "email": "gberti@example.com", 
         "date_joined": "2013-09-03T03:42:50Z"
+    }
+},
+{
+    "pk": 1, 
+    "model": "lumina.userpreferences", 
+    "fields": {
+        "send_emails": true, 
+        "user": [
+            "admin"
+        ]
+    }
+},
+{
+    "pk": 2, 
+    "model": "lumina.userpreferences", 
+    "fields": {
+        "send_emails": true, 
+        "user": [
+            "juan"
+        ]
+    }
+},
+{
+    "pk": 3, 
+    "model": "lumina.userpreferences", 
+    "fields": {
+        "send_emails": true, 
+        "user": [
+            "customer-ba07eb50-9fb5-4593-98"
+        ]
+    }
+},
+{
+    "pk": 4, 
+    "model": "lumina.userpreferences", 
+    "fields": {
+        "send_emails": true, 
+        "user": [
+            "generic-user-1"
+        ]
+    }
+},
+{
+    "pk": 5, 
+    "model": "lumina.userpreferences", 
+    "fields": {
+        "send_emails": true, 
+        "user": [
+            "generic-user-"
+        ]
+    }
+},
+{
+    "pk": 6, 
+    "model": "lumina.userpreferences", 
+    "fields": {
+        "send_emails": true, 
+        "user": [
+            "customer-957a6230-3eac-4ee1-a4"
+        ]
+    }
+},
+{
+    "pk": 7, 
+    "model": "lumina.userpreferences", 
+    "fields": {
+        "send_emails": true, 
+        "user": [
+            "fotografo1"
+        ]
+    }
+},
+{
+    "pk": 8, 
+    "model": "lumina.userpreferences", 
+    "fields": {
+        "send_emails": true, 
+        "user": [
+            "cliente1"
+        ]
+    }
+},
+{
+    "pk": 9, 
+    "model": "lumina.userpreferences", 
+    "fields": {
+        "send_emails": true, 
+        "user": [
+            "cliente2"
+        ]
+    }
+},
+{
+    "pk": 10, 
+    "model": "lumina.userpreferences", 
+    "fields": {
+        "send_emails": true, 
+        "user": [
+            "fotografo2"
+        ]
+    }
+},
+{
+    "pk": 11, 
+    "model": "lumina.userpreferences", 
+    "fields": {
+        "send_emails": true, 
+        "user": [
+            "cliente3"
+        ]
     }
 }
 ]

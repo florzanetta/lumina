@@ -99,6 +99,13 @@
 							                                {% endif %} 
 
 
+														<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Otros <b class="caret"></b></a>
+														    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+																	<!-- Items de drop-down  -->
+																	<li><a href="{% url 'customer_user_preferences_update' user.preferences.id %}">Preferencias</a></li>
+														    </ul>
+														</li>
+
 				                                            {% if user.is_staff or user.is_superuser %}
 
 																<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin <b class="caret"></b></a>

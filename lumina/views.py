@@ -30,12 +30,14 @@ from django.core.files.base import ContentFile
 
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Session, Image, LuminaUser, Customer, \
-    SharedSessionByEmail, ImageSelection, SessionQuote, SessionQuoteAlternative
+    SharedSessionByEmail, ImageSelection, SessionQuote, SessionQuoteAlternative,\
+    UserPreferences
 from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm, \
     SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm, \
     ImageSelectionCreateForm, SessionQuoteCreateForm, SessionQuoteUpdateForm, \
-    SessionQuoteAlternativeCreateForm, SessionQuoteUpdate2Form
+    SessionQuoteAlternativeCreateForm, SessionQuoteUpdate2Form,\
+    UserPreferencesUpdateForm
 
 
 #
@@ -939,7 +941,35 @@ class UserUpdateView(UpdateView):
 
 
 #===============================================================================
-# User
+# UserPreference
+#===============================================================================
+
+class UserPreferenceUpdateView(UpdateView):
+    model = UserPreferences
+    form_class = UserPreferencesUpdateForm
+    template_name = 'lumina/base_create_update_form.html'
+
+    def get_success_url(self):
+        # TODO: fix this
+        return reverse('home')
+
+    def form_valid(self, form):
+        ret = super(UserPreferenceUpdateView, self).form_valid(form)
+        messages.success(self.request, 'Las preferencias fueron guardados correctamente')
+        return ret
+
+    def get_queryset(self):
+        return UserPreferences.objects.filter(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super(UserPreferenceUpdateView, self).get_context_data(**kwargs)
+        context['title'] = "Actualizar preferencias"
+        context['submit_label'] = "Actualizar"
+        return context
+
+
+#===============================================================================
+# SessionQuote
 #===============================================================================
 
 class SessionQuoteCreateUpdateMixin():
