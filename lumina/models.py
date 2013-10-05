@@ -11,10 +11,6 @@ from django.core.exceptions import PermissionDenied, ValidationError, \
     SuspiciousOperation
 from django.contrib.auth.models import AbstractUser, UserManager
 
-#
-# FIXME: create preference instance when creating a user
-#
-
 
 #===============================================================================
 # LuminaUser

@@ -41,6 +41,11 @@ from lumina.forms import SessionCreateForm, SessionUpdateForm, \
 
 
 #
+# FIXME: create preference instance when creating a user
+# FIXME: update password in UserPreferenceUpdateView
+#
+
+#
 # List of generic CBV:
 #  - https://docs.djangoproject.com/en/1.5/ref/class-based-views/
 #

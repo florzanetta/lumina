@@ -110,10 +110,25 @@ CustomerUpdateForm = CustomerCreateForm
 #===============================================================================
 
 class UserPreferencesUpdateForm(forms.ModelForm):
+    password1 = forms.CharField(
+        max_length=20, required=False, widget=forms.PasswordInput(), label=u'Contrasena',
+        help_text="Ingrese la nueva contraseña (si desea cambiarla)")
+    password2 = forms.CharField(
+        max_length=20, required=False, widget=forms.PasswordInput(),
+        label=u'Contrasena (otra vez)',
+        help_text="Repita la nueva contraseña (si desea cambiarla)")
+
+    def clean(self):
+        super(UserPreferencesUpdateForm, self).clean()
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        if password1 != password2:
+            raise forms.ValidationError('Los passwords no concuerdan')
+        return self.cleaned_data
 
     class Meta:
         model = UserPreferences
-        fields = ('send_emails', )
+        fields = ('send_emails', 'password1', 'password2',)
 
 
 #===============================================================================
