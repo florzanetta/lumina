@@ -1180,8 +1180,10 @@ class SessionQuoteDetailView(DetailView):
 
         elif self.object.status == SessionQuote.STATUS_ACCEPTED:
             if self.request.user.is_for_customer():
-                buttons.append({'name': 'button_go_to_choose_quote',
-                                'submit_label': "Cambiar alternativa de presupuesto", })
+                # show button to change alternatives ONLY if exists more alternatives
+                if self.object.get_valid_alternatives().count() > 0:
+                    buttons.append({'name': 'button_go_to_choose_quote',
+                                    'submit_label': "Cambiar alternativa de presupuesto", })
             else:
                 buttons.append({'name': 'button_cancel',
                                 'submit_label': "Cancelar presupuesto", 'confirm': True, })
@@ -1195,7 +1197,7 @@ class SessionQuoteDetailView(DetailView):
         else:
             raise(Exception("Invalid 'status': {}".format(self.object.status)))
 
-        context['selected_quote'] = self.object.get_selected_quote
+        context['selected_quote'] = self.object.get_selected_quote()
         context['extra_buttons'] = buttons
         _put_session_statuses_in_context(context)
 
