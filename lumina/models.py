@@ -430,6 +430,8 @@ class ImageSelection(models.Model):
     # TODO: `preview_size` maybe should be non-null
     preview_size = models.ForeignKey('PreviewSize', null=True, blank=True)
 
+    quote = models.ForeignKey('SessionQuote', null=True, blank=True)
+
     objects = ImageSelectionManager()
 
     def clean(self):
