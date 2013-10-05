@@ -628,6 +628,12 @@ class SessionQuote(models.Model):
                                                    on_delete=models.PROTECT,
                                                    null=True, blank=True)
 
+    stipulated_date = models.DateTimeField(verbose_name="fecha de entrega pactada")
+    stipulated_down_payment = models.DecimalField(
+        max_digits=10, decimal_places=2, verbose_name="entrega inicial pactada")
+    #    actual_down_payment = models.DecimalField(max_digits=10, decimal_places=2,
+    #        verbose_name="entrega inicial realizada")
+
     objects = SessionQuoteManager()
 
     def confirm(self, user):

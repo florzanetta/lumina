@@ -53,12 +53,23 @@
         {% endif %}
 
         <tr>
+            <th>Fecha de entrega pactada:</th>
+            <td>{{ object.stipulated_date }}
+            </td>
+        </tr>
+
+        <tr>
+            <th>Entrega inicial pactada:</th>
+            <td>$ {{ object.stipulated_down_payment|intcomma }}
+            </td>
+        </tr>
+
+        <tr>
             <th>Condiciones:</th>
             <td><pre>{{ object.terms }}</pre>
             </td>
         </tr>
 
-        
         {% if not hide_alternatives %}
             <tr>
                 <th>Alternativa seleccionada:</th>
