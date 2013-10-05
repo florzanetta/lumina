@@ -427,6 +427,8 @@ class ImageSelection(models.Model):
     image_quantity = models.PositiveIntegerField()
     status = models.CharField(max_length=1, choices=STATUS, default=STATUS_WAITING)
     selected_images = models.ManyToManyField('Image', blank=True)
+    # TODO: `preview_size` maybe should be non-null
+    preview_size = models.ForeignKey('PreviewSize', null=True, blank=True)
 
     objects = ImageSelectionManager()
 
@@ -806,7 +808,7 @@ class SessionQuoteAlternative(models.Model):
 
 
 #===============================================================================
-# CustomerTypes
+# CustomerType
 #===============================================================================
 
 class CustomerType(models.Model):
@@ -818,7 +820,7 @@ class CustomerType(models.Model):
 
 
 #===============================================================================
-# SessionTypes
+# SessionType
 #===============================================================================
 
 class SessionType(models.Model):
@@ -827,3 +829,19 @@ class SessionType(models.Model):
 
     def __unicode__(self):
         return self.name
+
+
+#===============================================================================
+# PreviewSize
+#===============================================================================
+
+class PreviewSize(models.Model):
+    max_size = models.PositiveIntegerField(verbose_name="Tamaño máximo", null=True, blank=True)
+    studio = models.ForeignKey('Studio', related_name='preview_sizes')
+
+    class Meta:
+        unique_together = ("max_size", "studio")
+        ordering = ["max_size"]
+
+    def __unicode__(self):
+        return u"{0}x{0}".format(self.max_size)

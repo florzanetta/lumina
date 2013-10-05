@@ -4,7 +4,7 @@ from django.utils.html import format_html
 
 from lumina.models import LuminaUser, Image, Session, SharedSessionByEmail, \
     ImageSelection, Studio, Customer, SessionQuoteAlternative, SessionQuote,\
-    UserPreferences, CustomerType, SessionType
+    UserPreferences, CustomerType, SessionType, PreviewSize
 
 
 class SharedSessionByEmailAdmin(admin.ModelAdmin):
@@ -34,3 +34,4 @@ admin.site.register(Studio)
 admin.site.register(UserPreferences)
 admin.site.register(CustomerType)
 admin.site.register(SessionType)
+admin.site.register(PreviewSize)

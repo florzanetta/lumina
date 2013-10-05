@@ -43,6 +43,7 @@ from lumina.forms import SessionCreateForm, SessionUpdateForm, \
 #
 # FIXME: create preference instance when creating a user
 # FIXME: update password in UserPreferenceUpdateView
+# FIXME: use selecte PreviewSize when generating previews
 #
 
 #
@@ -451,6 +452,7 @@ class ImageSelectionCreateView(CreateView):
 
     def get_initial(self):
         initial = super(ImageSelectionCreateView, self).get_initial()
+        # FIXME: filter `PreviewSize` for user's Studio
         if 'id_session' in self.request.GET:
             initial.update({
                 'session': self.request.GET['id_session'],

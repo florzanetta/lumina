@@ -83,5 +83,29 @@
         "studio": 3, 
         "name": "Moda"
     }
+},
+{
+    "pk": 1, 
+    "model": "lumina.previewsize", 
+    "fields": {
+        "studio": 3, 
+        "max_size": 200
+    }
+},
+{
+    "pk": 2, 
+    "model": "lumina.previewsize", 
+    "fields": {
+        "studio": 3, 
+        "max_size": 500
+    }
+},
+{
+    "pk": 3, 
+    "model": "lumina.previewsize", 
+    "fields": {
+        "studio": 3, 
+        "max_size": 800
+    }
 }
 ]

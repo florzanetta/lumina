@@ -44,7 +44,7 @@ class ImageSelectionCreateForm(forms.ModelForm):
 
     class Meta:
         model = ImageSelection
-        fields = ('session', 'image_quantity',)
+        fields = ('session', 'image_quantity', 'preview_size')
         # exclude = ('user', 'status', 'selected_images')
 
 
