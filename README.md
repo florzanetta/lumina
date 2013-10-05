@@ -119,7 +119,7 @@ To re-generate **fixtures** for testing, run:
 
     python manage.py dumpdata --format=json --indent=4 --natural lumina.Studio     > lumina/fixtures/sample/studios.json
     python manage.py dumpdata --format=json --indent=4 --natural lumina.Customer   > lumina/fixtures/sample/customers.json
-    python manage.py dumpdata --format=json --indent=4 --natural lumina.LuminaUser > lumina/fixtures/sample/users.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.LuminaUser lumina.UserPreferences > lumina/fixtures/sample/users.json
     python manage.py dumpdata --format=json --indent=4 --natural lumina.Session    > lumina/fixtures/sample/sessions.json
     python manage.py dumpdata --format=json --indent=4 --natural lumina.Image      > lumina/fixtures/sample/images.json
     python manage.py dumpdata --format=json --indent=4 --natural lumina.ImageSelection > lumina/fixtures/sample/imageselection-waiting-selection.json
