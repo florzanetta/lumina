@@ -19,5 +19,69 @@
     "fields": {
         "name": "Estudio Fotogr\u00e1fico"
     }
+},
+{
+    "pk": 1, 
+    "model": "lumina.customertype", 
+    "fields": {
+        "studio": 3, 
+        "name": "Agencia de publicidad"
+    }
+},
+{
+    "pk": 2, 
+    "model": "lumina.customertype", 
+    "fields": {
+        "studio": 3, 
+        "name": "Persona"
+    }
+},
+{
+    "pk": 3, 
+    "model": "lumina.customertype", 
+    "fields": {
+        "studio": 3, 
+        "name": "Empresa"
+    }
+},
+{
+    "pk": 1, 
+    "model": "lumina.sessiontype", 
+    "fields": {
+        "studio": 3, 
+        "name": "Evento (otros)"
+    }
+},
+{
+    "pk": 2, 
+    "model": "lumina.sessiontype", 
+    "fields": {
+        "studio": 3, 
+        "name": "Evento - Cumplea\u00f1os de 15"
+    }
+},
+{
+    "pk": 3, 
+    "model": "lumina.sessiontype", 
+    "fields": {
+        "studio": 3, 
+        "name": "Evento - Casamiento"
+    }
+},
+{
+    "pk": 4, 
+    "model": "lumina.sessiontype", 
+    "fields": {
+        "studio": 3, 
+        "name": "Publicitario"
+    }
+},
+{
+    "pk": 5, 
+    "model": "lumina.sessiontype", 
+    "fields": {
+        "studio": 3, 
+        "name": "Moda"
+    }
 }
 ]

@@ -117,7 +117,7 @@ To check **code coverage**, run:
 
 To re-generate **fixtures** for testing, run:
 
-    python manage.py dumpdata --format=json --indent=4 --natural lumina.Studio     > lumina/fixtures/sample/studios.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.Studio lumina.CustomerType lumina.SessionType  > lumina/fixtures/sample/studios.json
     python manage.py dumpdata --format=json --indent=4 --natural lumina.Customer   > lumina/fixtures/sample/customers.json
     python manage.py dumpdata --format=json --indent=4 --natural lumina.LuminaUser lumina.UserPreferences > lumina/fixtures/sample/users.json
     python manage.py dumpdata --format=json --indent=4 --natural lumina.Session    > lumina/fixtures/sample/sessions.json

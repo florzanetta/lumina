@@ -201,6 +201,8 @@ class Customer(models.Model):
     name = models.CharField(max_length=100)
     studio = models.ForeignKey(Studio, related_name='customers')
 
+    customer_type = models.ForeignKey('CustomerType', null=True, related_name='+')
+
     # Customer additional information (contact, biling, etc.)
     address = models.TextField(blank=True)
     phone = models.CharField(max_length=20, blank=True)
@@ -282,6 +284,8 @@ class Session(models.Model):
 
     # REFACTOR: `customer` is a new attribute
     customer = models.ForeignKey(Customer, null=True, blank=True)
+
+    session_type = models.ForeignKey('SessionType', null=True, related_name='+')
 
     # REFACTOR: `shared_with` used to point to `LuminaUser`
     shared_with = models.ManyToManyField(Customer, blank=True,
@@ -793,3 +797,27 @@ class SessionQuoteAlternative(models.Model):
     class Meta:
         unique_together = ("session_quote", "image_quantity")
         ordering = ["image_quantity"]
+
+
+#===============================================================================
+# CustomerTypes
+#===============================================================================
+
+class CustomerType(models.Model):
+    name = models.CharField(max_length=100)
+    studio = models.ForeignKey('Studio', related_name='customer_types')
+
+    def __unicode__(self):
+        return self.name
+
+
+#===============================================================================
+# SessionTypes
+#===============================================================================
+
+class SessionType(models.Model):
+    name = models.CharField(max_length=100)
+    studio = models.ForeignKey('Studio', related_name='session_types')
+
+    def __unicode__(self):
+        return self.name

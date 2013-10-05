@@ -56,14 +56,14 @@ class SessionCreateForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        fields = ('name', 'photographer', 'customer', 'shared_with',)
+        fields = ('name', 'session_type', 'photographer', 'customer', 'shared_with',)
 
 
 class SessionUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        fields = ('name', 'photographer', 'customer', 'shared_with',)
+        fields = ('name', 'session_type', 'photographer', 'customer', 'shared_with',)
         widgets = {
             'shared_with': CheckboxSelectMultiple(),
         }
@@ -99,7 +99,8 @@ class CustomerCreateForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = (
-            'name', 'address', 'phone', 'city', 'iva', 'cuit', 'ingresos_brutos', 'notes'
+            'name', 'customer_type', 'address', 'phone', 'city', 'iva', 'cuit',
+            'ingresos_brutos', 'notes'
         )
 
 CustomerUpdateForm = CustomerCreateForm

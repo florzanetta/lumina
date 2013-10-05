@@ -171,7 +171,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # 'localflavor',
-    'cities_light',
+    # 'cities_light',
     'autocomplete_light',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
