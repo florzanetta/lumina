@@ -252,7 +252,7 @@ def view_report(request, report_id):
 
     elif report_id == 4:
         ctx['report_title'] = 'Ingresos ($) por tipo de cliente'
-        chart = pygal.Pie(legend_at_bottom=True)
+        chart = pygal.Pie(legend_at_bottom=True)  #@UndefinedVariable
         chart.title = ctx['report_title']
         chart.add('Particular (eventos)', 20000)
         chart.add('Particular (otros)', 7000)
