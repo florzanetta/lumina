@@ -245,6 +245,13 @@ def view_report(request, report_id):
 
     elif report_id == 4:
         ctx['report_title'] = 'Ingresos ($) por tipo de cliente'
+        chart = pygal.Pie(legend_at_bottom=True)
+        chart.title = ctx['report_title']
+        chart.add('Particular (eventos)', 20000)
+        chart.add('Particular (otros)', 7000)
+        chart.add('Agencia de publicidad', 85000)
+        chart.print_values = True
+        ctx['svg_chart'] = chart.render()
 
     else:
         raise(SuspiciousOperation())
