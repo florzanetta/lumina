@@ -221,7 +221,7 @@ def view_report(request, report_id):
         ctx['report_title'] = 'Costo (hs) vs Monto cobtrado ($) por tipo de cliente'
         chart = pygal.XY(#@UndefinedVariable
             stroke=False, legend_at_bottom=True, x_title="Horas", y_title="$")
-        chart.title = 'Costos vs Montos cobrado'
+        chart.title = ctx['report_title']
         chart.add(
             'Particular (eventos)',
             [ (random.randint(15, 40), random.randint(2000, 9000)) for _ in range(0, random.randint(5, 10))])
@@ -232,6 +232,13 @@ def view_report(request, report_id):
 
     elif report_id == 2:
         ctx['report_title'] = 'Presupuestos expandidos (en el tiempo)'
+        chart = pygal.StackedBar(legend_at_bottom=True, y_title="$")  #@UndefinedVariable
+        chart.title = ctx['report_title']
+        chart.x_labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', ]
+        chart.add('Presupuesto original', [random.randint(17000, 25000) for _ in range(0, 6)])
+        chart.add('Presupuesto expandido', [random.randint(1000, 5000) for _ in range(0, 6)])
+        chart.print_values = False
+        ctx['svg_chart'] = chart.render()
 
     elif report_id == 3:
         ctx['report_title'] = 'Presupuestos expandidos (por cliente)'
