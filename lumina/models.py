@@ -653,6 +653,7 @@ class SessionQuote(models.Model):
                                                    verbose_name="presupuesto alternativo")
 
     stipulated_date = models.DateTimeField(verbose_name="fecha de entrega pactada")
+    # FIXME: check stipulated_down_payment <= cost 
     stipulated_down_payment = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name="entrega inicial pactada")
     #    actual_down_payment = models.DecimalField(max_digits=10, decimal_places=2,
