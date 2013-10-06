@@ -30,14 +30,16 @@ from django.core.files.base import ContentFile
 
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Session, Image, LuminaUser, Customer, \
-    SharedSessionByEmail, ImageSelection, SessionQuote, SessionQuoteAlternative,\
+    SharedSessionByEmail, ImageSelection, SessionQuote, SessionQuoteAlternative, \
     UserPreferences
 from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm, \
     SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm, \
     ImageSelectionCreateForm, SessionQuoteCreateForm, SessionQuoteUpdateForm, \
-    SessionQuoteAlternativeCreateForm, SessionQuoteUpdate2Form,\
+    SessionQuoteAlternativeCreateForm, SessionQuoteUpdate2Form, \
     UserPreferencesUpdateForm, ImageSelectionAutoCreateForm
+import pygal
+import random
 
 
 #
@@ -213,8 +215,35 @@ def home(request):
 @login_required
 @cache_control(private=True)
 def view_report(request, report_id):
+    report_id = int(report_id)
+    ctx = {}
+    if report_id == 1:
+        ctx['report_title'] = 'Costo (hs) vs Monto cobtrado ($) por tipo de cliente'
+        chart = pygal.XY(#@UndefinedVariable
+            stroke=False, legend_at_bottom=True, x_title="Horas", y_title="$")
+        chart.title = 'Costos vs Montos cobrado'
+        chart.add(
+            'Particular (eventos)',
+            [ (random.randint(15, 40), random.randint(2000, 9000)) for _ in range(0, random.randint(5, 10))])
+        chart.add('Particular (otros)', [ (random.randint(5, 25), random.randint(1500, 4000)) for _ in range(0, random.randint(5, 10))])
+        chart.add('Agencia de publicidad', [ (random.randint(15, 90), random.randint(6000, 20000)) for _ in range(0, random.randint(5, 10))])
+        chart.print_values = False
+        ctx['svg_chart'] = chart.render()
+
+    elif report_id == 2:
+        ctx['report_title'] = 'Presupuestos expandidos (en el tiempo)'
+
+    elif report_id == 3:
+        ctx['report_title'] = 'Presupuestos expandidos (por cliente)'
+
+    elif report_id == 4:
+        ctx['report_title'] = 'Ingresos ($) por tipo de cliente'
+
+    else:
+        raise(SuspiciousOperation())
+
     return render_to_response(
-        'lumina/reports/report_{}.html'.format(int(report_id)), {},
+        'lumina/reports/report_generic.html', ctx,
         context_instance=RequestContext(request))
 
 

@@ -1,0 +1,19 @@
+{% extends "lumina/base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+
+{% block content %}
+
+    <h3>Informe</h3>
+    <h5>{{ report_title }}</h5>
+
+    <figure style="max-width: 800px; max-height: 500px;">{{ svg_chart|safe }}</figure>
+
+{% endblock content %}
+
+</body>
+</html>
