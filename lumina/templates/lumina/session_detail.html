@@ -95,17 +95,42 @@
 
 	    <hr>
 
-	    <p>
-		    <a href="{% url 'session_update' object.pk %}" class="btn btn-primary">Actualizar sesión</a>
-            <a href="{% url 'session_upload_previews' object.id %}" class="btn btn-primary">Agregar vistas previas</a>
-		    <a href="{% url 'image_create' %}?id_session={{ object.pk }}" class="btn btn-primary">Agregar imagenes en calidad total</a>
-            <a href="{% url 'shared_session_by_email_create' %}?id_session={{ object.pk }}" class="btn btn-primary">Compartir sesión via email</a>
-            <a href="{% url 'image_selection_create' %}?id_session={{ object.pk }}" class="btn btn-primary">Solicitar selección de imágenes</a>
-            <a href="{% url 'image_selection_auto_create' object.pk %}" class="btn btn-primary">Solicitar selección de imágenes (auto)</a>
-	    </p>
-    {% endif %}
 
-{% endblock content %}
+	    <p>
+	    <div class="btn-toolbar" style="margin: 0;">
+		    <a href="{% url 'session_update' object.pk %}" class="btn btn-primary">Editar sesión</a>
+		    
+	        <div class="btn-group">
+	            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+	                Agregar imágenes <span class="caret"></span>
+	            </a>
+	            <ul class="dropdown-menu">
+	                <li><a href="{% url 'session_upload_previews' object.id %}">Agregar vistas previas</a></li>
+	                <li><a href="{% url 'image_create' %}?id_session={{ object.pk }}">Agregar imagenes en calidad total</a></li>
+	            </ul>
+	        </div>
+
+            <div class="btn-group">
+                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                    Compartir <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'shared_session_by_email_create' %}?id_session={{ object.pk }}">Compartir via email</a></li>
+                </ul>
+            </div>
+            
+            <div class="btn-group">
+                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                    Solicitar selección de imágenes <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+		            <li><a href="{% url 'image_selection_create' %}?id_session={{ object.pk }}">Solicitar selección de imágenes</a></li>
+		            <li><a href="{% url 'image_selection_auto_create' object.pk %}">Solicitar selección de imágenes (desde presupuesto)</a></li>
+                </ul>
+            </div>
+	    </div>
+	    </p>
+	{% endif %} {% endblock content %}
 
 </body>
 </html>
