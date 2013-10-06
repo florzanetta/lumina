@@ -296,6 +296,8 @@ class Session(models.Model):
     shared_with = models.ManyToManyField(
         Customer, blank=True, related_name='sessions_shared_with_me', verbose_name="Compartida con")
 
+    worked_hours = models.PositiveIntegerField(default=0, verbose_name="horas trabajadas")
+
     objects = SessionManager()
 
     def __unicode__(self):

@@ -78,7 +78,7 @@ class SessionUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        fields = ('name', 'session_type', 'photographer', 'customer', 'shared_with',)
+        fields = ('name', 'session_type', 'photographer', 'customer', 'worked_hours', 'shared_with',)
         widgets = {
             'shared_with': CheckboxSelectMultiple(),
         }
