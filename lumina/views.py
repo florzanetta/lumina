@@ -212,6 +212,14 @@ def home(request):
 
 @login_required
 @cache_control(private=True)
+def view_report(request, report_id):
+    return render_to_response(
+        'lumina/reports/report_{}.html'.format(int(report_id)), {},
+        context_instance=RequestContext(request))
+
+
+@login_required
+@cache_control(private=True)
 def check_404(request):
     logger.info("Raising ObjectDoesNotExist()")
     raise(ObjectDoesNotExist())

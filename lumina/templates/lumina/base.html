@@ -111,6 +111,18 @@
 														    </ul>
 														</li>
 
+                                                            {% if user|user_is_photographer %} <!-- user is photographer -->
+		                                                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Informes<b class="caret"></b></a>
+		                                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+		                                                                    <!-- Items de drop-down  -->
+                                                                            <li><a href="{% url 'view_report' 1 %}">Costo (hs) vs Monto cobtrado ($)</a></li>
+                                                                            <li><a href="{% url 'view_report' 2 %}">Presupuestos expandidos (en el tiempo)</a></li>
+                                                                            <li><a href="{% url 'view_report' 3 %}">Presupuestos expandidos (por cliente)</a></li>
+                                                                            <li><a href="{% url 'view_report' 4 %}">Ingresos ($) por tipo de cliente</a></li>
+		                                                            </ul>
+                                                        </li>
+                                                            {% endif %} 
+
 				                                            {% if user.is_staff or user.is_superuser %}
 
 																<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin <b class="caret"></b></a>
