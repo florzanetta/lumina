@@ -242,6 +242,13 @@ def view_report(request, report_id):
 
     elif report_id == 3:
         ctx['report_title'] = 'Presupuestos expandidos (por cliente)'
+        chart = pygal.StackedBar(legend_at_bottom=True, y_title="$")  #@UndefinedVariable
+        chart.title = ctx['report_title']
+        chart.x_labels = ['Cliente A', 'Cliente B', 'Cliente C', 'Cliente D', 'Cliente E', 'Cliente F', 'Cliente G', 'Cliente H', 'Cliente I',]
+        chart.add('Presupuesto original', [random.randint(17000, 25000) for _ in range(0, 9)])
+        chart.add('Presupuesto expandido', [random.randint(1000, 5000) for _ in range(0, 9)])
+        chart.print_values = False
+        ctx['svg_chart'] = chart.render()
 
     elif report_id == 4:
         ctx['report_title'] = 'Ingresos ($) por tipo de cliente'
