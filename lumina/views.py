@@ -555,22 +555,30 @@ def image_selection_auto_create_view(request, pk):
     active_quote = session.get_active_quote()
     quote_quantity, quote_cost = active_quote.get_selected_quote_values()
 
+    assert quote_quantity > 0
+
     instance = ImageSelection(
-        studio=session.studio,
         session=session,
+        studio=session.studio,
         customer=session.customer,
         image_quantity=quote_quantity,
         quote=active_quote
     )
 
+    more_photos_required_than_existing = bool(session.image_set.count() < quote_quantity)
+
     if request.method == 'GET':
         form = ImageSelectionAutoCreateForm(instance=instance)
+        if more_photos_required_than_existing:
+            messages.error(
+                request, 'La sesión no contiene la cantidad de fotografías presupuestadas')
+
     elif request.method == 'POST':
         form = ImageSelectionAutoCreateForm(request.POST, instance=instance)
         if form.is_valid():
-            pass
+            messages.success(request, 'OK')
         else:
-            pass
+            messages.error(request, 'ERROR')
     else:
         raise(SuspiciousOperation("Invalid HTTP method"))
 
@@ -583,7 +591,8 @@ def image_selection_auto_create_view(request, pk):
     }
 
     ctx['title'] = "Solicitar selección de imágenes"
-    ctx['submit_label'] = "Solicitar"
+    if not more_photos_required_than_existing:
+        ctx['submit_label'] = "Solicitar"
 
     return render_to_response(
         'lumina/imageselection_auto_create.html', ctx,
