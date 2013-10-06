@@ -299,6 +299,15 @@ class Session(models.Model):
     def get_absolute_url(self):
         return reverse('session_detail', kwargs={'pk': self.pk})
 
+    def get_active_quote(self):
+        """
+        Since a quotation can be canceled and replaced by a new 'version',
+        but the session should be reused, we need this method to return
+        the valid quotation.
+        """
+        # FIXME: this works, but is pure evil... like Newman!
+        return self.quotes.get()
+
 
 #===============================================================================
 # SharedSessionByEmail
@@ -774,6 +783,20 @@ class SessionQuote(models.Model):
                 return self.accepted_quote_alternative.id
         else:
             return None
+
+    def get_selected_quote_values(self):
+        """
+        Returns a pair of values: image quantity and cost,
+        from the selected quote, or (None, None,).
+        """
+        selected_quote = self.get_selected_quote()
+        if selected_quote is None:
+            return (None, None,)
+        if selected_quote == 0:
+            return (self.image_quantity, self.cost,)
+        else:
+            quote_alternative = SessionQuoteAlternative.objects.get(pk=selected_quote)
+            return (quote_alternative.image_quantity, quote_alternative.cost,)
 
     def get_valid_alternatives(self):
         """

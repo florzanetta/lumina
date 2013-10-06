@@ -97,6 +97,16 @@ urlpatterns = patterns(
                 ImageSelectionCreateView.as_view())),
         name='image_selection_create'),
 
+    #    url(r'^session/image-selection/create/(?P<pk>\d+)/$',
+    #        cache_control(private=True)(
+    #            login_required(
+    #                ImageSelectionAutoCreateView.as_view())),
+    #        name='image_selection_auto_create'),
+    url(
+        r'^session/image-selection/create/(?P<pk>\d+)/$',
+        'lumina.views.image_selection_auto_create_view',
+        name='image_selection_auto_create'),
+
     url(r'^session/image-selection/list/$',
         cache_control(private=True)(
             login_required(

@@ -1,0 +1,36 @@
+{% extends "lumina/base_create_update_form.html" %}
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body>
+
+    <table>
+            {% block pre_form_content %}
+            
+                <tr>
+                    <td>Sesión:</td>
+                    <td>{{ object.name }}</td>
+                </tr>            
+            
+                <tr>
+                    <td>Cliente:</td>
+                    <td>{{ object.customer.name }}</td>
+                </tr>            
+            
+                <tr>
+                    <td>Presupuesto:</td>
+                    <td>
+                        $ {{ quote_cost|intcomma }}
+                        /
+                        {{ quote_quantity }} fotografías
+                    </td>
+                </tr>            
+
+            {% endblock pre_form_content %}
+    </table>
+
+</body>
+</html>

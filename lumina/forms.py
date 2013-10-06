@@ -48,6 +48,21 @@ class ImageSelectionCreateForm(forms.ModelForm):
         # exclude = ('user', 'status', 'selected_images')
 
 
+class ImageSelectionAutoCreateForm(forms.ModelForm):
+
+    def clean_preview_size(self):
+        preview_size = self.cleaned_data['preview_size']
+        if not preview_size:
+            raise(forms.ValidationError("Debe seleccionar un tamaño de visualizacion"))
+
+        return preview_size
+
+    class Meta:
+        model = ImageSelection
+        fields = ('preview_size',)
+        # exclude = ('user', 'status', 'selected_images')
+
+
 #===============================================================================
 # Session
 #===============================================================================

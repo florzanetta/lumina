@@ -101,6 +101,7 @@
 		    <a href="{% url 'image_create' %}?id_session={{ object.pk }}" class="btn btn-primary">Agregar imagenes en calidad total</a>
             <a href="{% url 'shared_session_by_email_create' %}?id_session={{ object.pk }}" class="btn btn-primary">Compartir sesión via email</a>
             <a href="{% url 'image_selection_create' %}?id_session={{ object.pk }}" class="btn btn-primary">Solicitar selección de imágenes</a>
+            <a href="{% url 'image_selection_auto_create' object.pk %}" class="btn btn-primary">Solicitar selección de imágenes (auto)</a>
 	    </p>
     {% endif %}
 

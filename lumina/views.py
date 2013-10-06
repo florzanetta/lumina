@@ -37,7 +37,7 @@ from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm, \
     ImageSelectionCreateForm, SessionQuoteCreateForm, SessionQuoteUpdateForm, \
     SessionQuoteAlternativeCreateForm, SessionQuoteUpdate2Form,\
-    UserPreferencesUpdateForm
+    UserPreferencesUpdateForm, ImageSelectionAutoCreateForm
 
 
 #
@@ -488,6 +488,66 @@ class ImageSelectionCreateView(CreateView):
         context['title'] = "Solicitud de seleccion de fotos"
         context['submit_label'] = "Enviar solicitud"
         return context
+
+
+@login_required
+@cache_control(private=True)
+def image_selection_auto_create_view(request, pk):
+    session = Session.objects.visible_sessions(request.user).get(pk=pk)
+    active_quote = session.get_active_quote()
+    quote_quantity, quote_cost = active_quote.get_selected_quote_values()
+
+    instance = ImageSelection(
+        studio=session.studio,
+        session=session,
+        customer=session.customer,
+        image_quantity=quote_quantity,
+        quote=active_quote
+    )
+
+    if request.method == 'GET':
+        form = ImageSelectionAutoCreateForm(instance=instance)
+    elif request.method == 'POST':
+        form = ImageSelectionAutoCreateForm(request.POST, instance=instance)
+        if form.is_valid():
+            pass
+        else:
+            pass
+    else:
+        raise(SuspiciousOperation("Invalid HTTP method"))
+
+    ctx = {
+        'object': session,
+        'form': form,
+        'active_quote': active_quote,
+        'quote_cost': quote_cost,
+        'quote_quantity': quote_quantity,
+    }
+
+    ctx['title'] = "Solicitar selección de imágenes"
+    ctx['submit_label'] = "Solicitar"
+
+    return render_to_response(
+        'lumina/imageselection_auto_create.html', ctx,
+        context_instance=RequestContext(request))
+
+
+#class ImageSelectionAutoCreateView(DetailView):
+#    """
+#    With this view, the photographer creates a request
+#    to the customer when the session has a quote associated.
+#    """
+#    model = Session
+#    template_name = 'lumina/imageselection_auto_create.html'
+#
+#    def get_queryset(self):
+#        # FIXME: `visible_sessions()` shouldn't be used here!
+#        return Session.objects.visible_sessions(self.request.user)
+#
+#    def get_context_data(self, **kwargs):
+#        context = super(ImageSelectionAutoCreateView, self).get_context_data(**kwargs)
+#        context['form'] = ImageSelectionAutoCreateForm()
+#        return context
 
 
 class ImageSelectionForCustomerView(DetailView):
