@@ -254,9 +254,9 @@ def view_report(request, report_id):
         ctx['report_title'] = 'Ingresos ($) por tipo de cliente'
         chart = pygal.Pie(legend_at_bottom=True)  #@UndefinedVariable
         chart.title = ctx['report_title']
-        chart.add('Particular (eventos)', 20000)
-        chart.add('Particular (otros)', 7000)
-        chart.add('Agencia de publicidad', 85000)
+        chart.add('Particular (eventos)', random.randint(9000, 20000))
+        chart.add('Particular (otros)', random.randint(2000, 8000))
+        chart.add('Agencia de publicidad', random.randint(30000, 99000))
         chart.print_values = True
         ctx['svg_chart'] = chart.render()
 
