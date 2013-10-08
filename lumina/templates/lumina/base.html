@@ -50,8 +50,9 @@
 																<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 
                                                                                 <!-- Items de drop-down  -->
-																	          <li><a href="{% url 'session_list' %}">Lista de sesiones</a></li>
+                                                                              <li><a href="{% url 'session_list' %}">Lista de sesiones</a></li>
                                                                                 {% if user|user_is_photographer %} <!-- user is photographer -->
+			                                                                              <li><a href="{% url 'session_list' %}">Lista de sesiones archivadas</a></li>
 																						<li><a href="{% url 'session_create' %}">Agregar sesión</a></li>
 																						<li><a href="{% url 'shared_session_by_email_create' %}">Compartir sesión</a></li>
                                                                                 {% else %} <!-- user is client -->
