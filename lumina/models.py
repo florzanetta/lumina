@@ -125,7 +125,7 @@ class LuminaUser(AbstractUser):
 #===============================================================================
 
 class UserPreferences(models.Model):
-    send_emails = models.BooleanField(default=True, verbose_name="Eviar emails")
+    send_emails = models.BooleanField(default=True, verbose_name="Enviar emails")
     user = models.OneToOneField(LuminaUser, related_name='preferences')
 
     def __unicode__(self):
