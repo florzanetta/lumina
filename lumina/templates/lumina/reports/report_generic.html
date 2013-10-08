@@ -19,7 +19,7 @@
     <h3>Informe</h3>
     <h5>{{ report_title }}</h5>
 
-    <figure style="max-width: 800px; max-height: 500px;">{{ svg_chart|safe }}</figure>
+    <hr>
 
     {% if show_form_1 %}
     
@@ -140,6 +140,11 @@
         </form>
 
     {% endif %}
+
+    <hr>
+
+    <figure style="max-width: 800px; max-height: 500px;">{{ svg_chart|safe }}</figure>
+
 
 {% endblock content %}
 
