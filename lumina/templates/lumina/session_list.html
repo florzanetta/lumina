@@ -13,6 +13,7 @@
 	<h3>Sesiones del estudio</h3>
 
     {% for a_session in object_list %}
+
         {% ifchanged a_session.customer.id %} 
             <h4>{{ a_session.customer.name }}</h4>
         {% endifchanged %}
@@ -30,21 +31,30 @@
                             <span class="badge badge-info">{{ a_session.image_set.count }}</span>
                             imagen{{ a_session.image_set.count|pluralize:",es" }}
                         </small>
+                    <!--
                       -
                       <small>
-                          Compartido con <span class="badge badge-info">{{ a_session.shared_with.count }}</span>
-                          cliente{{ a_session.shared_with.count|pluralize:",s" }}.
+                          Compartido con <span class="badge badge-info">{ { a_session.shared_with.count } }</span>
+                          cliente{ { a_session.shared_with.count|pluralize:",s" } }.
                       </small>
 		              -
 		              <small>
-		                  Compartido con <span class="badge badge-info">{{ a_session.shares_via_email.count }}</span>
-	                      persona{{ a_session.shares_via_email.count|pluralize:",s" }} via email.
+		                  Compartido con <span class="badge badge-info">{ { a_session.shares_via_email.count } }</span>
+	                      persona{ { a_session.shares_via_email.count|pluralize:",s" } } via email.
 		              </small>
+                    -->
 		        </div>
 		        <div>
-                    <i class="icon-user"></i> <small><em>Cliente:</em> {{ a_session.customer }}</small>
+		          <!--
+                    <i class="icon-user"></i> <small><em>Cliente:</em> { { a_session.customer } }</small>
                     -
+                    -->
                     <i class="icon-user"></i> <small><em>Fotógrafo:</em> {{ a_session.photographer }}</small>
+                    {% with quote=a_session.get_active_quote %}
+                        {% if quote %}
+                            - <a class="btn btn-primary btn-mini" href="{% url 'quote_detail' quote.id %}">Ver presupuesto</a>
+                        {% endif %}
+                    {% endwith %}
 		        </div>
 		    </div>
 		</div>
