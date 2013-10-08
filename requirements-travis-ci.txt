@@ -11,3 +11,4 @@ django-mailer==0.1.0
 django-autocomplete-light==1.4.3
 django-cities-light==2.1.0
 django-localflavor==1.0
+pygal==1.1.0
