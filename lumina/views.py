@@ -229,6 +229,7 @@ def view_report(request, report_id):
         chart.add('Agencia de publicidad', [ (random.randint(15, 90), random.randint(6000, 20000)) for _ in range(0, random.randint(5, 10))])
         chart.print_values = False
         ctx['svg_chart'] = chart.render()
+        ctx['show_form_1'] = True
 
     elif report_id == 2:
         ctx['report_title'] = 'Presupuestos expandidos (en el tiempo)'
@@ -239,6 +240,7 @@ def view_report(request, report_id):
         chart.add('Presupuesto expandido', [random.randint(1000, 5000) for _ in range(0, 6)])
         chart.print_values = False
         ctx['svg_chart'] = chart.render()
+        ctx['show_form_2'] = True
 
     elif report_id == 3:
         ctx['report_title'] = 'Presupuestos expandidos (por cliente)'
@@ -249,6 +251,7 @@ def view_report(request, report_id):
         chart.add('Presupuesto expandido', [random.randint(1000, 5000) for _ in range(0, 9)])
         chart.print_values = False
         ctx['svg_chart'] = chart.render()
+        ctx['show_form_3'] = True
 
     elif report_id == 4:
         ctx['report_title'] = 'Ingresos ($) por tipo de cliente'
@@ -259,6 +262,7 @@ def view_report(request, report_id):
         chart.add('Agencia de publicidad', random.randint(30000, 99000))
         chart.print_values = True
         ctx['svg_chart'] = chart.render()
+        ctx['show_form_4'] = True
 
     else:
         raise(SuspiciousOperation())
