@@ -11,6 +11,39 @@
 
     <h3>Sesión '{{ object.name }}'</h3>
 
+    {% if user.is_photographer %}
+    <table class="table">
+        <tr>
+            <th width="20%">Cliente:</th>
+            <td width="80%">
+                {{ object.customer.name }}
+                {% if user.is_photographer %}
+                    - <small>Tipo: {{ object.customer.customer_type }}</small>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Tipo de sesión:</th>
+            <td>
+                {{ object.session_type }}
+            </td>
+        </tr>
+
+        {% with quote=object.get_active_quote %}
+            {% if quote %}
+                <tr>
+                    <th>Pesupuesto:</th>
+                    <td>
+                        <i class="icon-briefcase"></i> <a class=""
+                            href="{% url 'quote_detail' quote.id %}">Ver presupuesto</a>
+                    </td>
+                </tr>
+            {% endif %}
+        {% endwith %}
+
+    </table>
+    {% endif %}
+
     <hr>
 
     <h5>Imágenes del album:</h5>
