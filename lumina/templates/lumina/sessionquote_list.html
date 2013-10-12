@@ -36,6 +36,13 @@
                           Estado: <span class="badge badge-info">{{ a_quote.get_status_display }}</span>
                       </small>
 		        </div>
+                {% if a_quote.session %}
+                    <div style="padding-top: 5px;">
+                        <em>Sesión:</em>
+                        <a href="{% url 'session_detail' a_quote.session.id %}">{{ a_quote.session.name }}</a>
+                    </div>
+                {% endif %}
+                
 		    </div>
 		</div>
 		<hr>
