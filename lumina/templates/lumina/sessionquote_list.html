@@ -38,8 +38,10 @@
 		        </div>
                 {% if a_quote.session %}
                     <div style="padding-top: 5px;">
-                        <em>Sesión:</em>
-                        <a href="{% url 'session_detail' a_quote.session.id %}">{{ a_quote.session.name }}</a>
+                        <small>
+                            <em>Sesión:</em>
+                            <a href="{% url 'session_detail' a_quote.session.id %}">{{ a_quote.session.name }}</a>
+                        </small>
                     </div>
                 {% endif %}
                 
