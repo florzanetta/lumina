@@ -31,6 +31,10 @@
                             <span class="badge badge-info">{{ a_session.image_set.count }}</span>
                             imagen{{ a_session.image_set.count|pluralize:",es" }}
                         </small>
+                        -
+                        <i class="icon-tag"></i> <small><em>Tipo:</em> <strong>{{ a_session.session_type }}</strong></small>
+                        -
+                        <i class="icon-user"></i> <small><em>Fotógrafo:</em> <strong>{{ a_session.photographer }}</strong></small>
                     <!--
                       -
                       <small>
@@ -44,18 +48,14 @@
 		              </small>
                     -->
 		        </div>
-		        <div>
-		          <!--
-                    <i class="icon-user"></i> <small><em>Cliente:</em> { { a_session.customer } }</small>
-                    -
-                    -->
-                    <i class="icon-user"></i> <small><em>Fotógrafo:</em> {{ a_session.photographer }}</small>
-                    {% with quote=a_session.get_active_quote %}
+                {% with quote=a_session.get_active_quote %}
+                    <div style="padding-top: 5px;">
                         {% if quote %}
-                            - <a class="btn btn-primary btn-mini" href="{% url 'quote_detail' quote.id %}">Ver presupuesto</a>
+                            <i class="icon-briefcase"></i> <small><a class=""
+                                href="{% url 'quote_detail' quote.id %}">Ver presupuesto</a></small>
                         {% endif %}
-                    {% endwith %}
-		        </div>
+                    </div>
+                {% endwith %}
 		    </div>
 		</div>
 		<hr>

@@ -294,7 +294,8 @@ class Session(models.Model):
 
     # REFACTOR: `shared_with` used to point to `LuminaUser`
     shared_with = models.ManyToManyField(
-        Customer, blank=True, related_name='sessions_shared_with_me', verbose_name="Compartida con")
+        Customer, blank=True, related_name='sessions_shared_with_me',
+        verbose_name="Compartida con")
 
     worked_hours = models.PositiveIntegerField(default=0, verbose_name="horas trabajadas")
 
@@ -655,7 +656,7 @@ class SessionQuote(models.Model):
                                                    verbose_name="presupuesto alternativo")
 
     stipulated_date = models.DateTimeField(verbose_name="fecha de entrega pactada")
-    # FIXME: check stipulated_down_payment <= cost 
+    # FIXME: check stipulated_down_payment <= cost
     stipulated_down_payment = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name="entrega inicial pactada")
     #    actual_down_payment = models.DecimalField(max_digits=10, decimal_places=2,
