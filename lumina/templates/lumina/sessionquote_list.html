@@ -36,7 +36,7 @@
                           Estado: <span class="badge badge-info">{{ a_quote.get_status_display }}</span>
                       </small>
 		        </div>
-                {% if a_quote.session %}
+                {% if user.is_photographer and a_quote.session %}
                     <div style="padding-top: 5px;">
                         <small>
                             <em>Sesión:</em>
