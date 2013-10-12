@@ -50,7 +50,6 @@
 																<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 
                                                                                 <!-- Items de drop-down  -->
-                                                                              <li><a href="{% url 'session_list' %}">Lista de sesiones</a></li>
                                                                                 {% if user|user_is_photographer %} <!-- user is photographer -->
 			                                                                              <li><a href="{% url 'session_list' %}">Lista de sesiones archivadas</a></li>
 																						<li><a href="{% url 'session_create' %}">Agregar sesión</a></li>
@@ -74,6 +73,10 @@
                                                                                 {% else %} <!-- user is client -->
                                                                                 {% endif %}
                                                                                 <li><a href="{% url 'quote_list' %}">Lista de presupuestos</a></li>
+                                                                                {% if user|user_is_photographer %} <!-- user is photographer -->
+                                                                                {% else %} <!-- user is client -->
+                                                                                    <li><a href="{% url 'quote_list_pending_for_customer' %}">Lista de presupuestos (pendientes de aceptar)</a></li>
+                                                                                {% endif %}
 
                                                                 </ul>
                                                             </li>

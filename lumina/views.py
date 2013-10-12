@@ -1228,9 +1228,12 @@ class SessionQuoteListView(ListView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
     #    #django.views.generic.list.ListView
     model = SessionQuote
+    filter = ''
 
     def get_queryset(self):
         qs = SessionQuote.objects.visible_sessionquote(self.request.user)
+        if self.filter == 'pending_for_customer':
+            qs = qs.filter(status=SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
         return qs.order_by('customer__name', 'id')
 
 
