@@ -301,6 +301,14 @@ class Session(models.Model):
 
     objects = SessionManager()
 
+    def clean(self):
+        # Check if customer is OK. IE: customer should be the same as the
+        # customers pointing to any of the existing quotes
+        quotes_pointing_to_self = SessionQuote.objects.filter(session=self).all()
+        for a_quote in quotes_pointing_to_self:
+            if a_quote.customer.id != self.customer.id:
+                raise ValidationError('Ha seleccionado un cliente distinto al del presupuesto')
+
     def __unicode__(self):
         return u"Session {0}".format(self.name)
 

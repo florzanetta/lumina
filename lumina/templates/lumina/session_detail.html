@@ -30,15 +30,17 @@
         </tr>
 
         {% with quote=object.get_active_quote %}
-            {% if quote %}
-                <tr>
-                    <th>Pesupuesto:</th>
-                    <td>
+            <tr>
+                <th>Pesupuesto:</th>
+                <td>
+                    {% if quote %}
                         <i class="icon-briefcase"></i> <a class=""
                             href="{% url 'quote_detail' quote.id %}">Ver presupuesto</a>
-                    </td>
-                </tr>
-            {% endif %}
+                    {% else %}
+                        <em>No hay presupuesto asociado</em>
+                    {% endif %}
+                </td>
+            </tr>
         {% endwith %}
 
     </table>
