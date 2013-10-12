@@ -748,7 +748,7 @@ class SessionCreateUpdateMixin():
     def _setup_form(self, form):
         qs_customers = self.request.user.all_my_customers()
         form.fields['customer'].queryset = qs_customers
-        form.fields['shared_with'].queryset = qs_customers
+        # form.fields['shared_with'].queryset = qs_customers
         form.fields['photographer'].queryset = self.request.user.studio.photographers.all()
 
 

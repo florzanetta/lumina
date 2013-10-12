@@ -54,32 +54,32 @@
 	    <hr>
     {% endfor %}
 
-    {% if object.studio == user.studio %}
-        <!-- the logged in user is the from the same studio than the session -->
+    <!--
+    { % if object.studio == user.studio % }
+        < ! - - the logged in user is the from the same studio than the session - - >
 
 	    <h5>
 	       Compartido con clientes:
 	           &nbsp;&nbsp;&nbsp;<i class="icon-question-sign"></i><small> Para compartir una sesión con un cliente, utilice <strong>Actualizar album</strong></small>
 	    </h5>
 	    <table class="table">
-	        {% for customer in object.shared_with.all %}
+	        { % for customer in object.shared_with.all % }
 	            <tr>
 	               <td>
-	                    <i class="icon-user"></i> {{ customer.name }}
+	                    <i class="icon-user"></i> { { customer.name } }
 	               </td>
 	            </tr>
-	        {% empty %}
+	        { % empty % }
 	            <tr><td>La sesión no ha sido compartido con ningún cliente</td></tr>
-	        {% endfor %}
+	        { % endfor % }
 	    </table>
 
-    {% endif %}
+    { % endif % }
+    -->
 
     {% if object.studio == user.studio %}
         <!-- the logged in user is the from the same studio than the session -->
 
-	    <hr>
-	
 	    <h5>Compartida via email:</h5>
 	    <table class="table">
 	        {% for shared_by_email in object.shares_via_email.all %}
