@@ -78,7 +78,8 @@ class SessionUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        fields = ('name', 'session_type', 'photographer', 'customer', 'worked_hours', 'shared_with',)
+        fields = ('name', 'session_type', 'photographer', 'customer',
+            'worked_hours', 'shared_with',)
         widgets = {
             'shared_with': CheckboxSelectMultiple(),
         }
@@ -210,14 +211,16 @@ class SessionQuoteCreateForm(forms.ModelForm):
         model = SessionQuote
         fields = (
             'customer', 'image_quantity', 'stipulated_date', 'cost',
-            'stipulated_down_payment', 'terms')
+            'stipulated_down_payment', 'give_full_quality_images',
+            'terms')
 
 
 class SessionQuoteUpdateForm(forms.ModelForm):
 
     class Meta:
         model = SessionQuote
-        fields = ('customer', 'image_quantity', 'cost', 'terms')
+        fields = ('customer', 'image_quantity', 'cost',
+            'give_full_quality_images', 'terms')
 
 
 class SessionQuoteUpdate2Form(forms.ModelForm):
