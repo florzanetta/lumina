@@ -1,13 +1,25 @@
 {% load humanize %}
+
     <tr>
         <th width="20%">Cliente:</th>
-        <td width="80%">{{ object.customer.name }}</td>
+        <td width="80%">
+            {{ object.customer.name }}
+            {% if user.is_photographer %}
+                - <small>Tipo: {{ object.customer.customer_type }}</small>
+            {% endif %}
+        </td>
     </tr>
     
-    {% if object.session and user.is_photographer %}
+    {% if user.is_photographer %}
     <tr>
         <th width="20%">Sesión:</th>
-        <td width="80%"><a href="{% url 'session_detail' object.session.id %}">{{ object.session.name }}</a></td>
+        <td width="80%">
+            {% if object.session %}
+                <a href="{% url 'session_detail' object.session.id %}">{{ object.session.name }}</a>
+            {% else %}
+                <em>Sin sesión</em>
+            {% endif %}
+        </td>
     </tr>
     {% endif %}
 
@@ -33,7 +45,6 @@
                 class="icon-question-sign"></i> Ayuda</a></small>
         </td>
     </tr>
-
 
         {% if object.status == 'A' %}
             <tr>
