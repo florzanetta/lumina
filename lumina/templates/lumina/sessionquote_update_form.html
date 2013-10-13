@@ -39,7 +39,7 @@
             <tr>
                 <td width="40%" style="text-align: right; font-weight: bold;">Alternativa:</td>
                 <td width="30%" style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
-                <td width="30%" style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
+                <td width="30%" style="text-align: right;">{{ object.currency }} {{ alt.cost|intcomma }}</td>
                 <td width="5%" style="text-align: center;">
                     {% if object.accepted_quote_alternative == alt %}
                         <a href="javascript:void(0);" data-toggle="tooltip"
