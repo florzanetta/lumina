@@ -7,7 +7,6 @@ Created on Jun 1, 2013
 '''
 
 from django import forms
-from django.forms.widgets import CheckboxSelectMultiple
 from django.forms.models import inlineformset_factory
 
 from localflavor.ar.forms import ARCUITField

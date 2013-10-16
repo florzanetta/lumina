@@ -1435,7 +1435,7 @@ class SessionQuoteAlternativeSelectView(DetailView):
 class SessionQuoteAlternativeCreateView(CreateView):
     model = SessionQuoteAlternative
     form_class = SessionQuoteAlternativeCreateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/sessionquote_alternative_create_update.html'
 
     def get_initial(self):
         initial = super(SessionQuoteAlternativeCreateView, self).get_initial()
