@@ -647,23 +647,12 @@ class SessionQuote(models.Model):
         (STATUS_REJECTED, u'Rechazado por el cliente'),
         (STATUS_CANCELED, u'Cancelado por fotografo'),
     )
-    CURRENCY_ARS = 'ARS'
-    CURRENCY_USD = 'USD'
-    CURRENCY_BRL = 'BRL'
-    CURRENCY_EUR = 'EUR'
-    CURRENCIES = (
-        (CURRENCY_ARS, u'$ (ARS) Pesos Argentinos'),
-        (CURRENCY_USD, u'u$s (USD) Dólares Estadounidenses'),
-        (CURRENCY_BRL, u'R$ (BRL) Reales Brasileños'),
-        (CURRENCY_EUR, u'\u20AC (EUR) Euros'),
-    )
+
     studio = models.ForeignKey(Studio, related_name='session_quotes', verbose_name="estudio")
     customer = models.ForeignKey(Customer, related_name='session_quotes', verbose_name="cliente")
     image_quantity = models.PositiveIntegerField(verbose_name="cantidad de imágenes")
     status = models.CharField(
         max_length=1, choices=STATUS, default=STATUS_QUOTING, verbose_name="estado")
-    currency = models.CharField(
-        max_length=3, choices=CURRENCIES, default=CURRENCY_ARS, verbose_name="moneda")
     cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="costo")
     terms = models.TextField(verbose_name="términos")
     accepted_rejected_by = models.ForeignKey(LuminaUser, related_name='+', null=True, blank=True)

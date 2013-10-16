@@ -210,7 +210,7 @@ class SessionQuoteCreateForm(forms.ModelForm):
     class Meta:
         model = SessionQuote
         fields = (
-            'customer', 'image_quantity', 'stipulated_date', 'currency', 'cost',
+            'customer', 'image_quantity', 'stipulated_date', 'cost',
             'stipulated_down_payment', 'give_full_quality_images',
             'terms')
 
@@ -219,7 +219,7 @@ class SessionQuoteUpdateForm(forms.ModelForm):
 
     class Meta:
         model = SessionQuote
-        fields = ('customer', 'image_quantity', 'currency', 'cost',
+        fields = ('customer', 'image_quantity', 'cost',
             'give_full_quality_images', 'terms')
 
 

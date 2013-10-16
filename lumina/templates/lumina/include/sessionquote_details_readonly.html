@@ -79,7 +79,7 @@
 
         <tr>
             <th>Entrega inicial pactada:</th>
-            <td>{{ object.currency }} {{ object.stipulated_down_payment|intcomma }}
+            <td>$ {{ object.stipulated_down_payment|intcomma }}
             </td>
         </tr>
 
@@ -111,7 +111,7 @@
                         <tr {% if selected_quote == 0 %}class="success"{% endif %}>
                             <td width="40%" style="text-align: right; font-weight: bold;">Presupuesto original:</td>
                             <td width="30%" style="text-align: right;">{{ object.image_quantity|intcomma }}</td>
-                            <td width="30%" style="text-align: right;">{{ object.currency }} {{ object.cost|intcomma }}</td>
+                            <td width="30%" style="text-align: right;">$ {{ object.cost|intcomma }}</td>
                             <td width="5%" style="text-align: center;">
                                 {% if selected_quote == 0 %}
                                     <i class="icon-ok"></i>
@@ -124,7 +124,7 @@
                             <tr {% if selected_quote == alt.id %}class="success"{% endif %}>
                                 <td style="text-align: right; font-weight: bold;">Alternativa:</td>
                                 <td style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
-                                <td style="text-align: right;">{{ object.currency }} {{ alt.cost|intcomma }}</td>
+                                <td style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
                                 <td width="5%" style="text-align: center;">
                                     {% if selected_quote == alt.id %}
                                         <i class="icon-ok"></i>
