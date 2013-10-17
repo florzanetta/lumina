@@ -14,23 +14,26 @@
 		              <small> <span class="label">{{ image.size|filesizeformat }}</span></small>
 		              &nbsp;
 		              <small><span class="label">{{ image.content_type }}</span></small>
+            {% endif %}
 		
 					  {% if hide_download %}
 					  {% else %}
-			              &nbsp;
-			              <small><a href="{% url 'image_download' image.pk %}"
-			                class="btn btn-primary btn-mini lumina_download_image">Bajar</a></small>
-					  {% endif %}
+					       {% if image.image %}
+					              &nbsp;
+					              <small><a href="{% url 'image_download' image.pk %}"
+					                class="btn btn-primary btn-mini lumina_download_image">Bajar</a></small>
+                            {% endif %}
+                      {% endif %}
 		
 		            {% if checkbox_for_selection %}
 						<label class="checkbox" for="selected_images_{{ image.id }}"><input
 		                        type="checkbox" name="selected_images" value="{{ image.id }}"
 		                        id="selected_images_{{ image.id }}"> Seleccionar
 		                </label>
+                    {% else %}
+                        <i class="icon-warning-sign"></i> <small><em>Esta imagen es una vista previa de la original</em></small>
                     {% endif %}
-            {% else %}
-                <i class="icon-warning-sign"></i> <small><em>Esta imagen es una vista previa de la original</em></small>
-            {% endif %}
+                
 
         </div>
     </div>
