@@ -5,25 +5,31 @@
     </a>
     <div class="media-body">
         <div class="media-heading"><a
-               href="{% if image.studio == user.studio and read_write %}{% url 'image_update' image.pk %}{% else %}javascript:void(0);{% endif %}">{{ image.original_filename }}</a>
+               href="{% if image.studio == user.studio and read_write %}{% url 'image_update' image.pk %}{% else %}javascript:void(0);{% endif %}"
+                    >{% if image.image %}{{ image.original_filename }}{% else %}{{ image.thumbnail_original_filename }}{% endif %}</a>
         </div>
         <div>
-              <small> <span class="label">{{ image.size|filesizeformat }}</span></small>
-              &nbsp;
-              <small><span class="label">{{ image.content_type }}</span></small>
 
-			  {% if hide_download %}
-			  {% else %}
-	              &nbsp;
-	              <small><a href="{% url 'image_download' image.pk %}"
-	                class="btn btn-primary btn-mini lumina_download_image">Bajar</a></small>
-			  {% endif %}
-
-            {% if checkbox_for_selection %}
-				<label class="checkbox" for="selected_images_{{ image.id }}"><input
-                        type="checkbox" name="selected_images" value="{{ image.id }}"
-                        id="selected_images_{{ image.id }}"> Seleccionar
-                </label>
+            {% if image.image %}
+		              <small> <span class="label">{{ image.size|filesizeformat }}</span></small>
+		              &nbsp;
+		              <small><span class="label">{{ image.content_type }}</span></small>
+		
+					  {% if hide_download %}
+					  {% else %}
+			              &nbsp;
+			              <small><a href="{% url 'image_download' image.pk %}"
+			                class="btn btn-primary btn-mini lumina_download_image">Bajar</a></small>
+					  {% endif %}
+		
+		            {% if checkbox_for_selection %}
+						<label class="checkbox" for="selected_images_{{ image.id }}"><input
+		                        type="checkbox" name="selected_images" value="{{ image.id }}"
+		                        id="selected_images_{{ image.id }}"> Seleccionar
+		                </label>
+                    {% endif %}
+            {% else %}
+                <i class="icon-warning-sign"></i> <small><em>Esta imagen es una vista previa de la original</em></small>
             {% endif %}
 
         </div>
