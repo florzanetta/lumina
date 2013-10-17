@@ -453,7 +453,7 @@ class ImageSelectionCreateView(CreateView):
 
 @login_required
 @cache_control(private=True)
-def image_selection_auto_create_view(request, pk):
+def image_selection_create_from_quote(request, pk):
     session = Session.objects.visible_sessions(request.user).get(pk=pk)
     active_quote = session.get_active_quote()
     quote_quantity, quote_cost = active_quote.get_selected_quote_values()

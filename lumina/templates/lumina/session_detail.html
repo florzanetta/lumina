@@ -160,7 +160,7 @@
                 </a>
                 <ul class="dropdown-menu">
 		            <li><a href="{% url 'image_selection_create' %}?id_session={{ object.pk }}">Solicitar selección de imágenes</a></li>
-		            <li><a href="{% url 'image_selection_auto_create' object.pk %}">Solicitar selección de imágenes (desde presupuesto)</a></li>
+		            <li><a href="{% url 'image_selection_create_from_quote' object.pk %}">Solicitar selección de imágenes (desde presupuesto)</a></li>
                 </ul>
             </div>
             
