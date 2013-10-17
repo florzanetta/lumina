@@ -1019,7 +1019,7 @@ class SessionQuoteCreateUpdateMixin():
 class SessionQuoteCreateView(CreateView, SessionQuoteCreateUpdateMixin):
     model = SessionQuote
     form_class = SessionQuoteCreateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/sessionquote_create.html'
 
     def get_form(self, form_class):
         form = super(SessionQuoteCreateView, self).get_form(form_class)
