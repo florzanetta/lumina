@@ -479,7 +479,10 @@ def image_selection_auto_create_view(request, pk):
     elif request.method == 'POST':
         form = ImageSelectionAutoCreateForm(request.POST, instance=instance)
         if form.is_valid():
-            messages.success(request, 'OK')
+            form.save()
+            messages.success(request, 'La solicitud fue creada satisfactoriamente')
+            return HttpResponseRedirect(reverse('session_detail',
+                args=[session.id]))
         else:
             messages.error(request, 'ERROR')
     else:
@@ -498,7 +501,7 @@ def image_selection_auto_create_view(request, pk):
         ctx['submit_label'] = "Solicitar"
 
     return render_to_response(
-        'lumina/imageselection_auto_create.html', ctx,
+        'lumina/imageselection_create_from_quote.html', ctx,
         context_instance=RequestContext(request))
 
 
@@ -508,7 +511,7 @@ def image_selection_auto_create_view(request, pk):
 #    to the customer when the session has a quote associated.
 #    """
 #    model = Session
-#    template_name = 'lumina/imageselection_auto_create.html'
+#    template_name = 'lumina/imageselection_create_from_quote.html'
 #
 #    def get_queryset(self):
 #        # FIXME: `visible_sessions()` shouldn't be used here!
