@@ -596,6 +596,13 @@ class Image(models.Model):
         """Set original filename, truncating if it's too large"""
         self.original_filename = filename[0:128]
 
+    def set_thumbnail_content_type(self, content_type):
+        """Set content_type, truncating if it's too large"""
+        self.thumbnail_content_type = content_type[0:64]
+
+    def set_thumbnail_original_filename(self, filename):
+        """Set original filename for thumb, truncating if it's too large"""
+        self.thumbnail_original_filename = filename[0:128]
 
 #===============================================================================
 # SessionQuote

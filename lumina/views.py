@@ -7,6 +7,8 @@ import os
 import uuid
 import decimal
 import zipfile
+import pygal
+import random
 
 from StringIO import StringIO
 
@@ -38,8 +40,6 @@ from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     ImageSelectionCreateForm, SessionQuoteCreateForm, SessionQuoteUpdateForm, \
     SessionQuoteAlternativeCreateForm, SessionQuoteUpdate2Form, \
     UserPreferencesUpdateForm, ImageSelectionAutoCreateForm
-import pygal
-import random
 
 
 #
@@ -824,18 +824,18 @@ def session_upload_previews_upload(request, session_id):
 
         thumb_base64 = request.POST[key]
         filename = request.POST[key + '_filename']
-
+        
         # thumb_base64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA(...)AP/2Q=="
         assert thumb_base64.startswith(PREFIX)
         thumb_base64 = thumb_base64[len(PREFIX):]
         thumb_contents = base64.decodestring(thumb_base64)
 
-        new_image = Image(
-            session=session, studio=request.user.studio, content_type='image/jpg',
-            original_filename='thumb_' + filename)
-
-        new_image.size = len(thumb_contents)
-        new_image.image.save('thumb_' + filename, ContentFile(thumb_contents))
+        new_image = Image(session=session, studio=request.user.studio,
+            thumbnail_content_type='image/jpg')
+        
+        new_image.set_thumbnail_original_filename(filename)
+        new_image.thumbnail_size = len(thumb_contents)
+        new_image.thumbnail_image.save(str(uuid.uuid4()), ContentFile(thumb_contents))
         new_image.save()
 
     response_data = {
