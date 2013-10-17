@@ -555,10 +555,24 @@ class Image(models.Model):
     """
     # See: https://docs.djangoproject.com/en/1.5/ref/models/fields/#filefield
     # See: https://docs.djangoproject.com/en/1.5/topics/files/
-    image = models.FileField(upload_to='images/%Y/%m/%d', max_length=300, verbose_name="imagen")
-    size = models.PositiveIntegerField(verbose_name="tamaño")
-    original_filename = models.CharField(max_length=128, verbose_name="nombre de archivo original")
-    content_type = models.CharField(max_length=64, verbose_name="tipo de contenido")
+    image = models.FileField(upload_to='images/%Y/%m/%d', max_length=300, verbose_name="imagen",
+        null=True, blank=True)
+    size = models.PositiveIntegerField(verbose_name="tamaño", null=True, blank=True)
+    original_filename = models.CharField(max_length=128, verbose_name="nombre de archivo original",
+        null=True, blank=True)
+    content_type = models.CharField(max_length=64, verbose_name="tipo de contenido",
+        null=True, blank=True)
+
+    thumbnail_image = models.FileField(upload_to='images/%Y/%m/%d', max_length=300,
+        verbose_name="previsualizacion", null=True, blank=True)
+    thumbnail_size = models.PositiveIntegerField(
+        verbose_name="tamaño de la previsualizacion", null=True, blank=True)
+    thumbnail_original_filename = models.CharField(max_length=128,
+        verbose_name="nombre de archivo (en cliente) de previsualizacion",
+        null=True, blank=True)
+    thumbnail_content_type = models.CharField(max_length=64,
+        verbose_name="tipo de contenido de previsualizacion",
+        null=True, blank=True)
 
     # REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
     studio = models.ForeignKey(Studio, verbose_name="estudio")
