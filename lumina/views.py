@@ -605,16 +605,40 @@ class ImageSelectionDetailView(DetailView):
                 raise(SuspiciousOperation())
             ctx['images_to_show'] = image_selection.session.image_set.all()
             ctx['selected_images'] = image_selection.selected_images.all()
-            if image_selection.status == ImageSelection.STATUS_IMAGES_SELECTED:
-                ctx['show_download_selected_as_zip_button'] = True
+
+            # Check if all the selected images are avaiable in full-quality
+            all_selected_are_available_in_full_quality = True
+            for image in ctx['selected_images']:
+                if not image.image:
+                    all_selected_are_available_in_full_quality = False
+                    break
+                
+            if all_selected_are_available_in_full_quality:
+                if image_selection.status == ImageSelection.STATUS_IMAGES_SELECTED:
+                    ctx['show_download_selected_as_zip_button'] = True
+            else:
+                messages.warning(self.request,
+                    'Algunas imagenes todavía no estan disponibles para ser bajadas en calidad total')
 
         elif self.request.user.is_for_customer():
             # Show only selected images to customer
             if image_selection.session.customer != self.request.user.user_for_customer:
                 raise(SuspiciousOperation())
             ctx['images_to_show'] = image_selection.selected_images.all()
-            if image_selection.status == ImageSelection.STATUS_IMAGES_SELECTED:
-                ctx['show_download_selected_as_zip_button'] = True
+
+            # Check if all the selected images are avaiable in full-quality
+            all_selected_are_available_in_full_quality = True
+            for image in ctx['images_to_show']:
+                if not image.image:
+                    all_selected_are_available_in_full_quality = False
+                    break
+
+            if all_selected_are_available_in_full_quality:
+                if image_selection.status == ImageSelection.STATUS_IMAGES_SELECTED:
+                    ctx['show_download_selected_as_zip_button'] = True
+            else:
+                messages.warning(self.request,
+                    'Algunas imagenes todavía no estan disponibles para ser bajadas en calidad total')
 
         else:
             raise(SuspiciousOperation())
