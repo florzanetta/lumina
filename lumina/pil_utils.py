@@ -14,7 +14,10 @@ def generate_thumbnail(image, max_size=None):
         max_size = 100
     assert image is not None
     assert isinstance(max_size, int)
-    img = PilImage.open(default_storage.path(image.image.path))
+    if image.thumbnail_image:
+        img = PilImage.open(default_storage.path(image.thumbnail_image.path))
+    else:
+        img = PilImage.open(default_storage.path(image.image.path))
     img.thumbnail((max_size, max_size,), PilImage.ANTIALIAS)
     output_file = StringIO()
     img.save(output_file, "JPEG")
