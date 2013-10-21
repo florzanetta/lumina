@@ -429,20 +429,6 @@ class ImageSelectionManager(models.Manager):
         but has at least one images that doesn't have the full-quality version.
         """
         assert user.is_photographer()
-
-        def x(t, q):
-            print "-----", t, "-----"
-            for i in q:
-                print "[{}] {}".format(i.pk, i)
-        x('del estudio', self.filter(studio=user.studio))
-        x('del estudio + STATUS_IMAGES_SELECTED', self.filter(studio=user.studio,
-            status=ImageSelection.STATUS_IMAGES_SELECTED))
-        x('imagenes solo thumb', self.filter(selected_images__image=None))
-
-        x("*** ful ***", self.filter(studio=user.studio,
-                           status=ImageSelection.STATUS_IMAGES_SELECTED,
-                           selected_images__image='').distinct())
-
         return self.filter(studio=user.studio,
                            status=ImageSelection.STATUS_IMAGES_SELECTED,
                            selected_images__image='').distinct()
