@@ -442,13 +442,15 @@ class ImageSelectionUploadPendingView(DetailView):
             self.object.get_selected_images_without_full_quality()
         return context
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, pk, *args, **kwargs):
+        image_selection = self.get_queryset().get(pk=pk)
         for just_uploaded_key, a_file in request.FILES.iteritems():
             assert just_uploaded_key.startswith('file_for_')
             splitted_key = just_uploaded_key.split('_')
             assert len(splitted_key) == 3
             image_pk = splitted_key[2]
             image = Image.objects.get(pk=image_pk)
+            assert image.session == image_selection.session
             assert image.image in (None, ''), "No es none: {}".format(image.image)
             image.image = a_file
             image.size = a_file.size
@@ -456,10 +458,20 @@ class ImageSelectionUploadPendingView(DetailView):
             image.set_content_type(a_file.content_type)
             image.save()
 
-        # FIXME: check if there are pending uplodas for this ImageSelection
-        # and based on that check, redirect to this or other view
-        return HttpResponseRedirect(reverse('imageselection_upload_pending',
-            args=[kwargs['pk']]))
+        messages.success(self.request, 'Se subieron correctamente {} imágenes'.format(
+            len(request.FILES)))
+        # Don't use get_queryset(), won't work without pending uploads
+        cnt = ImageSelection.objects.get(pk=pk).get_selected_images_without_full_quality().count()
+        if cnt == 0:
+            messages.success(self.request,
+                u'Se finalizó la carga. Todas las imagenes seleccionadas por el cliente '
+                u'poseen la versión en calidad total.')
+            # TODO: send email to customer telling the files are ready to be downloaded
+            return HttpResponseRedirect(reverse('imageselection_redirect',
+                args=[pk]))
+        else:
+            return HttpResponseRedirect(reverse('imageselection_upload_pending',
+                args=[pk]))
 
 
 class ImageSelectionCreateView(CreateView):
