@@ -24,7 +24,14 @@
                        <small><strong>Estado</strong>: {{ pet.get_status_display }}</small> <br>
 						<small><strong>Cant. de imagenes permitidas:</strong>
 							{{ pet.image_quantity }}</small><br>
-                       
+
+                    <i class="icon-calendar"></i>
+                        <small>
+                            <em>Fecha de creación: {{pet.created|date}}
+                            - Última actualización: {{pet.last_modified|date}}
+                            </em>
+                        </small>
+
 		        </div>
 		    </div>
 		</div>

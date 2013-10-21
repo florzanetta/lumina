@@ -38,6 +38,12 @@
                 <small><em>Esta imagen sólo está disponible como <strong>vista previa</strong></em></small>
             {% endif %}
 
+            {% if show_dates %}
+                -
+                <i class="icon-calendar"></i> <span title="Creación: {{image.created|date}} - Última actualización: {{image.last_modified|date}}">
+                    <small><em>Última actualización:</em> hace <strong>{{ image.last_modified|timesince }}</strong></small></span>
+            {% endif %}
+
         </div>
     </div>
 </div>

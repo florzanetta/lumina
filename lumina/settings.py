@@ -33,6 +33,8 @@ LUMINA_DUMP_OBJECTS = True
 
 AUTH_USER_MODEL = 'lumina.LuminaUser'
 
+DATETIME_FORMAT = 'd/m/Y - H:i'
+
 SOUTH_MIGRATION_MODULES = {
     'social_auth': 'ignore',
 }

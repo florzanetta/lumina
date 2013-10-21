@@ -75,7 +75,7 @@
     <hr>
 
     {% for image in object_list %}
-        {% include 'lumina/include/image.html' with image=image user=user read_write=True only %}
+        {% include 'lumina/include/image.html' with image=image user=user read_write=True show_dates=True only %}
     {% empty %}
         <p>No hay imagenes...</p>
     {% endfor %}

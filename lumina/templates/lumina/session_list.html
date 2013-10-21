@@ -35,6 +35,10 @@
                         <i class="icon-tag"></i> <small><em>Tipo:</em> <strong>{{ a_session.session_type }}</strong></small>
                         -
                         <i class="icon-user"></i> <small><em>Fotógrafo:</em> <strong>{{ a_session.photographer }}</strong></small>
+                        -
+                        <i class="icon-calendar"></i> <span title="Creación: {{a_session.created|date}} - Última actualización: {{a_session.last_modified|date}}">
+                            <small><em>Última actualización:</em> hace <strong>{{ a_session.last_modified|timesince }}</strong></small></span>
+                        
                     <!--
                       -
                       <small>

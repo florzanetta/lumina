@@ -35,6 +35,11 @@
                       <small>
                           Estado: <span class="badge badge-info">{{ a_quote.get_status_display }}</span>
                       </small>
+
+                    -
+                    <i class="icon-calendar"></i> <span title="Creación: {{a_quote.created|date}} - Última actualización: {{a_quote.last_modified|date}}">
+                        <small><em>Última actualización:</em> hace <strong>{{ a_quote.last_modified|timesince }}</strong></small></span>
+
 		        </div>
                 {% if user.is_photographer and a_quote.session %}
                     <div style="padding-top: 5px;">

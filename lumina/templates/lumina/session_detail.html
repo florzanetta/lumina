@@ -113,6 +113,11 @@
                         </div>
                         <div>
                             <em><small>{{ imageselection.get_status_display }}</small></em>
+
+                            -
+                            <i class="icon-calendar"></i> <span title="Creación: {{imageselection.created|date}} - Última actualización: {{imageselection.last_modified|date}}">
+                                <small><em>Última actualización:</em> hace <strong>{{ imageselection.last_modified|timesince }}</strong></small></span>
+
                         </div>
                    </td>
                 </tr>
