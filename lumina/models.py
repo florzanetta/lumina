@@ -299,6 +299,9 @@ class Session(models.Model):
 
     worked_hours = models.PositiveIntegerField(default=0, verbose_name="horas trabajadas")
 
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
     objects = SessionManager()
 
     def clean(self):
@@ -460,6 +463,9 @@ class ImageSelection(models.Model):
 
     quote = models.ForeignKey('SessionQuote', null=True, blank=True, verbose_name="presupuesto")
 
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
     objects = ImageSelectionManager()
 
     def clean(self):
@@ -580,6 +586,9 @@ class Image(models.Model):
     # REFACTOR: `session` used to be named `album` and refer to `Album`
     session = models.ForeignKey(Session, null=True, verbose_name="sesión")
 
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
     objects = ImageManager()
 
     def __unicode__(self):
@@ -697,6 +706,9 @@ class SessionQuote(models.Model):
 
     session = models.ForeignKey(
         Session, related_name='quotes', null=True, blank=True, verbose_name="Sesión")
+
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
 
     objects = SessionQuoteManager()
 
@@ -895,6 +907,8 @@ class SessionQuoteAlternative(models.Model):
         SessionQuote, related_name='quote_alternatives', verbose_name="presupuesto")
     image_quantity = models.PositiveIntegerField(verbose_name="cantidad de imágenes")
     cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="costo")
+
+    created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ("session_quote", "image_quantity")
