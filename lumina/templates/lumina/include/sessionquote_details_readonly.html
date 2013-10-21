@@ -97,6 +97,19 @@
             </td>
         </tr>
 
+        <tr>
+            <th><small>Fecha de creación:</small></th>
+            <td>
+                <small>{{ object.created }} (hace {{ object.created|timesince }})</small>
+            </td>
+        </tr>
+        <tr>
+            <th><small>Última actualización:</small></th>
+            <td>
+                <small>{{ object.last_modified }} (hace {{ object.last_modified|timesince }})</small>
+            </td>
+        </tr>
+
         {% if not hide_alternatives %}
             <tr>
                 <th>Alternativa seleccionada:</th>
