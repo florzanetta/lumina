@@ -413,6 +413,21 @@ class ImageSelectionListView(ListView):
         return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user)
 
 
+class ImageSelectionWithPendingUploadsListView(ListView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.list.ListView
+    model = ImageSelection
+
+    def get_queryset(self):
+        return ImageSelection.objects.image_selections_pending_to_upload_full_quality_images(
+            self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super(ImageSelectionWithPendingUploadsListView, self).get_context_data(**kwargs)
+        context['for_pending_uploads'] = True
+        return context
+
+
 class ImageSelectionCreateView(CreateView):
     """
     With this view, the photographer creates a request

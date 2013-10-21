@@ -28,7 +28,7 @@
             solicitud{{ image_selection_with_pending_uploads_count|pluralize:",es" }} de selección de fotos
             esperando que se suban la fotografías en calidad total.
             {% if image_selection_with_pending_uploads_count %}
-                <a href="{ % url '' % }">Haga clic aquí para listarlas</a>
+                <a href="{% url 'imageselection_with_pending_uploads_list' %}">Haga clic aquí para listarlas</a>
             {% endif %}
     </p>
 

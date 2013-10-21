@@ -495,6 +495,9 @@ class ImageSelection(models.Model):
     def __unicode__(self):
         return u"ImageSelection p/{0}".format(self.session.name)
 
+    def get_selected_images_without_full_quality(self):
+        return self.selected_images.filter(image='')
+
     def clean(self):
         # from django.core.exceptions import ValidationError
         if self.id is None:
