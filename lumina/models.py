@@ -423,6 +423,30 @@ class ImageSelectionManager(models.Manager):
             qs = qs.filter(status=ImageSelection.STATUS_WAITING)
         return qs
 
+    def image_selections_pending_to_upload_full_quality_images(self, user):
+        """
+        Returns ImageSelection instances which user has selected the images,
+        but has at least one images that doesn't have the full-quality version.
+        """
+        assert user.is_photographer()
+
+        def x(t, q):
+            print "-----", t, "-----"
+            for i in q:
+                print "[{}] {}".format(i.pk, i)
+        x('del estudio', self.filter(studio=user.studio))
+        x('del estudio + STATUS_IMAGES_SELECTED', self.filter(studio=user.studio,
+            status=ImageSelection.STATUS_IMAGES_SELECTED))
+        x('imagenes solo thumb', self.filter(selected_images__image=None))
+
+        x("*** ful ***", self.filter(studio=user.studio,
+                           status=ImageSelection.STATUS_IMAGES_SELECTED,
+                           selected_images__image='').distinct())
+
+        return self.filter(studio=user.studio,
+                           status=ImageSelection.STATUS_IMAGES_SELECTED,
+                           selected_images__image='').distinct()
+
 
 class ImageSelection(models.Model):
     """
@@ -467,6 +491,9 @@ class ImageSelection(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = ImageSelectionManager()
+
+    def __unicode__(self):
+        return u"ImageSelection p/{0}".format(self.session.name)
 
     def clean(self):
         # from django.core.exceptions import ValidationError

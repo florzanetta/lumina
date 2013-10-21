@@ -59,11 +59,24 @@ logger = logging.getLogger(__name__)
 
 
 def _photographer_home(request):
+    image_selection_with_pending_uploads = \
+        ImageSelection.objects.image_selections_pending_to_upload_full_quality_images(
+            request.user)
+    image_selection_with_pending_uploads_count = image_selection_with_pending_uploads.count()
+
+    if image_selection_with_pending_uploads_count:
+        messages.warning(request, 'Hay {} solicitud{} de selección de fotos '
+            'esperando que se suban la fotografías en calidad total'.format(
+                image_selection_with_pending_uploads_count,
+                '' if image_selection_with_pending_uploads_count == 1 else 'es'))
+
     ctx = {
         'session_count': Session.objects.visible_sessions(request.user).count(),
         'image_count': Image.objects.visible_images(request.user).count(),
         'shared_session_via_email_count':
-        request.user.all_my_shared_sessions_by_email().count()
+        request.user.all_my_shared_sessions_by_email().count(),
+        'image_selection_with_pending_uploads': image_selection_with_pending_uploads,
+        'image_selection_with_pending_uploads_count': image_selection_with_pending_uploads_count,
     }
     return render_to_response(
         'lumina/index_photographer.html', ctx,
@@ -612,7 +625,7 @@ class ImageSelectionDetailView(DetailView):
                 if not image.image:
                     all_selected_are_available_in_full_quality = False
                     break
-                
+
             if all_selected_are_available_in_full_quality:
                 if image_selection.status == ImageSelection.STATUS_IMAGES_SELECTED:
                     ctx['show_download_selected_as_zip_button'] = True

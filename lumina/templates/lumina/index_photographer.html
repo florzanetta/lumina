@@ -24,6 +24,14 @@
     <p><span class="badge badge-info">{{ image_count }}</span>
             imagen{{ image_count|pluralize:",es" }}</p>
 
+    <p><span class="badge badge-info">{{ image_selection_with_pending_uploads_count }}</span>
+            solicitud{{ image_selection_with_pending_uploads_count|pluralize:",es" }} de selección de fotos
+            esperando que se suban la fotografías en calidad total.
+            {% if image_selection_with_pending_uploads_count %}
+                <a href="{ % url '' % }">Haga clic aquí para listarlas</a>
+            {% endif %}
+    </p>
+
     <hr>
 
     <!--
