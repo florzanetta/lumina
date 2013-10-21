@@ -15,7 +15,8 @@ from lumina.views import SessionListView, SessionDetailView, SessionCreateView, 
     SessionQuoteCreateView, SessionQuoteListView, SessionQuoteDetailView,\
     SessionQuoteUpdateView, \
     SessionQuoteAlternativeSelectView, SessionQuoteAlternativeCreateView,\
-    UserPreferenceUpdateView, ImageSelectionWithPendingUploadsListView
+    UserPreferenceUpdateView, ImageSelectionWithPendingUploadsListView,\
+    ImageSelectionUploadPendingView
 
 autocomplete_light.autodiscover()  # BEFORE admin.autodiscover()
 admin.autodiscover()
@@ -121,8 +122,8 @@ urlpatterns = patterns(
 
     url(r'^session/image-selection/upload-pending/(?P<pk>\d+)/$',
         cache_control(private=True)(
-            login_required(ImageSelectionDetailView.as_view())),
-        name='imageselection_upload_pending'), # TODO: implement!
+            login_required(ImageSelectionUploadPendingView.as_view())),
+        name='imageselection_upload_pending'),
 
     url(r'^session/image-selection/redirect/(?P<pk>\d+)/$',
         'lumina.views.imageselection_redirect',

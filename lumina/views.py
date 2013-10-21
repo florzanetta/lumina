@@ -428,6 +428,40 @@ class ImageSelectionWithPendingUploadsListView(ListView):
         return context
 
 
+class ImageSelectionUploadPendingView(DetailView):
+    model = ImageSelection
+    template_name = 'lumina/imageselection_upload_pending.html'
+
+    def get_queryset(self):
+        return ImageSelection.objects.image_selections_pending_to_upload_full_quality_images(
+            self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super(ImageSelectionUploadPendingView, self).get_context_data(**kwargs)
+        context['selected_images_without_full_quality'] = \
+            self.object.get_selected_images_without_full_quality()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        for just_uploaded_key, a_file in request.FILES.iteritems():
+            assert just_uploaded_key.startswith('file_for_')
+            splitted_key = just_uploaded_key.split('_')
+            assert len(splitted_key) == 3
+            image_pk = splitted_key[2]
+            image = Image.objects.get(pk=image_pk)
+            assert image.image in (None, ''), "No es none: {}".format(image.image)
+            image.image = a_file
+            image.size = a_file.size
+            image.set_original_filename(a_file.name)
+            image.set_content_type(a_file.content_type)
+            image.save()
+
+        # FIXME: check if there are pending uplodas for this ImageSelection
+        # and based on that check, redirect to this or other view
+        return HttpResponseRedirect(reverse('imageselection_upload_pending',
+            args=[kwargs['pk']]))
+
+
 class ImageSelectionCreateView(CreateView):
     """
     With this view, the photographer creates a request

@@ -1,0 +1,61 @@
+{% extends "lumina/base.html" %} {% load lumina_extras %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}
+    Lumina - Peticiones de selección de imágenes de album {{ object.album.name }}
+    {% endblock %}</title>
+</head>
+<body>
+
+    <!--
+    This template shows an 'read-only' version of ImageSelection
+    (for both photographers and customers)
+-->
+
+    {% block content %}
+
+    <h3>Peticiones de selección de imágenes de la sesión {{ object.session.name }}</h3>
+
+    <small><strong>Sesión:</strong> {{ object.session.name }}</small>
+    <br>
+
+    <small><strong>Estado:</strong> {{ object.get_status_display }}</small>
+    <br>
+
+    {% if selected_images_without_full_quality %}
+        <h5>Imágenes de la sesión:</h5>
+
+        <form method="post" enctype="multipart/form-data" action=".">
+            {% csrf_token %}
+            <table class="table">
+                {% for image in selected_images_without_full_quality %}
+                <tr>
+                    <td width="1%">
+                        <div class="media">
+                            <a class="pull-left" href="javascript:void(0);"> <img class="media-object"
+                                src="{% url 'image_thumb_64x64' image.pk %}" style="min-width: 80px;">
+                            </a>
+                        </div>
+                    </td>
+                    <td width="99%">
+                        <input type="file" name="file_for_{{image.pk}}" />
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+    
+            <input type="submit" value="Subir archivos" class="btn btn-primary">
+    
+        </form>
+    {% else %}
+    
+        <p>Todas las fotografías han sido subidas.</p>
+    
+    {% endif %}
+    
+    {% endblock content %}
+
+</body>
+</html>
