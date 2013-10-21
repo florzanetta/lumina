@@ -604,6 +604,7 @@ class Image(models.Model):
         """Set original filename for thumb, truncating if it's too large"""
         self.thumbnail_original_filename = filename[0:128]
 
+
 #===============================================================================
 # SessionQuote
 #===============================================================================
