@@ -141,10 +141,10 @@ def view_report(request, report_id):
 
         cursor = connection.cursor()
         cursor.execute("SELECT ls.session_type_id,"
-            " lst.name AS session_type_name,"
-            " ls.worked_hours AS worked_hours,"
-            " lsq.cost AS orig_cost,"
-            " lsqa.cost AS selected_quote_alternative_cost"
+            " lst.name AS \"session_type_name\","
+            " ls.worked_hours AS \"worked_hours\","
+            " lsq.cost AS \"orig_cost\","
+            " lsqa.cost AS \"selected_quote_alternative_cost\""
             " FROM lumina_session AS ls JOIN lumina_sessionquote AS lsq ON lsq.session_id = ls.id"
             " JOIN lumina_sessiontype AS lst ON ls.session_type_id = lst.id"
             " LEFT OUTER JOIN lumina_sessionquotealternative AS lsqa"
