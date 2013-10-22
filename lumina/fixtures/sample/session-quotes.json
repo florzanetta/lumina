@@ -1,0 +1,45 @@
+[
+{
+    "pk": 1, 
+    "model": "lumina.sessionquote", 
+    "fields": {
+        "customer": 4, 
+        "status": "A", 
+        "terms": "No se ceden derechos de copia", 
+        "stipulated_down_payment": "200", 
+        "session": 8, 
+        "created": "2013-10-22T02:27:22.412Z", 
+        "stipulated_date": "2014-01-01T21:00:00Z", 
+        "accepted_rejected_by": [
+            "cliente1"
+        ], 
+        "cost": "1000", 
+        "studio": 3, 
+        "accepted_quote_alternative": null, 
+        "last_modified": "2013-10-22T02:30:22.197Z", 
+        "accepted_rejected_at": "2013-10-22T02:29:22.928Z", 
+        "image_quantity": 2, 
+        "give_full_quality_images": true
+    }
+},
+{
+    "pk": 1, 
+    "model": "lumina.sessionquotealternative", 
+    "fields": {
+        "created": "2013-10-22T02:27:46.826Z", 
+        "image_quantity": 3, 
+        "session_quote": 1, 
+        "cost": "1400"
+    }
+},
+{
+    "pk": 2, 
+    "model": "lumina.sessionquotealternative", 
+    "fields": {
+        "created": "2013-10-22T02:28:00.558Z", 
+        "image_quantity": 4, 
+        "session_quote": 1, 
+        "cost": "1800"
+    }
+}
+]

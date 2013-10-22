@@ -60,7 +60,7 @@ with username 'admin' and password 'admin'):
 
 To add to the database some initial data (albums, images and shares), run:
 
-    python manage.py loaddata sample/studios.json sample/customers.json sample/users.json sample/sessions.json sample/images.json
+    python manage.py loaddata sample/studios.json sample/customers.json sample/users.json sample/sessions.json sample/images.json sample/session-quotes.json
 
 
 The username/passwords to login are:
@@ -118,11 +118,12 @@ To check **code coverage**, run:
 To re-generate **fixtures** for testing, run:
 
     python manage.py dumpdata --format=json --indent=4 --natural lumina.Studio lumina.CustomerType lumina.SessionType lumina.PreviewSize > lumina/fixtures/sample/studios.json
-    python manage.py dumpdata --format=json --indent=4 --natural lumina.Customer   > lumina/fixtures/sample/customers.json
-    python manage.py dumpdata --format=json --indent=4 --natural lumina.LuminaUser lumina.UserPreferences > lumina/fixtures/sample/users.json
-    python manage.py dumpdata --format=json --indent=4 --natural lumina.Session    > lumina/fixtures/sample/sessions.json
-    python manage.py dumpdata --format=json --indent=4 --natural lumina.Image      > lumina/fixtures/sample/images.json
-    python manage.py dumpdata --format=json --indent=4 --natural lumina.ImageSelection > lumina/fixtures/sample/imageselection-waiting-selection.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.Customer                                                         > lumina/fixtures/sample/customers.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.LuminaUser lumina.UserPreferences                                > lumina/fixtures/sample/users.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.Session                                                          > lumina/fixtures/sample/sessions.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.Image                                                            > lumina/fixtures/sample/images.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.ImageSelection                                                   > lumina/fixtures/sample/imageselection-waiting-selection.json
+    python manage.py dumpdata --format=json --indent=4 --natural lumina.SessionQuote lumina.SessionQuoteAlternative                      > lumina/fixtures/sample/session-quotes.json
 
 (remember to execute this with a **CLEAN** database: see *Reset of the database and uploads*).
 

@@ -142,5 +142,59 @@
         "thumbnail_content_type": null, 
         "size": 211357
     }
+},
+{
+    "pk": 9, 
+    "model": "lumina.image", 
+    "fields": {
+        "original_filename": null, 
+        "thumbnail_size": 6213, 
+        "created": "2013-10-22T02:31:29.070Z", 
+        "thumbnail_original_filename": "Birds--Birds--Birds--5931142538_1.jpg", 
+        "image": "", 
+        "session": 8, 
+        "studio": 3, 
+        "thumbnail_image": "Birds--Birds--Birds--5931142538_1.jpg", 
+        "content_type": null, 
+        "last_modified": "2013-10-22T02:31:29.071Z", 
+        "thumbnail_content_type": "image/jpg", 
+        "size": null
+    }
+},
+{
+    "pk": 10, 
+    "model": "lumina.image", 
+    "fields": {
+        "original_filename": null, 
+        "thumbnail_size": 10326, 
+        "created": "2013-10-22T02:31:29.074Z", 
+        "thumbnail_original_filename": "8902217876_de6e699066_2.jpg", 
+        "image": "", 
+        "session": 8, 
+        "studio": 3, 
+        "thumbnail_image": "8902217876_de6e699066_2.jpg", 
+        "content_type": null, 
+        "last_modified": "2013-10-22T02:31:29.075Z", 
+        "thumbnail_content_type": "image/jpg", 
+        "size": null
+    }
+},
+{
+    "pk": 11, 
+    "model": "lumina.image", 
+    "fields": {
+        "original_filename": null, 
+        "thumbnail_size": 6010, 
+        "created": "2013-10-22T02:31:29.077Z", 
+        "thumbnail_original_filename": "6556750957_e9bf2b5fef_o.jpg", 
+        "image": "", 
+        "session": 8, 
+        "studio": 3, 
+        "thumbnail_image": "6556750957_e9bf2b5fef_o.jpg", 
+        "content_type": null, 
+        "last_modified": "2013-10-22T02:31:29.078Z", 
+        "thumbnail_content_type": "image/jpg", 
+        "size": null
+    }
 }
 ]
