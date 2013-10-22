@@ -4,10 +4,16 @@
     "model": "lumina.image", 
     "fields": {
         "original_filename": "Sunken_Flower_5896136734.jpg", 
+        "thumbnail_size": null, 
+        "created": "2013-09-03T03:42:50Z", 
+        "thumbnail_original_filename": null, 
         "image": "Sunken_Flower_5896136734.jpg", 
         "session": 1, 
         "studio": 2, 
+        "thumbnail_image": "", 
         "content_type": "image/jpeg", 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "thumbnail_content_type": null, 
         "size": 56611
     }
 },
@@ -16,10 +22,16 @@
     "model": "lumina.image", 
     "fields": {
         "original_filename": "Sunken_Flower_5896136734.jpg", 
+        "thumbnail_size": null, 
+        "created": "2013-09-03T03:42:50Z", 
+        "thumbnail_original_filename": null, 
         "image": "Sunken_Flower_5896136734_1.jpg", 
         "session": 2, 
         "studio": 2, 
+        "thumbnail_image": "", 
         "content_type": "image/jpeg", 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "thumbnail_content_type": null, 
         "size": 56611
     }
 },
@@ -28,10 +40,16 @@
     "model": "lumina.image", 
     "fields": {
         "original_filename": "Birds--Birds--Birds--5931142538.jpg", 
+        "thumbnail_size": null, 
+        "created": "2013-09-03T03:42:50Z", 
+        "thumbnail_original_filename": null, 
         "image": "Birds--Birds--Birds--5931142538.jpg", 
         "session": 4, 
         "studio": 3, 
+        "thumbnail_image": "", 
         "content_type": "image/jpeg", 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "thumbnail_content_type": null, 
         "size": 211357
     }
 },
@@ -40,10 +58,16 @@
     "model": "lumina.image", 
     "fields": {
         "original_filename": "8902217876_de6e699066.jpg", 
+        "thumbnail_size": null, 
+        "created": "2013-09-03T03:42:50Z", 
+        "thumbnail_original_filename": null, 
         "image": "8902217876_de6e699066.jpg", 
         "session": 3, 
         "studio": 3, 
+        "thumbnail_image": "", 
         "content_type": "image/jpeg", 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "thumbnail_content_type": null, 
         "size": 249942
     }
 },
@@ -52,10 +76,16 @@
     "model": "lumina.image", 
     "fields": {
         "original_filename": "6556750957_e9bf2b5fef_o.jpg", 
+        "thumbnail_size": null, 
+        "created": "2013-09-03T03:42:50Z", 
+        "thumbnail_original_filename": null, 
         "image": "6556750957_e9bf2b5fef_o.jpg", 
         "session": 4, 
         "studio": 3, 
+        "thumbnail_image": "", 
         "content_type": "image/jpeg", 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "thumbnail_content_type": null, 
         "size": 319629
     }
 },
@@ -64,10 +94,16 @@
     "model": "lumina.image", 
     "fields": {
         "original_filename": "8902217876_de6e699066.jpg", 
+        "thumbnail_size": null, 
+        "created": "2013-09-03T03:42:50Z", 
+        "thumbnail_original_filename": null, 
         "image": "8902217876_de6e699066_1.jpg", 
         "session": 5, 
         "studio": 1, 
+        "thumbnail_image": "", 
         "content_type": "image/jpeg", 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "thumbnail_content_type": null, 
         "size": 249942
     }
 },
@@ -76,10 +112,16 @@
     "model": "lumina.image", 
     "fields": {
         "original_filename": "8902217876_de6e699066.jpg", 
+        "thumbnail_size": null, 
+        "created": "2013-09-03T03:42:50Z", 
+        "thumbnail_original_filename": null, 
         "image": "8902217876_de6e699066_2.jpg", 
         "session": 6, 
         "studio": 2, 
+        "thumbnail_image": "", 
         "content_type": "image/jpeg", 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "thumbnail_content_type": null, 
         "size": 249942
     }
 },
@@ -88,10 +130,16 @@
     "model": "lumina.image", 
     "fields": {
         "original_filename": "Birds--Birds--Birds--5931142538.jpg", 
+        "thumbnail_size": null, 
+        "created": "2013-09-03T03:42:50Z", 
+        "thumbnail_original_filename": null, 
         "image": "Birds--Birds--Birds--5931142538_1.jpg", 
         "session": 6, 
         "studio": 2, 
+        "thumbnail_image": "", 
         "content_type": "image/jpeg", 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "thumbnail_content_type": null, 
         "size": 211357
     }
 }
