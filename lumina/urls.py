@@ -263,7 +263,7 @@ urlpatterns = patterns(
     # Reports
     #===========================================================================
 
-    url(r'^report/(\d+)/$', 'lumina.views.view_report', name='view_report'),
+    url(r'^report/(\d+)/$', 'lumina.views_reports.view_report', name='view_report'),
 
     #===========================================================================
     # Rest API
