@@ -77,8 +77,11 @@ def _report_2(request, ctx):
     cursor.execute("SELECT "
         " lsq.created AS \"date_for_report\","
         " lsq.cost AS \"orig_cost\","
-        " lsqa.cost AS \"selected_quote_alternative_cost\""
-        " FROM lumina_session AS ls JOIN lumina_sessionquote AS lsq ON lsq.session_id = ls.id"
+        " lsqa.cost AS \"selected_quote_alternative_cost\","
+        " c.name AS \"customer\""
+        " FROM lumina_session AS ls"
+        " JOIN lumina_sessionquote AS lsq ON lsq.session_id = ls.id"
+        " JOIN lumina_customer AS c ON ls.customer_id = c.id"
         " LEFT OUTER JOIN lumina_sessionquotealternative AS lsqa"
         "    ON lsq.accepted_quote_alternative_id = lsqa.id"
         " WHERE ls.studio_id = %s", [request.user.studio.id])
@@ -88,10 +91,7 @@ def _report_2(request, ctx):
         for row in cursor.fetchall()
     ]
 
-    # {'accepted_rejected_at': datetime.datetime(2013, 10, 26, 23, 27, 14, 614551, tzinfo=<UTC>),
-    #  'orig_cost': Decimal('3992'),
-    #  'selected_quote_alternative_cost': None}]
-    pprint.pprint(values_as_dict)
+    # pprint.pprint(values_as_dict)
 
     group_by_date = defaultdict(list)
     for item in values_as_dict:
@@ -100,7 +100,7 @@ def _report_2(request, ctx):
     dates = group_by_date.keys()
     dates.sort()
 
-    logger.info("group_by_session_type: %s", pprint.pformat(group_by_date))
+    logger.info("group_by_date: %s", pprint.pformat(group_by_date))
 
     serie_cost = []
     serie_alt_quote = []
@@ -129,9 +129,52 @@ def _report_3(request, ctx):
     ctx['report_title'] = 'Presupuestos expandidos (por cliente)'
     chart = pygal.StackedBar(legend_at_bottom=True, y_title="$")  #@UndefinedVariable
     chart.title = ctx['report_title']
-    chart.x_labels = ['Cliente A', 'Cliente B', 'Cliente C', 'Cliente D', 'Cliente E', 'Cliente F', 'Cliente G', 'Cliente H', 'Cliente I',]
-    chart.add('Presupuesto original', [random.randint(17000, 25000) for _ in range(0, 9)])
-    chart.add('Presupuesto expandido', [random.randint(1000, 5000) for _ in range(0, 9)])
+
+    cursor = connection.cursor()
+    # FIXME: use only accepted quotes! (not canceled, or rejected by customer)
+    cursor.execute("SELECT "
+        " lsq.created AS \"date_for_report\","
+        " lsq.cost AS \"orig_cost\","
+        " lsqa.cost AS \"selected_quote_alternative_cost\","
+        " c.name AS \"customer\""
+        " FROM lumina_session AS ls"
+        " JOIN lumina_sessionquote AS lsq ON lsq.session_id = ls.id"
+        " JOIN lumina_customer AS c ON ls.customer_id = c.id"
+        " LEFT OUTER JOIN lumina_sessionquotealternative AS lsqa"
+        "    ON lsq.accepted_quote_alternative_id = lsqa.id"
+        " WHERE ls.studio_id = %s", [request.user.studio.id])
+    desc = cursor.description
+    values_as_dict = [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]
+
+    group_by_customer = defaultdict(list)
+    for item in values_as_dict:
+        group_by_customer[item['customer']].append(item)
+    customers = group_by_customer.keys()
+    customers.sort()
+
+    logger.info("group_by_customer: %s", pprint.pformat(group_by_customer))
+
+    serie_cost = []
+    serie_alt_quote = []
+    labels = []
+
+    for customer in customers:
+        acum_cost = 0.0
+        acum_alt_quote = 0.0
+        for item in group_by_customer[customer]:
+            acum_cost += float(item['orig_cost'])
+            if item['selected_quote_alternative_cost']:
+                acum_alt_quote += float(item['selected_quote_alternative_cost'])
+        labels.append(customer)
+        serie_cost.append(acum_cost)
+        serie_alt_quote.append(acum_alt_quote)
+
+    chart.x_labels = labels
+    chart.add('Presupuesto original', serie_cost)
+    chart.add('Presupuesto expandido', serie_alt_quote)
     chart.print_values = False
     ctx['svg_chart'] = chart.render()
     ctx['show_form_3'] = True
