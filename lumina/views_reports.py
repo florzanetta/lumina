@@ -16,6 +16,8 @@ from django.db import connection
 
 logger = logging.getLogger(__name__)
 
+# FIXME: for all SQLs, check that works on PostgreSql!
+
 
 def _report_1(request, ctx):
     ctx['report_title'] = 'Costo (hs) vs Monto cobtrado ($) por tipo de cliente'
@@ -24,15 +26,17 @@ def _report_1(request, ctx):
     chart.title = ctx['report_title']
 
     cursor = connection.cursor()
+    # FIXME: use only accepted quotes! (not canceled, or rejected by customer)
     cursor.execute("SELECT ls.session_type_id,"
         " lst.name AS \"session_type_name\","
         " ls.worked_hours AS \"worked_hours\","
         " lsq.cost AS \"orig_cost\","
         " lsqa.cost AS \"selected_quote_alternative_cost\""
-        " FROM lumina_session AS ls JOIN lumina_sessionquote AS lsq ON lsq.session_id = ls.id"
+        " FROM lumina_session AS ls "
+        " JOIN lumina_sessionquote AS lsq ON lsq.session_id = ls.id"
         " JOIN lumina_sessiontype AS lst ON ls.session_type_id = lst.id"
         " LEFT OUTER JOIN lumina_sessionquotealternative AS lsqa"
-        " ON lsq.accepted_quote_alternative_id = lsqa.id"
+        "    ON lsq.accepted_quote_alternative_id = lsqa.id"
         " WHERE ls.worked_hours > 0 AND ls.studio_id = %s", [request.user.studio.id])
     desc = cursor.description
     values_as_dict = [
@@ -65,11 +69,57 @@ def _report_1(request, ctx):
 
 def _report_2(request, ctx):
     ctx['report_title'] = 'Presupuestos expandidos (en el tiempo)'
-    chart = pygal.StackedBar(legend_at_bottom=True, y_title="$")  #@UndefinedVariable
+    chart = pygal.StackedBar(legend_at_bottom=True, y_title="$", x_label_rotation=20)  #@UndefinedVariable
     chart.title = ctx['report_title']
-    chart.x_labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', ]
-    chart.add('Presupuesto original', [random.randint(17000, 25000) for _ in range(0, 6)])
-    chart.add('Presupuesto expandido', [random.randint(1000, 5000) for _ in range(0, 6)])
+
+    cursor = connection.cursor()
+    # FIXME: use only accepted quotes! (not canceled, or rejected by customer)
+    cursor.execute("SELECT "
+        " lsq.created AS \"date_for_report\","
+        " lsq.cost AS \"orig_cost\","
+        " lsqa.cost AS \"selected_quote_alternative_cost\""
+        " FROM lumina_session AS ls JOIN lumina_sessionquote AS lsq ON lsq.session_id = ls.id"
+        " LEFT OUTER JOIN lumina_sessionquotealternative AS lsqa"
+        "    ON lsq.accepted_quote_alternative_id = lsqa.id"
+        " WHERE ls.studio_id = %s", [request.user.studio.id])
+    desc = cursor.description
+    values_as_dict = [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]
+
+    # {'accepted_rejected_at': datetime.datetime(2013, 10, 26, 23, 27, 14, 614551, tzinfo=<UTC>),
+    #  'orig_cost': Decimal('3992'),
+    #  'selected_quote_alternative_cost': None}]
+    pprint.pprint(values_as_dict)
+
+    group_by_date = defaultdict(list)
+    for item in values_as_dict:
+        group_by_date[(item['date_for_report'].year,
+            item['date_for_report'].month)].append(item)
+    dates = group_by_date.keys()
+    dates.sort()
+
+    logger.info("group_by_session_type: %s", pprint.pformat(group_by_date))
+
+    serie_cost = []
+    serie_alt_quote = []
+    labels = []
+
+    for year, month in dates:
+        acum_cost = 0.0
+        acum_alt_quote = 0.0
+        for item in group_by_date[(year, month)]:
+            acum_cost += float(item['orig_cost'])
+            if item['selected_quote_alternative_cost']:
+                acum_alt_quote += float(item['selected_quote_alternative_cost'])
+        labels.append("{}/{}".format(month, year))
+        serie_cost.append(acum_cost)
+        serie_alt_quote.append(acum_alt_quote)
+
+    chart.x_labels = labels
+    chart.add('Presupuesto original', serie_cost)
+    chart.add('Presupuesto expandido', serie_alt_quote)
     chart.print_values = False
     ctx['svg_chart'] = chart.render()
     ctx['show_form_2'] = True
