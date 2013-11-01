@@ -87,20 +87,6 @@ def non_empty_unicode_keys(a_dict):
     return [unicode(k) for k in a_dict.keys() if a_dict[k]]
 
 
-@register.filter(name='user_is_customer')
-def user_is_customer(user):
-    if user is None:
-        return False
-    return user.user_type == LuminaUser.CUSTOMER
-
-
-@register.filter(name='user_is_photographer')
-def user_is_photographer(user):
-    if user is None:
-        return False
-    return user.user_type == LuminaUser.PHOTOGRAPHER
-
-
 @register.filter(name='full_name_with_username')
 def full_name_with_username(user):
     if not user:
