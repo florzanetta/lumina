@@ -669,6 +669,12 @@ class SessionListView(ListView):
 
     def get_queryset(self):
         qs = Session.objects.visible_sessions(self.request.user)
+        if self.request.GET.get('archived', '0') == '1':
+            qs = qs.filter(archived=True)
+        else:
+            # qs.filter(archived=False) -> DOES NOT WORKS
+            # at least with sqlite
+            qs = qs.exclude(archived=True)
         return qs.order_by('customer__name', 'name')
 
 
@@ -676,6 +682,23 @@ class SessionDetailView(DetailView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
     #    #django.views.generic.detail.DetailView
     model = Session
+
+    def post(self, request, *args, **kwargs):
+        session = self.get_object()
+
+        #    <input class="btn btn-primary" type="submit" name="archive_session" value="Archivar">
+        #    <input class="btn btn-primary" type="submit" name="delete_session" value="Borrar">
+
+        if 'archive_session' in request.POST:
+            session.archive(self.request.user)
+            messages.success(self.request, 'La sesión fue archivada correctamente')
+            return HttpResponseRedirect(reverse('session_detail', args=[session.id]))
+
+        #    if 'delete_session' in request.POST:
+        #        session.delete(self.request.user)
+        #        return HttpResponseRedirect(reverse('quote_update', args=[session.id]))
+
+        raise(SuspiciousOperation())
 
     def get_queryset(self):
         return Session.objects.visible_sessions(self.request.user)

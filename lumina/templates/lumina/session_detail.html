@@ -13,6 +13,7 @@
 
     {% if user.is_photographer %}
     <table class="table">
+
         <tr>
             <th width="20%">Cliente:</th>
             <td width="80%">
@@ -22,6 +23,7 @@
                 {% endif %}
             </td>
         </tr>
+
         <tr>
             <th>Tipo de sesión:</th>
             <td>
@@ -43,6 +45,14 @@
             </tr>
         {% endwith %}
 
+        {% if object.archived %}
+        <tr>
+            <th><small>Archivado:</small></th>
+            <td>
+                <i class="icon-exclamation-sign"></i> <small><em>La sesión se encuentra archivada</em></small>
+            </td>
+        </tr>
+        {% endif %}
 
         <tr>
             <th><small>Fecha de creación:</small></th>
@@ -50,6 +60,7 @@
                 <small>{{ object.created }} (hace {{ object.created|timesince }})</small>
             </td>
         </tr>
+
         <tr>
             <th><small>Última actualización:</small></th>
             <td>
@@ -149,7 +160,8 @@
 
 	    <hr>
 
-
+        <form action="." method="post">
+        {% csrf_token %}
 	    <p>
 	    <div class="btn-toolbar" style="margin: 0;">
 		    <a href="{% url 'session_update' object.pk %}" class="btn btn-primary">Editar sesión</a>
@@ -182,12 +194,13 @@
 		            <li><a href="{% url 'image_selection_create_from_quote' object.pk %}">Solicitar selección de imágenes (desde presupuesto)</a></li>
                 </ul>
             </div>
-            
-            <a href="#" class="btn btn-primary">Archivar</a>
-            <a href="#" class="btn btn-primary">Borrar</a>
+
+            <input class="btn btn-primary" type="submit" name="archive_session" value="Archivar">
+            <input class="btn btn-primary" type="submit" name="delete_session" value="Borrar">
             
 	    </div>
 	    </p>
+	    </form>
 	{% endif %} {% endblock content %}
 
 </body>

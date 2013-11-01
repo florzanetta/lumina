@@ -320,6 +320,16 @@ class Session(models.Model):
     def get_absolute_url(self):
         return reverse('session_detail', kwargs={'pk': self.pk})
 
+    def archive(self, user):
+        """
+        Archive the session
+        """
+        assert user.is_photographer()
+        assert self.studio == user.studio
+        assert not self.archived
+        self.archived = True
+        self.save(force_update=True, update_fields=['archived'])
+
     def get_active_quote(self):
         """
         Since a quotation can be canceled and replaced by a new 'version',
