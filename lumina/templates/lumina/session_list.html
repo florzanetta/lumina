@@ -12,6 +12,45 @@
 
 	<h3>Sesiones</h3>
 
+    {% if list_archived %}
+    <form action="." method="post" class="form-inline">
+        {% csrf_token %}
+
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="span2"  style="text-align: right;">Fecha de creación:</div>
+            <div class="span5">
+                    <input type="text" class="input-medium" placeholder="Fecha (desde)">
+            </div>
+            <div class="span5">
+                     <input type="text" class="input-medium" placeholder="Fecha (hasta)">
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="span2"  style="text-align: right;">Cliente:</div>
+            <div class="span4">
+                    <select>
+                      <option>Todos</option>
+                    </select>
+            </div>
+            <div class="span2"  style="text-align: right;">Tipo de sesión:</div>
+            <div class="span4">
+                    <select>
+                      <option>Todos</option>
+                    </select>
+            </div>
+        </div>
+        
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="span12" style="text-align: right;">
+                <input type="submit" value="Buscar" class="btn btn-primary">
+            </div>
+        </div>
+        
+    </form>
+    <hr>
+    {% endif %}
+
     {% for a_session in object_list %}
 
         {% ifchanged a_session.customer.id %} 

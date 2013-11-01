@@ -667,9 +667,17 @@ class SessionListView(ListView):
     #    #django.views.generic.list.ListView
     model = Session
 
+    def _archived(self):
+        return self.request.REQUEST.get('archived', '0') == '1'
+
+    def get_context_data(self, **kwargs):
+        context = super(SessionListView, self).get_context_data(**kwargs)
+        context['list_archived'] = self._archived()
+        return context
+
     def get_queryset(self):
         qs = Session.objects.visible_sessions(self.request.user)
-        if self.request.GET.get('archived', '0') == '1':
+        if self._archived():
             qs = qs.filter(archived=True)
         else:
             # qs.filter(archived=False) -> DOES NOT WORKS
