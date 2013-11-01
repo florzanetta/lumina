@@ -302,6 +302,8 @@ class Session(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
+    archived = models.BooleanField(default=False, verbose_name="Archivada")
+
     objects = SessionManager()
 
     def clean(self):
@@ -725,6 +727,8 @@ class SessionQuote(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
+
+    archived = models.BooleanField(default=False, verbose_name="Archivado")
 
     objects = SessionQuoteManager()
 
