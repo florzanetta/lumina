@@ -181,15 +181,59 @@ def _report_3(request, ctx):
 
 
 def _report_4(request, ctx):
-        ctx['report_title'] = 'Ingresos ($) por tipo de cliente'
-        chart = pygal.Pie(legend_at_bottom=True)  #@UndefinedVariable
-        chart.title = ctx['report_title']
-        chart.add('Particular (eventos)', random.randint(9000, 20000))
-        chart.add('Particular (otros)', random.randint(2000, 8000))
-        chart.add('Agencia de publicidad', random.randint(30000, 99000))
-        chart.print_values = True
-        ctx['svg_chart'] = chart.render()
-        ctx['show_form_4'] = True
+    ctx['report_title'] = 'Ingresos ($) por tipo de cliente'
+    chart = pygal.Pie(legend_at_bottom=True)  #@UndefinedVariable
+    chart.title = ctx['report_title']
+        
+    cursor = connection.cursor()
+    # FIXME: use only accepted quotes! (not canceled, or rejected by customer)
+    cursor.execute("SELECT "
+        " lsq.created AS \"date_for_report\","
+        " lsq.cost AS \"orig_cost\","
+        " lsqa.cost AS \"selected_quote_alternative_cost\","
+        " ct.name AS \"customer_type\""
+        " FROM lumina_session AS ls"
+        " JOIN lumina_sessionquote AS lsq ON lsq.session_id = ls.id"
+        " JOIN lumina_customer AS c ON ls.customer_id = c.id"
+        " JOIN lumina_customertype AS ct ON c.customer_type_id = ct.id"
+        " LEFT OUTER JOIN lumina_sessionquotealternative AS lsqa"
+        "    ON lsq.accepted_quote_alternative_id = lsqa.id"
+        " WHERE ls.studio_id = %s", [request.user.studio.id])
+    desc = cursor.description
+    values_as_dict = [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]
+
+    group_by_customer_type = defaultdict(list)
+    for item in values_as_dict:
+        group_by_customer_type[item['customer_type']].append(item)
+    customer_types = group_by_customer_type.keys()
+    customer_types.sort()
+
+    logger.info("group_by_customer: %s", pprint.pformat(group_by_customer_type))
+
+    serie_cost = []
+    serie_alt_quote = []
+    # labels = []
+
+    for customer in customer_types:
+        acum_cost = 0.0
+        acum_alt_quote = 0.0
+        for item in group_by_customer_type[customer]:
+            acum_cost += float(item['orig_cost'])
+            if item['selected_quote_alternative_cost']:
+                acum_alt_quote += float(item['selected_quote_alternative_cost'])
+        # labels.append(customer)
+        serie_cost.append(acum_cost)
+        serie_alt_quote.append(acum_alt_quote)
+        
+        chart.add("{} ($ {})".format(customer, acum_cost + acum_alt_quote),
+            acum_cost + acum_alt_quote)
+
+    chart.print_values = True
+    ctx['svg_chart'] = chart.render()
+    ctx['show_form_4'] = True
 
 
 @login_required
