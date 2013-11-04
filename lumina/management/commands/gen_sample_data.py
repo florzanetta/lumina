@@ -35,6 +35,7 @@ class Command(BaseCommand):
                 customer=customer,
                 image_quantity=image_quantity,
                 cost=cost,
+                archived=True,
                 stipulated_date=stipulated_date,
                 stipulated_down_payment=0.0)
             quote.created = created
@@ -58,4 +59,5 @@ class Command(BaseCommand):
             session.session_type = random.choice(SessionType.objects.filter(
                 studio=photographer.studio).all())
             session.worked_hours = random.randint(20, 40)
+            session.archived = True
             session.save()
