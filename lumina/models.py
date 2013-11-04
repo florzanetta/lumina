@@ -707,6 +707,7 @@ class SessionQuote(models.Model):
         (STATUS_CANCELED, u'Cancelado por fotografo'),
     )
 
+    name = models.CharField(max_length=300, verbose_name="nombre")
     studio = models.ForeignKey(Studio, related_name='session_quotes', verbose_name="estudio")
     customer = models.ForeignKey(Customer, related_name='session_quotes', verbose_name="cliente")
     image_quantity = models.PositiveIntegerField(verbose_name="cantidad de imágenes")

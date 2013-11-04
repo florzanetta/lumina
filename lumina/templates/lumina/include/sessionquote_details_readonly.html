@@ -1,6 +1,13 @@
 {% load humanize %}{% load lumina_extras %}
 
     <tr>
+        <th width="20%">Nombre:</th>
+        <td width="80%">
+            {{ object.name }}
+        </td>
+    </tr>
+    
+    <tr>
         <th width="20%">Cliente:</th>
         <td width="80%">
             {{ object.customer.name }}
