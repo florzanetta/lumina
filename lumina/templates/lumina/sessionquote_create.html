@@ -1,5 +1,18 @@
 {% extends "lumina/base_create_update_form.html" %}
 
+<style type="text/css">
+
+	{% block css %}
+	    {{ block.super }}
+	    
+	    #id_terms {
+	       width: 40em;
+	    }
+	    
+	{% endblock %}
+
+</style>
+
 {% block javascript_bottom %}
 
 <script type="text/javascript">
