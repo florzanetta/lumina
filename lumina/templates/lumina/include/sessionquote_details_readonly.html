@@ -1,4 +1,4 @@
-{% load humanize %}
+{% load humanize %}{% load lumina_extras %}
 
     <tr>
         <th width="20%">Cliente:</th>
@@ -28,18 +28,8 @@
             Estado:
         </th>
         <td>
-            {% if object.get_status_display == status_STATUS_ACCEPTED %}
-                <span class="label label-success"><i class="icon-ok icon-white"></i>
-                    {{ object.get_status_display }}</span>
-            {% elif object.get_status_display == status_STATUS_REJECTED %}
-                <span class="label label-important"><i class="icon-remove icon-white"></i>
-                    {{ object.get_status_display }}</span>
-            {% elif object.get_status_display == status_STATUS_WAITING_CUSTOMER_RESPONSE %}
-                <span class="label label-warning"><i class="icon-time icon-white"></i>
-                    {{ object.get_status_display }}</span>
-            {% else %}
-                <span class="label">{{ object.get_status_display }}</span>
-            {% endif %}
+            {% session_quote_status object %}
+            
             &nbsp;&nbsp;&nbsp;
             <small><a href="#helpModal" data-toggle="modal"><i
                 class="icon-question-sign"></i> Ayuda</a></small>

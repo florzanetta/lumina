@@ -32,10 +32,7 @@
                             imagen{{ a_quote.image_quantity|pluralize:",es" }}
                         </small>
                       -
-                      <small>
-                          Estado: <span class="badge badge-info">{{ a_quote.get_status_display }}</span>
-                      </small>
-
+                    {% session_quote_status a_quote %}
                     -
                     <i class="icon-calendar"></i> <span title="Creación: {{a_quote.created|date}} - Última actualización: {{a_quote.last_modified|date}}">
                         <small><em>Última actualización:</em> hace <strong>{{ a_quote.last_modified|timesince }}</strong></small></span>
