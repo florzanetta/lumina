@@ -916,7 +916,7 @@ class SessionQuote(models.Model):
         assert self.status == SessionQuote.STATUS_ACCEPTED
 
         new_session = Session()
-        new_session.name = "(sesión para presupuesto #{})".format(self.id)
+        new_session.name = self.name
         new_session.studio = self.studio
         new_session.photographer = user
         new_session.customer = self.customer
