@@ -576,9 +576,9 @@ class ImageManager(models.Manager):
                 pass
 
             # Tha image was selected by the user?
-            return self.get(imageselection__customer=user.user_for_customer,
+            return self.filter(imageselection__customer=user.user_for_customer,
                             imageselection__status=ImageSelection.STATUS_IMAGES_SELECTED,
-                            imageselection__selected_images=image_id)
+                            imageselection__selected_images=image_id).distinct().get(id=image_id)
 
         raise(Exception())
 
