@@ -1245,7 +1245,15 @@ class SessionQuoteDetailView(DetailView):
 
         elif 'button_cancel_and_new_version' in request.POST:
             # FIXME: implement this!
-            return HttpResponseRedirect(reverse('quote_create'))
+            messages.error(self.request, "La creacion de nuevas versiones "
+                "de presupuestos todavia no esta implementada.")
+            return HttpResponseRedirect(reverse('home'))
+
+        elif 'button_archive_quote' in request.POST:
+            # FIXME: implement this!
+            messages.error(self.request, "El archivado "
+                "de presupuestos todavia no esta implementado.")
+            return HttpResponseRedirect(reverse('home'))
 
         elif 'button_update_quote_alternatives' in request.POST:
             return HttpResponseRedirect(reverse('quote_update', args=[quote.id]))
@@ -1290,7 +1298,11 @@ class SessionQuoteDetailView(DetailView):
                                 'submit_label': "Editar presup. alternativos", })
 
         elif self.object.status == SessionQuote.STATUS_REJECTED:
-            pass
+            if self.request.user.is_for_customer():
+                pass
+            else:
+                buttons.append({'name': 'button_archive_quote',
+                                'submit_label': "Archivar", })
 
         elif self.object.status == SessionQuote.STATUS_ACCEPTED:
             if self.request.user.is_for_customer():
@@ -1306,13 +1318,19 @@ class SessionQuoteDetailView(DetailView):
                                 'confirm': True, })
                 buttons.append({'name': 'button_update_quote_alternatives',
                                 'submit_label': "Editar presup. alternativos", })
+                buttons.append({'name': 'button_archive_quote',
+                                'submit_label': "Archivar", })
                 if self.object.session is None:
                     buttons.append({'name': 'button_create_session',
                                     'submit_label': "Crear sesión", })
 
         elif self.object.status == SessionQuote.STATUS_CANCELED:
             # Canceled
-            pass
+            if self.request.user.is_for_customer():
+                pass
+            else:
+                buttons.append({'name': 'button_archive_quote',
+                                'submit_label': "Archivar", })
 
         else:
             raise(Exception("Invalid 'status': {}".format(self.object.status)))
