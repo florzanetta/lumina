@@ -15,11 +15,13 @@
 
 {% elif object.status == 'Q' %}
     {# STATUS_QUOTING #}
-    <span class="label">{{ object.get_status_display }} // QUOTING QUOTING</span>
+    <span class="label"><i class="icon-pencil icon-white"></i>
+        {{ object.get_status_display }}</span>
 
 {% elif object.status == 'E' %}
     {# STATUS_CANCELED #}
-    <span class="label">{{ object.get_status_display }} // CANCELED CANCELED</span>
+    <span class="label label-inverse"><i class="icon-remove icon-white"></i>
+        {{ object.get_status_display }}</span>
 
 {% else %}
     <span class="label">{{ object.get_status_display }}</span>
