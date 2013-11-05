@@ -158,6 +158,7 @@ class Studio(models.Model):
     who pays to the `studio`.
     """
     name = models.CharField(max_length=100, verbose_name="Nombre")
+    default_terms = models.TextField(null=True, blank=True)
 
     objects = StudioManager()
 
