@@ -167,10 +167,21 @@
 
 													<!-- Items de drop-down  -->
                                                     {% if user.is_photographer %} <!-- user is photographer -->
-                                                            <li><a href="javascript:void(0);" title="Usuario: {{ user.username }}"><em><small>{{ user.get_full_name }} &nbsp; (fotografo)</small></em></a></li>
+                                                            <!-- <li><a href="javascript:void(0);" title="Usuario: {{ user.username }}"><em>
+                                                                <small>{{ user.get_full_name }} &nbsp; (fotografo)</small></em></a></li> -->
+                                                            <li style="max-height:30px; width:auto; vertical-align:middle;"><a
+                                                                    href="javascript:void(0);"
+                                                                    title="{{ user.get_full_name }} ({{ user.username }}) - fotografo"><img
+                                                                    style="margin-top: -7px;" src="/static/photographer.png"></a></li>
                                                     {% else %} <!-- user is client -->
-                                                            <li><a href="javascript:void(0);" title="Usuario: {{ user.username }}"><em><small>{{ user.get_full_name }} &nbsp; (usuario)</small></em></a></li>
+                                                            <!-- <li><a href="javascript:void(0);" title="Usuario: {{ user.username }}"><em>
+                                                                <small>{{ user.get_full_name }} &nbsp; (usuario)</small></em></a></li> -->
+                                                            <li style="max-height:30px; width:auto; vertical-align:middle;"><a
+                                                                    href="javascript:void(0);"
+                                                                    title="{{ user.get_full_name }} ({{ user.username }}) - usuario"><img
+                                                                    style="margin-top: -7px;" src="/static/customer.png"></a></li>
                                                     {% endif %}
+
                                                     <li><a href="{% url 'logout' %}">Salir</a></li>
 													{% if 'twitter' in social_auth|non_empty_unicode_keys %}
 												          <li><img alt="Logged in with Twitter" src="/static/twitter-icon-16x16.jpg"></li> 
