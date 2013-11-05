@@ -1060,13 +1060,21 @@ class UserPreferenceUpdateView(UpdateView):
         # TODO: fix this
         return reverse('home')
 
-    def form_valid(self, form):
-        ret = super(UserPreferenceUpdateView, self).form_valid(form)
-        messages.success(self.request, 'Las preferencias fueron guardados correctamente')
-        return ret
-
     def get_queryset(self):
         return UserPreferences.objects.filter(user=self.request.user)
+
+    def form_valid(self, form):
+        ret = super(UserPreferenceUpdateView, self).form_valid(form)
+
+        # Set the password
+        if form['password1'].value():
+            updated_user = self.object.user
+            logger.warn("Changing password of user '%s'", updated_user.username)
+            updated_user.set_password(form['password1'].value())
+            updated_user.save()
+
+        messages.success(self.request, 'Las preferencias fueron guardados correctamente')
+        return ret
 
     def get_context_data(self, **kwargs):
         context = super(UserPreferenceUpdateView, self).get_context_data(**kwargs)
