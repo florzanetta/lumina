@@ -40,7 +40,8 @@
                         </div>
                     </td>
                     <td width="99%">
-                        <input type="file" name="file_for_{{image.pk}}" />
+                        <div><a href="javascript:void(0);">{% if image.image %}{{ image.original_filename }}{% else %}{{ image.thumbnail_original_filename }}{% endif %}</a></div>
+                        <div><input type="file" name="file_for_{{image.pk}}" /></div>
                     </td>
                 </tr>
                 {% endfor %}
