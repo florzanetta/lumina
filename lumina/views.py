@@ -1094,6 +1094,7 @@ class SessionQuoteCreateView(CreateView, SessionQuoteCreateUpdateMixin):
     def get_form(self, form_class):
         form = super(SessionQuoteCreateView, self).get_form(form_class)
         self._setup_form(form)
+        form.fields['terms'].initial = self.request.user.studio.default_terms or ''
         return form
 
     def form_valid(self, form):
