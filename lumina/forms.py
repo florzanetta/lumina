@@ -36,7 +36,7 @@ class ImageSelectionCreateForm(forms.ModelForm):
     def clean_image_quantity(self):
         data = self.cleaned_data['image_quantity']
         if data <= 0:
-            raise(forms.ValidationError("La cantidad de imagenes debe ser mayor a 0"))
+            raise forms.ValidationError("La cantidad de imagenes debe ser mayor a 0")
 
         # Always return the cleaned data, whether you have changed it or not.
         return data
@@ -52,7 +52,7 @@ class ImageSelectionAutoCreateForm(forms.ModelForm):
     def clean_preview_size(self):
         preview_size = self.cleaned_data['preview_size']
         if not preview_size:
-            raise(forms.ValidationError("Debe seleccionar un tamaño de visualizacion"))
+            raise forms.ValidationError("Debe seleccionar un tamaño de visualizacion")
 
         return preview_size
 

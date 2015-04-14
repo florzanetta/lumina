@@ -50,7 +50,7 @@ def _report_1(request, ctx):
 
     logger.info("group_by_session_type: %s", pprint.pformat(group_by_session_type))
 
-    for a_session_type, items in group_by_session_type.items():
+    for a_session_type, items in list(group_by_session_type.items()):
         values = [[0, 0]]  # HACK! without this, charts with 1 value doesn't show up
         for item in items:
             # (horas, costo)
@@ -257,7 +257,7 @@ def view_report(request, report_id):
         _report_4(request, ctx)
 
     else:
-        raise (SuspiciousOperation())
+        raise SuspiciousOperation()
 
     return render_to_response(
         'lumina/reports/report_generic.html', ctx,

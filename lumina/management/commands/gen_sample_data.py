@@ -16,7 +16,7 @@ class Command(BaseCommand):
         if len(the_args) != 2:
             for ph in LuminaUser.objects.filter(user_type=LuminaUser.PHOTOGRAPHER).order_by('id'):
                 self.stdout.write("{} - {}".format(ph.id, str(ph)))
-            raise(CommandError("You must specify <photographer_id> and <number_of_inserts>"))
+            raise CommandError("You must specify <photographer_id> and <number_of_inserts>")
 
         photographer = LuminaUser.objects.get(pk=int(the_args[0]))
         assert photographer.is_photographer()

@@ -79,7 +79,7 @@ class LuminaSeleniumTests(LiveServerTestCase):
             print(debug_dump_of_objects)
             print("-" * 70)
             raise
-        for key, value in level0_obj.items():
+        for key, value in list(level0_obj.items()):
             try:
                 dumped_objects[key] = json.loads(value)
             except:

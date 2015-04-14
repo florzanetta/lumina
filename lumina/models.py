@@ -267,7 +267,7 @@ class SessionManager(models.Manager):
             #                    Q(imageselection__customer=user.user_for_customer)
             #                    ).distinct()
         else:
-            raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
+            raise Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id))
 
     def get_pending_uploads(self, user):
         """
@@ -417,7 +417,7 @@ class ImageSelectionManager(models.Manager):
             return self.filter(studio=user.studio)
         elif user.is_for_customer():
             return self.filter(session__customer=user.user_for_customer)
-        raise(SuspiciousOperation())
+        raise SuspiciousOperation()
 
     def pending_image_selections(self, user):
         """
@@ -528,7 +528,7 @@ class ImageManager(models.Manager):
             # FIXME: REFACTOR: add support for shared sessions & any other stuff
             return self.filter(session__customer=user.user_for_customer)
         else:
-            raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
+            raise Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id))
 
     # ===============================================================================
     #     # F-I-X-M-E: REFACTOR: refactor this (if needed)
@@ -583,7 +583,7 @@ class ImageManager(models.Manager):
                                imageselection__status=ImageSelection.STATUS_IMAGES_SELECTED,
                                imageselection__selected_images=image_id).distinct().get(id=image_id)
 
-        raise(Exception())
+        raise Exception()
 
 
 class Image(models.Model):
@@ -664,7 +664,7 @@ class SessionQuoteManager(models.Manager):
                                            SessionQuote.STATUS_ACCEPTED,
                                            SessionQuote.STATUS_REJECTED])
         else:
-            raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
+            raise Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id))
 
     def modificable_sessionquote(self, user):
         """
@@ -796,7 +796,7 @@ class SessionQuote(models.Model):
             self.accepted_quote_alternative = sqa
             # done!
         else:
-            raise(Exception('Invalid alternative_data'))
+            raise Exception('Invalid alternative_data')
 
         # change state after checks
         self.status = SessionQuote.STATUS_ACCEPTED
@@ -907,7 +907,7 @@ class SessionQuote(models.Model):
             current_quantity = self.accepted_quote_alternative.image_quantity
             return self.quote_alternatives.filter(image_quantity__gt=current_quantity) \
                 .order_by('image_quantity')
-        raise(Exception("Invalid state: {}".format(self.status)))
+        raise Exception("Invalid state: {}".format(self.status))
 
     def create_session(self, user):
         assert user.is_photographer()
