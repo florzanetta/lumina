@@ -179,6 +179,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'lumina',
     'mailer',
+    'social',
     'social_auth',
     # 'south',
 )
