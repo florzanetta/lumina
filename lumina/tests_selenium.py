@@ -158,3 +158,6 @@ class LuminaSeleniumTests(LiveServerTestCase):
         self._wait_until_render_done()
         objs = self._get_dump_of_objects()
         self._assert_user_in_dump_of_objects(objs, None)
+
+if os.environ.get("RUN_SELENIUM", '0') != '1':
+    del LuminaSeleniumTests
