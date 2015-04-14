@@ -14,10 +14,11 @@
 
     <h4>Estadísticas</h4>
 
-    <p><span class="badge badge-info">{{ session_count }}</span>
-            sesion{{ session_count|pluralize:",es" }} ha sido compartida con Ud.</p>
-
+    <!--
+    <p><span class="badge badge-info">{ { session_count } }</span>
+            sesion{ { session_count|pluralize:",es" } } ha sido compartida con Ud.</p>
     <hr>
+    -->
 
     <h4>Peticiones de selección de fotos pendientes...</h4>
     <p><span class="badge badge-info">{{ image_selection_pending_count }}</span>
@@ -36,7 +37,7 @@
             presupuesto{{ quotes_pending_count|pluralize:"s" }}
             pendientes de aprobar.
             {% if quotes_pending_count %}
-                <a href="{% url 'quote_list' %}">Haga clic aqui</a> para verlos...
+                <a href="{% url 'quote_list_pending_for_customer' %}">Haga clic aqui</a> para verlos...
             {% endif %}
     </p>
     <hr>

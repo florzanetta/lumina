@@ -3,7 +3,8 @@ from django.core.urlresolvers import reverse
 from django.utils.html import format_html
 
 from lumina.models import LuminaUser, Image, Session, SharedSessionByEmail, \
-    ImageSelection, Studio, Customer, SessionQuoteAlternative, SessionQuote
+    ImageSelection, Studio, Customer, SessionQuoteAlternative, SessionQuote,\
+    UserPreferences, CustomerType, SessionType, PreviewSize
 
 
 class SharedSessionByEmailAdmin(admin.ModelAdmin):
@@ -20,6 +21,7 @@ class SharedSessionByEmailAdmin(admin.ModelAdmin):
     generate_link.short_description = "Link"
     generate_link.allow_tags = True
 
+
 admin.site.register(Customer)
 admin.site.register(Image)
 admin.site.register(ImageSelection)
@@ -29,3 +31,7 @@ admin.site.register(SessionQuote)
 admin.site.register(SessionQuoteAlternative)
 admin.site.register(SharedSessionByEmail, SharedSessionByEmailAdmin)
 admin.site.register(Studio)
+admin.site.register(UserPreferences)
+admin.site.register(CustomerType)
+admin.site.register(SessionType)
+admin.site.register(PreviewSize)

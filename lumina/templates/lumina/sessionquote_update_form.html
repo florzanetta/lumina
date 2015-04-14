@@ -5,6 +5,20 @@
 <head>
 <meta charset="UTF-8">
 <title>{% block title %}Lumina - {{ title }}{% endblock %}</title>
+
+<style type="text/css">
+
+    {% block css %}
+        {{ block.super }}
+        
+        #id_terms {
+           width: 40em;
+        }
+        
+    {% endblock %}
+
+</style>
+
 </head>
 <body>
 
@@ -77,6 +91,8 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$('.with_tooltip').tooltip();
+    $("<span>$ </span>").insertBefore("#id_cost");
+    $("<span>$ </span>").insertBefore("#id_stipulated_down_payment");
 });
 </script>
  

@@ -12,6 +12,10 @@ from django.core.exceptions import PermissionDenied, ValidationError, \
 from django.contrib.auth.models import AbstractUser, UserManager
 
 
+#===============================================================================
+# LuminaUser
+#===============================================================================
+
 class LuminaUserManager(UserManager):
     """
     Manager for the LuminaUser model
@@ -46,7 +50,9 @@ class LuminaUser(AbstractUser):
 
     This should be None (NULL) for `user_type == CUSTOMER`.
     """
-    studio = models.ForeignKey('Studio', related_name='photographers', null=True, blank=True)
+    studio = models.ForeignKey(
+        'Studio', related_name='photographers', null=True, blank=True,
+        verbose_name="Estudio")
 
     # ----------------------------------------------------------------------
     # ----- Attributes for CUSTOMERS // null=True, blank=True
@@ -63,12 +69,13 @@ class LuminaUser(AbstractUser):
     """
     # REFACTOR: used to be an attribute `customer_of` and point to `LuminaUser`
     # REFACTOR: `user_for_customer` is a new attribute
-    user_for_customer = models.ForeignKey('Customer', null=True, blank=True, related_name='users')
+    user_for_customer = models.ForeignKey(
+        'Customer', null=True, blank=True, related_name='users', verbose_name="Cliente")
 
-    phone = models.CharField(max_length=20, null=True, blank=True)
-    cellphone = models.CharField(max_length=20, null=True, blank=True)
-    alternative_email = models.EmailField(null=True, blank=True)
-    notes = models.TextField(blank=True, null=True)
+    phone = models.CharField(max_length=20, null=True, blank=True, verbose_name="Teléfono")
+    cellphone = models.CharField(max_length=20, null=True, blank=True, verbose_name="Celular")
+    alternative_email = models.EmailField(null=True, blank=True, verbose_name="Email alternativo")
+    notes = models.TextField(blank=True, null=True, verbose_name="Notas")
 
     objects = LuminaUserManager()
 
@@ -114,6 +121,21 @@ class LuminaUser(AbstractUser):
 
 
 #===============================================================================
+# UserPreference
+#===============================================================================
+
+class UserPreferences(models.Model):
+    send_emails = models.BooleanField(default=True, verbose_name="Enviar emails")
+    user = models.OneToOneField(LuminaUser, related_name='preferences')
+
+    def __unicode__(self):
+        if self.user:
+            return u"User preferences for {}".format(self.user.get_full_name())
+        else:
+            return u"User preferences"
+
+
+#===============================================================================
 # Studio
 #===============================================================================
 
@@ -135,7 +157,8 @@ class Studio(models.Model):
     A `studio` instance has many `customers`. Customers are organizations
     who pays to the `studio`.
     """
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, verbose_name="Nombre")
+    default_terms = models.TextField(null=True, blank=True)
 
     objects = StudioManager()
 
@@ -179,19 +202,22 @@ class Customer(models.Model):
     A customer has many 'users'... all of them are employee of the Customer,
     or any person that the customer allowed to access the images.
     """
-    name = models.CharField(max_length=100)
-    studio = models.ForeignKey(Studio, related_name='customers')
+    name = models.CharField(max_length=100, verbose_name="nombre")
+    studio = models.ForeignKey(Studio, related_name='customers', verbose_name="estudio")
+
+    customer_type = models.ForeignKey(
+        'CustomerType', null=True, related_name='+', verbose_name="tipo de cliente")
 
     # Customer additional information (contact, biling, etc.)
-    address = models.TextField(blank=True)
-    phone = models.CharField(max_length=20, blank=True)
+    address = models.TextField(blank=True, verbose_name="dirección")
+    phone = models.CharField(max_length=20, blank=True, verbose_name="teléfono")
 
     # company_name = models.TextField(blank=True)
     # address = models.TextField(blank=True)
 
     # https://github.com/yourlabs/django-cities-light
     # city = models.ForeignKey('cities_light.City', blank=True, null=True)
-    city = models.CharField(max_length=40, blank=True, null=True)
+    city = models.CharField(max_length=40, blank=True, null=True, verbose_name="ciudad")
 
     cuit = models.CharField(max_length=13, blank=True, null=True)
 
@@ -200,7 +226,7 @@ class Customer(models.Model):
 
     ingresos_brutos = models.CharField(max_length=20, blank=True, null=True)
 
-    notes = models.TextField(blank=True, null=True)
+    notes = models.TextField(blank=True, null=True, verbose_name="Notas")
 
     objects = CustomerManager()
 
@@ -254,27 +280,65 @@ class Session(models.Model):
     """
     Represents a photo session.
     """
-    name = models.CharField(max_length=300)
+    name = models.CharField(max_length=300, verbose_name="Nombre")
 
     # REFACTOR: `studio` used to be named `user` and point to `LuminaUser`
-    studio = models.ForeignKey(Studio)
+    studio = models.ForeignKey(Studio, verbose_name="estudio")
 
-    photographer = models.ForeignKey(LuminaUser)
+    photographer = models.ForeignKey(LuminaUser, verbose_name="fotógrafo")
 
     # REFACTOR: `customer` is a new attribute
-    customer = models.ForeignKey(Customer, null=True, blank=True)
+    customer = models.ForeignKey(Customer, null=True, blank=True, verbose_name="cliente")
+
+    session_type = models.ForeignKey(
+        'SessionType', null=True, related_name='+', verbose_name="tipo de sesión")
 
     # REFACTOR: `shared_with` used to point to `LuminaUser`
-    shared_with = models.ManyToManyField(Customer, blank=True,
-                                         related_name='sessions_shared_with_me')
+    shared_with = models.ManyToManyField(
+        Customer, blank=True, related_name='sessions_shared_with_me',
+        verbose_name="Compartida con")
+
+    worked_hours = models.PositiveIntegerField(default=0, verbose_name="horas trabajadas")
+
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    archived = models.BooleanField(default=False, verbose_name="Archivada")
 
     objects = SessionManager()
+
+    def clean(self):
+        # Check if customer is OK. IE: customer should be the same as the
+        # customers pointing to any of the existing quotes
+        quotes_pointing_to_self = SessionQuote.objects.filter(session=self).all()
+        for a_quote in quotes_pointing_to_self:
+            if a_quote.customer.id != self.customer.id:
+                raise ValidationError('Ha seleccionado un cliente distinto al del presupuesto')
 
     def __unicode__(self):
         return u"Session {0}".format(self.name)
 
     def get_absolute_url(self):
         return reverse('session_detail', kwargs={'pk': self.pk})
+
+    def archive(self, user):
+        """
+        Archive the session
+        """
+        assert user.is_photographer()
+        assert self.studio == user.studio
+        assert not self.archived
+        self.archived = True
+        self.save(force_update=True, update_fields=['archived'])
+
+    def get_active_quote(self):
+        """
+        Since a quotation can be canceled and replaced by a new 'version',
+        but the session should be reused, we need this method to return
+        the valid quotation.
+        """
+        # FIXME: this works, but is pure evil... like Newman!
+        return self.quotes.get()
 
 
 #===============================================================================
@@ -301,14 +365,14 @@ class SharedSessionByEmail(models.Model):
     With the current implementation, all the images of the album
     can be seen, and downloaded.
     """
-    shared_with = models.EmailField(max_length=254)
+    shared_with = models.EmailField(max_length=254, verbose_name="compartida con")
     # https://docs.djangoproject.com/en/1.5/ref/models/fields/#emailfield
 
     # REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
-    studio = models.ForeignKey(Studio)
+    studio = models.ForeignKey(Studio, verbose_name="estudio")
 
     # REFACTOR: `session` used to be named `album` and refer to `Album`
-    session = models.ForeignKey(Session, related_name='shares_via_email')
+    session = models.ForeignKey(Session, related_name='shares_via_email', verbose_name="sesión")
 
     # FIXME: REFACTOR: add `shared_by`, to know who shared the album
     # shared_by = models.ForeignKey(LuminaUser)
@@ -372,6 +436,16 @@ class ImageSelectionManager(models.Manager):
             qs = qs.filter(status=ImageSelection.STATUS_WAITING)
         return qs
 
+    def image_selections_pending_to_upload_full_quality_images(self, user):
+        """
+        Returns ImageSelection instances which user has selected the images,
+        but has at least one images that doesn't have the full-quality version.
+        """
+        assert user.is_photographer()
+        return self.filter(studio=user.studio,
+                           status=ImageSelection.STATUS_IMAGES_SELECTED,
+                           selected_images__image='').distinct()
+
 
 class ImageSelection(models.Model):
     """
@@ -393,23 +467,41 @@ class ImageSelection(models.Model):
     )
 
     # REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
-    studio = models.ForeignKey(Studio, related_name='+')
+    studio = models.ForeignKey(Studio, related_name='+', verbose_name="estudio")
 
     # REFACTOR: `session` used to be named `album` and refer to `Album`
-    session = models.ForeignKey(Session)
+    session = models.ForeignKey(Session, verbose_name="sesión")
 
     # REFACTOR: `customer` used to refer to `LuminaUser`
-    customer = models.ForeignKey(Customer, related_name='+')
+    customer = models.ForeignKey(Customer, related_name='+', verbose_name="cliente")
 
-    image_quantity = models.PositiveIntegerField()
-    status = models.CharField(max_length=1, choices=STATUS, default=STATUS_WAITING)
-    selected_images = models.ManyToManyField('Image', blank=True)
+    image_quantity = models.PositiveIntegerField(verbose_name="cantidad de imágenes")
+    status = models.CharField(
+        max_length=1, choices=STATUS, default=STATUS_WAITING, verbose_name="estado")
+    selected_images = models.ManyToManyField(
+        'Image', blank=True, verbose_name="imágenes seleccionadas")
+    # TODO: `preview_size` maybe should be non-null
+    preview_size = models.ForeignKey(
+        'PreviewSize', null=True, blank=True, verbose_name="tamaño de previsualización")
+
+    quote = models.ForeignKey('SessionQuote', null=True, blank=True, verbose_name="presupuesto")
+
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
 
     objects = ImageSelectionManager()
+
+    def __unicode__(self):
+        return u"ImageSelection p/{0}".format(self.session.name)
+
+    def get_selected_images_without_full_quality(self):
+        return self.selected_images.filter(image='')
 
     def clean(self):
         # from django.core.exceptions import ValidationError
         if self.id is None:
+            # --- NEW INSTANCE! ---
+            # Check: image_quantity can't be greater than the number of images of the session
             image_count = self.session.image_set.count()
             if self.image_quantity > image_count:
                 msg = {'image_quantity': 'Debe seleccionar {} o menos imagenes'.format(
@@ -485,9 +577,9 @@ class ImageManager(models.Manager):
                 pass
 
             # Tha image was selected by the user?
-            return self.get(imageselection__customer=user.user_for_customer,
+            return self.filter(imageselection__customer=user.user_for_customer,
                             imageselection__status=ImageSelection.STATUS_IMAGES_SELECTED,
-                            imageselection__selected_images=image_id)
+                            imageselection__selected_images=image_id).distinct().get(id=image_id)
 
         raise(Exception())
 
@@ -498,16 +590,33 @@ class Image(models.Model):
     """
     # See: https://docs.djangoproject.com/en/1.5/ref/models/fields/#filefield
     # See: https://docs.djangoproject.com/en/1.5/topics/files/
-    image = models.FileField(upload_to='images/%Y/%m/%d', max_length=300)
-    size = models.PositiveIntegerField()
-    original_filename = models.CharField(max_length=128)
-    content_type = models.CharField(max_length=64)
+    image = models.FileField(upload_to='images/%Y/%m/%d', max_length=300, verbose_name="imagen",
+        null=True, blank=True)
+    size = models.PositiveIntegerField(verbose_name="tamaño", null=True, blank=True)
+    original_filename = models.CharField(max_length=128, verbose_name="nombre de archivo original",
+        null=True, blank=True)
+    content_type = models.CharField(max_length=64, verbose_name="tipo de contenido",
+        null=True, blank=True)
+
+    thumbnail_image = models.FileField(upload_to='images/%Y/%m/%d', max_length=300,
+        verbose_name="previsualizacion", null=True, blank=True)
+    thumbnail_size = models.PositiveIntegerField(
+        verbose_name="tamaño de la previsualizacion", null=True, blank=True)
+    thumbnail_original_filename = models.CharField(max_length=128,
+        verbose_name="nombre de archivo (en cliente) de previsualizacion",
+        null=True, blank=True)
+    thumbnail_content_type = models.CharField(max_length=64,
+        verbose_name="tipo de contenido de previsualizacion",
+        null=True, blank=True)
 
     # REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
-    studio = models.ForeignKey(Studio)
+    studio = models.ForeignKey(Studio, verbose_name="estudio")
 
     # REFACTOR: `session` used to be named `album` and refer to `Album`
-    session = models.ForeignKey(Session, null=True)
+    session = models.ForeignKey(Session, null=True, verbose_name="sesión")
+
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
 
     objects = ImageManager()
 
@@ -524,6 +633,14 @@ class Image(models.Model):
     def set_original_filename(self, filename):
         """Set original filename, truncating if it's too large"""
         self.original_filename = filename[0:128]
+
+    def set_thumbnail_content_type(self, content_type):
+        """Set content_type, truncating if it's too large"""
+        self.thumbnail_content_type = content_type[0:64]
+
+    def set_thumbnail_original_filename(self, filename):
+        """Set original filename for thumb, truncating if it's too large"""
+        self.thumbnail_original_filename = filename[0:128]
 
 
 #===============================================================================
@@ -591,19 +708,39 @@ class SessionQuote(models.Model):
         (STATUS_CANCELED, u'Cancelado por fotografo'),
     )
 
-    studio = models.ForeignKey(Studio, related_name='session_quotes')
-    # session = models.ForeignKey(Session)
-    customer = models.ForeignKey(Customer, related_name='session_quotes')
-    image_quantity = models.PositiveIntegerField()
-    status = models.CharField(max_length=1, choices=STATUS, default=STATUS_QUOTING)
-    cost = models.DecimalField(max_digits=10, decimal_places=2)
-    terms = models.TextField()
+    name = models.CharField(max_length=300, verbose_name="nombre")
+    studio = models.ForeignKey(Studio, related_name='session_quotes', verbose_name="estudio")
+    customer = models.ForeignKey(Customer, related_name='session_quotes', verbose_name="cliente")
+    image_quantity = models.PositiveIntegerField(verbose_name="cantidad de imágenes")
+    status = models.CharField(
+        max_length=1, choices=STATUS, default=STATUS_QUOTING, verbose_name="estado")
+    cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="costo")
+    terms = models.TextField(verbose_name="términos")
     accepted_rejected_by = models.ForeignKey(LuminaUser, related_name='+', null=True, blank=True)
     accepted_rejected_at = models.DateTimeField(null=True, blank=True)
     accepted_quote_alternative = models.ForeignKey('SessionQuoteAlternative',
                                                    related_name='+',
                                                    on_delete=models.PROTECT,
-                                                   null=True, blank=True)
+                                                   null=True, blank=True,
+                                                   verbose_name="presupuesto alternativo")
+
+    stipulated_date = models.DateTimeField(verbose_name="fecha de entrega pactada")
+    # FIXME: check stipulated_down_payment <= cost
+    stipulated_down_payment = models.DecimalField(
+        max_digits=10, decimal_places=2, verbose_name="entrega inicial pactada")
+    #    actual_down_payment = models.DecimalField(max_digits=10, decimal_places=2,
+    #        verbose_name="entrega inicial realizada")
+
+    give_full_quality_images = models.BooleanField(default=True,
+        verbose_name="Entrega JPGs de máxima calidad")
+
+    session = models.ForeignKey(
+        Session, related_name='quotes', null=True, blank=True, verbose_name="Sesión")
+
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    archived = models.BooleanField(default=False, verbose_name="Archivado")
 
     objects = SessionQuoteManager()
 
@@ -741,6 +878,20 @@ class SessionQuote(models.Model):
         else:
             return None
 
+    def get_selected_quote_values(self):
+        """
+        Returns a pair of values: image quantity and cost,
+        from the selected quote, or (None, None,).
+        """
+        selected_quote = self.get_selected_quote()
+        if selected_quote is None:
+            return (None, None,)
+        if selected_quote == 0:
+            return (self.image_quantity, self.cost,)
+        else:
+            quote_alternative = SessionQuoteAlternative.objects.get(pk=selected_quote)
+            return (quote_alternative.image_quantity, quote_alternative.cost,)
+
     def get_valid_alternatives(self):
         """
         Return the valid quotes alternatives.
@@ -760,6 +911,23 @@ class SessionQuote(models.Model):
                 .order_by('image_quantity')
         raise(Exception("Invalid state: {}".format(self.status)))
 
+    def create_session(self, user):
+        assert user.is_photographer()
+        assert user.studio == self.studio
+        assert self.status == SessionQuote.STATUS_ACCEPTED
+
+        new_session = Session()
+        new_session.name = self.name
+        new_session.studio = self.studio
+        new_session.photographer = user
+        new_session.customer = self.customer
+        new_session.save()
+
+        self.session = new_session
+        self.save()
+
+        return new_session
+
     def __unicode__(self):
         return u"Quote for {}".format(str(self.customer))
 
@@ -767,10 +935,53 @@ class SessionQuote(models.Model):
 class SessionQuoteAlternative(models.Model):
     """
     """
-    session_quote = models.ForeignKey(SessionQuote, related_name='quote_alternatives')
-    image_quantity = models.PositiveIntegerField()
-    cost = models.DecimalField(max_digits=10, decimal_places=2)
+    session_quote = models.ForeignKey(
+        SessionQuote, related_name='quote_alternatives', verbose_name="presupuesto")
+    image_quantity = models.PositiveIntegerField(verbose_name="cantidad de imágenes")
+    cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="costo")
+
+    created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         unique_together = ("session_quote", "image_quantity")
         ordering = ["image_quantity"]
+
+
+#===============================================================================
+# CustomerType
+#===============================================================================
+
+class CustomerType(models.Model):
+    name = models.CharField(max_length=100, verbose_name="tipo de cliente")
+    studio = models.ForeignKey('Studio', related_name='customer_types', verbose_name="estudio")
+
+    def __unicode__(self):
+        return self.name
+
+
+#===============================================================================
+# SessionType
+#===============================================================================
+
+class SessionType(models.Model):
+    name = models.CharField(max_length=100, verbose_name="tipo de sesión")
+    studio = models.ForeignKey('Studio', related_name='session_types', verbose_name="estudio")
+
+    def __unicode__(self):
+        return self.name
+
+
+#===============================================================================
+# PreviewSize
+#===============================================================================
+
+class PreviewSize(models.Model):
+    max_size = models.PositiveIntegerField(verbose_name="Tamaño máximo", null=True, blank=True)
+    studio = models.ForeignKey('Studio', related_name='preview_sizes', verbose_name="estudio")
+
+    class Meta:
+        unique_together = ("max_size", "studio")
+        ordering = ["max_size"]
+
+    def __unicode__(self):
+        return u"{0}x{0}".format(self.max_size)

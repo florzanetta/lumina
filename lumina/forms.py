@@ -7,13 +7,13 @@ Created on Jun 1, 2013
 '''
 
 from django import forms
-from django.forms.widgets import CheckboxSelectMultiple
 from django.forms.models import inlineformset_factory
 
 from localflavor.ar.forms import ARCUITField
 
 from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail, \
-    Image, ImageSelection, SessionQuote, SessionQuoteAlternative
+    Image, ImageSelection, SessionQuote, SessionQuoteAlternative,\
+    UserPreferences
 
 
 #===============================================================================
@@ -43,7 +43,22 @@ class ImageSelectionCreateForm(forms.ModelForm):
 
     class Meta:
         model = ImageSelection
-        fields = ('session', 'image_quantity',)
+        fields = ('session', 'image_quantity', 'preview_size')
+        # exclude = ('user', 'status', 'selected_images')
+
+
+class ImageSelectionAutoCreateForm(forms.ModelForm):
+
+    def clean_preview_size(self):
+        preview_size = self.cleaned_data['preview_size']
+        if not preview_size:
+            raise(forms.ValidationError("Debe seleccionar un tamaño de visualizacion"))
+
+        return preview_size
+
+    class Meta:
+        model = ImageSelection
+        fields = ('preview_size',)
         # exclude = ('user', 'status', 'selected_images')
 
 
@@ -55,17 +70,18 @@ class SessionCreateForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        fields = ('name', 'photographer', 'customer', 'shared_with',)
+        fields = ('name', 'session_type', 'photographer', 'customer', )  # 'shared_with',
 
 
 class SessionUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        fields = ('name', 'photographer', 'customer', 'shared_with',)
-        widgets = {
-            'shared_with': CheckboxSelectMultiple(),
-        }
+        fields = ('name', 'session_type', 'photographer', 'customer',
+            'worked_hours', )  # 'shared_with',
+        #widgets = {
+        #    'shared_with': CheckboxSelectMultiple(),
+        #}
 
 
 #===============================================================================
@@ -98,10 +114,37 @@ class CustomerCreateForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = (
-            'name', 'address', 'phone', 'city', 'iva', 'cuit', 'ingresos_brutos', 'notes'
+            'name', 'customer_type', 'address', 'phone', 'city', 'iva', 'cuit',
+            'ingresos_brutos', 'notes'
         )
 
 CustomerUpdateForm = CustomerCreateForm
+
+
+#===============================================================================
+# UserPreferences
+#===============================================================================
+
+class UserPreferencesUpdateForm(forms.ModelForm):
+    password1 = forms.CharField(
+        max_length=20, required=False, widget=forms.PasswordInput(), label=u'Contrasena',
+        help_text="Ingrese la nueva contraseña (si desea cambiarla)")
+    password2 = forms.CharField(
+        max_length=20, required=False, widget=forms.PasswordInput(),
+        label=u'Contrasena (otra vez)',
+        help_text="Repita la nueva contraseña (si desea cambiarla)")
+
+    def clean(self):
+        super(UserPreferencesUpdateForm, self).clean()
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        if password1 != password2:
+            raise forms.ValidationError('Los passwords no concuerdan')
+        return self.cleaned_data
+
+    class Meta:
+        model = UserPreferences
+        fields = ('send_emails', 'password1', 'password2',)
 
 
 #===============================================================================
@@ -165,14 +208,18 @@ class SessionQuoteCreateForm(forms.ModelForm):
 
     class Meta:
         model = SessionQuote
-        fields = ('customer', 'image_quantity', 'cost', 'terms')
+        fields = (
+            'name', 'customer', 'image_quantity', 'stipulated_date', 'cost',
+            'stipulated_down_payment', 'give_full_quality_images',
+            'terms')
 
 
 class SessionQuoteUpdateForm(forms.ModelForm):
 
     class Meta:
         model = SessionQuote
-        fields = ('customer', 'image_quantity', 'cost', 'terms')
+        fields = ('name', 'customer', 'image_quantity', 'cost',
+            'give_full_quality_images', 'terms')
 
 
 class SessionQuoteUpdate2Form(forms.ModelForm):

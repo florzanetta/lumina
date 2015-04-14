@@ -10,8 +10,6 @@ import zipfile
 
 from StringIO import StringIO
 
-import mailer
-
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.views.generic.edit import CreateView, UpdateView
@@ -30,13 +28,22 @@ from django.core.files.base import ContentFile
 
 from lumina.pil_utils import generate_thumbnail
 from lumina.models import Session, Image, LuminaUser, Customer, \
-    SharedSessionByEmail, ImageSelection, SessionQuote, SessionQuoteAlternative
+    SharedSessionByEmail, ImageSelection, SessionQuote, SessionQuoteAlternative, \
+    UserPreferences
 from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm, \
     SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm, \
     ImageSelectionCreateForm, SessionQuoteCreateForm, SessionQuoteUpdateForm, \
-    SessionQuoteAlternativeCreateForm, SessionQuoteUpdate2Form
+    SessionQuoteAlternativeCreateForm, SessionQuoteUpdate2Form, \
+    UserPreferencesUpdateForm, ImageSelectionAutoCreateForm
+from lumina.mail import send_email, send_email_for_session_quote
 
+
+#
+# FIXME: create preference instance when creating a user
+# FIXME: update password in UserPreferenceUpdateView
+# FIXME: use selecte PreviewSize when generating previews
+#
 
 #
 # List of generic CBV:
@@ -49,112 +56,25 @@ from lumina.forms import SessionCreateForm, SessionUpdateForm, \
 logger = logging.getLogger(__name__)
 
 
-def send_emails(subject, to_email_list, body):
-    logger.info("Sending email '{}' to '{}'".format(
-        subject, to_email_list))
-    from_email = "Lumina <notifications@lumina-photo.com.ar>"
-    try:
-        mailer.send_mail(subject, body, from_email, to_email_list, fail_silently=False)
-        logger.info("Email to %s, with subject '%s' queued", to_email_list, subject)
-    except:
-        logger.exception("Couldn't queue email to %s", to_email_list)
-        pass
-
-
-def send_email(subject, to_email, body):
-    return send_emails(subject, [to_email], body)
-
-
-def send_email_for_session_quote(quote, user, request):
-    """
-    Send an email informing the change of status of SessionQuote.
-    The new status is taken from quote.status
-    """
-    link = request.build_absolute_uri(reverse('quote_detail',
-                                              args=[quote.id]))
-
-    if quote.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE:
-        # send to customer
-        subject = "Ud. posee un nuevo presupuesto"
-        to_email_list = [u.email for u in quote.customer.users.all()]
-        body = ("Ud. posee un nuevo presupuesto.\n"
-                "Para verlo, acceda a {}.\n"
-                "".format(link))
-        send_emails(subject, to_email_list, body)
-
-        # send to photographers
-        subject = "Se ha enviado un presupuesto"
-        to_email_list = [u.email for u in quote.studio.photographers.all()]
-        body = ("Se ha enviado un presupuesto.\n"
-                "Cliente: {}.\n"
-                "Enviado por: {}.\n"
-                "Para verlo, acceda a {}."
-                "".format(quote.customer, user, link))
-        send_emails(subject, to_email_list, body)
-
-    elif quote.status == SessionQuote.STATUS_ACCEPTED:
-        # send to customer
-        subject = "Se ha aceptado un presupuesto"
-        to_email_list = [u.email for u in quote.customer.users.all()]
-        body = ("Se ha aceptado un presupuesto.\n"
-                "El presupuesto fue aceptado por {}.\n"
-                "Para verlo, acceda a {}."
-                "".format(user, link))
-        send_emails(subject, to_email_list, body)
-
-        # send to photographers
-        subject = "Un cliente ha aceptado un presupuesto"
-        to_email_list = [u.email for u in quote.studio.photographers.all()]
-        body = ("Se ha aceptado un presupuesto.\n"
-                "El presupuesto fue aceptado por {}.\n"
-                "Para verlo, acceda a {}."
-                "".format(user, link))
-        send_emails(subject, to_email_list, body)
-
-    elif quote.status == SessionQuote.STATUS_REJECTED:
-        # send to customer
-        subject = "Se ha rechazado un presupuesto"
-        to_email_list = [u.email for u in quote.customer.users.all()]
-        body = ("Se ha rechazado un presupuesto.\n"
-                "El presupuesto fue rechazado por {}.\n"
-                "Para verlo, acceda a {}."
-                "".format(user, link))
-        send_emails(subject, to_email_list, body)
-
-        # send to photographers
-        subject = "Un cliente ha rechazado un presupuesto"
-        to_email_list = [u.email for u in quote.studio.photographers.all()]
-        body = ("Se ha rechazado un presupuesto.\n"
-                "El presupuesto fue rechazado por {}.\n"
-                "Para verlo, acceda a {}."
-                "".format(user, link))
-        send_emails(subject, to_email_list, body)
-
-    elif quote.status == SessionQuote.STATUS_CANCELED:
-        # send to photographers
-        subject = "Se ha cancelado un presupuesto"
-        to_email_list = [u.email for u in quote.studio.photographers.all()]
-        body = ("Se ha cancelado un presupuesto.\n"
-                "El presupuesto fue cancelado por {}.\n"
-                "Para verlo, acceda a {}."
-                "".format(user, link))
-        send_emails(subject, to_email_list, body)
-
-    elif quote.status == SessionQuote.STATUS_QUOTING:
-        pass
-
-    else:
-        logger.error("send_email_for_session_quote(): Invalid quote.status: '%s'",
-                     quote.status)
-        return
-
-
 def _photographer_home(request):
+    image_selection_with_pending_uploads = \
+        ImageSelection.objects.image_selections_pending_to_upload_full_quality_images(
+            request.user)
+    image_selection_with_pending_uploads_count = image_selection_with_pending_uploads.count()
+
+    if image_selection_with_pending_uploads_count:
+        messages.warning(request, 'Hay {} solicitud{} de selección de fotos '
+            'esperando que se suban la fotografías en calidad total'.format(
+                image_selection_with_pending_uploads_count,
+                '' if image_selection_with_pending_uploads_count == 1 else 'es'))
+
     ctx = {
         'session_count': Session.objects.visible_sessions(request.user).count(),
         'image_count': Image.objects.visible_images(request.user).count(),
         'shared_session_via_email_count':
-        request.user.all_my_shared_sessions_by_email().count()
+        request.user.all_my_shared_sessions_by_email().count(),
+        'image_selection_with_pending_uploads': image_selection_with_pending_uploads,
+        'image_selection_with_pending_uploads_count': image_selection_with_pending_uploads_count,
     }
     return render_to_response(
         'lumina/index_photographer.html', ctx,
@@ -431,6 +351,67 @@ class ImageSelectionListView(ListView):
         return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user)
 
 
+class ImageSelectionWithPendingUploadsListView(ListView):
+    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
+    #    #django.views.generic.list.ListView
+    model = ImageSelection
+
+    def get_queryset(self):
+        return ImageSelection.objects.image_selections_pending_to_upload_full_quality_images(
+            self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super(ImageSelectionWithPendingUploadsListView, self).get_context_data(**kwargs)
+        context['for_pending_uploads'] = True
+        return context
+
+
+class ImageSelectionUploadPendingView(DetailView):
+    model = ImageSelection
+    template_name = 'lumina/imageselection_upload_pending.html'
+
+    def get_queryset(self):
+        return ImageSelection.objects.image_selections_pending_to_upload_full_quality_images(
+            self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super(ImageSelectionUploadPendingView, self).get_context_data(**kwargs)
+        context['selected_images_without_full_quality'] = \
+            self.object.get_selected_images_without_full_quality()
+        return context
+
+    def post(self, request, pk, *args, **kwargs):
+        image_selection = self.get_queryset().get(pk=pk)
+        for just_uploaded_key, a_file in request.FILES.iteritems():
+            assert just_uploaded_key.startswith('file_for_')
+            splitted_key = just_uploaded_key.split('_')
+            assert len(splitted_key) == 3
+            image_pk = splitted_key[2]
+            image = Image.objects.get(pk=image_pk)
+            assert image.session == image_selection.session
+            assert image.image in (None, ''), "No es none: {}".format(image.image)
+            image.image = a_file
+            image.size = a_file.size
+            image.set_original_filename(a_file.name)
+            image.set_content_type(a_file.content_type)
+            image.save()
+
+        messages.success(self.request, 'Se subieron correctamente {} imágenes'.format(
+            len(request.FILES)))
+        # Don't use get_queryset(), won't work without pending uploads
+        cnt = ImageSelection.objects.get(pk=pk).get_selected_images_without_full_quality().count()
+        if cnt == 0:
+            messages.success(self.request,
+                u'Se finalizó la carga. Todas las imagenes seleccionadas por el cliente '
+                u'poseen la versión en calidad total.')
+            # TODO: send email to customer telling the files are ready to be downloaded
+            return HttpResponseRedirect(reverse('imageselection_redirect',
+                args=[pk]))
+        else:
+            return HttpResponseRedirect(reverse('imageselection_upload_pending',
+                args=[pk]))
+
+
 class ImageSelectionCreateView(CreateView):
     """
     With this view, the photographer creates a request
@@ -444,6 +425,7 @@ class ImageSelectionCreateView(CreateView):
 
     def get_initial(self):
         initial = super(ImageSelectionCreateView, self).get_initial()
+        # FIXME: filter `PreviewSize` for user's Studio
         if 'id_session' in self.request.GET:
             initial.update({
                 'session': self.request.GET['id_session'],
@@ -479,6 +461,78 @@ class ImageSelectionCreateView(CreateView):
         context['title'] = "Solicitud de seleccion de fotos"
         context['submit_label'] = "Enviar solicitud"
         return context
+
+
+@login_required
+@cache_control(private=True)
+def image_selection_create_from_quote(request, pk):
+    session = Session.objects.visible_sessions(request.user).get(pk=pk)
+    active_quote = session.get_active_quote()
+    quote_quantity, quote_cost = active_quote.get_selected_quote_values()
+
+    assert quote_quantity > 0
+
+    instance = ImageSelection(
+        session=session,
+        studio=session.studio,
+        customer=session.customer,
+        image_quantity=quote_quantity,
+        quote=active_quote
+    )
+
+    more_photos_required_than_existing = bool(session.image_set.count() < quote_quantity)
+
+    if request.method == 'GET':
+        form = ImageSelectionAutoCreateForm(instance=instance)
+        if more_photos_required_than_existing:
+            messages.error(
+                request, 'La sesión no contiene la cantidad de fotografías presupuestadas')
+
+    elif request.method == 'POST':
+        form = ImageSelectionAutoCreateForm(request.POST, instance=instance)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'La solicitud fue creada satisfactoriamente')
+            return HttpResponseRedirect(reverse('session_detail',
+                args=[session.id]))
+        else:
+            messages.error(request, 'ERROR')
+    else:
+        raise(SuspiciousOperation("Invalid HTTP method"))
+
+    ctx = {
+        'object': session,
+        'form': form,
+        'active_quote': active_quote,
+        'quote_cost': quote_cost,
+        'quote_quantity': quote_quantity,
+    }
+
+    ctx['title'] = "Solicitar selección de imágenes"
+    if not more_photos_required_than_existing:
+        ctx['submit_label'] = "Solicitar"
+
+    return render_to_response(
+        'lumina/imageselection_create_from_quote.html', ctx,
+        context_instance=RequestContext(request))
+
+
+#class ImageSelectionAutoCreateView(DetailView):
+#    """
+#    With this view, the photographer creates a request
+#    to the customer when the session has a quote associated.
+#    """
+#    model = Session
+#    template_name = 'lumina/imageselection_create_from_quote.html'
+#
+#    def get_queryset(self):
+#        # FIXME: `visible_sessions()` shouldn't be used here!
+#        return Session.objects.visible_sessions(self.request.user)
+#
+#    def get_context_data(self, **kwargs):
+#        context = super(ImageSelectionAutoCreateView, self).get_context_data(**kwargs)
+#        context['form'] = ImageSelectionAutoCreateForm()
+#        return context
 
 
 class ImageSelectionForCustomerView(DetailView):
@@ -563,16 +617,40 @@ class ImageSelectionDetailView(DetailView):
                 raise(SuspiciousOperation())
             ctx['images_to_show'] = image_selection.session.image_set.all()
             ctx['selected_images'] = image_selection.selected_images.all()
-            if image_selection.status == ImageSelection.STATUS_IMAGES_SELECTED:
-                ctx['show_download_selected_as_zip_button'] = True
+
+            # Check if all the selected images are avaiable in full-quality
+            all_selected_are_available_in_full_quality = True
+            for image in ctx['selected_images']:
+                if not image.image:
+                    all_selected_are_available_in_full_quality = False
+                    break
+
+            if all_selected_are_available_in_full_quality:
+                if image_selection.status == ImageSelection.STATUS_IMAGES_SELECTED:
+                    ctx['show_download_selected_as_zip_button'] = True
+            else:
+                messages.warning(self.request,
+                    'Algunas imagenes todavía no estan disponibles para ser bajadas en calidad total')
 
         elif self.request.user.is_for_customer():
             # Show only selected images to customer
             if image_selection.session.customer != self.request.user.user_for_customer:
                 raise(SuspiciousOperation())
             ctx['images_to_show'] = image_selection.selected_images.all()
-            if image_selection.status == ImageSelection.STATUS_IMAGES_SELECTED:
-                ctx['show_download_selected_as_zip_button'] = True
+
+            # Check if all the selected images are avaiable in full-quality
+            all_selected_are_available_in_full_quality = True
+            for image in ctx['images_to_show']:
+                if not image.image:
+                    all_selected_are_available_in_full_quality = False
+                    break
+
+            if all_selected_are_available_in_full_quality:
+                if image_selection.status == ImageSelection.STATUS_IMAGES_SELECTED:
+                    ctx['show_download_selected_as_zip_button'] = True
+            else:
+                messages.warning(self.request,
+                    'Algunas imagenes todavía no estan disponibles para ser bajadas en calidad total')
 
         else:
             raise(SuspiciousOperation())
@@ -589,8 +667,22 @@ class SessionListView(ListView):
     #    #django.views.generic.list.ListView
     model = Session
 
+    def _archived(self):
+        return self.request.REQUEST.get('archived', '0') == '1'
+
+    def get_context_data(self, **kwargs):
+        context = super(SessionListView, self).get_context_data(**kwargs)
+        context['list_archived'] = self._archived()
+        return context
+
     def get_queryset(self):
         qs = Session.objects.visible_sessions(self.request.user)
+        if self._archived():
+            qs = qs.filter(archived=True)
+        else:
+            # qs.filter(archived=False) -> DOES NOT WORKS
+            # at least with sqlite
+            qs = qs.exclude(archived=True)
         return qs.order_by('customer__name', 'name')
 
 
@@ -598,6 +690,23 @@ class SessionDetailView(DetailView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
     #    #django.views.generic.detail.DetailView
     model = Session
+
+    def post(self, request, *args, **kwargs):
+        session = self.get_object()
+
+        #    <input class="btn btn-primary" type="submit" name="archive_session" value="Archivar">
+        #    <input class="btn btn-primary" type="submit" name="delete_session" value="Borrar">
+
+        if 'archive_session' in request.POST:
+            session.archive(self.request.user)
+            messages.success(self.request, 'La sesión fue archivada correctamente')
+            return HttpResponseRedirect(reverse('session_detail', args=[session.id]))
+
+        #    if 'delete_session' in request.POST:
+        #        session.delete(self.request.user)
+        #        return HttpResponseRedirect(reverse('quote_update', args=[session.id]))
+
+        raise(SuspiciousOperation())
 
     def get_queryset(self):
         return Session.objects.visible_sessions(self.request.user)
@@ -608,7 +717,7 @@ class SessionCreateUpdateMixin():
     def _setup_form(self, form):
         qs_customers = self.request.user.all_my_customers()
         form.fields['customer'].queryset = qs_customers
-        form.fields['shared_with'].queryset = qs_customers
+        # form.fields['shared_with'].queryset = qs_customers
         form.fields['photographer'].queryset = self.request.user.studio.photographers.all()
 
 
@@ -684,18 +793,18 @@ def session_upload_previews_upload(request, session_id):
 
         thumb_base64 = request.POST[key]
         filename = request.POST[key + '_filename']
-
+        
         # thumb_base64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA(...)AP/2Q=="
         assert thumb_base64.startswith(PREFIX)
         thumb_base64 = thumb_base64[len(PREFIX):]
         thumb_contents = base64.decodestring(thumb_base64)
 
-        new_image = Image(
-            session=session, studio=request.user.studio, content_type='image/jpg',
-            original_filename='thumb_' + filename)
-
-        new_image.size = len(thumb_contents)
-        new_image.image.save('thumb_' + filename, ContentFile(thumb_contents))
+        new_image = Image(session=session, studio=request.user.studio,
+            thumbnail_content_type='image/jpg')
+        
+        new_image.set_thumbnail_original_filename(filename)
+        new_image.thumbnail_size = len(thumb_contents)
+        new_image.thumbnail_image.save(str(uuid.uuid4()), ContentFile(thumb_contents))
         new_image.save()
 
     response_data = {
@@ -939,7 +1048,35 @@ class UserUpdateView(UpdateView):
 
 
 #===============================================================================
-# User
+# UserPreference
+#===============================================================================
+
+class UserPreferenceUpdateView(UpdateView):
+    model = UserPreferences
+    form_class = UserPreferencesUpdateForm
+    template_name = 'lumina/base_create_update_form.html'
+
+    def get_success_url(self):
+        # TODO: fix this
+        return reverse('home')
+
+    def form_valid(self, form):
+        ret = super(UserPreferenceUpdateView, self).form_valid(form)
+        messages.success(self.request, 'Las preferencias fueron guardados correctamente')
+        return ret
+
+    def get_queryset(self):
+        return UserPreferences.objects.filter(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super(UserPreferenceUpdateView, self).get_context_data(**kwargs)
+        context['title'] = "Actualizar preferencias"
+        context['submit_label'] = "Actualizar"
+        return context
+
+
+#===============================================================================
+# SessionQuote
 #===============================================================================
 
 class SessionQuoteCreateUpdateMixin():
@@ -952,11 +1089,12 @@ class SessionQuoteCreateUpdateMixin():
 class SessionQuoteCreateView(CreateView, SessionQuoteCreateUpdateMixin):
     model = SessionQuote
     form_class = SessionQuoteCreateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/sessionquote_create.html'
 
     def get_form(self, form_class):
         form = super(SessionQuoteCreateView, self).get_form(form_class)
         self._setup_form(form)
+        form.fields['terms'].initial = self.request.user.studio.default_terms or ''
         return form
 
     def form_valid(self, form):
@@ -1060,9 +1198,12 @@ class SessionQuoteListView(ListView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
     #    #django.views.generic.list.ListView
     model = SessionQuote
+    filter = ''
 
     def get_queryset(self):
         qs = SessionQuote.objects.visible_sessionquote(self.request.user)
+        if self.filter == 'pending_for_customer':
+            qs = qs.filter(status=SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
         return qs.order_by('customer__name', 'id')
 
 
@@ -1103,8 +1244,24 @@ class SessionQuoteDetailView(DetailView):
             return HttpResponseRedirect(reverse('quote_detail',
                                                 args=[quote.id]))
 
+        elif 'button_cancel_and_new_version' in request.POST:
+            # FIXME: implement this!
+            messages.error(self.request, "La creacion de nuevas versiones "
+                "de presupuestos todavia no esta implementada.")
+            return HttpResponseRedirect(reverse('home'))
+
+        elif 'button_archive_quote' in request.POST:
+            # FIXME: implement this!
+            messages.error(self.request, "El archivado "
+                "de presupuestos todavia no esta implementado.")
+            return HttpResponseRedirect(reverse('home'))
+
         elif 'button_update_quote_alternatives' in request.POST:
             return HttpResponseRedirect(reverse('quote_update', args=[quote.id]))
+
+        elif 'button_create_session' in request.POST:
+            new_session = quote.create_session(request.user)
+            return HttpResponseRedirect(reverse('session_update', args=[new_session.id]))
 
         else:
             raise(SuspiciousOperation())
@@ -1135,11 +1292,18 @@ class SessionQuoteDetailView(DetailView):
             else:
                 buttons.append({'name': 'button_cancel',
                                 'submit_label': "Cancelar presupuesto", 'confirm': True, })
+                buttons.append({'name': 'button_cancel_and_new_version',
+                                'submit_label': "Cancelar presupuesto y crear nueva versión",
+                                'confirm': True, })
                 buttons.append({'name': 'button_update_quote_alternatives',
                                 'submit_label': "Editar presup. alternativos", })
 
         elif self.object.status == SessionQuote.STATUS_REJECTED:
-            pass
+            if self.request.user.is_for_customer():
+                pass
+            else:
+                buttons.append({'name': 'button_archive_quote',
+                                'submit_label': "Archivar", })
 
         elif self.object.status == SessionQuote.STATUS_ACCEPTED:
             if self.request.user.is_for_customer():
@@ -1150,12 +1314,24 @@ class SessionQuoteDetailView(DetailView):
             else:
                 buttons.append({'name': 'button_cancel',
                                 'submit_label': "Cancelar presupuesto", 'confirm': True, })
+                buttons.append({'name': 'button_cancel_and_new_version',
+                                'submit_label': "Cancelar presupuesto y crear nueva versión",
+                                'confirm': True, })
                 buttons.append({'name': 'button_update_quote_alternatives',
                                 'submit_label': "Editar presup. alternativos", })
+                buttons.append({'name': 'button_archive_quote',
+                                'submit_label': "Archivar", })
+                if self.object.session is None:
+                    buttons.append({'name': 'button_create_session',
+                                    'submit_label': "Crear sesión", })
 
         elif self.object.status == SessionQuote.STATUS_CANCELED:
             # Canceled
-            pass
+            if self.request.user.is_for_customer():
+                pass
+            else:
+                buttons.append({'name': 'button_archive_quote',
+                                'submit_label': "Archivar", })
 
         else:
             raise(Exception("Invalid 'status': {}".format(self.object.status)))
@@ -1247,7 +1423,7 @@ class SessionQuoteAlternativeSelectView(DetailView):
 class SessionQuoteAlternativeCreateView(CreateView):
     model = SessionQuoteAlternative
     form_class = SessionQuoteAlternativeCreateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/sessionquote_alternative_create_update.html'
 
     def get_initial(self):
         initial = super(SessionQuoteAlternativeCreateView, self).get_initial()

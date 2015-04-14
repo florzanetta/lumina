@@ -11,6 +11,66 @@
 
     <h3>Sesión '{{ object.name }}'</h3>
 
+    {% if user.is_photographer %}
+    <table class="table">
+
+        <tr>
+            <th width="20%">Cliente:</th>
+            <td width="80%">
+                {{ object.customer.name }}
+                {% if user.is_photographer %}
+                    - <small>Tipo: {{ object.customer.customer_type }}</small>
+                {% endif %}
+            </td>
+        </tr>
+
+        <tr>
+            <th>Tipo de sesión:</th>
+            <td>
+                {{ object.session_type }}
+            </td>
+        </tr>
+
+        {% with quote=object.get_active_quote %}
+            <tr>
+                <th>Pesupuesto:</th>
+                <td>
+                    {% if quote %}
+                        <i class="icon-briefcase"></i> <a class=""
+                            href="{% url 'quote_detail' quote.id %}">Ver presupuesto</a>
+                    {% else %}
+                        <em>No hay presupuesto asociado</em>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endwith %}
+
+        {% if object.archived %}
+        <tr>
+            <th><small>Archivado:</small></th>
+            <td>
+                <i class="icon-exclamation-sign"></i> <small><em>La sesión se encuentra archivada</em></small>
+            </td>
+        </tr>
+        {% endif %}
+
+        <tr>
+            <th><small>Fecha de creación:</small></th>
+            <td>
+                <small>{{ object.created }} (hace {{ object.created|timesince }})</small>
+            </td>
+        </tr>
+
+        <tr>
+            <th><small>Última actualización:</small></th>
+            <td>
+                <small>{{ object.last_modified }} (hace {{ object.last_modified|timesince }})</small>
+            </td>
+        </tr>
+
+    </table>
+    {% endif %}
+
     <hr>
 
     <h5>Imágenes del album:</h5>
@@ -21,32 +81,32 @@
 	    <hr>
     {% endfor %}
 
-    {% if object.studio == user.studio %}
-        <!-- the logged in user is the from the same studio than the session -->
+    <!--
+    { % if object.studio == user.studio % }
+        < ! - - the logged in user is the from the same studio than the session - - >
 
 	    <h5>
 	       Compartido con clientes:
 	           &nbsp;&nbsp;&nbsp;<i class="icon-question-sign"></i><small> Para compartir una sesión con un cliente, utilice <strong>Actualizar album</strong></small>
 	    </h5>
 	    <table class="table">
-	        {% for customer in object.shared_with.all %}
+	        { % for customer in object.shared_with.all % }
 	            <tr>
 	               <td>
-	                    <i class="icon-user"></i> {{ customer.name }}
+	                    <i class="icon-user"></i> { { customer.name } }
 	               </td>
 	            </tr>
-	        {% empty %}
+	        { % empty % }
 	            <tr><td>La sesión no ha sido compartido con ningún cliente</td></tr>
-	        {% endfor %}
+	        { % endfor % }
 	    </table>
 
-    {% endif %}
+    { % endif % }
+    -->
 
     {% if object.studio == user.studio %}
         <!-- the logged in user is the from the same studio than the session -->
 
-	    <hr>
-	
 	    <h5>Compartida via email:</h5>
 	    <table class="table">
 	        {% for shared_by_email in object.shares_via_email.all %}
@@ -78,6 +138,11 @@
                         </div>
                         <div>
                             <em><small>{{ imageselection.get_status_display }}</small></em>
+
+                            -
+                            <i class="icon-calendar"></i> <span title="Creación: {{imageselection.created|date}} - Última actualización: {{imageselection.last_modified|date}}">
+                                <small><em>Última actualización:</em> hace <strong>{{ imageselection.last_modified|timesince }}</strong></small></span>
+
                         </div>
                    </td>
                 </tr>
@@ -95,16 +160,48 @@
 
 	    <hr>
 
+        <form action="." method="post">
+        {% csrf_token %}
 	    <p>
-		    <a href="{% url 'session_update' object.pk %}" class="btn btn-primary">Actualizar sesión</a>
-            <a href="{% url 'session_upload_previews' object.id %}" class="btn btn-primary">Agregar vistas previas</a>
-		    <a href="{% url 'image_create' %}?id_session={{ object.pk }}" class="btn btn-primary">Agregar imagenes en calidad total</a>
-            <a href="{% url 'shared_session_by_email_create' %}?id_session={{ object.pk }}" class="btn btn-primary">Compartir sesión via email</a>
-            <a href="{% url 'image_selection_create' %}?id_session={{ object.pk }}" class="btn btn-primary">Solicitar selección de imágenes</a>
-	    </p>
-    {% endif %}
+	    <div class="btn-toolbar" style="margin: 0;">
+		    <a href="{% url 'session_update' object.pk %}" class="btn btn-primary">Editar sesión</a>
+		    
+	        <div class="btn-group">
+	            <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+	                Agregar imágenes <span class="caret"></span>
+	            </a>
+	            <ul class="dropdown-menu">
+	                <li><a href="{% url 'session_upload_previews' object.id %}">Agregar vistas previas</a></li>
+	                <li><a href="{% url 'image_create' %}?id_session={{ object.pk }}">Agregar imagenes en calidad total</a></li>
+	            </ul>
+	        </div>
 
-{% endblock content %}
+            <div class="btn-group">
+                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                    Compartir <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'shared_session_by_email_create' %}?id_session={{ object.pk }}">Compartir via email</a></li>
+                </ul>
+            </div>
+            
+            <div class="btn-group">
+                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                    Solicitar selección de imágenes <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+		            <li><a href="{% url 'image_selection_create' %}?id_session={{ object.pk }}">Solicitar selección de imágenes</a></li>
+		            <li><a href="{% url 'image_selection_create_from_quote' object.pk %}">Solicitar selección de imágenes (desde presupuesto)</a></li>
+                </ul>
+            </div>
+
+            <input class="btn btn-primary" type="submit" name="archive_session" value="Archivar">
+            <input class="btn btn-primary" type="submit" name="delete_session" value="Borrar">
+            
+	    </div>
+	    </p>
+	    </form>
+	{% endif %} {% endblock content %}
 
 </body>
 </html>

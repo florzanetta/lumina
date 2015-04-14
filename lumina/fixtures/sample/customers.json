@@ -3,50 +3,80 @@
     "pk": 1, 
     "model": "lumina.customer", 
     "fields": {
-        "phone": "111-212-2113", 
-        "studio": 1, 
+        "city": "", 
         "name": "HBSC Bank *****", 
-        "address": "Some Address 1234\r\n"
+        "cuit": "", 
+        "ingresos_brutos": "", 
+        "phone": "111-212-2113", 
+        "customer_type": 3, 
+        "studio": 1, 
+        "address": "Some Address 1234\r\n", 
+        "notes": "", 
+        "iva": null
     }
 },
 {
     "pk": 2, 
     "model": "lumina.customer", 
     "fields": {
-        "phone": "999-8888-7777", 
-        "studio": 2, 
+        "city": null, 
         "name": "Doh Customer ******", 
-        "address": "Tha eddress *****"
+        "cuit": null, 
+        "ingresos_brutos": null, 
+        "phone": "999-8888-7777", 
+        "customer_type": null, 
+        "studio": 2, 
+        "address": "Tha eddress *****", 
+        "notes": null, 
+        "iva": null
     }
 },
 {
     "pk": 3, 
     "model": "lumina.customer", 
     "fields": {
-        "phone": "999-9999-9999", 
-        "studio": 2, 
+        "city": null, 
         "name": "Other Customer *****", 
-        "address": "Other direction"
+        "cuit": null, 
+        "ingresos_brutos": null, 
+        "phone": "999-9999-9999", 
+        "customer_type": null, 
+        "studio": 2, 
+        "address": "Other direction", 
+        "notes": null, 
+        "iva": null
     }
 },
 {
     "pk": 4, 
     "model": "lumina.customer", 
     "fields": {
-        "phone": "222-11-21123", 
-        "studio": 3, 
+        "city": "", 
         "name": "Fontanarrosa & Cia - Customer 'A'", 
-        "address": "Bla bla bla 1234"
+        "cuit": "", 
+        "ingresos_brutos": "", 
+        "phone": "222-11-21123", 
+        "customer_type": 3, 
+        "studio": 3, 
+        "address": "Bla bla bla 1234", 
+        "notes": "", 
+        "iva": null
     }
 },
 {
     "pk": 5, 
     "model": "lumina.customer", 
     "fields": {
-        "phone": "123-2331-2312", 
-        "studio": 3, 
+        "city": "", 
         "name": "JJCampanella S.A. - Customer 'B'", 
-        "address": "Mi calle 1234\r\nBarrio Centro"
+        "cuit": "", 
+        "ingresos_brutos": "", 
+        "phone": "123-2331-2312", 
+        "customer_type": 2, 
+        "studio": 3, 
+        "address": "Mi calle 1234\r\nBarrio Centro", 
+        "notes": "", 
+        "iva": null
     }
 }
 ]

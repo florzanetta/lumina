@@ -1,31 +1,47 @@
-{% load humanize %}
+{% load humanize %}{% load lumina_extras %}
+
+    <tr>
+        <th width="20%">Nombre:</th>
+        <td width="80%">
+            {{ object.name }}
+        </td>
+    </tr>
+    
     <tr>
         <th width="20%">Cliente:</th>
-        <td width="80%">{{ object.customer.name }}</td>
+        <td width="80%">
+            {{ object.customer.name }}
+            {% if user.is_photographer %}
+                - <small>Tipo: {{ object.customer.customer_type }}</small>
+            {% endif %}
+        </td>
     </tr>
+    
+    {% if user.is_photographer %}
+    <tr>
+        <th width="20%">Sesión:</th>
+        <td width="80%">
+            {% if object.session %}
+                <a href="{% url 'session_detail' object.session.id %}">{{ object.session.name }}</a>
+            {% else %}
+                <em>Sin sesión</em>
+            {% endif %}
+        </td>
+    </tr>
+    {% endif %}
+
     <tr>
         <th>
             Estado:
         </th>
         <td>
-            {% if object.get_status_display == status_STATUS_ACCEPTED %}
-                <span class="label label-success"><i class="icon-ok icon-white"></i>
-                    {{ object.get_status_display }}</span>
-            {% elif object.get_status_display == status_STATUS_REJECTED %}
-                <span class="label label-important"><i class="icon-remove icon-white"></i>
-                    {{ object.get_status_display }}</span>
-            {% elif object.get_status_display == status_STATUS_WAITING_CUSTOMER_RESPONSE %}
-                <span class="label label-warning"><i class="icon-time icon-white"></i>
-                    {{ object.get_status_display }}</span>
-            {% else %}
-                <span class="label">{{ object.get_status_display }}</span>
-            {% endif %}
+            {% session_quote_status object %}
+            
             &nbsp;&nbsp;&nbsp;
             <small><a href="#helpModal" data-toggle="modal"><i
                 class="icon-question-sign"></i> Ayuda</a></small>
         </td>
     </tr>
-
 
         {% if object.status == 'A' %}
             <tr>
@@ -53,12 +69,44 @@
         {% endif %}
 
         <tr>
+            <th>Fecha de entrega pactada:</th>
+            <td>{{ object.stipulated_date }}
+            </td>
+        </tr>
+
+        <tr>
+            <th>Entrega inicial pactada:</th>
+            <td>$ {{ object.stipulated_down_payment|intcomma }}
+            </td>
+        </tr>
+
+        <tr>
+            <th>Entrega JPGs de máxima calidad:</th>
+            <td>
+                {{ object.give_full_quality_images|yesno:"Si,No" }}
+            </td>
+        </tr>
+
+
+        <tr>
             <th>Condiciones:</th>
             <td><pre>{{ object.terms }}</pre>
             </td>
         </tr>
 
-        
+        <tr>
+            <th><small>Fecha de creación:</small></th>
+            <td>
+                <small>{{ object.created }} (hace {{ object.created|timesince }})</small>
+            </td>
+        </tr>
+        <tr>
+            <th><small>Última actualización:</small></th>
+            <td>
+                <small>{{ object.last_modified }} (hace {{ object.last_modified|timesince }})</small>
+            </td>
+        </tr>
+
         {% if not hide_alternatives %}
             <tr>
                 <th>Alternativa seleccionada:</th>

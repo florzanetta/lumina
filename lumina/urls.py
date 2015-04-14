@@ -14,7 +14,9 @@ from lumina.views import SessionListView, SessionDetailView, SessionCreateView, 
     ImageSelectionForCustomerView, SessionUploadPreviewsView,\
     SessionQuoteCreateView, SessionQuoteListView, SessionQuoteDetailView,\
     SessionQuoteUpdateView, \
-    SessionQuoteAlternativeSelectView, SessionQuoteAlternativeCreateView
+    SessionQuoteAlternativeSelectView, SessionQuoteAlternativeCreateView,\
+    UserPreferenceUpdateView, ImageSelectionWithPendingUploadsListView,\
+    ImageSelectionUploadPendingView
 
 autocomplete_light.autodiscover()  # BEFORE admin.autodiscover()
 admin.autodiscover()
@@ -96,11 +98,32 @@ urlpatterns = patterns(
                 ImageSelectionCreateView.as_view())),
         name='image_selection_create'),
 
+    #    url(r'^session/image-selection/create/(?P<pk>\d+)/$',
+    #        cache_control(private=True)(
+    #            login_required(
+    #                ImageSelectionAutoCreateView.as_view())),
+    #        name='image_selection_create_from_quote'),
+    url(
+        r'^session/image-selection/create/(?P<pk>\d+)/$',
+        'lumina.views.image_selection_create_from_quote',
+        name='image_selection_create_from_quote'),
+
     url(r'^session/image-selection/list/$',
         cache_control(private=True)(
             login_required(
                 ImageSelectionListView.as_view())),
         name='imageselection_list'),
+
+    url(r'^session/image-selection/with-pending-uploads/list/$',
+        cache_control(private=True)(
+            login_required(
+                ImageSelectionWithPendingUploadsListView.as_view())),
+        name='imageselection_with_pending_uploads_list'),
+
+    url(r'^session/image-selection/upload-pending/(?P<pk>\d+)/$',
+        cache_control(private=True)(
+            login_required(ImageSelectionUploadPendingView.as_view())),
+        name='imageselection_upload_pending'),
 
     url(r'^session/image-selection/redirect/(?P<pk>\d+)/$',
         'lumina.views.imageselection_redirect',
@@ -184,6 +207,10 @@ urlpatterns = patterns(
             login_required(UserUpdateView.as_view())),
         name='customer_user_update'),
 
+    url(r'^user/preferences/(?P<pk>\d+)/$',
+        cache_control(private=True)(
+            login_required(UserPreferenceUpdateView.as_view())),
+        name='customer_user_preferences_update'),
 
     #===========================================================================
     # SessionQuote
@@ -197,8 +224,14 @@ urlpatterns = patterns(
     url(r'^quote/list/$',
         cache_control(private=True)(
             login_required(
-                SessionQuoteListView.as_view())),
+                SessionQuoteListView.as_view(filter=''))),
         name='quote_list'),
+
+    url(r'^quote/list/pending_for_cusomter/$',
+        cache_control(private=True)(
+            login_required(
+                SessionQuoteListView.as_view(filter='pending_for_customer'))),
+        name='quote_list_pending_for_customer'),
 
     url(r'^quote/detail/(?P<pk>\d+)/$',
         cache_control(private=True)(
@@ -226,6 +259,11 @@ urlpatterns = patterns(
         name='quote_alternatives_create'),
 
 
+    #===========================================================================
+    # Reports
+    #===========================================================================
+
+    url(r'^report/(\d+)/$', 'lumina.views_reports.view_report', name='view_report'),
 
     #===========================================================================
     # Rest API

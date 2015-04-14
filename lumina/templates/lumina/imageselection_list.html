@@ -18,13 +18,40 @@
 		        <img class="media-object" src="/static/album-icon-64x64.png">
 		    </a>
 		    <div class="media-body">
-		        <div class="media-heading"><a
-		               href="{% url 'imageselection_redirect' pet.id %}"><strong>Sesión</strong>:
-		               		{{ pet.session.name }}</a> <br>
-                       <small><strong>Estado</strong>: {{ pet.get_status_display }}</small> <br>
-						<small><strong>Cant. de imagenes permitidas:</strong>
-							{{ pet.image_quantity }}</small><br>
-                       
+		        <div class="media-heading">
+                {% if for_pending_uploads %}
+                    <!-- Point to pending-uploads view -->
+                    <a href="{% url 'imageselection_upload_pending' pet.id %}">
+                        <strong>Sesión</strong>:
+                            {{ pet.session.name }}</a>
+                {% else %}
+                    <!-- Point to image-selection view -->
+                    <a href="{% url 'imageselection_redirect' pet.id %}">
+                        <strong>Sesión</strong>:
+                            {{ pet.session.name }}</a>
+                {% endif %}
+                <br>
+
+               <small><strong>Estado</strong>: {{ pet.get_status_display }}</small> <br>
+
+				<small><strong>Cant. de imagenes permitidas:</strong>
+					{{ pet.image_quantity }}</small><br>
+
+                {% if for_pending_uploads %}
+                    {% with count=pet.get_selected_images_without_full_quality|length %}
+                        <span class="badge badge-important">{{ count }}</span>
+                        <small> {{count|pluralize:"imagen,imágenes"}} en calidad total
+                            pendientes de ser subidas</small><br>
+                    {% endwith %}
+                {% endif %}
+
+                <i class="icon-calendar"></i>
+                    <small>
+                        <em>Fecha de creación: {{pet.created|date}}
+                        - Última actualización: {{pet.last_modified|date}}
+                        </em>
+                    </small>
+
 		        </div>
 		    </div>
 		</div>

@@ -3,13 +3,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>{% block title %}Lumina - Crear album de vistas previas{% endblock %}</title>
+<title>{% block title %}Lumina - Agregar imágenes de vista previa{% endblock %}</title>
 </head>
 <body>
 
     {% block content %}
 
-    <h3>Crear album de vistas previas</h3>
+    <h3>Agregar imágenes de previsualización</h3>
     <form action="{% url 'session_upload_previews_upload' object.id %}" method="post" enctype="multipart/form-data">
         <!-- { % csrf_token % } -->
         <table class="table">
@@ -18,6 +18,20 @@
                 <td>Imagenes</td>
                 <td>
                     <input id="fileinput" type="file" name="images" multiple>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Tamaño máximo</td>
+                <td>
+                    <select>
+                        <option>250x250</option>
+                        <option>600x600</option>
+                        <option>800x800</option>
+                        <option>1000x1000</option>
+                        <option>1500x1500</option>
+                        <option>2000x2000</option>
+                    </select>
                 </td>
             </tr>
 

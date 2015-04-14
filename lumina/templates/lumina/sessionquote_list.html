@@ -20,11 +20,11 @@
 
 		<div class="media">
 		    <a class="pull-left" href="javascript:void(0);">
-		        <img class="media-object" src="/static/album-icon-64x64.png">
+		        <img class="media-object" src="/static/quote-icon-64x64.png">
 		    </a>
 		    <div class="media-body">
 		        <div class="media-heading"><a
-		               href="{% url 'quote_detail' a_quote.id %}">{{ a_quote.customer.name }}</a>
+		               href="{% url 'quote_detail' a_quote.id %}">{{ a_quote.name }}</a>
 		        </div>
 		        <div>
                         <small>
@@ -32,10 +32,21 @@
                             imagen{{ a_quote.image_quantity|pluralize:",es" }}
                         </small>
                       -
-                      <small>
-                          Estado: <span class="badge badge-info">{{ a_quote.get_status_display }}</span>
-                      </small>
+                    {% session_quote_status a_quote %}
+                    -
+                    <i class="icon-calendar"></i> <span title="Creación: {{a_quote.created|date}} - Última actualización: {{a_quote.last_modified|date}}">
+                        <small><em>Última actualización:</em> hace <strong>{{ a_quote.last_modified|timesince }}</strong></small></span>
+
 		        </div>
+                {% if user.is_photographer and a_quote.session %}
+                    <div style="padding-top: 5px;">
+                        <small>
+                            <em>Sesión:</em>
+                            <a href="{% url 'session_detail' a_quote.session.id %}">{{ a_quote.session.name }}</a>
+                        </small>
+                    </div>
+                {% endif %}
+                
 		    </div>
 		</div>
 		<hr>
@@ -43,6 +54,18 @@
        <p>No hay presupuestos...</p>
         <hr>
     {% endfor %}
+
+    <div class="pagination pagination-small pagination-right">
+        <ul>
+            <li class="disabled"><a href="#">&laquo;</a></li>
+            <li class="active"><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+            <li><a href="#">&raquo;</a></li>
+        </ul>
+    </div>
 
     {% if user.is_photographer %}
     <p>

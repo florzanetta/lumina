@@ -4,12 +4,16 @@
     "model": "lumina.session", 
     "fields": {
         "customer": 2, 
+        "worked_hours": 0, 
+        "name": "City at night *****", 
+        "session_type": null, 
         "photographer": [
             "juan"
         ], 
-        "studio": 2, 
-        "name": "City at night *****", 
-        "shared_with": []
+        "created": "2013-09-03T03:42:50Z", 
+        "shared_with": [], 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "studio": 2
     }
 },
 {
@@ -17,12 +21,16 @@
     "model": "lumina.session", 
     "fields": {
         "customer": 3, 
+        "worked_hours": 0, 
+        "name": "Town at the morning *****", 
+        "session_type": null, 
         "photographer": [
             "juan"
         ], 
-        "studio": 2, 
-        "name": "Town at the morning *****", 
-        "shared_with": []
+        "created": "2013-09-03T03:42:50Z", 
+        "shared_with": [], 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "studio": 2
     }
 },
 {
@@ -30,12 +38,16 @@
     "model": "lumina.session", 
     "fields": {
         "customer": 4, 
+        "worked_hours": 0, 
+        "name": "Fotos de la selva", 
+        "session_type": 4, 
         "photographer": [
             "fotografo1"
         ], 
-        "studio": 3, 
-        "name": "Fotos de la selva", 
-        "shared_with": []
+        "created": "2013-09-03T03:42:50Z", 
+        "shared_with": [], 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "studio": 3
     }
 },
 {
@@ -43,12 +55,16 @@
     "model": "lumina.session", 
     "fields": {
         "customer": 5, 
+        "worked_hours": 0, 
+        "name": "Aves", 
+        "session_type": 5, 
         "photographer": [
             "fotografo2"
         ], 
-        "studio": 3, 
-        "name": "Aves", 
-        "shared_with": []
+        "created": "2013-09-03T03:42:50Z", 
+        "shared_with": [], 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "studio": 3
     }
 },
 {
@@ -56,12 +72,16 @@
     "model": "lumina.session", 
     "fields": {
         "customer": 1, 
+        "worked_hours": 0, 
+        "name": "Admin's album 1d300055-7b06-498d-bb33-43e263c6c95e *****", 
+        "session_type": 4, 
         "photographer": [
             "admin"
         ], 
-        "studio": 1, 
-        "name": "Admin's album 1d300055-7b06-498d-bb33-43e263c6c95e *****", 
-        "shared_with": []
+        "created": "2013-09-03T03:42:50Z", 
+        "shared_with": [], 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "studio": 1
     }
 },
 {
@@ -69,12 +89,16 @@
     "model": "lumina.session", 
     "fields": {
         "customer": 2, 
+        "worked_hours": 0, 
+        "name": "Juan's Album 16436663-7ae0-4902-888d-e1c4da976c25 *****", 
+        "session_type": null, 
         "photographer": [
             "juan"
         ], 
-        "studio": 2, 
-        "name": "Juan's Album 16436663-7ae0-4902-888d-e1c4da976c25 *****", 
-        "shared_with": []
+        "created": "2013-09-03T03:42:50Z", 
+        "shared_with": [], 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "studio": 2
     }
 },
 {
@@ -82,12 +106,16 @@
     "model": "lumina.session", 
     "fields": {
         "customer": 5, 
+        "worked_hours": 0, 
+        "name": "Catalogo 2013", 
+        "session_type": 1, 
         "photographer": [
             "fotografo1"
         ], 
-        "studio": 3, 
-        "name": "Catalogo 2013", 
-        "shared_with": []
+        "created": "2013-09-03T03:42:50Z", 
+        "shared_with": [], 
+        "last_modified": "2013-09-03T03:42:50Z", 
+        "studio": 3
     }
 }
 ]

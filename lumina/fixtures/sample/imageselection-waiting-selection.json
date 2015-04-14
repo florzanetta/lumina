@@ -3,12 +3,16 @@
     "pk": 1, 
     "model": "lumina.imageselection", 
     "fields": {
-        "customer": 5, 
+        "customer": 4, 
         "status": "W", 
+        "created": "2013-10-22T02:31:41.707Z", 
+        "quote": 1, 
         "selected_images": [], 
-        "session": 4, 
+        "session": 8, 
         "studio": 3, 
-        "image_quantity": 1
+        "last_modified": "2013-10-22T02:31:41.707Z", 
+        "image_quantity": 2, 
+        "preview_size": 2
     }
 }
 ]

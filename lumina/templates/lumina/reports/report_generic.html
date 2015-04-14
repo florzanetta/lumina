@@ -1,0 +1,152 @@
+{% extends "lumina/base.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+    {% block extra_headers %} 
+    <!--
+		<script type="text/javascript" src="http://kozea.github.com/pygal.js/javascripts/svg.jquery.js"></script>
+		<script type="text/javascript" src="http://kozea.github.com/pygal.js/javascripts/pygal-tooltips.js"></script>
+	-->
+    {% endblock extra_headers %}
+
+</head>
+<body>
+
+{% block content %}
+
+    <h3>Informe</h3>
+    <h5>{{ report_title }}</h5>
+
+    <hr>
+
+    {% if show_form_1 %}
+    
+        <form method="post" class="form-inline">
+    
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="span1"  style="text-align: right;">Fecha:</div>
+                <div class="span5">
+                        <input type="text" class="input-medium" placeholder="Fecha (desde)">
+                </div>
+                <div class="span5">
+                         <input type="text" class="input-medium" placeholder="Fecha (hasta)">
+                </div>
+                <div class="span1" >
+                    <input type="button" value="Actualizar" class="btn btn-primary">
+                </div>
+            </div>
+            
+        </form>
+
+    {% endif %}
+    
+    {% if show_form_2 %}
+    
+        <form method="post" class="form-inline">
+    
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="span1"  style="text-align: right;">Fecha:</div>
+                <div class="span4">
+                        <input type="text" class="input-medium" placeholder="Fecha (desde)">
+                </div>
+                <div class="span4">
+                         <input type="text" class="input-medium" placeholder="Fecha (hasta)">
+                </div>
+                <div class="span1" >
+                    <input type="button" value="Actualizar" class="btn btn-primary">
+                </div>
+            </div>
+
+
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="span1"  style="text-align: right;">Tipo de cliente:</div>
+                <div class="span4">
+                        <select>
+                          <option>Todos</option>
+                        </select>
+                </div>
+                <div class="span1"  style="text-align: right;">Tipo de sesión:</div>
+                <div class="span4">
+                        <select>
+                          <option>Todos</option>
+                        </select>
+                </div>
+            </div>
+            
+        </form>
+
+    {% endif %}
+    
+    {% if show_form_3 %}
+    
+        <form method="post" class="form-inline">
+    
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="span1"  style="text-align: right;">Fecha:</div>
+                <div class="span4">
+                        <input type="text" class="input-medium" placeholder="Fecha (desde)">
+                </div>
+                <div class="span4">
+                         <input type="text" class="input-medium" placeholder="Fecha (hasta)">
+                </div>
+                <div class="span1" >
+                    <input type="button" value="Actualizar" class="btn btn-primary">
+                </div>
+            </div>
+
+
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="span1"  style="text-align: right;">Tipo de sesión:</div>
+                <div class="span4">
+                        <select>
+                          <option>Todos</option>
+                        </select>
+                </div>
+            </div>
+            
+        </form>
+
+    {% endif %}
+    
+    {% if show_form_4 %}
+    
+        <form method="post" class="form-inline">
+    
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="span1"  style="text-align: right;">Fecha:</div>
+                <div class="span4">
+                        <input type="text" class="input-medium" placeholder="Fecha (desde)">
+                </div>
+                <div class="span4">
+                         <input type="text" class="input-medium" placeholder="Fecha (hasta)">
+                </div>
+                <div class="span1" >
+                    <input type="button" value="Actualizar" class="btn btn-primary">
+                </div>
+            </div>
+
+
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="span1"  style="text-align: right;">Tipo de sesión:</div>
+                <div class="span4">
+                        <select>
+                          <option>Todos</option>
+                        </select>
+                </div>
+            </div>
+            
+        </form>
+
+    {% endif %}
+
+    <hr>
+
+    <figure style="max-width: 800px; max-height: 500px;">{{ svg_chart|safe }}</figure>
+
+
+{% endblock content %}
+
+</body>
+</html>

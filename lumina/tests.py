@@ -14,6 +14,7 @@ from lumina.models import SessionQuote, Studio, LuminaUser, \
     SessionQuoteAlternative
 import decimal
 from lumina.forms import SessionQuoteAlternativeFormSet
+import datetime
 
 # from lumina.pil_utils import generate_thumbnail
 # from lumina.models import Image, Album, LuminaUser
@@ -370,7 +371,9 @@ class SessionQuoteModelTests(TestCase):
         quote = SessionQuote.objects.create(studio=self.studio,
                                             customer=self.user_for_customer.user_for_customer,
                                             image_quantity=10,
-                                            cost=12.34)
+                                            cost=12.34,
+                                            stipulated_date=datetime.datetime.now(),
+                                            stipulated_down_payment=0.0)
         return quote
 
     def _create_quote_alternatives(self, quote):

@@ -14,7 +14,12 @@
 	    <table class="table">
             <tr>
                <td>Imagen:</td>
-               <td><img class="media-object" src="{% url 'image_thumb_64x64' object.pk %}"></td>
+               <td><img class="media-object" src="{% url 'image_thumb_64x64' object.pk %}">
+               {% if not object.image %}
+                    <i class="icon-warning-sign"></i>
+                    <small><em>Esta imagen sólo está disponible como <strong>vista previa</strong></em></small>
+               {% endif %}
+               </td>
             </tr>
 	        {{ form.as_table }}
 	        <tr>
