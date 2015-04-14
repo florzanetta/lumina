@@ -21,7 +21,7 @@ echo ""
 echo "Checking flake8... (flake8 doesn't cancels commits right now)"
 echo ""
 
-flake8 --config=.flake8 --show-source lumina
+flake8 --config=.flake8 lumina
 
 if [ "$PRE_COMMIT" != "1" ] ; then
 
