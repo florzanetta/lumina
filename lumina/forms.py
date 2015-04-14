@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-'''
+"""
 Created on Jun 1, 2013
 
 @author: Horacio G. de Oro
-'''
+"""
 
 from django import forms
 from django.forms.models import inlineformset_factory
@@ -16,9 +16,9 @@ from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail, \
     UserPreferences
 
 
-#===============================================================================
+# ===============================================================================
 # SharedSessionByEmail
-#===============================================================================
+# ===============================================================================
 
 class SharedSessionByEmailCreateForm(forms.ModelForm):
 
@@ -27,9 +27,9 @@ class SharedSessionByEmailCreateForm(forms.ModelForm):
         fields = ('session', 'shared_with',)
 
 
-#===============================================================================
+# ===============================================================================
 # ImageSelection
-#===============================================================================
+# ===============================================================================
 
 class ImageSelectionCreateForm(forms.ModelForm):
 
@@ -62,9 +62,9 @@ class ImageSelectionAutoCreateForm(forms.ModelForm):
         # exclude = ('user', 'status', 'selected_images')
 
 
-#===============================================================================
+# ===============================================================================
 # Session
-#===============================================================================
+# ===============================================================================
 
 class SessionCreateForm(forms.ModelForm):
 
@@ -77,16 +77,15 @@ class SessionUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Session
-        fields = ('name', 'session_type', 'photographer', 'customer',
-            'worked_hours', )  # 'shared_with',
-        #widgets = {
+        fields = ('name', 'session_type', 'photographer', 'customer', 'worked_hours', )  # 'shared_with',
+        # widgets = {
         #    'shared_with': CheckboxSelectMultiple(),
-        #}
+        # }
 
 
-#===============================================================================
+# ===============================================================================
 # Image
-#===============================================================================
+# ===============================================================================
 
 class ImageCreateForm(forms.ModelForm):
 
@@ -102,9 +101,9 @@ class ImageUpdateForm(forms.ModelForm):
         fields = ('session',)
 
 
-#===============================================================================
+# ===============================================================================
 # Customer
-#===============================================================================
+# ===============================================================================
 
 class CustomerCreateForm(forms.ModelForm):
 
@@ -121,9 +120,9 @@ class CustomerCreateForm(forms.ModelForm):
 CustomerUpdateForm = CustomerCreateForm
 
 
-#===============================================================================
+# ===============================================================================
 # UserPreferences
-#===============================================================================
+# ===============================================================================
 
 class UserPreferencesUpdateForm(forms.ModelForm):
     password1 = forms.CharField(
@@ -147,9 +146,9 @@ class UserPreferencesUpdateForm(forms.ModelForm):
         fields = ('send_emails', 'password1', 'password2',)
 
 
-#===============================================================================
+# ===============================================================================
 # User
-#===============================================================================
+# ===============================================================================
 
 class UserCreateForm(forms.ModelForm):
     password1 = forms.CharField(max_length=20, required=True,
@@ -200,9 +199,9 @@ class UserUpdateForm(forms.ModelForm):
         return self.cleaned_data
 
 
-#===============================================================================
+# ===============================================================================
 # SessionQuote
-#===============================================================================
+# ===============================================================================
 
 class SessionQuoteCreateForm(forms.ModelForm):
 
@@ -219,7 +218,7 @@ class SessionQuoteUpdateForm(forms.ModelForm):
     class Meta:
         model = SessionQuote
         fields = ('name', 'customer', 'image_quantity', 'cost',
-            'give_full_quality_images', 'terms')
+                  'give_full_quality_images', 'terms')
 
 
 class SessionQuoteUpdate2Form(forms.ModelForm):
@@ -229,9 +228,9 @@ class SessionQuoteUpdate2Form(forms.ModelForm):
         fields = []
 
 
-#===============================================================================
+# ===============================================================================
 # SessionQuoteAlternative
-#===============================================================================
+# ===============================================================================
 
 # inline formset + class based views -> http://haineault.com/blog/155/
 

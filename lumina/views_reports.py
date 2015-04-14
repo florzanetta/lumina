@@ -2,7 +2,6 @@
 
 import logging
 import pygal
-import random
 import pprint
 
 from collections import defaultdict
@@ -21,13 +20,14 @@ logger = logging.getLogger(__name__)
 
 def _report_1(request, ctx):
     ctx['report_title'] = 'Costo (hs) vs Monto cobtrado ($) por tipo de cliente'
-    chart = pygal.XY(# @UndefinedVariable
-        stroke=False, legend_at_bottom=True, x_title="Horas", y_title="$")
+    chart = pygal.XY(  # @UndefinedVariable
+                       stroke=False, legend_at_bottom=True, x_title="Horas", y_title="$")
     chart.title = ctx['report_title']
 
     cursor = connection.cursor()
     # FIXME: use only accepted quotes! (not canceled, or rejected by customer)
-    cursor.execute("SELECT ls.session_type_id,"
+    cursor.execute(
+        "SELECT ls.session_type_id,"
         " lst.name AS \"session_type_name\","
         " ls.worked_hours AS \"worked_hours\","
         " lsq.cost AS \"orig_cost\","
@@ -51,7 +51,7 @@ def _report_1(request, ctx):
     logger.info("group_by_session_type: %s", pprint.pformat(group_by_session_type))
 
     for a_session_type, items in group_by_session_type.iteritems():
-        values = [[0,0]] # HACK! without this, charts with 1 value doesn't show up
+        values = [[0, 0]]  # HACK! without this, charts with 1 value doesn't show up
         for item in items:
             # (horas, costo)
             hours = float(item['worked_hours'])
@@ -69,12 +69,13 @@ def _report_1(request, ctx):
 
 def _report_2(request, ctx):
     ctx['report_title'] = 'Presupuestos expandidos (en el tiempo)'
-    chart = pygal.StackedBar(legend_at_bottom=True, y_title="$", x_label_rotation=20)  #@UndefinedVariable
+    chart = pygal.StackedBar(legend_at_bottom=True, y_title="$", x_label_rotation=20)  # @UndefinedVariable
     chart.title = ctx['report_title']
 
     cursor = connection.cursor()
     # FIXME: use only accepted quotes! (not canceled, or rejected by customer)
-    cursor.execute("SELECT "
+    cursor.execute(
+        "SELECT "
         " lsq.created AS \"date_for_report\","
         " lsq.cost AS \"orig_cost\","
         " lsqa.cost AS \"selected_quote_alternative_cost\","
@@ -96,7 +97,7 @@ def _report_2(request, ctx):
     group_by_date = defaultdict(list)
     for item in values_as_dict:
         group_by_date[(item['date_for_report'].year,
-            item['date_for_report'].month)].append(item)
+                       item['date_for_report'].month)].append(item)
     dates = group_by_date.keys()
     dates.sort()
 
@@ -127,12 +128,13 @@ def _report_2(request, ctx):
 
 def _report_3(request, ctx):
     ctx['report_title'] = 'Presupuestos expandidos (por cliente)'
-    chart = pygal.StackedBar(legend_at_bottom=True, y_title="$")  #@UndefinedVariable
+    chart = pygal.StackedBar(legend_at_bottom=True, y_title="$")  # @UndefinedVariable
     chart.title = ctx['report_title']
 
     cursor = connection.cursor()
     # FIXME: use only accepted quotes! (not canceled, or rejected by customer)
-    cursor.execute("SELECT "
+    cursor.execute(
+        "SELECT "
         " lsq.created AS \"date_for_report\","
         " lsq.cost AS \"orig_cost\","
         " lsqa.cost AS \"selected_quote_alternative_cost\","
@@ -182,12 +184,13 @@ def _report_3(request, ctx):
 
 def _report_4(request, ctx):
     ctx['report_title'] = 'Ingresos ($) por tipo de cliente'
-    chart = pygal.Pie(legend_at_bottom=True)  #@UndefinedVariable
+    chart = pygal.Pie(legend_at_bottom=True)  # @UndefinedVariable
     chart.title = ctx['report_title']
-        
+
     cursor = connection.cursor()
     # FIXME: use only accepted quotes! (not canceled, or rejected by customer)
-    cursor.execute("SELECT "
+    cursor.execute(
+        "SELECT "
         " lsq.created AS \"date_for_report\","
         " lsq.cost AS \"orig_cost\","
         " lsqa.cost AS \"selected_quote_alternative_cost\","
@@ -227,9 +230,8 @@ def _report_4(request, ctx):
         # labels.append(customer)
         serie_cost.append(acum_cost)
         serie_alt_quote.append(acum_alt_quote)
-        
-        chart.add("{} ($ {})".format(customer, acum_cost + acum_alt_quote),
-            acum_cost + acum_alt_quote)
+
+        chart.add("{} ($ {})".format(customer, acum_cost + acum_alt_quote), acum_cost + acum_alt_quote)
 
     chart.print_values = True
     ctx['svg_chart'] = chart.render()
@@ -255,7 +257,7 @@ def view_report(request, report_id):
         _report_4(request, ctx)
 
     else:
-        raise(SuspiciousOperation())
+        raise (SuspiciousOperation())
 
     return render_to_response(
         'lumina/reports/report_generic.html', ctx,

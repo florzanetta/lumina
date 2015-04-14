@@ -12,9 +12,9 @@ from django.core.exceptions import PermissionDenied, ValidationError, \
 from django.contrib.auth.models import AbstractUser, UserManager
 
 
-#===============================================================================
+# ===============================================================================
 # LuminaUser
-#===============================================================================
+# ===============================================================================
 
 class LuminaUserManager(UserManager):
     """
@@ -120,9 +120,9 @@ class LuminaUser(AbstractUser):
         return u"{} ({})".format(self.get_full_name(), self.username)
 
 
-#===============================================================================
+# ===============================================================================
 # UserPreference
-#===============================================================================
+# ===============================================================================
 
 class UserPreferences(models.Model):
     send_emails = models.BooleanField(default=True, verbose_name="Enviar emails")
@@ -135,9 +135,9 @@ class UserPreferences(models.Model):
             return u"User preferences"
 
 
-#===============================================================================
+# ===============================================================================
 # Studio
-#===============================================================================
+# ===============================================================================
 
 class StudioManager(models.Manager):
     """
@@ -166,9 +166,9 @@ class Studio(models.Model):
         return u"Studio {0}".format(self.name)
 
 
-#===============================================================================
+# ===============================================================================
 # Customer
-#===============================================================================
+# ===============================================================================
 
 class CustomerManager(models.Manager):
     """
@@ -234,9 +234,9 @@ class Customer(models.Model):
         return u"Customer {0}".format(self.name)
 
 
-#===============================================================================
+# ===============================================================================
 # Session
-#===============================================================================
+# ===============================================================================
 
 class SessionManager(models.Manager):
     """
@@ -341,9 +341,9 @@ class Session(models.Model):
         return self.quotes.get()
 
 
-#===============================================================================
+# ===============================================================================
 # SharedSessionByEmail
-#===============================================================================
+# ===============================================================================
 
 class SharedSessionByEmailManager(models.Manager):
     """
@@ -397,9 +397,9 @@ class SharedSessionByEmail(models.Model):
                                    " or doesn't exists".format(image_id, self.id)))
 
 
-#===============================================================================
+# ===============================================================================
 # ImageSelection
-#===============================================================================
+# ===============================================================================
 
 class ImageSelectionManager(models.Manager):
     """
@@ -509,9 +509,9 @@ class ImageSelection(models.Model):
                 raise ValidationError(msg)
 
 
-#===============================================================================
+# ===============================================================================
 # Image
-#===============================================================================
+# ===============================================================================
 
 class ImageManager(models.Manager):
     """
@@ -528,7 +528,7 @@ class ImageManager(models.Manager):
         else:
             raise(Exception("User isn't PHOTOG. neither CUSTOMER - user: {}".format(user.id)))
 
-    #===============================================================================
+    # ===============================================================================
     #     # F-I-X-M-E: REFACTOR: refactor this (if needed)
     #     def all_previsualisable(self, user):
     #         """
@@ -542,7 +542,7 @@ class ImageManager(models.Manager):
     #         q = q | Q(album__shared_with=user)
     #         q = q | Q(album__imageselection__customer=user)
     #         return self.filter(q).distinct()
-    #===============================================================================
+    # ===============================================================================
 
     def get_for_download(self, user, image_id):
         """
@@ -578,8 +578,8 @@ class ImageManager(models.Manager):
 
             # Tha image was selected by the user?
             return self.filter(imageselection__customer=user.user_for_customer,
-                            imageselection__status=ImageSelection.STATUS_IMAGES_SELECTED,
-                            imageselection__selected_images=image_id).distinct().get(id=image_id)
+                               imageselection__status=ImageSelection.STATUS_IMAGES_SELECTED,
+                               imageselection__selected_images=image_id).distinct().get(id=image_id)
 
         raise(Exception())
 
@@ -590,24 +590,21 @@ class Image(models.Model):
     """
     # See: https://docs.djangoproject.com/en/1.5/ref/models/fields/#filefield
     # See: https://docs.djangoproject.com/en/1.5/topics/files/
-    image = models.FileField(upload_to='images/%Y/%m/%d', max_length=300, verbose_name="imagen",
-        null=True, blank=True)
+    image = models.FileField(upload_to='images/%Y/%m/%d', max_length=300, verbose_name="imagen", null=True, blank=True)
     size = models.PositiveIntegerField(verbose_name="tamaño", null=True, blank=True)
     original_filename = models.CharField(max_length=128, verbose_name="nombre de archivo original",
-        null=True, blank=True)
-    content_type = models.CharField(max_length=64, verbose_name="tipo de contenido",
-        null=True, blank=True)
+                                         null=True, blank=True)
+    content_type = models.CharField(max_length=64, verbose_name="tipo de contenido", null=True, blank=True)
 
     thumbnail_image = models.FileField(upload_to='images/%Y/%m/%d', max_length=300,
-        verbose_name="previsualizacion", null=True, blank=True)
-    thumbnail_size = models.PositiveIntegerField(
-        verbose_name="tamaño de la previsualizacion", null=True, blank=True)
+                                       verbose_name="previsualizacion", null=True, blank=True)
+    thumbnail_size = models.PositiveIntegerField(verbose_name="tamaño de la previsualizacion", null=True, blank=True)
     thumbnail_original_filename = models.CharField(max_length=128,
-        verbose_name="nombre de archivo (en cliente) de previsualizacion",
-        null=True, blank=True)
+                                                   verbose_name="nombre de archivo (en cliente) de previsualizacion",
+                                                   null=True, blank=True)
     thumbnail_content_type = models.CharField(max_length=64,
-        verbose_name="tipo de contenido de previsualizacion",
-        null=True, blank=True)
+                                              verbose_name="tipo de contenido de previsualizacion",
+                                              null=True, blank=True)
 
     # REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
     studio = models.ForeignKey(Studio, verbose_name="estudio")
@@ -643,9 +640,9 @@ class Image(models.Model):
         self.thumbnail_original_filename = filename[0:128]
 
 
-#===============================================================================
+# ===============================================================================
 # SessionQuote
-#===============================================================================
+# ===============================================================================
 
 class SessionQuoteManager(models.Manager):
     """
@@ -731,8 +728,7 @@ class SessionQuote(models.Model):
     #    actual_down_payment = models.DecimalField(max_digits=10, decimal_places=2,
     #        verbose_name="entrega inicial realizada")
 
-    give_full_quality_images = models.BooleanField(default=True,
-        verbose_name="Entrega JPGs de máxima calidad")
+    give_full_quality_images = models.BooleanField(default=True, verbose_name="Entrega JPGs de máxima calidad")
 
     session = models.ForeignKey(
         Session, related_name='quotes', null=True, blank=True, verbose_name="Sesión")
@@ -947,9 +943,9 @@ class SessionQuoteAlternative(models.Model):
         ordering = ["image_quantity"]
 
 
-#===============================================================================
+# ===============================================================================
 # CustomerType
-#===============================================================================
+# ===============================================================================
 
 class CustomerType(models.Model):
     name = models.CharField(max_length=100, verbose_name="tipo de cliente")
@@ -959,9 +955,9 @@ class CustomerType(models.Model):
         return self.name
 
 
-#===============================================================================
+# ===============================================================================
 # SessionType
-#===============================================================================
+# ===============================================================================
 
 class SessionType(models.Model):
     name = models.CharField(max_length=100, verbose_name="tipo de sesión")
@@ -971,9 +967,9 @@ class SessionType(models.Model):
         return self.name
 
 
-#===============================================================================
+# ===============================================================================
 # PreviewSize
-#===============================================================================
+# ===============================================================================
 
 class PreviewSize(models.Model):
     max_size = models.PositiveIntegerField(verbose_name="Tamaño máximo", null=True, blank=True)

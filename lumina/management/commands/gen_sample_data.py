@@ -26,12 +26,13 @@ class Command(BaseCommand):
             customer = random.choice(photographer.studio.customers.all())
             cost = random.randint(500, 5000)
             stipulated_date = datetime.datetime(today.year + 1, random.randint(1, 12),
-                random.randint(1, 28))
+                                                random.randint(1, 28))
             created = datetime.datetime(random.randint(today.year - 1, today.year),
-                random.randint(1, 12), random.randint(1, 28))
+                                        random.randint(1, 12), random.randint(1, 28))
             image_quantity = random.randint(1, 50) * 5
 
-            quote = SessionQuote.objects.create(studio=photographer.studio,
+            quote = SessionQuote.objects.create(
+                studio=photographer.studio,
                 customer=customer,
                 image_quantity=image_quantity,
                 cost=cost,
@@ -45,7 +46,8 @@ class Command(BaseCommand):
 
             quote.confirm(photographer)
 
-            sqa = SessionQuoteAlternative.objects.create(session_quote=quote,
+            sqa = SessionQuoteAlternative.objects.create(
+                session_quote=quote,
                 image_quantity=int(image_quantity * 1.5),
                 cost=decimal.Decimal(int(cost * 1.2)))
 
