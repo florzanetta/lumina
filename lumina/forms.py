@@ -245,10 +245,13 @@ class SessionQuoteUpdate2Form(forms.ModelForm):
 
 # SessionQuoteAlternativeFormSet = modelformset_factory(SessionQuoteAlternative)
 
+# FIXME: 'exclude' was added empty to fix the unittests, because now
+# it's required, buy we sould check what to pass to 'exclude'
 SessionQuoteAlternativeFormSet = inlineformset_factory(SessionQuote,
                                                        SessionQuoteAlternative,
                                                        can_delete=True,
-                                                       extra=3)
+                                                       extra=3,
+                                                       exclude=[])
 
 
 class SessionQuoteAlternativeCreateForm(forms.ModelForm):
