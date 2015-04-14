@@ -2,10 +2,14 @@
 # http://about.travis-ci.org/docs/user/languages/python/
 #
 language: python
+
 python:
- - "2.7"
+ - "3.4"
+
 install:
  - "pip install -q -r requirements-travis-ci.txt --use-mirrors"
-#before_script:
+
+# before_script:
 # - "pep8 --show-source --statistics --max-line-length=100 --exclude=lumina/migrations --show-source lumina"
-script: "python manage.py test -v 2 lumina"
+
+script: "./checks.sh"
