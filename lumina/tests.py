@@ -4,7 +4,7 @@ import os
 
 from mock import Mock
 from PIL import Image as PilImage
-from StringIO import StringIO
+from io import StringIO
 
 from django.test import TestCase
 from django.test.utils import override_settings

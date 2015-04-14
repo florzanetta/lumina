@@ -75,11 +75,11 @@ class LuminaSeleniumTests(LiveServerTestCase):
         try:
             level0_obj = json.loads(debug_dump_of_objects)
         except:
-            print "-" * 70
-            print debug_dump_of_objects
-            print "-" * 70
+            print("-" * 70)
+            print(debug_dump_of_objects)
+            print("-" * 70)
             raise
-        for key, value in level0_obj.iteritems():
+        for key, value in level0_obj.items():
             try:
                 dumped_objects[key] = json.loads(value)
             except:
@@ -111,7 +111,7 @@ class LuminaSeleniumTests(LiveServerTestCase):
             try:
                 self.assertEqual(user[0]['fields']['username'], username)
             except:
-                print dump_of_objects
+                print(dump_of_objects)
                 raise
 
     def _go_home(self):

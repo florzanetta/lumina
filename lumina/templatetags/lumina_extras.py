@@ -45,11 +45,11 @@ class DumpObjectsNode(template.Node):
                     objects[var_name] = serializers.serialize('json', var, indent=2)
                 else:
                     objects[var_name] = serializers.serialize('json', [var], indent=2)
-            except AttributeError, ae:
+            except AttributeError as ae:
                 if ae.args[0].endswith("object has no attribute '_meta'"):
                     try:
                         objects[var_name] = json.dumps([var])
-                    except TypeError, te:
+                    except TypeError as te:
                         if te.args[0].endswith("is not JSON serializable"):
                             objects[var_name] = str(var)
                         else:
@@ -82,16 +82,15 @@ def dump_objects(parser, token):
 
 @register.filter(name='non_empty_unicode_keys')
 def non_empty_unicode_keys(a_dict):
-    return [unicode(k) for k in a_dict.keys() if a_dict[k]]
+    return [str(k) for k in list(a_dict.keys()) if a_dict[k]]
 
 
 @register.filter(name='full_name_with_username')
 def full_name_with_username(user):
     if not user:
-        return u''
+        return ''
 
-    return u"{0} ({1})".format(user.get_full_name(),
-                               user.username)
+    return "{0} ({1})".format(user.get_full_name(), user.username)
 
 
 # ===============================================================================

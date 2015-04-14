@@ -3,13 +3,15 @@
 import datetime
 import decimal
 
-from types import NoneType
-
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied, ValidationError, \
     SuspiciousOperation
 from django.contrib.auth.models import AbstractUser, UserManager
+
+
+# py3
+NoneType = type(None)
 
 
 # ===============================================================================
@@ -117,7 +119,7 @@ class LuminaUser(AbstractUser):
                                          user_for_customer__studio=self.studio)
 
     def __unicode__(self):
-        return u"{} ({})".format(self.get_full_name(), self.username)
+        return "{} ({})".format(self.get_full_name(), self.username)
 
 
 # ===============================================================================
@@ -130,9 +132,9 @@ class UserPreferences(models.Model):
 
     def __unicode__(self):
         if self.user:
-            return u"User preferences for {}".format(self.user.get_full_name())
+            return "User preferences for {}".format(self.user.get_full_name())
         else:
-            return u"User preferences"
+            return "User preferences"
 
 
 # ===============================================================================
@@ -163,7 +165,7 @@ class Studio(models.Model):
     objects = StudioManager()
 
     def __unicode__(self):
-        return u"Studio {0}".format(self.name)
+        return "Studio {0}".format(self.name)
 
 
 # ===============================================================================
@@ -231,7 +233,7 @@ class Customer(models.Model):
     objects = CustomerManager()
 
     def __unicode__(self):
-        return u"Customer {0}".format(self.name)
+        return "Customer {0}".format(self.name)
 
 
 # ===============================================================================
@@ -316,7 +318,7 @@ class Session(models.Model):
                 raise ValidationError('Ha seleccionado un cliente distinto al del presupuesto')
 
     def __unicode__(self):
-        return u"Session {0}".format(self.name)
+        return "Session {0}".format(self.name)
 
     def get_absolute_url(self):
         return reverse('session_detail', kwargs={'pk': self.pk})
@@ -382,7 +384,7 @@ class SharedSessionByEmail(models.Model):
     objects = SharedSessionByEmailManager()
 
     def __unicode__(self):
-        return u"Session {0} shared by email to {1}".format(self.session.name, self.shared_with)
+        return "Session {0} shared by email to {1}".format(self.session.name, self.shared_with)
 
     def get_image_from_session(self, image_id):
         """
@@ -462,8 +464,8 @@ class ImageSelection(models.Model):
     STATUS_WAITING = 'W'
     STATUS_IMAGES_SELECTED = 'S'
     STATUS = (
-        (STATUS_WAITING, u'Esperando selección de cliente'),
-        (STATUS_IMAGES_SELECTED, u'Seleccion realizada'),
+        (STATUS_WAITING, 'Esperando selección de cliente'),
+        (STATUS_IMAGES_SELECTED, 'Seleccion realizada'),
     )
 
     # REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
@@ -492,7 +494,7 @@ class ImageSelection(models.Model):
     objects = ImageSelectionManager()
 
     def __unicode__(self):
-        return u"ImageSelection p/{0}".format(self.session.name)
+        return "ImageSelection p/{0}".format(self.session.name)
 
     def get_selected_images_without_full_quality(self):
         return self.selected_images.filter(image='')
@@ -618,7 +620,7 @@ class Image(models.Model):
     objects = ImageManager()
 
     def __unicode__(self):
-        return u"Image {0}".format(self.original_filename)
+        return "Image {0}".format(self.original_filename)
 
     def get_absolute_url(self):
         return reverse('image_update', kwargs={'pk': self.pk})
@@ -698,11 +700,11 @@ class SessionQuote(models.Model):
     STATUS_REJECTED = 'R'
     STATUS_CANCELED = 'E'
     STATUS = (
-        (STATUS_QUOTING, u'Siendo creado por fotografo'),
-        (STATUS_WAITING_CUSTOMER_RESPONSE, u'Esperando aceptacion de cliente'),
-        (STATUS_ACCEPTED, u'Aceptado por el cliente'),
-        (STATUS_REJECTED, u'Rechazado por el cliente'),
-        (STATUS_CANCELED, u'Cancelado por fotografo'),
+        (STATUS_QUOTING, 'Siendo creado por fotografo'),
+        (STATUS_WAITING_CUSTOMER_RESPONSE, 'Esperando aceptacion de cliente'),
+        (STATUS_ACCEPTED, 'Aceptado por el cliente'),
+        (STATUS_REJECTED, 'Rechazado por el cliente'),
+        (STATUS_CANCELED, 'Cancelado por fotografo'),
     )
 
     name = models.CharField(max_length=300, verbose_name="nombre")
@@ -925,7 +927,7 @@ class SessionQuote(models.Model):
         return new_session
 
     def __unicode__(self):
-        return u"Quote for {}".format(str(self.customer))
+        return "Quote for {}".format(str(self.customer))
 
 
 class SessionQuoteAlternative(models.Model):
@@ -980,4 +982,4 @@ class PreviewSize(models.Model):
         ordering = ["max_size"]
 
     def __unicode__(self):
-        return u"{0}x{0}".format(self.max_size)
+        return "{0}x{0}".format(self.max_size)

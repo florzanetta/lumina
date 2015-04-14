@@ -308,7 +308,7 @@ GOOGLE_CONSUMER_SECRET = ''
 
 try:
     from lumina.local_settings import *  # @UnusedWildImport
-except ImportError, e:
+except ImportError as e:
     import warnings
     warnings.warn("Couldn't import from 'lumina.local_settings': %s" % e.args[0], stacklevel=0)
     TWITTER_CONSUMER_KEY = ''

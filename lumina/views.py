@@ -8,7 +8,7 @@ import uuid
 import decimal
 import zipfile
 
-from StringIO import StringIO
+from io import StringIO
 
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
@@ -380,7 +380,7 @@ class ImageSelectionUploadPendingView(DetailView):
 
     def post(self, request, pk, *args, **kwargs):
         image_selection = self.get_queryset().get(pk=pk)
-        for just_uploaded_key, a_file in request.FILES.iteritems():
+        for just_uploaded_key, a_file in request.FILES.items():
             assert just_uploaded_key.startswith('file_for_')
             splitted_key = just_uploaded_key.split('_')
             assert len(splitted_key) == 3
@@ -400,8 +400,8 @@ class ImageSelectionUploadPendingView(DetailView):
         cnt = ImageSelection.objects.get(pk=pk).get_selected_images_without_full_quality().count()
         if cnt == 0:
             messages.success(self.request,
-                             u'Se finalizó la carga. Todas las imagenes seleccionadas por el cliente '
-                             u'poseen la versión en calidad total.')
+                             'Se finalizó la carga. Todas las imagenes seleccionadas por el cliente '
+                             'poseen la versión en calidad total.')
             # TODO: send email to customer telling the files are ready to be downloaded
             return HttpResponseRedirect(reverse('imageselection_redirect',
                                                 args=[pk]))
@@ -438,7 +438,7 @@ class ImageSelectionCreateView(CreateView):
         subject = "Solicitud de seleccion de imagenes"
         link = self.request.build_absolute_uri(
             reverse('session_detail', args=[form.instance.session.id]))
-        message = u"Tiene una nueva solicitud para seleccionar fotografías.\n" + \
+        message = "Tiene una nueva solicitud para seleccionar fotografías.\n" + \
                   "Para verlo ingrese a {}".format(link)
         for customer_user in form.instance.customer.users.all():
             to_email = customer_user.email
@@ -1153,7 +1153,7 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
             if 'default_button' in self.request.POST:  # Submit for 'Update'
                 return super(SessionQuoteUpdateView, self).form_valid(form)
 
-        delete_alternative = [k for k in self.request.POST.keys()
+        delete_alternative = [k for k in list(self.request.POST.keys())
                               if k.startswith('delete_alternative_')]
 
         if delete_alternative:

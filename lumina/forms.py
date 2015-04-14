@@ -126,11 +126,11 @@ CustomerUpdateForm = CustomerCreateForm
 
 class UserPreferencesUpdateForm(forms.ModelForm):
     password1 = forms.CharField(
-        max_length=20, required=False, widget=forms.PasswordInput(), label=u'Contrasena',
+        max_length=20, required=False, widget=forms.PasswordInput(), label='Contrasena',
         help_text="Ingrese la nueva contraseña (si desea cambiarla)")
     password2 = forms.CharField(
         max_length=20, required=False, widget=forms.PasswordInput(),
-        label=u'Contrasena (otra vez)',
+        label='Contrasena (otra vez)',
         help_text="Repita la nueva contraseña (si desea cambiarla)")
 
     def clean(self):
@@ -153,10 +153,10 @@ class UserPreferencesUpdateForm(forms.ModelForm):
 class UserCreateForm(forms.ModelForm):
     password1 = forms.CharField(max_length=20, required=True,
                                 widget=forms.PasswordInput(),
-                                label=u'Contrasena')
+                                label='Contrasena')
     password2 = forms.CharField(max_length=20, required=True,
                                 widget=forms.PasswordInput(),
-                                label=u'Contrasena (otra vez)')
+                                label='Contrasena (otra vez)')
 
     class Meta:
         model = LuminaUser
@@ -176,11 +176,11 @@ class UserCreateForm(forms.ModelForm):
 
 class UserUpdateForm(forms.ModelForm):
     password1 = forms.CharField(
-        max_length=20, required=False, widget=forms.PasswordInput(), label=u'Contrasena',
+        max_length=20, required=False, widget=forms.PasswordInput(), label='Contrasena',
         help_text="Ingrese la nueva contraseña (si desea cambiarla)")
     password2 = forms.CharField(
         max_length=20, required=False, widget=forms.PasswordInput(),
-        label=u'Contrasena (otra vez)',
+        label='Contrasena (otra vez)',
         help_text="Repita la nueva contraseña (si desea cambiarla)")
 
     class Meta:

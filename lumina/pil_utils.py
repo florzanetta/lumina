@@ -1,4 +1,4 @@
-from cStringIO import StringIO
+from io import StringIO
 from PIL import Image as PilImage
 
 from django.core.files.storage import default_storage
