@@ -3,7 +3,7 @@ Django==1.5.1
 South==0.8.1
 psycopg2==2.5
 # images
-Pillow==2.0.0
+Pillow==2.8.1
 # dev & testing
 mock==1.0.1
 coverage==3.6
@@ -18,6 +18,14 @@ python-openid==2.2.5
 django-social-auth==0.7.25
 django-mailer==0.1.0
 django-autocomplete-light==1.4.3
-django-cities-light==2.1.0
+django-cities-light==3.1.2
 django-localflavor==1.0
 pygal==1.1.0
+## The following requirements were added by pip --freeze:
+Unidecode==0.4.17
+argparse==1.2.1
+django-autoslug==1.7.2
+six==1.9.0
+wsgiref==0.1.2
+## The following requirements were added by pip --freeze:
+lxml==3.4.2
