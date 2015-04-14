@@ -18,7 +18,7 @@ echo ""
 echo "Running test cases..."
 echo ""
 
-env RUN_SELENIUM=${RUN_SELENIUM:-1} python manage.py test --liveserver=localhost:8082 -v 2 lumina
+env RUN_SELENIUM=${RUN_SELENIUM:-0} python manage.py test --liveserver=localhost:8082 -v 2 lumina
 if [ "$?" -ne 0 ] ; then
 	echo ""
 	echo "ERROR:"
