@@ -268,6 +268,17 @@ LOGGING = {
 GOOGLE_CONSUMER_KEY = ''
 GOOGLE_CONSUMER_SECRET = ''
 
+
+if os.environ.get("LUMINA_TEST_SKIP_MIGRATIONS", "0") == "1":
+    NOT_USED = "lumina_migrations_not_used_in_tests"
+    MIGRATION_MODULES = {"lumina": NOT_USED,
+                         "contenttypes": NOT_USED,
+                         "admin": NOT_USED,
+                         "auth": NOT_USED,
+                         "sessions": NOT_USED,
+                         }
+
+
 try:
     from lumina.local_settings import *  # noqa
 except ImportError as e:
