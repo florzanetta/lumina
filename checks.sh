@@ -4,7 +4,7 @@ echo ""
 echo "Checking pep8..."
 echo ""
 
-pep8 --show-source --statistics --max-line-length=100 --exclude=lumina/migrations --show-source lumina
+pep8 --show-source --statistics --max-line-length=120 --exclude=lumina/migrations --show-source lumina
 if [ "$?" -ne 0 ] ; then
 	echo ""
 	echo "ERROR:"
