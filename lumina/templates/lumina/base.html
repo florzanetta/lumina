@@ -183,9 +183,11 @@
                                                     {% endif %}
 
                                                     <li><a href="{% url 'logout' %}">Salir</a></li>
-													{% if 'twitter' in social_auth|non_empty_unicode_keys %}
+                                                    <!--
+													{ % if 'twitter' in social_auth|non_empty_unicode_keys % }
 												          <li><img alt="Logged in with Twitter" src="/static/twitter-icon-16x16.jpg"></li> 
-													{% endif %}
+                                                    { % endif % }
+													-->
 
 				                        {% else	%} <!-- user.is_authenticated == False -->
 				

@@ -286,7 +286,7 @@ urlpatterns = patterns(
     #
     # django-social-auth
     #
-    url(r'^social_auth/', include('social_auth.urls')),
+    # url(r'^social_auth/', include('social_auth.urls')), # LUMINA_NOSOCIAL
 
     #
     # autocomplete_light

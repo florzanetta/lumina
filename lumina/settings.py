@@ -132,7 +132,7 @@ TEMPLATES = [
                 "django.core.context_processors.media",
                 "django.core.context_processors.static",
                 "django.core.context_processors.tz",
-                "social_auth.context_processors.social_auth_by_name_backends",
+                # "social_auth.context_processors.social_auth_by_name_backends", # LUMINA_NOSOCIAL
             ],
         },
     },
@@ -155,8 +155,8 @@ INSTALLED_APPS = (
     'autocomplete_light',
     'lumina',
     'mailer',
-    'social',
-    'social_auth',
+    # 'social', # LUMINA_NOSOCIAL
+    # 'social_auth', # LUMINA_NOSOCIAL
 )
 
 
@@ -173,9 +173,9 @@ DEFAULT_FILE_STORAGE = 'lumina.django_files_storage.TestImagesFallbackStorage'
 
 
 AUTHENTICATION_BACKENDS = (
-    'social_auth.backends.twitter.TwitterBackend',
+    # 'social_auth.backends.twitter.TwitterBackend', # LUMINA_NOSOCIAL
     #    'social_auth.backends.facebook.FacebookBackend',
-    'social_auth.backends.google.GoogleOAuthBackend',
+    # 'social_auth.backends.google.GoogleOAuthBackend', # LUMINA_NOSOCIAL
     #    'social_auth.backends.google.GoogleOAuth2Backend',
     #    'social_auth.backends.google.GoogleBackend',
     #    'social_auth.backends.yahoo.YahooBackend',
