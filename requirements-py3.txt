@@ -1,16 +1,19 @@
 # django & co
 Django==1.8
-South==1.0.2
 psycopg2==2.6
+
 # images
 Pillow==2.8.1
+
 # dev & testing
 mock==1.0.1
 coverage==3.7.1
 selenium==2.45.0
 pep8==1.6.2
+
 # uwsgi
 uWSGI==2.0.10
+
 # pygal
 pygal==1.7.0
 

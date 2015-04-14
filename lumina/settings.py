@@ -35,9 +35,9 @@ AUTH_USER_MODEL = 'lumina.LuminaUser'
 
 DATETIME_FORMAT = 'd/m/Y - H:i'
 
-SOUTH_MIGRATION_MODULES = {
-    'social_auth': 'ignore',
-}
+# SOUTH_MIGRATION_MODULES = {
+#     'social_auth': 'ignore',
+# }
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -45,8 +45,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-# http://south.readthedocs.org/en/latest/settings.html#south-tests-migrate
-SOUTH_TESTS_MIGRATE = False
+# # http://south.readthedocs.org/en/latest/settings.html#south-tests-migrate
+# SOUTH_TESTS_MIGRATE = False
 
 DATABASES = {
     'default': {
@@ -180,7 +180,7 @@ INSTALLED_APPS = (
     'lumina',
     'mailer',
     'social_auth',
-    'south',
+    # 'south',
 )
 
 #
