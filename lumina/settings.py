@@ -269,7 +269,7 @@ GOOGLE_CONSUMER_KEY = ''
 GOOGLE_CONSUMER_SECRET = ''
 
 try:
-    from lumina.local_settings import *  # @UnusedWildImport
+    from lumina.local_settings import *  # noqa
 except ImportError as e:
     import warnings
     warnings.warn("Couldn't import from 'lumina.local_settings': %s" % e.args[0], stacklevel=0)

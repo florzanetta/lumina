@@ -2,18 +2,18 @@
 
 import os
 
-from mock import Mock
-from PIL import Image as PilImage
-from io import StringIO
+# from mock import Mock
+# from PIL import Image as PilImage
+# from io import StringIO
 
 from django.test import TestCase
-from django.test.utils import override_settings
-from django.core.urlresolvers import reverse
-from django.contrib.auth import authenticate
+# from django.test.utils import override_settings
+# from django.core.urlresolvers import reverse
+# from django.contrib.auth import authenticate
 from lumina.models import SessionQuote, Studio, LuminaUser, \
     SessionQuoteAlternative
 import decimal
-from lumina.forms import SessionQuoteAlternativeFormSet
+# from lumina.forms import SessionQuoteAlternativeFormSet
 import datetime
 
 # from lumina.pil_utils import generate_thumbnail
@@ -575,4 +575,4 @@ class SessionQuoteModelTests(TestCase):
 # ===============================================================================
 
 if os.environ.get("RUN_SELENIUM", '0') == '1':
-    from lumina.tests_selenium import *  # @UnusedWildImport
+    from lumina.tests_selenium import *  # noqa

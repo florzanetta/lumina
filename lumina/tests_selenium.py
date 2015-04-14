@@ -161,3 +161,6 @@ class LuminaSeleniumTests(LiveServerTestCase):
 
 if os.environ.get("RUN_SELENIUM", '0') != '1':
     del LuminaSeleniumTests
+
+    class LuminaSeleniumTests():
+        pass

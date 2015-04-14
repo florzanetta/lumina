@@ -6,7 +6,7 @@ echo ""
 echo "Checking pep8..."
 echo ""
 
-pep8 --config=.pep8 --show-source --statistics lumina
+env RUN_SELENIUM=1 pep8 --config=.pep8 --show-source --statistics lumina
 EXIT_STATUS=$?
 if [ "$EXIT_STATUS" -ne 0 ] ; then
 	echo ""
@@ -21,7 +21,7 @@ echo ""
 echo "Checking flake8... (flake8 doesn't cancels commits right now)"
 echo ""
 
-flake8 --config=.flake8 lumina
+env RUN_SELENIUM=1 flake8 --config=.flake8 lumina
 
 if [ "$PRE_COMMIT" != "1" ] ; then
 

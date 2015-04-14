@@ -1,4 +1,4 @@
-from lumina.settings import *  # @UnusedWildImport
+from lumina.settings import *  # noqa
 
 DEBUG = False
 TEMPLATE_DEBUG = False

@@ -1,9 +1,5 @@
 
 [pep8]
-exclude = lumina/migrations/*
+exclude = lumina/migrations
 max-line-length = 119
-
-#ignore = E226,E302,E41
-#max-complexity = 10
-
 
