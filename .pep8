@@ -1,0 +1,5 @@
+
+[pep8]
+exclude = lumina/migrations
+max-line-length = 119
+

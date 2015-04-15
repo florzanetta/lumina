@@ -40,7 +40,7 @@ def _report_1(request, ctx):
         " WHERE ls.worked_hours > 0 AND ls.studio_id = %s", [request.user.studio.id])
     desc = cursor.description
     values_as_dict = [
-        dict(zip([col[0] for col in desc], row))
+        dict(list(zip([col[0] for col in desc], row)))
         for row in cursor.fetchall()
     ]
 
@@ -50,7 +50,7 @@ def _report_1(request, ctx):
 
     logger.info("group_by_session_type: %s", pprint.pformat(group_by_session_type))
 
-    for a_session_type, items in group_by_session_type.iteritems():
+    for a_session_type, items in list(group_by_session_type.items()):
         values = [[0, 0]]  # HACK! without this, charts with 1 value doesn't show up
         for item in items:
             # (horas, costo)
@@ -88,7 +88,7 @@ def _report_2(request, ctx):
         " WHERE ls.studio_id = %s", [request.user.studio.id])
     desc = cursor.description
     values_as_dict = [
-        dict(zip([col[0] for col in desc], row))
+        dict(list(zip([col[0] for col in desc], row)))
         for row in cursor.fetchall()
     ]
 
@@ -98,7 +98,7 @@ def _report_2(request, ctx):
     for item in values_as_dict:
         group_by_date[(item['date_for_report'].year,
                        item['date_for_report'].month)].append(item)
-    dates = group_by_date.keys()
+    dates = list(group_by_date.keys())
     dates.sort()
 
     logger.info("group_by_date: %s", pprint.pformat(group_by_date))
@@ -147,14 +147,14 @@ def _report_3(request, ctx):
         " WHERE ls.studio_id = %s", [request.user.studio.id])
     desc = cursor.description
     values_as_dict = [
-        dict(zip([col[0] for col in desc], row))
+        dict(list(zip([col[0] for col in desc], row)))
         for row in cursor.fetchall()
     ]
 
     group_by_customer = defaultdict(list)
     for item in values_as_dict:
         group_by_customer[item['customer']].append(item)
-    customers = group_by_customer.keys()
+    customers = list(group_by_customer.keys())
     customers.sort()
 
     logger.info("group_by_customer: %s", pprint.pformat(group_by_customer))
@@ -204,14 +204,14 @@ def _report_4(request, ctx):
         " WHERE ls.studio_id = %s", [request.user.studio.id])
     desc = cursor.description
     values_as_dict = [
-        dict(zip([col[0] for col in desc], row))
+        dict(list(zip([col[0] for col in desc], row)))
         for row in cursor.fetchall()
     ]
 
     group_by_customer_type = defaultdict(list)
     for item in values_as_dict:
         group_by_customer_type[item['customer_type']].append(item)
-    customer_types = group_by_customer_type.keys()
+    customer_types = list(group_by_customer_type.keys())
     customer_types.sort()
 
     logger.info("group_by_customer: %s", pprint.pformat(group_by_customer_type))
@@ -257,7 +257,7 @@ def view_report(request, report_id):
         _report_4(request, ctx)
 
     else:
-        raise (SuspiciousOperation())
+        raise SuspiciousOperation()
 
     return render_to_response(
         'lumina/reports/report_generic.html', ctx,

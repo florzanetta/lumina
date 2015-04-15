@@ -1,8 +1,3 @@
-'''
-Created on Jun 2, 2013
-
-@author: Horacio G. de Oro
-'''
 import os
 import subprocess
 import json
@@ -13,8 +8,6 @@ from django.conf import settings
 __all__ = [
     'LuminaSeleniumTests',
 ]
-
-# https://docs.djangoproject.com/en/1.5/topics/testing/overview/#django.test.LiveServerTestCase
 
 
 def _get_webdriver():
@@ -75,11 +68,11 @@ class LuminaSeleniumTests(LiveServerTestCase):
         try:
             level0_obj = json.loads(debug_dump_of_objects)
         except:
-            print "-" * 70
-            print debug_dump_of_objects
-            print "-" * 70
+            print("-" * 70)
+            print(debug_dump_of_objects)
+            print("-" * 70)
             raise
-        for key, value in level0_obj.iteritems():
+        for key, value in list(level0_obj.items()):
             try:
                 dumped_objects[key] = json.loads(value)
             except:
@@ -111,7 +104,7 @@ class LuminaSeleniumTests(LiveServerTestCase):
             try:
                 self.assertEqual(user[0]['fields']['username'], username)
             except:
-                print dump_of_objects
+                print(dump_of_objects)
                 raise
 
     def _go_home(self):
@@ -158,3 +151,9 @@ class LuminaSeleniumTests(LiveServerTestCase):
         self._wait_until_render_done()
         objs = self._get_dump_of_objects()
         self._assert_user_in_dump_of_objects(objs, None)
+
+if os.environ.get("RUN_SELENIUM", '0') != '1':
+    del LuminaSeleniumTests
+
+    class LuminaSeleniumTests(object):
+        pass

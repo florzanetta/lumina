@@ -1,32 +1,31 @@
 # -*- coding: utf-8 -*-
 
+import decimal
 import os
 
-from mock import Mock
-from PIL import Image as PilImage
-from StringIO import StringIO
+# from mock import Mock
+# from PIL import Image as PilImage
+# from io import StringIO
 
 from django.test import TestCase
-from django.test.utils import override_settings
-from django.core.urlresolvers import reverse
-from django.contrib.auth import authenticate
+# from django.test.utils import override_settings
+# from django.core.urlresolvers import reverse
+# from django.contrib.auth import authenticate
+from django.utils import timezone
+
 from lumina.models import SessionQuote, Studio, LuminaUser, \
     SessionQuoteAlternative
-import decimal
-from lumina.forms import SessionQuoteAlternativeFormSet
-import datetime
-
+# from lumina.forms import SessionQuoteAlternativeFormSet
 # from lumina.pil_utils import generate_thumbnail
-# from lumina.models import Image, Album, LuminaUser
 
 
 MEDIA_ROOT_FOR_TESTING = os.path.join(os.path.split(
-    os.path.abspath(__file__))[0], '../test/test-images')
+    os.path.abspath(__file__))[0], 'test-images')
 
 
 # def get_test_image_path():
 #    test_images_dir = os.path.join(os.path.split(os.path.abspath(__file__))[0],
-#        '../test/test-images')
+#        'test-images')
 #    image_path = os.path.join(test_images_dir, '8902217876_de6e699066.jpg')
 #    return image_path
 
@@ -372,7 +371,7 @@ class SessionQuoteModelTests(TestCase):
                                             customer=self.user_for_customer.user_for_customer,
                                             image_quantity=10,
                                             cost=12.34,
-                                            stipulated_date=datetime.datetime.now(),
+                                            stipulated_date=timezone.now(),
                                             stipulated_down_payment=0.0)
         return quote
 
@@ -568,11 +567,3 @@ class SessionQuoteModelTests(TestCase):
                             "with uesr {}".format(self.photographer))
         except AssertionError:
             pass
-
-
-#===============================================================================
-# Selenium
-#===============================================================================
-
-if os.environ.get("RUN_SELENIUM", '0') == '1':
-    from lumina.tests_selenium import *  # @UnusedWildImport

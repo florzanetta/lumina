@@ -8,7 +8,7 @@ import uuid
 import decimal
 import zipfile
 
-from StringIO import StringIO
+from io import StringIO
 
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
@@ -124,21 +124,21 @@ def home(request):
 @cache_control(private=True)
 def check_404(request):
     logger.info("Raising ObjectDoesNotExist()")
-    raise (ObjectDoesNotExist())
+    raise ObjectDoesNotExist()
 
 
 @login_required
 @cache_control(private=True)
 def check_500(request):
     logger.info("Raising Exception()")
-    raise (Exception())
+    raise Exception()
 
 
 @login_required
 @cache_control(private=True)
 def check_403(request):
     logger.info("Raising PermissionDenied()")
-    raise (PermissionDenied())
+    raise PermissionDenied()
 
 
 def _image_thumb(request, image, max_size=None):
@@ -380,7 +380,7 @@ class ImageSelectionUploadPendingView(DetailView):
 
     def post(self, request, pk, *args, **kwargs):
         image_selection = self.get_queryset().get(pk=pk)
-        for just_uploaded_key, a_file in request.FILES.iteritems():
+        for just_uploaded_key, a_file in list(request.FILES.items()):
             assert just_uploaded_key.startswith('file_for_')
             splitted_key = just_uploaded_key.split('_')
             assert len(splitted_key) == 3
@@ -400,8 +400,8 @@ class ImageSelectionUploadPendingView(DetailView):
         cnt = ImageSelection.objects.get(pk=pk).get_selected_images_without_full_quality().count()
         if cnt == 0:
             messages.success(self.request,
-                             u'Se finalizó la carga. Todas las imagenes seleccionadas por el cliente '
-                             u'poseen la versión en calidad total.')
+                             'Se finalizó la carga. Todas las imagenes seleccionadas por el cliente '
+                             'poseen la versión en calidad total.')
             # TODO: send email to customer telling the files are ready to be downloaded
             return HttpResponseRedirect(reverse('imageselection_redirect',
                                                 args=[pk]))
@@ -438,7 +438,7 @@ class ImageSelectionCreateView(CreateView):
         subject = "Solicitud de seleccion de imagenes"
         link = self.request.build_absolute_uri(
             reverse('session_detail', args=[form.instance.session.id]))
-        message = u"Tiene una nueva solicitud para seleccionar fotografías.\n" + \
+        message = "Tiene una nueva solicitud para seleccionar fotografías.\n" + \
                   "Para verlo ingrese a {}".format(link)
         for customer_user in form.instance.customer.users.all():
             to_email = customer_user.email
@@ -496,7 +496,7 @@ def image_selection_create_from_quote(request, pk):
         else:
             messages.error(request, 'ERROR')
     else:
-        raise (SuspiciousOperation("Invalid HTTP method"))
+        raise SuspiciousOperation("Invalid HTTP method")
 
     ctx = {
         'object': session,
@@ -566,7 +566,7 @@ class ImageSelectionForCustomerView(DetailView):
 
         if invalid_ids:
             # This was an attempt to submit ids for images on other's albums!
-            raise (SuspiciousOperation("Invalid ids: {}".format(','.join(invalid_ids))))
+            raise SuspiciousOperation("Invalid ids: {}".format(','.join(invalid_ids)))
 
         images_by_id = dict([(img.id, img) for img in images])
         for img_id in selected_images_ids:
@@ -612,7 +612,7 @@ class ImageSelectionDetailView(DetailView):
         if self.request.user.is_photographer():
             # Show all to the photographer
             if image_selection.session.studio != self.request.user.studio:
-                raise (SuspiciousOperation())
+                raise SuspiciousOperation()
             ctx['images_to_show'] = image_selection.session.image_set.all()
             ctx['selected_images'] = image_selection.selected_images.all()
 
@@ -633,7 +633,7 @@ class ImageSelectionDetailView(DetailView):
         elif self.request.user.is_for_customer():
             # Show only selected images to customer
             if image_selection.session.customer != self.request.user.user_for_customer:
-                raise (SuspiciousOperation())
+                raise SuspiciousOperation
             ctx['images_to_show'] = image_selection.selected_images.all()
 
             # Check if all the selected images are avaiable in full-quality
@@ -651,14 +651,14 @@ class ImageSelectionDetailView(DetailView):
                                  'Algunas imagenes todavía no estan disponibles para ser bajadas en calidad total')
 
         else:
-            raise (SuspiciousOperation())
+            raise SuspiciousOperation()
 
         return ctx
 
 
-#===============================================================================
+# ===============================================================================
 # Session
-#===============================================================================
+# ===============================================================================
 
 class SessionListView(ListView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
@@ -704,7 +704,7 @@ class SessionDetailView(DetailView):
         #        session.delete(self.request.user)
         #        return HttpResponseRedirect(reverse('quote_update', args=[session.id]))
 
-        raise (SuspiciousOperation())
+        raise SuspiciousOperation()
 
     def get_queryset(self):
         return Session.objects.visible_sessions(self.request.user)
@@ -783,7 +783,7 @@ def session_upload_previews_upload(request, session_id):
     session = request.user.studio.session_set.all().get(pk=session_id)
     while True:
         key = "img" + str(index)
-        if not key in request.POST:
+        if key not in request.POST:
             break
         img_count += 1
         index += 1
@@ -812,9 +812,9 @@ def session_upload_previews_upload(request, session_id):
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
-#===============================================================================
+# ===============================================================================
 # Image
-#===============================================================================
+# ===============================================================================
 
 class ImageListView(ListView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
@@ -910,9 +910,9 @@ class ImageUpdateView(UpdateView):
         return context
 
 
-#===============================================================================
+# ===============================================================================
 # Customer
-#===============================================================================
+# ===============================================================================
 
 class CustomerListView(ListView):
     model = Customer
@@ -963,9 +963,9 @@ class CustomerUpdateView(UpdateView):
         return context
 
 
-#===============================================================================
+# ===============================================================================
 # User
-#===============================================================================
+# ===============================================================================
 
 class UserListView(ListView):
     model = LuminaUser
@@ -1044,9 +1044,9 @@ class UserUpdateView(UpdateView):
         return context
 
 
-#===============================================================================
+# ===============================================================================
 # UserPreference
-#===============================================================================
+# ===============================================================================
 
 class UserPreferenceUpdateView(UpdateView):
     model = UserPreferences
@@ -1072,9 +1072,9 @@ class UserPreferenceUpdateView(UpdateView):
         return context
 
 
-#===============================================================================
+# ===============================================================================
 # SessionQuote
-#===============================================================================
+# ===============================================================================
 
 class SessionQuoteCreateUpdateMixin():
     def _setup_form(self, form):
@@ -1133,7 +1133,7 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
             # ro
             return SessionQuoteUpdate2Form
         else:
-            raise (SuspiciousOperation())
+            raise SuspiciousOperation()
 
     def get_form(self, form_class):
         form = super(SessionQuoteUpdateView, self).get_form(form_class)
@@ -1153,7 +1153,7 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
             if 'default_button' in self.request.POST:  # Submit for 'Update'
                 return super(SessionQuoteUpdateView, self).form_valid(form)
 
-        delete_alternative = [k for k in self.request.POST.keys()
+        delete_alternative = [k for k in list(self.request.POST.keys())
                               if k.startswith('delete_alternative_')]
 
         if delete_alternative:
@@ -1167,7 +1167,7 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
             return HttpResponseRedirect(reverse('quote_update', args=[self.object.id]))
 
         # FIXME: add an error messages and do a redirect instead of this
-        raise (SuspiciousOperation())
+        raise SuspiciousOperation()
 
     def get_context_data(self, **kwargs):
         context = super(SessionQuoteUpdateView, self).get_context_data(**kwargs)
@@ -1260,7 +1260,7 @@ class SessionQuoteDetailView(DetailView):
             return HttpResponseRedirect(reverse('session_update', args=[new_session.id]))
 
         else:
-            raise (SuspiciousOperation())
+            raise SuspiciousOperation()
 
     def get_context_data(self, **kwargs):
         context = super(SessionQuoteDetailView, self).get_context_data(**kwargs)
@@ -1270,7 +1270,7 @@ class SessionQuoteDetailView(DetailView):
             # The photographer did not finished the Quote
             if self.request.user.is_for_customer():
                 # The customer shouln't see this Quote
-                raise (SuspiciousOperation())
+                raise SuspiciousOperation()
             else:
                 buttons.append({'name': 'button_update',
                                 'submit_label': "Editar", })
@@ -1330,7 +1330,7 @@ class SessionQuoteDetailView(DetailView):
                                 'submit_label': "Archivar", })
 
         else:
-            raise (Exception("Invalid 'status': {}".format(self.object.status)))
+            raise Exception("Invalid 'status': {}".format(self.object.status))
 
         context['selected_quote'] = self.object.get_selected_quote()
         context['extra_buttons'] = buttons
@@ -1371,7 +1371,7 @@ class SessionQuoteAlternativeSelectView(DetailView):
             elif quote.status == SessionQuote.STATUS_ACCEPTED:
                 quote.update_quote_alternative(request.user, params)
             else:
-                raise (SuspiciousOperation())
+                raise SuspiciousOperation()
 
             messages.success(self.request,
                              'El presupuesto fue aceptado correctamente')
@@ -1387,7 +1387,7 @@ class SessionQuoteAlternativeSelectView(DetailView):
                                                 args=[quote.id]))
 
         else:
-            raise (SuspiciousOperation())
+            raise SuspiciousOperation()
 
     def get_context_data(self, **kwargs):
         context = super(SessionQuoteAlternativeSelectView, self).get_context_data(**kwargs)
@@ -1395,7 +1395,7 @@ class SessionQuoteAlternativeSelectView(DetailView):
         context['available_alternatives'] = self.object.get_valid_alternatives()
 
         if not self.request.user.is_for_customer():
-            raise (Exception("The user is not a customer! User: {}".format(self.request.user)))
+            raise Exception("The user is not a customer! User: {}".format(self.request.user))
 
         if self.object.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE:
             pass
@@ -1407,7 +1407,7 @@ class SessionQuoteAlternativeSelectView(DetailView):
             context['selected_quote'] = selected_quote
 
         else:
-            raise (Exception("Invalid 'status': {}".format(self.object.status)))
+            raise Exception("Invalid 'status': {}".format(self.object.status))
 
         _put_session_statuses_in_context(context)
 

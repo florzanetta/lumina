@@ -36,7 +36,7 @@ class ImageSelectionCreateForm(forms.ModelForm):
     def clean_image_quantity(self):
         data = self.cleaned_data['image_quantity']
         if data <= 0:
-            raise(forms.ValidationError("La cantidad de imagenes debe ser mayor a 0"))
+            raise forms.ValidationError("La cantidad de imagenes debe ser mayor a 0")
 
         # Always return the cleaned data, whether you have changed it or not.
         return data
@@ -52,7 +52,7 @@ class ImageSelectionAutoCreateForm(forms.ModelForm):
     def clean_preview_size(self):
         preview_size = self.cleaned_data['preview_size']
         if not preview_size:
-            raise(forms.ValidationError("Debe seleccionar un tamaño de visualizacion"))
+            raise forms.ValidationError("Debe seleccionar un tamaño de visualizacion")
 
         return preview_size
 
@@ -126,11 +126,11 @@ CustomerUpdateForm = CustomerCreateForm
 
 class UserPreferencesUpdateForm(forms.ModelForm):
     password1 = forms.CharField(
-        max_length=20, required=False, widget=forms.PasswordInput(), label=u'Contrasena',
+        max_length=20, required=False, widget=forms.PasswordInput(), label='Contrasena',
         help_text="Ingrese la nueva contraseña (si desea cambiarla)")
     password2 = forms.CharField(
         max_length=20, required=False, widget=forms.PasswordInput(),
-        label=u'Contrasena (otra vez)',
+        label='Contrasena (otra vez)',
         help_text="Repita la nueva contraseña (si desea cambiarla)")
 
     def clean(self):
@@ -153,10 +153,10 @@ class UserPreferencesUpdateForm(forms.ModelForm):
 class UserCreateForm(forms.ModelForm):
     password1 = forms.CharField(max_length=20, required=True,
                                 widget=forms.PasswordInput(),
-                                label=u'Contrasena')
+                                label='Contrasena')
     password2 = forms.CharField(max_length=20, required=True,
                                 widget=forms.PasswordInput(),
-                                label=u'Contrasena (otra vez)')
+                                label='Contrasena (otra vez)')
 
     class Meta:
         model = LuminaUser
@@ -176,11 +176,11 @@ class UserCreateForm(forms.ModelForm):
 
 class UserUpdateForm(forms.ModelForm):
     password1 = forms.CharField(
-        max_length=20, required=False, widget=forms.PasswordInput(), label=u'Contrasena',
+        max_length=20, required=False, widget=forms.PasswordInput(), label='Contrasena',
         help_text="Ingrese la nueva contraseña (si desea cambiarla)")
     password2 = forms.CharField(
         max_length=20, required=False, widget=forms.PasswordInput(),
-        label=u'Contrasena (otra vez)',
+        label='Contrasena (otra vez)',
         help_text="Repita la nueva contraseña (si desea cambiarla)")
 
     class Meta:
@@ -245,10 +245,13 @@ class SessionQuoteUpdate2Form(forms.ModelForm):
 
 # SessionQuoteAlternativeFormSet = modelformset_factory(SessionQuoteAlternative)
 
+# FIXME: 'exclude' was added empty to fix the unittests, because now
+# it's required, buy we sould check what to pass to 'exclude'
 SessionQuoteAlternativeFormSet = inlineformset_factory(SessionQuote,
                                                        SessionQuoteAlternative,
                                                        can_delete=True,
-                                                       extra=3)
+                                                       extra=3,
+                                                       exclude=[])
 
 
 class SessionQuoteAlternativeCreateForm(forms.ModelForm):

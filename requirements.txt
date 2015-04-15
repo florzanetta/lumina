@@ -1,31 +1,45 @@
 # django & co
-Django==1.5.1
-South==0.8.1
-psycopg2==2.5
+Django==1.8
+pytz==2015.2
+psycopg2==2.6
+
 # images
 Pillow==2.8.1
+
 # dev & testing
 mock==1.0.1
-coverage==3.6
-selenium==2.33.0
-pep8==1.4.5
+coverage==3.7.1
+selenium==2.45.0
+pep8==1.6.2
+
 # uwsgi
-uWSGI==1.9.11
-# django-social-auth
-httplib2==0.8
-oauth2==1.5.211
-python-openid==2.2.5
-django-social-auth==0.7.25
-django-mailer==0.1.0
-django-autocomplete-light==1.4.3
-django-cities-light==3.1.2
-django-localflavor==1.0
-pygal==1.1.0
-## The following requirements were added by pip --freeze:
-Unidecode==0.4.17
-argparse==1.2.1
-django-autoslug==1.7.2
+uWSGI==2.0.10
+
+# pygal
+pygal==1.7.0
+
+# --- django-mailer (just in case we overwrite this file with contents of freeze)
+# git+https://github.com/pinax/django-mailer.git@88436a1318ad4e14d6dd3f8ac6256059af43a2f0#egg=django-mailer
+git+https://github.com/pinax/django-mailer.git@88436a1318ad4e14d6dd3f8ac6256059af43a2f0#egg=django-mailer 
+
+# django-localflavor
+django-localflavor==1.1
+
+# django-autocomplete-light
+django-autocomplete-light==2.0.9
 six==1.9.0
-wsgiref==0.1.2
-## The following requirements were added by pip --freeze:
-lxml==3.4.2
+
+# --- django-social-auth (just in case we overwrite this file with contents of freeze)
+# git+https://github.com/omab/django-social-auth.git@699571a3b6d84aa2c25ffce59daa4c7f3559a0e4#egg=django-social-auth
+#git+https://github.com/omab/django-social-auth.git@699571a3b6d84aa2c25ffce59daa4c7f3559a0e4#egg=django-social-auth
+#PyJWT==1.0.1
+#defusedxml==0.4.1
+#oauthlib==0.7.2
+#python3-openid==3.0.5
+#requests==2.6.0
+#requests-oauthlib==0.4.2
+
+# flake8
+#flake8==2.4.0
+#mccabe==0.3
+#pyflakes==0.8.1

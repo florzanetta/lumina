@@ -1,31 +1,43 @@
 #!/bin/sh
 
+cd $(dirname $0)
+
 echo ""
 echo "Checking pep8..."
 echo ""
 
-pep8 --show-source --statistics --max-line-length=120 --exclude=lumina/migrations --show-source lumina
-if [ "$?" -ne 0 ] ; then
+env RUN_SELENIUM=1 pep8 --config=.pep8 --show-source --statistics lumina
+EXIT_STATUS=$?
+if [ "$EXIT_STATUS" -ne 0 ] ; then
 	echo ""
 	echo "ERROR:"
 	echo ""
 	echo " pep8 failed"
 	echo ""
-	exit 1
+	exit $EXIT_STATUS
 fi
 
-echo ""
-echo "Running test cases..."
-echo ""
+# echo ""
+# echo "Checking flake8... (flake8 doesn't cancels commits right now)"
+# echo ""
+#
+# env RUN_SELENIUM=1 flake8 --config=.flake8 lumina
 
-env RUN_SELENIUM=1 python manage.py test --liveserver=localhost:8082 -v 2 lumina
-if [ "$?" -ne 0 ] ; then
+if [ "$PRE_COMMIT" != "1" ] ; then
+
 	echo ""
-	echo "ERROR:"
+	echo "Running test cases..."
 	echo ""
-	echo " Test failed"
-	echo ""
-	exit 1
+	env RUN_SELENIUM=${RUN_SELENIUM:-0} LUMINA_TEST_SKIP_MIGRATIONS=${LUMINA_TEST_SKIP_MIGRATIONS:-1} python manage.py test --liveserver=localhost:8082 $TEST_PARAMS lumina
+	EXIT_STATUS=$?
+	if [ "$EXIT_STATUS" -ne 0 ] ; then
+		echo ""
+		echo "ERROR:"
+		echo ""
+		echo " Test failed"
+		echo ""
+		exit $EXIT_STATUS
+	fi
+
 fi
 
-echo "Ready to push..."
