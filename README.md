@@ -47,15 +47,19 @@ Setup of database
 By default, a Sqlite on `~/lumina.sqlite` will be used. To create it, run:
 
     $ python manage.py syncdb
-    $ python manage.py migrate
 
-To apply the migrations, run:
 
-    $ python manage.py migrate lumina
+How to create and apply database migrations
+-------------------------------------------
 
 To generate migrations automatically from model changes:
 
     $ python manage.py schemamigration lumina --auto
+
+
+To apply the migrations, run:
+
+    $ python manage.py migrate lumina
 
 
 Reset of the database and uploads
