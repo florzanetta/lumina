@@ -28,7 +28,7 @@ if [ "$PRE_COMMIT" != "1" ] ; then
 	echo ""
 	echo "Running test cases..."
 	echo ""
-	env RUN_SELENIUM=${RUN_SELENIUM:-0} LUMINA_TEST_SKIP_MIGRATIONS=${LUMINA_TEST_SKIP_MIGRATIONS:-1} python manage.py test --liveserver=localhost:8082 -v 2 lumina
+	env RUN_SELENIUM=${RUN_SELENIUM:-0} LUMINA_TEST_SKIP_MIGRATIONS=${LUMINA_TEST_SKIP_MIGRATIONS:-1} python manage.py test --liveserver=localhost:8082 $TEST_PARAMS lumina
 	EXIT_STATUS=$?
 	if [ "$EXIT_STATUS" -ne 0 ] ; then
 		echo ""
