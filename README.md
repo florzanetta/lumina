@@ -18,10 +18,10 @@ a differentiating factor to offer to their customers.
 Virtualenv
 ----------
 
-We use Python 2.7 (required by Django) and virtualenv. To generate the virtualenv,
+We use Python 3.4 (required by Django) and virtualenv. To generate the virtualenv,
 in the root directory of the working copy, execute:
 
-    $ virtualenv -p python2.7 virtualenv
+    $ virtualenv -p python3.4 virtualenv
 
 To activate the virtualenv:
 
@@ -31,10 +31,20 @@ And to install the dependencies:
 
     $ pip install -r requirements.txt 
 
+Local config
+------------
+
+Create a `lumina_local_settings.py` in the root of the proyect, with the following content:
+
+    from lumina.settings_dev import *
+
+    SECRET_KEY = 'some-random-secret-key'
+
+
 Setup of database
 -----------------
 
-By default, a Sqlite on '~/lumina.sqlite' will be used. To create it, run:
+By default, a Sqlite on `~/lumina.sqlite` will be used. To create it, run:
 
     $ python manage.py syncdb
     $ python manage.py migrate
@@ -51,8 +61,8 @@ To generate migrations automatically from model changes:
 Reset of the database and uploads
 ---------------------------------
 
-To reset the data (delete uploads, reset database and create an 'admin', user to login
-with username 'admin' and password 'admin'):
+To reset the data (delete uploads, reset database and create an `admin`, user to login
+with username `admin` and password `admin`):
 
     rm -rf ~/lumina.sqlite ~/lumina/uploads
     python manage.py syncdb --noinput
@@ -85,6 +95,7 @@ Defaults settings
     MEDIA_ROOT = os.path.expanduser('~/lumina/uploads/')
 
 
+<!--
 Data for `cities_light` app
 ---------------------------
 
@@ -94,6 +105,8 @@ the full list of city/state/country from internet, you need to run:
     $ python manage.py cities_light
 
 Clic [here](https://github.com/yourlabs/django-cities-light) for more info about `django-cities-light`.
+-->
+
 
 Testing
 -------
@@ -101,10 +114,6 @@ Testing
 To **execute the tests**, run:
 
     $ python manage.py test --liveserver=localhost:8082 lumina
-
-or:
-
-    $ python manage.py test --liveserver=localhost:8082 lumina -v 2
 
 To include Selenium tests define the env variable **RUN_SELENIUM=1**:
 
@@ -127,29 +136,6 @@ To re-generate **fixtures** for testing, run:
 
 (remember to execute this with a **CLEAN** database: see *Reset of the database and uploads*).
 
-You can ignore the error `UserWarning: Couldn't import from 'lumina_local_settings': No module named lumina_local_settings`.
-If you create a settings files for your environment, it won't appear anymore:
-
-    $ touch lumina_local_settings.py
-
-
-Travis-CI
----------
-
-Travis-CI will:
-
-1) check the source code for PEP8, which can be tested locally with:
-
-    $ pep8 --show-source --statistics --max-line-length=100 --exclude=lumina/migrations --show-source lumina
-
-2) run the tests, excluding Selenium tests:
-
-    $ manage.py test lumina -v 2
-
-The *checks.sh* shell script does that (a little more, since it runs Selenium tests):
-
-    $ ./checks.sh
-
 
 Git hooks
 ---------
@@ -166,7 +152,7 @@ Licence
     #===============================================================================
     #    lumina - Photography management software targeted to professional users to
     #        simplyfies their workflow, saves time and optimizes communication.
-    #    Copyright (C) 2013 Horacio Guillermo de Oro <hgdeoro@gmail.com> and 
+    #    Copyright (C) 2013-2015 Horacio Guillermo de Oro <hgdeoro@gmail.com> and
     #    Florencia Zanetta <florzanetta@gmail.com>
     #
     #    This program is free software: you can redistribute it and/or modify
