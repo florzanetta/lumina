@@ -17,11 +17,11 @@ if [ "$EXIT_STATUS" -ne 0 ] ; then
 	exit $EXIT_STATUS
 fi
 
-echo ""
-echo "Checking flake8... (flake8 doesn't cancels commits right now)"
-echo ""
-
-env RUN_SELENIUM=1 flake8 --config=.flake8 lumina
+# echo ""
+# echo "Checking flake8... (flake8 doesn't cancels commits right now)"
+# echo ""
+#
+# env RUN_SELENIUM=1 flake8 --config=.flake8 lumina
 
 if [ "$PRE_COMMIT" != "1" ] ; then
 
