@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import datetime
 import decimal
 
 from django.db import models
@@ -8,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied, ValidationError, \
     SuspiciousOperation
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.utils import timezone
 
 
 # py3
@@ -801,7 +801,7 @@ class SessionQuote(models.Model):
         # change state after checks
         self.status = SessionQuote.STATUS_ACCEPTED
         self.accepted_rejected_by = user
-        self.accepted_rejected_at = datetime.datetime.now()
+        self.accepted_rejected_at = timezone.now()
 
         self.save()
         # FIXME: IMPLEMENT THIS
@@ -835,7 +835,7 @@ class SessionQuote(models.Model):
 
         # change state after checks
         self.accepted_rejected_by = user
-        self.accepted_rejected_at = datetime.datetime.now()
+        self.accepted_rejected_at = timezone.now()
 
         self.save()
         # FIXME: IMPLEMENT THIS
@@ -850,7 +850,7 @@ class SessionQuote(models.Model):
         assert self.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE
         self.status = SessionQuote.STATUS_REJECTED
         self.accepted_rejected_by = user
-        self.accepted_rejected_at = datetime.datetime.now()
+        self.accepted_rejected_at = timezone.now()
         self.save()
         # FIXME: IMPLEMENT THIS
 

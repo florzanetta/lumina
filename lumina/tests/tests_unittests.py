@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import decimal
 import os
 
 # from mock import Mock
@@ -10,14 +11,12 @@ from django.test import TestCase
 # from django.test.utils import override_settings
 # from django.core.urlresolvers import reverse
 # from django.contrib.auth import authenticate
+from django.utils import timezone
+
 from lumina.models import SessionQuote, Studio, LuminaUser, \
     SessionQuoteAlternative
-import decimal
 # from lumina.forms import SessionQuoteAlternativeFormSet
-import datetime
-
 # from lumina.pil_utils import generate_thumbnail
-# from lumina.models import Image, Album, LuminaUser
 
 
 MEDIA_ROOT_FOR_TESTING = os.path.join(os.path.split(
@@ -372,7 +371,7 @@ class SessionQuoteModelTests(TestCase):
                                             customer=self.user_for_customer.user_for_customer,
                                             image_quantity=10,
                                             cost=12.34,
-                                            stipulated_date=datetime.datetime.now(),
+                                            stipulated_date=timezone.now(),
                                             stipulated_down_payment=0.0)
         return quote
 
