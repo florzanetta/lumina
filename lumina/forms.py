@@ -7,7 +7,6 @@ Created on Jun 1, 2013
 """
 
 from django import forms
-from django.forms.models import inlineformset_factory
 
 from localflavor.ar.forms import ARCUITField
 
@@ -232,30 +231,26 @@ class SessionQuoteUpdate2Form(forms.ModelForm):
 # SessionQuoteAlternative
 # ===============================================================================
 
-# inline formset + class based views -> http://haineault.com/blog/155/
-
-# from django.forms.models import BaseModelFormSet
-# class BaseSessionQuoteAlternativeFormSet(BaseModelFormSet):
-#     def __init__(self, *args, **kwargs):
-#         super(BaseSessionQuoteAlternativeFormSet, self).__init__(*args, **kwargs)
-#         self.queryset = Author.objects.filter()
-#
-# SessionQuoteAlternativeFormSet = modelformset_factory(SessionQuoteAlternative,
-#                                                       formset=BaseSessionQuoteAlternativeFormSet)
-
-# SessionQuoteAlternativeFormSet = modelformset_factory(SessionQuoteAlternative)
-
-# FIXME: 'exclude' was added empty to fix the unittests, because now
-# it's required, buy we sould check what to pass to 'exclude'
-SessionQuoteAlternativeFormSet = inlineformset_factory(SessionQuote,
-                                                       SessionQuoteAlternative,
-                                                       can_delete=True,
-                                                       extra=3,
-                                                       exclude=[])
-
-
 class SessionQuoteAlternativeCreateForm(forms.ModelForm):
 
     class Meta:
         model = SessionQuoteAlternative
         fields = ('image_quantity', 'cost')
+
+# # inline formset + class based views -> http://haineault.com/blog/155/
+#
+# # from django.forms.models import BaseModelFormSet
+# # class BaseSessionQuoteAlternativeFormSet(BaseModelFormSet):
+# #     def __init__(self, *args, **kwargs):
+# #         super(BaseSessionQuoteAlternativeFormSet, self).__init__(*args, **kwargs)
+# #         self.queryset = Author.objects.filter()
+# #
+# # SessionQuoteAlternativeFormSet = modelformset_factory(SessionQuoteAlternative,
+# #                                                       formset=BaseSessionQuoteAlternativeFormSet)
+#
+# # SessionQuoteAlternativeFormSet = modelformset_factory(SessionQuoteAlternative)
+#
+# SessionQuoteAlternativeFormSet = inlineformset_factory(SessionQuote,
+#                                                        SessionQuoteAlternative,
+#                                                        can_delete=True,
+#                                                        extra=3)
