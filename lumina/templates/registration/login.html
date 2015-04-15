@@ -14,17 +14,7 @@
 <div class="row">
 <div class="col-xs-6 col-xs-offset-2">
 
-    <h3>Inicio de sesión</h3>
-
-    <p>&nbsp;</p>
-
-        <form method="post" action=".">
-            {% csrf_token %}
-            {% crispy form %}
-            <input type="submit" value="Login" id="submit_button" class="btn btn-primary"/>
-            <input type="hidden" name="next" value="{{ next }}" />
-        </form>
-
+    {% crispy form %}
     <hr>
 
     <!--

@@ -5,12 +5,13 @@ Created on Jun 1, 2013
 
 @author: Horacio G. de Oro
 """
-
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
+from crispy_forms import bootstrap
+from crispy_forms import helper
+from crispy_forms import layout
 from localflavor.ar.forms import ARCUITField
-from crispy_forms.helper import FormHelper
 
 from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail, \
     Image, ImageSelection, SessionQuote, SessionQuoteAlternative,\
@@ -24,8 +25,22 @@ from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail, \
 class CustomAuthenticationForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_tag = False
+        self.helper = helper.FormHelper()
+        self.helper.form_action = "login"
+        # self.helper.form_class = 'xxx-form-horizontal'
+        # self.helper.label_class = 'xxx-helper-label_class'
+        # self.helper.field_class = 'xxx-helper-field_class'
+        self.helper.layout = helper.Layout(
+            layout.Fieldset(
+                'Inicio de sesión',
+                'username',
+                'password',
+                layout.Hidden('next', '{{next}}'),
+            ),
+            bootstrap.FormActions(
+                layout.Submit('submit', 'Iniciar sesión'),
+            ),
+        )
 
 
 # ===============================================================================
