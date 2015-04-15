@@ -3,5 +3,16 @@
   apt: name={{item}} state=present
   sudo: yes
   with_items:
+    - rsync
     - python3.4
     - python-virtualenv
+
+- name: make directories
+  file: path=/home/lumina/{{item}} owner=lumina group=lumina mode=0700 state=directory
+  with_items:
+    - deploy
+    - deploy/src
+    - deploy/local
+
+- name: upload sources
+  synchronize: src=../lumina dest=/home/lumina/src
