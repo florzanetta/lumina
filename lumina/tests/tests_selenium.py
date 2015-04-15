@@ -1,8 +1,3 @@
-'''
-Created on Jun 2, 2013
-
-@author: Horacio G. de Oro
-'''
 import os
 import subprocess
 import json
@@ -13,8 +8,6 @@ from django.conf import settings
 __all__ = [
     'LuminaSeleniumTests',
 ]
-
-# https://docs.djangoproject.com/en/1.5/topics/testing/overview/#django.test.LiveServerTestCase
 
 
 def _get_webdriver():
@@ -162,5 +155,5 @@ class LuminaSeleniumTests(LiveServerTestCase):
 if os.environ.get("RUN_SELENIUM", '0') != '1':
     del LuminaSeleniumTests
 
-    class LuminaSeleniumTests():
+    class LuminaSeleniumTests(object):
         pass

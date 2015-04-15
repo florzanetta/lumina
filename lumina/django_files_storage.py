@@ -1,8 +1,3 @@
-'''
-Created on Jun 3, 2013
-
-@author: Horacio G. de Oro
-'''
 import os
 import warnings
 import logging
@@ -14,7 +9,7 @@ from django.conf import settings
 logger = logging.getLogger(__name__)
 
 MEDIA_ROOT_FOR_TESTING = os.path.join(os.path.split(
-    os.path.abspath(__file__))[0], '../test/test-images')
+    os.path.abspath(__file__))[0], 'tests/test-images')
 
 
 def _get_fallback_path(name):

@@ -21,12 +21,12 @@ import datetime
 
 
 MEDIA_ROOT_FOR_TESTING = os.path.join(os.path.split(
-    os.path.abspath(__file__))[0], '../test/test-images')
+    os.path.abspath(__file__))[0], 'test-images')
 
 
 # def get_test_image_path():
 #    test_images_dir = os.path.join(os.path.split(os.path.abspath(__file__))[0],
-#        '../test/test-images')
+#        'test-images')
 #    image_path = os.path.join(test_images_dir, '8902217876_de6e699066.jpg')
 #    return image_path
 
@@ -568,11 +568,3 @@ class SessionQuoteModelTests(TestCase):
                             "with uesr {}".format(self.photographer))
         except AssertionError:
             pass
-
-
-# ===============================================================================
-# Selenium
-# ===============================================================================
-
-if os.environ.get("RUN_SELENIUM", '0') == '1':
-    from lumina.tests_selenium import *  # noqa
