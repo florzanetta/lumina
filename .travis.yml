@@ -1,6 +1,4 @@
-#
 # http://about.travis-ci.org/docs/user/languages/python/
-#
 language: python
 
 python:
@@ -8,8 +6,11 @@ python:
 
 install:
  - "pip install -q -r requirements-travis-ci.txt --use-mirrors"
+ - "echo 'from lumina.settings_dev import *' > lumina_local_settings.py"
+ - "echo SECRET_KEY=123456789 >> lumina_local_settings.py"
 
 # before_script:
 # - "pep8 --show-source --statistics --max-line-length=100 --exclude=lumina/migrations --show-source lumina"
 
-script: "./checks.sh"
+script:
+ - "./checks.sh"
