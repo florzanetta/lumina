@@ -1,0 +1,7 @@
+---
+- name: install packages
+  apt: name={{item}} state=present
+  sudo: yes
+  with_items:
+    - python3.4
+    - python-virtualenv
