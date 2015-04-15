@@ -1,5 +1,6 @@
 # django & co
 Django==1.8
+pytz==2015.2
 psycopg2==2.6
 
 # images
