@@ -100,6 +100,7 @@ INSTALLED_APPS = (
     # 'localflavor',
     # 'cities_light',
     'autocomplete_light',
+    'crispy_forms',
     'lumina',
     'mailer',
     # 'social', # LUMINA_NOSOCIAL
@@ -177,6 +178,12 @@ GOOGLE_CONSUMER_SECRET = ''
 
 TWITTER_CONSUMER_KEY = ''
 TWITTER_CONSUMER_SECRET = ''
+
+
+# ===== Social auth =====
+
+CRISPY_TEMPLATE_PACK = "bootstrap3"
+
 
 # ===== Social auth =====
 

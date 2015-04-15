@@ -29,6 +29,9 @@ django-localflavor==1.1
 django-autocomplete-light==2.0.9
 six==1.9.0
 
+# django-crispy-forms
+django-crispy-forms==1.4.0
+
 # --- django-social-auth (just in case we overwrite this file with contents of freeze)
 # git+https://github.com/omab/django-social-auth.git@699571a3b6d84aa2c25ffce59daa4c7f3559a0e4#egg=django-social-auth
 #git+https://github.com/omab/django-social-auth.git@699571a3b6d84aa2c25ffce59daa4c7f3559a0e4#egg=django-social-auth
