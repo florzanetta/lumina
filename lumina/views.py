@@ -17,6 +17,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import login as django_login
 from django.contrib import messages
 from django.core.files.storage import default_storage
 from django.views.decorators.cache import cache_control
@@ -35,7 +36,7 @@ from lumina.forms import SessionCreateForm, SessionUpdateForm, \
     SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm, \
     ImageSelectionCreateForm, SessionQuoteCreateForm, SessionQuoteUpdateForm, \
     SessionQuoteAlternativeCreateForm, SessionQuoteUpdate2Form, \
-    UserPreferencesUpdateForm, ImageSelectionAutoCreateForm
+    UserPreferencesUpdateForm, ImageSelectionAutoCreateForm, CustomAuthenticationForm
 from lumina.mail import send_email, send_email_for_session_quote
 
 
@@ -54,6 +55,10 @@ from lumina.mail import send_email, send_email_for_session_quote
 #
 
 logger = logging.getLogger(__name__)
+
+
+def login(request):
+    return django_login(request, authentication_form=CustomAuthenticationForm)
 
 
 def _photographer_home(request):

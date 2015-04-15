@@ -1,5 +1,6 @@
 {% extends "lumina/base.html" %}
 {% load lumina_extras %}
+{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,49 +11,33 @@
 
 {% block content %}
 
-<h3>Inicio de sesión</h3>
+<div class="row">
+<div class="col-xs-6 col-xs-offset-2">
 
-{% if form.errors %}
-	<div class="alert alert-error">
-		<button type="button" class="close" data-dismiss="alert">&times;</button>
-		<h4>Error!</h4>
-		Your username and password didn't match. Please try again.
-	</div>
-{% endif %}
+    <h3>Inicio de sesión</h3>
 
-<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
-{% csrf_token %}
-<table>
-<tr>
-    <td style="padding-left: 4em; padding-right: 1em; text-align: right;">{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td style="padding-left: 4em; padding-right: 1em; text-align: right;">{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-<tr>
-    <td> &nbsp; </td>
-    <td><input type="submit" value="Login" id="submit_button" class="btn btn-primary"/></td>
-</tr>
-</table>
+    <p>&nbsp;</p>
 
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
+        <form method="post" action=".">
+            {% csrf_token %}
+            {% crispy form %}
+            <input type="submit" value="Login" id="submit_button" class="btn btn-primary"/>
+            <input type="hidden" name="next" value="{{ next }}" />
+        </form>
 
-<p>&nbsp;</p>
+    <hr>
 
-<hr>
+    <!--
+    <h3>Social auth</h3>
 
-<!--
-<h3>Social auth</h3>
+    <a href="{ % url 'socialauth_begin' 'twitter' % }"><img
+        src="/static/sign-in-with-twitter-gray.png" alt="Login with Twitter"/></a>.
+    -->
 
-<a href="{ % url 'socialauth_begin' 'twitter' % }"><img
-    src="/static/sign-in-with-twitter-gray.png" alt="Login with Twitter"/></a>.
--->
+    {% dump_objects %}
 
-{% dump_objects %}
-
+</div>
+</div>
 {% endblock content %}
 
 {% block javascript_bottom %} 

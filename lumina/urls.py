@@ -278,7 +278,7 @@ urlpatterns = patterns(
     url(r'^admin/check/404$', 'lumina.views.check_404', name='check_404'),
     url(r'^admin/check/500$', 'lumina.views.check_500', name='check_500'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
+    url(r'^accounts/login/$', 'lumina.views.login', name='login'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
         {'next_page': '/', },
         name='logout',),

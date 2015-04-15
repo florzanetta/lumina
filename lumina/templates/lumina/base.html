@@ -205,7 +205,7 @@
             {% else	%} <!-- user.is_authenticated == False -->
 
                   <!-- Items de drop-down  -->
-                  <li><a href="{% url 'django.contrib.auth.views.login' %}?next=/">Iniciar sesión</a></li>
+                  <li><a href="{% url 'login' %}?next=/">Iniciar sesión</a></li>
 
             {% endif %}
 
