@@ -49,6 +49,7 @@ MEDIA_URL = ''
 STATIC_ROOT = ''
 
 MIDDLEWARE_CLASSES = (
+    # ----- Django 1.8 defaults
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -57,6 +58,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    # ----- Python Social Auth
+    # FIXME: enable and configure 'SocialAuthExceptionMiddleware'
+    #  - See: http://python-social-auth.readthedocs.org/en/latest/configuration/django.html#exceptions-middleware
+    # ----- Lumina
     # 'lumina.middleware.LoggingMiddleware',
 )
 
@@ -81,6 +86,9 @@ TEMPLATES = [
                 "django.core.context_processors.media",
                 "django.core.context_processors.static",
                 "django.core.context_processors.tz",
+                # ----- Python Social Auth
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
             ],
         },
     },
@@ -102,11 +110,17 @@ INSTALLED_APPS = (
     'crispy_forms',
     'lumina',
     'mailer',
+    'social.apps.django_app.default',
 )
 
 LOGIN_REDIRECT_URL = 'home'
 
 AUTHENTICATION_BACKENDS = (
+    'social.backends.open_id.OpenIdAuth',
+    'social.backends.google.GoogleOpenId',
+    'social.backends.google.GoogleOAuth2',
+    'social.backends.google.GoogleOAuth',
+    'social.backends.twitter.TwitterOAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -150,6 +164,86 @@ SELENIUM_WEBDRIVER_BIN = (
     '/usr/lib/chromium-browser/chromedriver',
 )
 
+
+# ===== Python Social Auth =====
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
+SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email']
+
+SOCIAL_AUTH_USER_MODEL = AUTH_USER_MODEL
+
+# http://python-social-auth.readthedocs.org/en/latest/pipeline.html
+SOCIAL_AUTH_PIPELINE = (
+    # Get the information we can about the user and return it in a simple
+    # format to create the user instance later. On some cases the details are
+    # already part of the auth response from the provider, but sometimes this
+    # could hit a provider API.
+    'social.pipeline.social_auth.social_details',
+
+    # Get the social uid from whichever service we're authing thru. The uid is
+    # the unique identifier of the given user in the provider.
+    'social.pipeline.social_auth.social_uid',
+
+    # Verifies that the current auth process is valid within the current
+    # project, this is were emails and domains whitelists are applied (if
+    # defined).
+    'social.pipeline.social_auth.auth_allowed',
+
+    # Checks if the current social-account is already associated in the site.
+    'social.pipeline.social_auth.social_user',
+
+    # ----- Lumina: don't create new users
+    # # Make up a username for this person, appends a random string at the end if
+    # # there's any collision.
+    # 'social.pipeline.user.get_username',
+
+    # Send a validation email to the user to verify its email address.
+    # Disabled by default.
+    # 'social.pipeline.mail.mail_validation',
+
+    # Associates the current social details with another user account with
+    # a similar email address. Disabled by default.
+    # 'social.pipeline.social_auth.associate_by_email',
+
+    # ----- Lumina: don't create new users
+    # # Create a user account if we haven't found one yet.
+    # 'social.pipeline.user.create_user',
+
+    # Create the record that associated the social account with this user.
+    'social.pipeline.social_auth.associate_user',
+
+    # Populate the extra_data field in the social record with the values
+    # specified by settings (and the default ones like access_token, etc).
+    'social.pipeline.social_auth.load_extra_data',
+
+    # Update the user record with any changed info from the auth service.
+    'social.pipeline.user.user_details'
+)
+
+DEFAULT_DISCONNECT_PIPELINE = (
+    # Verifies that the social association can be disconnected from the current
+    # user (ensure that the user login mechanism is not compromised by this
+    # disconnection).
+    'social.pipeline.disconnect.allowed_to_disconnect',
+
+    # Collects the social associations to disconnect.
+    'social.pipeline.disconnect.get_entries',
+
+    # Revoke any access_token when possible.
+    'social.pipeline.disconnect.revoke_tokens',
+
+    # Removes the social associations.
+    'social.pipeline.disconnect.disconnect'
+)
+
+# SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/logged-in/'
+# SOCIAL_AUTH_LOGIN_ERROR_URL = '/login-error/'
+# SOCIAL_AUTH_LOGIN_URL = '/login-url/'
+# SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/new-users-redirect-url/'
+# SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/new-association-redirect-url/'
+# SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = '/account-disconnected-redirect-url/'
+# SOCIAL_AUTH_INACTIVE_USER_URL = '/inactive-user/'
 
 # ===== Crispy forms =====
 

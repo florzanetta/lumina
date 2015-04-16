@@ -271,6 +271,12 @@ urlpatterns = patterns(
 
     url(r'^rest/', include('lumina.urls_rest')),
 
+    # ===========================================================================
+    # Python Social Auth
+    # ===========================================================================
+
+    url(r'^social/', include('social.apps.django_app.urls', namespace='social')),
+
     #
     # Other
     #
