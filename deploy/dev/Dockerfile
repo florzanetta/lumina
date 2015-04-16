@@ -27,8 +27,10 @@ RUN chown -R lumina.lumina /home/lumina/.ssh && chmod 0700 /home/lumina/.ssh && 
 
 RUN echo 'lumina ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/lumina
 
+RUN rm /etc/apt/apt.conf.d/docker-clean
+
 VOLUME /var/lib/apt
 VOLUME /var/cache/apt
-VOLUME /home/lumina/deploy/.pip-cache
+VOLUME /home/lumina/deploy
 
 CMD ["/usr/sbin/sshd", "-D"]

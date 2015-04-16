@@ -1,4 +1,8 @@
 ---
+- name: update apt
+  apt: update_cache=yes cache_valid_time=604800
+  sudo: yes
+
 - name: install packages
   apt: name={{item}} state=present
   sudo: yes
@@ -9,10 +13,34 @@
 
 - name: make directories
   file: path=/home/lumina/{{item}} owner=lumina group=lumina mode=0700 state=directory
+  sudo: yes
   with_items:
+    - .pip
     - deploy
     - deploy/src
     - deploy/local
+    - deploy/.pip-cache
+
+- name: setup pip
+  ini_file: >
+    dest=/home/lumina/.pip/pip.conf
+    section=install
+    option='download-cache'
+    value='/home/lumina/deploy/.pip-cache'
 
 - name: upload sources
-  synchronize: src=../lumina dest=/home/lumina/src
+  synchronize: >
+    src=../lumina/lumina/
+    dest=/home/lumina/deploy/src
+    rsync_opts=--exclude=.git
+
+- name: create virtualenv
+  command: virtualenv -p python3.4 /home/lumina/deploy/virtualenv creates=/home/lumina/deploy/virtualenv/bin/python
+
+- name: setup virtualenv
+  pip: >
+    requirements=/home/lumina/deploy/src/lumina/requirements.txt
+    virtualenv=/home/lumina/deploy/virtualenv
+    virtualenv_site_packages=no
+    virtualenv_command=/usr/bin/python3.4
+    extra_args='-U'
