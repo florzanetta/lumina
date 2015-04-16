@@ -27,4 +27,8 @@ RUN chown -R lumina.lumina /home/lumina/.ssh && chmod 0700 /home/lumina/.ssh && 
 
 RUN echo 'lumina ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/lumina
 
+VOLUME /var/lib/apt
+VOLUME /var/cache/apt
+VOLUME /home/lumina/deploy/.pip-cache
+
 CMD ["/usr/sbin/sshd", "-D"]
