@@ -81,7 +81,6 @@ TEMPLATES = [
                 "django.core.context_processors.media",
                 "django.core.context_processors.static",
                 "django.core.context_processors.tz",
-                # "social_auth.context_processors.social_auth_by_name_backends", # LUMINA_NOSOCIAL
             ],
         },
     },
@@ -103,15 +102,11 @@ INSTALLED_APPS = (
     'crispy_forms',
     'lumina',
     'mailer',
-    # 'social', # LUMINA_NOSOCIAL
-    # 'social_auth', # LUMINA_NOSOCIAL
 )
 
 LOGIN_REDIRECT_URL = 'home'
 
 AUTHENTICATION_BACKENDS = (
-    # 'social_auth.backends.twitter.TwitterBackend', # LUMINA_NOSOCIAL
-    # 'social_auth.backends.google.GoogleOAuthBackend', # LUMINA_NOSOCIAL
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -155,37 +150,13 @@ SELENIUM_WEBDRIVER_BIN = (
     '/usr/lib/chromium-browser/chromedriver',
 )
 
-# ===== Social auth =====
 
-# SOCIAL_AUTH_LOGIN_REDIRECT_URL
-# Where to redirect after an existing user was identified
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
-
-# SOCIAL_AUTH_NEW_USER_REDIRECT_URL
-# Where to redirect after a new user was created
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
-SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/?SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL'
-SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = '/?SOCIAL_AUTH_DISCONNECT_REDIRECT_URL'
-SOCIAL_AUTH_BACKEND_ERROR_URL = '/?SOCIAL_AUTH_BACKEND_ERROR_URL'
-SOCIAL_AUTH_COMPLETE_URL_NAME = 'socialauth_complete'
-SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
-SOCIAL_AUTH_INACTIVE_USER_URL = '/?SOCIAL_AUTH_INACTIVE_USER_URL'
-
-# Googgle allows us to use OAuth without key/secret
-# See: http://django-social-auth.readthedocs.org/en/latest/backends/google.html#google-oauth
-GOOGLE_CONSUMER_KEY = ''
-GOOGLE_CONSUMER_SECRET = ''
-
-TWITTER_CONSUMER_KEY = ''
-TWITTER_CONSUMER_SECRET = ''
-
-
-# ===== Social auth =====
+# ===== Crispy forms =====
 
 CRISPY_TEMPLATE_PACK = "bootstrap3"
 
 
-# ===== Social auth =====
+# ===== Local settings =====
 
 # Load settings from 'lumina_local_settings'
 try:

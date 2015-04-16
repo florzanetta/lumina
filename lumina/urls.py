@@ -284,11 +284,6 @@ urlpatterns = patterns(
         name='logout',),
 
     #
-    # django-social-auth
-    #
-    # url(r'^social_auth/', include('social_auth.urls')), # LUMINA_NOSOCIAL
-
-    #
     # autocomplete_light
     #
     url(r'^autocomplete/', include('autocomplete_light.urls')),

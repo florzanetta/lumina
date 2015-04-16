@@ -109,7 +109,6 @@ def _put_session_statuses_in_context(context):
 
 
 def home(request):
-    # 'auth_providers': request.user.social_auth.get_providers(),
     if not request.user.is_authenticated():
         # ----- Anonymous
         ctx = {}
