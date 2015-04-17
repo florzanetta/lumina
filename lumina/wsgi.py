@@ -8,8 +8,17 @@ https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/
 """
 
 import os
+import warnings
 
 from django.core.wsgi import get_wsgi_application
+
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    import autocomplete_light
+    from crispy_forms import utils
+    from crispy_forms.templatetags import crispy_forms_filters
+    from crispy_forms.templatetags import crispy_forms_tags
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lumina.settings")
 
