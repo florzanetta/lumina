@@ -2,3 +2,4 @@
 - hosts: servers
   roles:
      - server
+     - lumina
