@@ -22,9 +22,12 @@ CRISPY_FAIL_SILENTLY = False
 
 # ===== Django =====
 
+BASEDIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+
 DEBUG = True
 
-MEDIA_ROOT = os.path.expanduser('~/lumina/uploads/')
+MEDIA_ROOT = os.path.join(BASEDIR, "deploy", "dev", "media")
+STATIC_ROOT = os.path.join(BASEDIR, "deploy", "dev", "static")
 
 DATABASES = {
     'default': {
