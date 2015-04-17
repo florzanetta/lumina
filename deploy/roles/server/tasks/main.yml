@@ -1,17 +1,46 @@
 ---
+- name: register extra repositories
+  sudo: yes
+  copy: src=pgdg.list dest=/etc/apt/sources.list.d
+  tags:
+    - setup
+    - pg
+
+- name: upload extra repositories keys
+  sudo: yes
+  copy: src=ACCC4CF8.asc dest=/tmp/
+  tags:
+    - setup
+    - pg
+
+- name: register extra repositories keys
+  sudo: yes
+  command: sudo apt-key add /tmp/ACCC4CF8.asc
+  tags:
+    - setup
+    - pg
+
 - name: update apt
-  apt: update_cache=yes cache_valid_time=604800
+  apt: update_cache=yes
   sudo: yes
   tags:
+    - update_apt
     - setup
 
 - name: install packages
   apt: name={{item}} state=present
   sudo: yes
   with_items:
+    - git
     - rsync
     - python3.4
+    - python3.4-dev
     - python-virtualenv
+    - postgresql-9.4
+    - postgresql-client-9.4
+    - postgresql-contrib-9.4
+    - libpq-dev
+    - postgresql-server-dev-9.4
   tags:
     - setup
 
