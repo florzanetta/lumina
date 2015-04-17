@@ -33,4 +33,7 @@ VOLUME /var/lib/apt
 VOLUME /var/cache/apt
 VOLUME /home/lumina/deploy
 
-CMD ["/usr/sbin/sshd", "-D"]
+RUN apt-get install -y supervisor
+COPY supervisor-sshd.conf /etc/supervisor/conf.d/sshd.conf
+
+CMD ["/usr/bin/supervisord", "--nodaemon", "-c", "/etc/supervisor/supervisord.conf"]
