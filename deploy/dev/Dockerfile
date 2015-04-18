@@ -36,4 +36,11 @@ VOLUME /home/lumina/deploy
 RUN apt-get install -y supervisor
 COPY supervisor-sshd.conf /etc/supervisor/conf.d/sshd.conf
 
+RUN apt-get install --reinstall locales
+RUN locale-gen en_US.UTF-8 && \
+    echo 'LANGUAGE="en_US.UTF-8"' >> /etc/environment && \
+    echo 'LC_ALL="en_US.UTF-8"' >> /etc/environment
+
+ENV LANGUAGE "en_US.UTF-8"
+
 CMD ["/usr/bin/supervisord", "--nodaemon", "-c", "/etc/supervisor/supervisord.conf"]

@@ -3,29 +3,30 @@
   sudo: yes
   copy: src=pgdg.list dest=/etc/apt/sources.list.d
   tags:
+    - apt
     - setup
-    - pg
 
 - name: upload extra repositories keys
   sudo: yes
   copy: src=ACCC4CF8.asc dest=/tmp/
   tags:
+    - apt
     - setup
-    - pg
 
 - name: register extra repositories keys
   sudo: yes
   command: sudo apt-key add /tmp/ACCC4CF8.asc
   tags:
+    - apt
     - setup
-    - pg
 
 - name: update apt
   apt: update_cache=yes
   sudo: yes
   tags:
-    - update_apt
+    - apt
     - setup
+    - update_apt
 
 - name: install packages
   apt: name={{item}} state=present
@@ -41,5 +42,39 @@
     - postgresql-contrib-9.4
     - libpq-dev
     - postgresql-server-dev-9.4
+  tags:
+    - apt
+    - setup
+
+- name: initialize postgresql
+  sudo: yes
+  command: pg_createcluster 9.4 main creates=/var/lib/postgresql/9.4/main
+  tags:
+    - setup
+
+- name: setup postgresql config
+  sudo: yes
+  lineinfile: >
+    dest=/etc/postgresql/9.4/main/postgresql.conf
+    regexp=^include_if_exists
+    line="include_if_exists = '/etc/postgresql/9.4/main/postgresql-customizations.conf'"
+  tags:
+    - setup
+
+- name: upload postgresql config
+  sudo: yes
+  copy: >
+    src={{item}}
+    dest=/etc/postgresql/9.4/main/{{item}}
+    owner=postgres
+  with_items:
+    - postgresql-customizations.conf
+    - pg_hba.conf
+  tags:
+    - setup
+
+- name: upload postgresql startup
+  sudo: yes
+  copy: src=supervisor-postgresql.conf dest=/etc/supervisor/conf.d/
   tags:
     - setup
