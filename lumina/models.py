@@ -118,7 +118,7 @@ class LuminaUser(AbstractUser):
         return LuminaUser.objects.filter(user_type=LuminaUser.CUSTOMER,
                                          user_for_customer__studio=self.studio)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} ({})".format(self.get_full_name(), self.username)
 
 
@@ -130,11 +130,11 @@ class UserPreferences(models.Model):
     send_emails = models.BooleanField(default=True, verbose_name="Enviar emails")
     user = models.OneToOneField(LuminaUser, related_name='preferences')
 
-    def __unicode__(self):
+    def __str__(self):
         if self.user:
             return "User preferences for {}".format(self.user.get_full_name())
         else:
-            return "User preferences"
+            return "User preferences (no user)"
 
 
 # ===============================================================================
@@ -164,7 +164,7 @@ class Studio(models.Model):
 
     objects = StudioManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return "Studio {0}".format(self.name)
 
 
@@ -232,7 +232,7 @@ class Customer(models.Model):
 
     objects = CustomerManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return "Customer {0}".format(self.name)
 
 
@@ -317,7 +317,7 @@ class Session(models.Model):
             if a_quote.customer.id != self.customer.id:
                 raise ValidationError('Ha seleccionado un cliente distinto al del presupuesto')
 
-    def __unicode__(self):
+    def __str__(self):
         return "Session {0}".format(self.name)
 
     def get_absolute_url(self):
@@ -383,7 +383,7 @@ class SharedSessionByEmail(models.Model):
 
     objects = SharedSessionByEmailManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return "Session {0} shared by email to {1}".format(self.session.name, self.shared_with)
 
     def get_image_from_session(self, image_id):
@@ -493,8 +493,8 @@ class ImageSelection(models.Model):
 
     objects = ImageSelectionManager()
 
-    def __unicode__(self):
-        return "ImageSelection p/{0}".format(self.session.name)
+    def __str__(self):
+        return "ImageSelection for session {0}".format(self.session.name)
 
     def get_selected_images_without_full_quality(self):
         return self.selected_images.filter(image='')
@@ -619,7 +619,7 @@ class Image(models.Model):
 
     objects = ImageManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return "Image {0}".format(self.original_filename)
 
     def get_absolute_url(self):
@@ -926,8 +926,8 @@ class SessionQuote(models.Model):
 
         return new_session
 
-    def __unicode__(self):
-        return "Quote for {}".format(str(self.customer))
+    def __str__(self):
+        return "Quote for {}".format(self.customer)
 
 
 class SessionQuoteAlternative(models.Model):
@@ -944,6 +944,9 @@ class SessionQuoteAlternative(models.Model):
         unique_together = ("session_quote", "image_quantity")
         ordering = ["image_quantity"]
 
+    def __str__(self):
+        return "SessionQuoteAlternative for quote {0}".format(self.session_quote)
+
 
 # ===============================================================================
 # CustomerType
@@ -953,7 +956,7 @@ class CustomerType(models.Model):
     name = models.CharField(max_length=100, verbose_name="tipo de cliente")
     studio = models.ForeignKey('Studio', related_name='customer_types', verbose_name="estudio")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -965,7 +968,7 @@ class SessionType(models.Model):
     name = models.CharField(max_length=100, verbose_name="tipo de sesión")
     studio = models.ForeignKey('Studio', related_name='session_types', verbose_name="estudio")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -981,5 +984,5 @@ class PreviewSize(models.Model):
         unique_together = ("max_size", "studio")
         ordering = ["max_size"]
 
-    def __unicode__(self):
+    def __str__(self):
         return "{0}x{0}".format(self.max_size)

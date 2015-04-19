@@ -23,15 +23,15 @@ class SharedSessionByEmailAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Customer)
+admin.site.register(CustomerType)
 admin.site.register(Image)
 admin.site.register(ImageSelection)
 admin.site.register(LuminaUser)
+admin.site.register(PreviewSize)
 admin.site.register(Session)
 admin.site.register(SessionQuote)
 admin.site.register(SessionQuoteAlternative)
+admin.site.register(SessionType)
 admin.site.register(SharedSessionByEmail, SharedSessionByEmailAdmin)
 admin.site.register(Studio)
 admin.site.register(UserPreferences)
-admin.site.register(CustomerType)
-admin.site.register(SessionType)
-admin.site.register(PreviewSize)
