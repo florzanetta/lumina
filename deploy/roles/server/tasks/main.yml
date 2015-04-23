@@ -42,6 +42,7 @@
     - postgresql-contrib-9.4
     - libpq-dev
     - postgresql-server-dev-9.4
+    - python-psycopg2
   tags:
     - apt
     - setup
@@ -58,6 +59,8 @@
     dest=/etc/postgresql/9.4/main/postgresql.conf
     regexp=^include_if_exists
     line="include_if_exists = '/etc/postgresql/9.4/main/postgresql-customizations.conf'"
+  notify:
+    - reload postgres
   tags:
     - setup
 
@@ -70,11 +73,30 @@
   with_items:
     - postgresql-customizations.conf
     - pg_hba.conf
+  notify:
+    - reload postgres
   tags:
     - setup
 
 - name: upload postgresql startup
   sudo: yes
   copy: src=supervisor-postgresql.conf dest=/etc/supervisor/conf.d/
+  notify:
+    - reload postgres
+  tags:
+    - setup
+
+- name: flush handlers to reload postgresql
+  meta: flush_handlers
+  tags:
+    - setup
+
+- name: create pg user
+  postgresql_user: name=lumina_dev password=lumina_dev
+  tags:
+    - setup
+
+- name: create pg db
+  postgresql_db: name=lumina_dev owner=lumina_dev
   tags:
     - setup
