@@ -1,6 +1,4 @@
 ---
 - name: reload postgres
   sudo: yes
-  service:
-    name: postgresql
-    state: restarted
+  shell: supervisorctl reread ; supervisorctl update ; supervisorctl stop postgresql ; supervisorctl start postgresql
