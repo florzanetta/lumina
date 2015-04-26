@@ -5,14 +5,6 @@
 # - install packages
 # - setup postgresql user & database
 #
-# *** FIXME: postgresql hba uses 'trust'
-#            it's ok for Docker development environment, but it's
-#            insecure for real servers
-#
-# *** FIXME: remove '_dev' suffix from postgresql db and username
-#            it's ok for Docker development environment, but it's
-#            confusing for real servers
-#
 - name: register extra repositories
   sudo: yes
   copy: src=pgdg.list dest=/etc/apt/sources.list.d
@@ -86,7 +78,17 @@
     owner=postgres
   with_items:
     - postgresql-customizations.conf
-    - pg_hba.conf
+  notify:
+    - reload postgres
+  tags:
+    - setup
+
+- name: upload postgresql hba
+  sudo: yes
+  copy: >
+    src={{POSTGRESQL_HBA_CONF}}
+    dest=/etc/postgresql/9.4/main/pg_hba.conf
+    owner=postgres
   notify:
     - reload postgres
   tags:
@@ -106,11 +108,11 @@
     - setup
 
 - name: create pg user
-  postgresql_user: name=lumina_dev password=lumina_dev
+  postgresql_user: name={{django_DATABASE_USER}} password={{django_DATABASE_PASSWORD}}
   tags:
     - setup
 
 - name: create pg db
-  postgresql_db: name=lumina_dev owner=lumina_dev
+  postgresql_db: name={{django_DATABASE_NAME}} owner={{django_DATABASE_USER}}
   tags:
     - setup
