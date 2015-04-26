@@ -1,6 +1,12 @@
-# sshd
 #
-# VERSION               0.0.2
+# Creates an Ubuntu 14.04 LTS based container to deploy Lumina, including:
+# - creates lumina user
+# - setup ssh keys for passwordless login
+# - setup passwordless sudo
+# - setup supervisord
+#
+# Based on: https://docs.docker.com/v1.5/examples/running_ssh_service/
+#
 
 FROM ubuntu:14.04
 MAINTAINER Sven Dowideit <SvenDowideit@docker.com>

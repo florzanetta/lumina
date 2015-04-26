@@ -1,4 +1,14 @@
 ---
+#
+# Install Lumina
+#
+# - setup pip, virtualenv
+# - upload sources
+#
+# *** TODO: sync DB
+# *** TODO: upload settings.py
+# *** TODO: init script for lumina
+#
 - name: make directories
   file: path=/home/lumina/{{item}} owner=lumina group=lumina mode=0700 state=directory
   sudo: yes

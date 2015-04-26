@@ -1,4 +1,13 @@
 ---
+#
+# Setup the server. Works for Docker and real servers.
+#
+# - install packages
+# - setup postgresql user & database
+#
+# *** FIXME: postgresql hba uses 'trust'; it's ok for Docker development environment, but it's not secure for real servers
+# *** FIXME: remove '_dev' suffix from postgresql db and username
+#
 - name: register extra repositories
   sudo: yes
   copy: src=pgdg.list dest=/etc/apt/sources.list.d
