@@ -5,8 +5,13 @@
 # - install packages
 # - setup postgresql user & database
 #
-# *** FIXME: postgresql hba uses 'trust'; it's ok for Docker development environment, but it's not secure for real servers
+# *** FIXME: postgresql hba uses 'trust'
+#            it's ok for Docker development environment, but it's
+#            insecure for real servers
+#
 # *** FIXME: remove '_dev' suffix from postgresql db and username
+#            it's ok for Docker development environment, but it's
+#            confusing for real servers
 #
 - name: register extra repositories
   sudo: yes
