@@ -15,9 +15,12 @@
   with_items:
     - .pip
     - deploy
-    - deploy/src
-    - deploy/local
     - deploy/.pip-cache
+    - deploy/local
+    - deploy/media
+    - deploy/static
+    - deploy/src
+    - deploy/src-other
 
 - name: setup pip
   ini_file: >
@@ -27,25 +30,58 @@
     value='/home/lumina/deploy/.pip-cache'
   tags:
     - setup
+    - virtualenv
 
-- name: upload sources
+- name: upload / synchronize sources
   synchronize: >
     src=../lumina
     dest=/home/lumina/deploy/src
-    rsync_opts=--exclude=.git
+    rsync_opts=--exclude=.git,--delete,--delete-after
+  tags:
+    - quick
 
 - name: upload other files
   copy: >
-    src=../requirements.txt
-    dest=/home/lumina/deploy/src/
+    src={{item}}
+    dest=/home/lumina/deploy/src-other/
+  with_items:
+    - ../requirements.txt
+    - ../manage.py
+  tags:
+    - quick
 
 - name: create virtualenv
-  command: virtualenv -p python3.4 /home/lumina/deploy/virtualenv creates=/home/lumina/deploy/virtualenv/bin/python
+  command: >
+    virtualenv -p python3.4 /home/lumina/deploy/virtualenv
+    creates=/home/lumina/deploy/virtualenv/bin/python
+  tags:
+    - virtualenv
 
 - name: setup virtualenv
   pip: >
-    requirements=/home/lumina/deploy/src/requirements.txt
+    requirements=/home/lumina/deploy/src-other/requirements.txt
     virtualenv=/home/lumina/deploy/virtualenv
     virtualenv_site_packages=no
     virtualenv_command=/usr/bin/python3.4
     extra_args='-U'
+  tags:
+    - virtualenv
+
+- name: upload settings
+  template: src=lumina_local_settings.py dest=/home/lumina/deploy/src-other/lumina_local_settings.py
+  with_items:
+    - ../requirements.txt
+    - ../manage.py
+  tags:
+    - quick
+
+- name: collectstatic
+  django_manage: >
+      app_path=/home/lumina/deploy/src-other
+      command=collectstatic
+      settings=lumina.settings
+      virtualenv=/home/lumina/deploy/virtualenv
+  environment:
+    PYTHONPATH: '/home/lumina/deploy/src:/home/lumina/deploy/src-other:/home/lumina/deploy/local'
+  tags:
+    - quick
