@@ -86,7 +86,7 @@
 - name: upload postgresql hba
   sudo: yes
   copy: >
-    src={{POSTGRESQL_HBA_CONF}}
+    src={{postgresql_HBA_CONF}}
     dest=/etc/postgresql/9.4/main/pg_hba.conf
     owner=postgres
   notify:
@@ -94,7 +94,7 @@
   tags:
     - setup
 
-- name: upload postgresql startup
+- name: upload supervisord config for postgresql
   sudo: yes
   copy: src=supervisor-postgresql.conf dest=/etc/supervisor/conf.d/
   notify:

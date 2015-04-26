@@ -17,7 +17,9 @@
     - deploy
     - deploy/.pip-cache
     - deploy/local
+    - deploy/log
     - deploy/media
+    - deploy/run
     - deploy/static
     - deploy/src
     - deploy/src-other
@@ -40,7 +42,7 @@
   tags:
     - quick
 
-- name: upload other files
+- name: upload other files related to sources
   copy: >
     src={{item}}
     dest=/home/lumina/deploy/src-other/
@@ -67,11 +69,10 @@
   tags:
     - virtualenv
 
-- name: upload settings
-  template: src=lumina_local_settings.py dest=/home/lumina/deploy/src-other/lumina_local_settings.py
-  with_items:
-    - ../requirements.txt
-    - ../manage.py
+- name: upload lumina settings
+  template: >
+    src=lumina_local_settings.py
+    dest=/home/lumina/deploy/src-other/lumina_local_settings.py
   tags:
     - quick
 
@@ -85,3 +86,22 @@
     PYTHONPATH: '/home/lumina/deploy/src:/home/lumina/deploy/src-other:/home/lumina/deploy/local'
   tags:
     - quick
+
+- name: upload uwsgi.ini
+  template: >
+    src=uwsgi.ini
+    dest=/home/lumina/deploy/local/uwsgi.ini
+  notify:
+    - reload uwsgi from supervisord
+
+- name: upload supervisord config for uwsgi
+  sudo: yes
+  copy: src=supervisor-uwsgi.conf dest=/etc/supervisor/conf.d/
+  notify:
+    - reload uwsgi from supervisord
+
+- name: reload uwsgi
+  command: /bin/true
+  notify:
+    - reload uwsgi
+  # FIXME: if uwsgi isn't running, this task doesn't start it

@@ -1,0 +1,7 @@
+---
+- name: reload uwsgi from supervisord
+  sudo: yes
+  shell: supervisorctl reread ; supervisorctl update ; supervisorctl stop uwsgi ; supervisorctl start uwsgi
+
+- name: reload uwsgi
+  shell: 'test -e /home/lumina/deploy/run/.uwsgi-fifo && timeout 2s bash -c "echo r > /home/lumina/deploy/run/.uwsgi-fifo" ; /bin/true'
