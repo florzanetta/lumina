@@ -49,8 +49,9 @@
   with_items:
     - ../requirements.txt
     - ../manage.py
+    - manage.sh
   tags:
-    - quick
+    - virtualenv
 
 - name: create virtualenv
   command: >
@@ -73,6 +74,17 @@
   template: >
     src=lumina_local_settings.py
     dest=/home/lumina/deploy/src-other/lumina_local_settings.py
+  tags:
+    - quick
+
+- name: syncdb
+  django_manage: >
+      app_path=/home/lumina/deploy/src-other
+      command=syncdb
+      settings=lumina.settings
+      virtualenv=/home/lumina/deploy/virtualenv
+  environment:
+    PYTHONPATH: '/home/lumina/deploy/src:/home/lumina/deploy/src-other:/home/lumina/deploy/local'
   tags:
     - quick
 
