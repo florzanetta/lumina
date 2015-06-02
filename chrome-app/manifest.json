@@ -1,0 +1,17 @@
+{
+  "name": "Lumina App",
+  "description": "Chrome App para Lumina",
+  "version": "0.2",
+  "manifest_version": 2,
+  "app": {
+    "background": {
+      "scripts": [
+        "background.js"
+      ]
+    }
+  },
+  "icons": {
+    "16": "lumina-logo-16.png",
+    "128": "lumina-logo-128.png"
+  }
+}
