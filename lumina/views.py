@@ -116,6 +116,8 @@ def home(request):
             'lumina/index_anonymous.html', ctx,
             context_instance=RequestContext(request))
 
+    request.user._check()
+
     if request.user.is_photographer():
         # ----- Photographer
         return _photographer_home(request)

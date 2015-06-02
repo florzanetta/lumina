@@ -118,6 +118,14 @@ class LuminaUser(AbstractUser):
         return LuminaUser.objects.filter(user_type=LuminaUser.CUSTOMER,
                                          user_for_customer__studio=self.studio)
 
+    def _check(self):
+        if self.is_photographer():
+            assert self.studio is not None, "Photographer does NOT have a studio"
+        elif self.is_for_customer():
+            assert self.studio is None, "Client DOES HAVE a studio"
+        else:
+            assert False, "TIPO INVALIDO DE USUARIO"
+
     def __str__(self):
         return "{} ({})".format(self.get_full_name(), self.username)
 
