@@ -60,6 +60,7 @@ var luminaService = {
 	 */
 	showPingResponse_ : function(e) {
 		// e.target.responseXML.querySelectorAll('photo');
+		var target = e.target;
 		var resp = JSON.parse(e.target.responseText);
 		var msg = '' + resp['status'] + " / " + resp['server_date_str']
 				+ " / '" + resp['username'] + "'";
@@ -67,11 +68,14 @@ var luminaService = {
 		if ('username' in resp && resp['username'].length > 0) {
 			set_log("User '" + resp['username'] + "' logged in");
 			console.info("eventPage.js: User is logged in");
-			this.sendMessageToLuminaApp({username: resp['username']});
+			this.sendMessageToLuminaApp({username: resp['username'],
+			                             sessionid: resp['sessionid'],
+			                             csrftoken: resp['csrftoken'],
+			                             });
 		} else {
 			set_log("Connection to server ok. Remember to login!");
 			console.info("eventPage.js: Connection to server ok. User is NOT logged in");
-			this.sendMessageToLuminaApp({username: ''});
+			this.sendMessageToLuminaApp({username: '', sessionid: '', csrftoken: ''});
 		}
 
 		chrome.browserAction.setIcon({

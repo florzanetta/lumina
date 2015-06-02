@@ -15,6 +15,8 @@ def ping(request):
         'status': 'ok',
         'server_date_str': str(datetime.datetime.now()),
         'username': username,
+        'sessionid': request.COOKIES.get('sessionid', ''),
+        'csrftoken': request.COOKIES.get('csrftoken', ''),
     }
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
