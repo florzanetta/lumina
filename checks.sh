@@ -2,6 +2,16 @@
 
 cd $(dirname $0)
 
+BASEDIR=$(pwd)
+
+if [ -z "${VIRTUAL_ENV}" -a -e ${BASEDIR}/virtualenv ] ; then
+	if [ -L ${BASEDIR}/virtualenv ] ; then
+		source $(readlink ${BASEDIR}/virtualenv)/bin/activate
+	else
+		source ${BASEDIR}/virtualenv/bin/activate
+	fi
+fi
+
 echo ""
 echo "Checking pep8..."
 echo ""

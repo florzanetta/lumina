@@ -2,8 +2,12 @@
 
 BASEDIR=$( cd $(dirname $0) ; pwd)
 
-if [ -z "$VIRTUAL_ENV" -a -d $BASEDIR/virtualenv ] ; then
-        . $BASEDIR/virtualenv/bin/activate
+if [ -z "${VIRTUAL_ENV}" -a -e ${BASEDIR}/virtualenv ] ; then
+	if [ -L ${BASEDIR}/virtualenv ] ; then
+		source $(readlink ${BASEDIR}/virtualenv)/bin/activate
+	else
+		source ${BASEDIR}/virtualenv/bin/activate
+	fi
 fi
 
 python $BASEDIR/manage.py collectstatic --noinput
