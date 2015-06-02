@@ -29,7 +29,16 @@ var luminaService = {
 		var resp = JSON.parse(response.target.responseText);
 		return resp;
 	},
-		
+
+	sendMessageToLuminaApp: function(message) {
+		/*
+		 * https://developer.chrome.com/extensions/runtime#method-sendMessage
+		 */
+		var extensionId = "decjfgeckpkpgilljbjmmballhljnogf";
+		chrome.runtime.sendMessage(extensionId, message);
+		console.debug("Message sent to Lumina App");
+	},
+
 	/**
 	 * @public
 	 */
@@ -41,7 +50,7 @@ var luminaService = {
 		req.onerror = this.xmlhttprequesterror_.bind(this);
 		console.debug("eventPage.js: will send XMLHttpRequest")
 		req.send(null);
-		console.debug("eventPage.js: XMLHttpRequest sent")
+		console.debug("eventPage.js: XMLHttpRequest sent");
 	},
 
 	/**
@@ -58,9 +67,11 @@ var luminaService = {
 		if ('username' in resp && resp['username'].length > 0) {
 			set_log("User '" + resp['username'] + "' logged in");
 			console.info("eventPage.js: User is logged in");
+			this.sendMessageToLuminaApp({username: resp['username']});
 		} else {
 			set_log("Connection to server ok. Remember to login!");
 			console.info("eventPage.js: Connection to server ok. User is NOT logged in");
+			this.sendMessageToLuminaApp({username: ''});
 		}
 
 		chrome.browserAction.setIcon({

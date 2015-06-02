@@ -6,3 +6,11 @@ chrome.app.runtime.onLaunched.addListener(function() {
     }
   });
 });
+
+chrome.runtime.onMessageExternal.addListener(
+  function(request, sender, sendResponse) {
+    console.info("request: " + request + " - username: " + request['username']);
+    // console.info("sender: " + sender);
+  });
+
+console.info("Load finished");
