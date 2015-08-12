@@ -173,7 +173,7 @@ def _image_download(request, image):
     #            filename_to_user)
     #        return response
 
-    with open(full_filename) as f:
+    with open(full_filename, mode='r+b') as f:
         file_contents = f.read()
     response = HttpResponse(file_contents, content_type=content_type)
     response['Content-Length'] = filesize
