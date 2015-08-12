@@ -800,7 +800,7 @@ def session_upload_previews_upload(request, session_id):
         # thumb_base64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA(...)AP/2Q=="
         assert thumb_base64.startswith(PREFIX)
         thumb_base64 = thumb_base64[len(PREFIX):]
-        thumb_contents = base64.decodestring(thumb_base64)
+        thumb_contents = base64.decodestring(bytes(thumb_base64, 'ascii'))
 
         new_image = Image(session=session, studio=request.user.studio,
                           thumbnail_content_type='image/jpg')
