@@ -1,4 +1,4 @@
-from io import StringIO
+from io import BytesIO
 from PIL import Image as PilImage
 
 from django.core.files.storage import default_storage
@@ -19,7 +19,7 @@ def generate_thumbnail(image, max_size=None):
     else:
         img = PilImage.open(default_storage.path(image.image.path))
     img.thumbnail((max_size, max_size,), PilImage.ANTIALIAS)
-    output_file = StringIO()
+    output_file = BytesIO()
     img.save(output_file, "JPEG")
     del img  # no need to close it
     return output_file.getvalue()

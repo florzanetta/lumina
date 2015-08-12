@@ -8,7 +8,7 @@ import uuid
 import decimal
 import zipfile
 
-from io import StringIO
+from io import BytesIO
 
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
@@ -199,7 +199,7 @@ def _image_download_as_zip(request, images):
     response['Content-Disposition'] = 'filename=all.zip'
     # now add them to a zip file
     # note the zip only exist in memory as you add to it
-    zip_buffer = StringIO()
+    zip_buffer = BytesIO()
     zip_file = zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED)
     for an_image in images:
         zip_file.writestr(an_image.original_filename, an_image.image.read())
