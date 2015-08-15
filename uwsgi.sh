@@ -21,8 +21,7 @@ uwsgi \
 	--module=lumina.wsgi:application \
 	--env DJANGO_SETTINGS_MODULE=lumina.settings_uwsgi \
 	--master \
-	--processes=1 \
-	--enable-threads \
+	--processes=5 \
 	--home=${VIRTUAL_ENV} \
 	--http=127.0.0.1:$HTTP_PORT \
 	--python-path=${BASEDIR} \
