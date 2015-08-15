@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 
@@ -9,15 +10,15 @@ logger = logging.getLogger(__name__)
 
 
 def send_emails(subject, to_email_list, body):
-    logger.info("Sending email '{}' to '{}'".format(
-        subject, to_email_list))
+    logger.info("Sending email '{}' to '{}'".format(subject, to_email_list))
     from_email = "Lumina <notifications@lumina-photo.com.ar>"
     try:
-        send_mail(subject, body, from_email, [to_email_list], fail_silently=False)
+        send_mail(subject, body, from_email, to_email_list, fail_silently=False)
         logger.info("Email to %s, with subject '%s' queued", to_email_list, subject)
     except:
         logger.exception("Couldn't queue email to %s", to_email_list)
-        pass
+        if settings.DEBUG:
+            raise
 
 
 def send_email(subject, to_email, body):
