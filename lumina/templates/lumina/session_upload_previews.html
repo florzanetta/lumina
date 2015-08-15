@@ -14,14 +14,14 @@
         <!-- { % csrf_token % } -->
         <table class="table">
 
-            <tr id="fileInputRow">
+            <tr class="formControlRow">
                 <td>Imagenes</td>
                 <td>
-                    <input id="fileinput" type="file" name="images" multiple>
+                    <input id="fileInput" type="file" name="images" multiple>
                 </td>
             </tr>
 
-            <tr>
+            <tr class="formControlRow">
                 <td>Tamaño máximo</td>
                 <td>
                     <select>
@@ -36,13 +36,12 @@
             </tr>
 
             <tr>
-                <td></td>
-                <td>
-                    <a href="javascript:void(0);" onclick="upload_previews();"
-                        data-loading-text="Seleccione las imagenes..." class="btn btn-primary" id="submit_button">Subir
-                        previsualizacion</a>
+                <td colspan="2">
+					<button class="btn btn-primary disabled"
+							id="formSubmitButton">Subir imágenes</button>
                 </td>
             </tr>
+
         </table>
     </form>
 
@@ -90,9 +89,8 @@
 
 		  </div>
 		  <div class="modal-footer">
-				<button class="btn btn-primary" data-dismiss="modal"
-						data-loading-text="Procesando..."
-						onclick="$('#statistics_modal').modal('hide');">Cerrar</button>
+				<button class="btn btn-primary disabled"
+						id="statistics_modal_close_button">Cerrar</button>
 		  </div>
 		</div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
@@ -110,14 +108,20 @@ function readablizeBytes(bytes) {
 			+ s[e];
 }
 
-function finished_loading_thumbnails() {
-	$('#submit_button').button('reset');
+function onFinishedLoadingThumbnails() {
+	$('#statistics_modal_close_button').removeClass('disabled');
+	$('#statistics_modal_close_button').click(function() {
+		$('#statistics_modal').modal('hide');
+	});
+
+	$('#formSubmitButton').removeClass('disabled');
+	$('#formSubmitButton').click(uploadThumbnails);
 }
 
-function show_statistics_modal() {
+function showStatisticsDialog(fileCount) {
 	$('#stats_orig_size')[0].textContent = '';
 	$('#stats_preview_size')[0].textContent = '';
-	$('#stats_files_count')[0].textContent = document.LUM_TOTAL_FILE_COUNT;
+	$('#stats_files_count')[0].textContent = '' + fileCount;
 	$('#stats_files_processed')[0].textContent = '0';
 
 	$('#statistics_modal').modal({
@@ -126,20 +130,29 @@ function show_statistics_modal() {
 	});
 }
 
-function update_statistics() {
-	$('#stats_orig_size')[0].textContent = readablizeBytes(document.LUM_SIZE_ORIGINAL);
-	$('#stats_preview_size')[0].textContent = readablizeBytes(document.LUM_SIZE_PREVIEW);
+/**
+ * Update statistics on dialog model
+ */
+function updateStatistics() {
+	$('#stats_orig_size')[0].textContent = readablizeBytes(document.LUM_SUM_SIZE_ORIGINAL);
+	$('#stats_preview_size')[0].textContent = readablizeBytes(document.LUM_SUM_SIZE_PREVIEW);
 
 	// REMEMBER: document.LUM_PROCESSED_FILE_COUNT is incremented after updating statistics!
 	var processed_including_current = document.LUM_PROCESSED_FILE_COUNT + 1;
 	$('#stats_files_processed')[0].textContent = processed_including_current;
 
 	if (processed_including_current >= document.LUM_TOTAL_FILE_COUNT) {
-		finished_loading_thumbnails();
+		onFinishedLoadingThumbnails();
 	}
 }
 
-function add_preview_img_error(non_image_file) {
+/**
+ * This method is called for each of the files selected by the user
+ * that are NOT images.
+ *
+ * @See generateThumbnailAndAppendToHtml: called when the file IS an image
+ */
+function appendErrorMessageFileIsNotAnImage(non_image_file) {
 	var status = $('#status');
 	var li = document.createElement("li");
 	li.className = "text-error";
@@ -148,11 +161,17 @@ function add_preview_img_error(non_image_file) {
 	status.append(li);
 }
 
-function add_preview_img(image_file, img) {
+/**
+ * This method is called for each of the files/images selected by the user,
+ * when the file is a image.
+ *
+ * @See appendErrorMessageFileIsNotAnImage: called when the file is NOT an image
+ */
+function generateThumbnailAndAppendToHtml(image_file, img) {
 	var thumbnails = $('#thumbnails_preview')[0];
 	var tmp;
 
-	var ret = resizeMe(img, 400, 400, 0.5);
+	var ret = resizeImage(img, 400, 400, 0.5);
 	var url = ret[0];
 	var width = ret[1];
 	var height = ret[2];
@@ -237,8 +256,7 @@ function add_preview_img(image_file, img) {
 	small.appendChild(tmp);
 
 	// Speedup
-	var speedup = ((preview_file_size * 1.0)
-			/ (image_file.size * 1.0) * 100.0)
+	var speedup = ((preview_file_size * 1.0) / (image_file.size * 1.0) * 100.0)
 	tmp = document.createElement("strong");
 	tmp.textContent = " - Radio: ";
 	small.appendChild(tmp);
@@ -256,13 +274,19 @@ function add_preview_img(image_file, img) {
 	var hr = document.createElement("hr");
 	thumbnails.appendChild(hr);
 
-	document.LUM_SIZE_ORIGINAL += image_file.size;
-	document.LUM_SIZE_PREVIEW += preview_file_size;
-	update_statistics();
+	document.LUM_SUM_SIZE_ORIGINAL += image_file.size;
+	document.LUM_SUM_SIZE_PREVIEW += preview_file_size;
+	updateStatistics();
 }
 
-// https://github.com/josefrichter/resize/blob/master/public/preprocess.js
-function resizeMe(img, max_width, max_height, quality) {
+
+/**
+ * Do the actual resize of the image
+ */
+function resizeImage(img, max_width, max_height, quality) {
+	/*
+	 * https://github.com/josefrichter/resize/blob/master/public/preprocess.js
+	 */
 
 	// Initially, W & H has original size
 	var width = img.width;
@@ -304,55 +328,60 @@ function resizeMe(img, max_width, max_height, quality) {
 	return [ dataUrl, width, height ];
 }
 
-function process_file(image_file) {
+function processFile(imageFile) {
 	var img = document.createElement("img");
-	img.src = window.URL.createObjectURL(image_file);
+	img.src = window.URL.createObjectURL(imageFile);
 
 	// http://stackoverflow.com/questions/12570834/how-can-i-get-the-file-size-image-height-and-width-before-upload
 	img.onerror = function() {
-		add_preview_img_error(image_file);
+		appendErrorMessageFileIsNotAnImage(imageFile);
 		document.LUM_PROCESSED_FILE_COUNT += 1;
 	};
 
 	img.onload = function() {
-		add_preview_img(image_file, this);
+		generateThumbnailAndAppendToHtml(imageFile, this);
 		document.LUM_PROCESSED_FILE_COUNT += 1;
 	};
 }
 
-function show_thumbnail() {
+/**
+ * Executed when the user selects the files, loads the
+ * files contents and generates the thumbnails.
+ */
+function generateAndShowThumbnails() {
 	document.LUM_PREVIEW_IMAGES = new Array();
 	document.LUM_PREVIEW_FILENAMES = new Array();
-	document.LUM_SIZE_ORIGINAL = 0;
-	document.LUM_SIZE_PREVIEW = 0;
+	document.LUM_SUM_SIZE_ORIGINAL = 0;
+	document.LUM_SUM_SIZE_PREVIEW = 0;
 	document.LUM_PROCESSED_FILE_COUNT = 0;
 
 	$('#thumbnails_preview').empty();
 	$('#status').empty();
 
-	var filesToUpload = $("#fileinput")[0].files;
+	var selectedFiles = $("#fileInput")[0].files;
 
-	if (filesToUpload.length == 0) {
-		$('#submit_button').button('loading');
+	if (selectedFiles.length <= 0)
 		return;
-	}
 
-	document.LUM_TOTAL_FILE_COUNT = filesToUpload.length;
-	show_statistics_modal(); // Call *AFTER* setting doc.LUM_TOTAL_FILE_COUNT
+	$('.formControlRow').toggle();
 
-	for (var x = 0; x < filesToUpload.length; x++) {
+	showStatisticsDialog(selectedFiles.length);
+
+	document.LUM_TOTAL_FILE_COUNT = selectedFiles.length;
+
+	for (var x = 0; x < selectedFiles.length; x++) {
 		// This for runs almost inmediatly, but the processing of
 		// the images not! The processing is made in sort of
 		// background thread.....
-		var fileToUpload = filesToUpload[x];
-		process_file(fileToUpload);
+		var fileToUpload = selectedFiles[x];
+		processFile(fileToUpload);
 	}
 
 }
 
-function upload_previews() {
+function uploadThumbnails() {
 	var images = {};
-	for (i = 0; i < document.LUM_PREVIEW_IMAGES.length; i++) {
+	for (var i = 0; i < document.LUM_PREVIEW_IMAGES.length; i++) {
 		images['img' + i] = document.LUM_PREVIEW_IMAGES[i];
 		images['img' + i + '_filename'] = document.LUM_PREVIEW_FILENAMES[i];
 		console.info("URL[" + i + "]="
@@ -380,8 +409,7 @@ function upload_previews() {
 }
 
 $(document).ready(function() {
-	$('#fileinput').bind('change', show_thumbnail);
-	$('#submit_button').button('loading');
+	$('#fileInput').bind('change', generateAndShowThumbnails);
 });
 
 </script>
