@@ -99,6 +99,12 @@
     {% endblock content %}
 
 {% block javascript_bottom %}
+
+<!-- FROM: https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js -->
+<script src="/static/lumina/js/crypto-js-3.1.2-sha1.js"></script>
+<!-- FROM: https://github.com/satazor/SparkMD5 -->
+<script src="/static/lumina/js/spark-md5.min.js"></script>
+
 <script type="text/javascript">
 
 function readablizeBytes(bytes) {
@@ -277,6 +283,21 @@ function generateThumbnailAndAppendToHtml(image_file, img) {
 	document.LUM_SUM_SIZE_ORIGINAL += image_file.size;
 	document.LUM_SUM_SIZE_PREVIEW += preview_file_size;
 	updateStatistics();
+
+	// ------------------------
+
+	var reader = new FileReader();
+	reader.onload = function(event) {
+		var binary = event.target.result;
+		// var sha1sum = CryptoJS.SHA1(binary).toString();
+		// console.log("CryptoJS.SHA1(): sha1sum: " + sha1sum);
+		var spark = new SparkMD5();
+		spark.appendBinary(binary);
+		var hexHash = spark.end();
+		console.log("SparkMD5.hash(): md5sum: " + hexHash);
+	};
+
+	reader.readAsBinaryString(image_file);
 }
 
 
