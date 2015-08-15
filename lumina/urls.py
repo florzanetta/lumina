@@ -5,18 +5,16 @@ from django.views.decorators.cache import cache_control
 
 import autocomplete_light
 
+from lumina import views_image_selection
 from lumina.views import SessionListView, SessionDetailView, SessionCreateView, \
     SessionUpdateView, CustomerListView, CustomerCreateView, CustomerUpdateView, \
     UserListView, ImageListView, UserCreateView, UserUpdateView, \
     SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView, \
-    ImageCreateView, ImageUpdateView, ImageSelectionCreateView, \
-    ImageSelectionListView, ImageSelectionDetailView, \
-    ImageSelectionForCustomerView, SessionUploadPreviewsView,\
+    ImageCreateView, ImageUpdateView, SessionUploadPreviewsView,\
     SessionQuoteCreateView, SessionQuoteListView, SessionQuoteDetailView,\
     SessionQuoteUpdateView, \
     SessionQuoteAlternativeSelectView, SessionQuoteAlternativeCreateView,\
-    UserPreferenceUpdateView, ImageSelectionWithPendingUploadsListView,\
-    ImageSelectionUploadPendingView
+    UserPreferenceUpdateView
 
 autocomplete_light.autodiscover()  # BEFORE admin.autodiscover()
 admin.autodiscover()
@@ -95,7 +93,7 @@ urlpatterns = patterns(
     url(r'^session/image-selection/create/$',
         cache_control(private=True)(
             login_required(
-                ImageSelectionCreateView.as_view())),
+                views_image_selection.ImageSelectionCreateView.as_view())),
         name='image_selection_create'),
 
     #    url(r'^session/image-selection/create/(?P<pk>\d+)/$',
@@ -105,38 +103,38 @@ urlpatterns = patterns(
     #        name='image_selection_create_from_quote'),
     url(
         r'^session/image-selection/create/(?P<pk>\d+)/$',
-        'lumina.views.image_selection_create_from_quote',
+        views_image_selection.image_selection_create_from_quote,
         name='image_selection_create_from_quote'),
 
     url(r'^session/image-selection/list/$',
         cache_control(private=True)(
             login_required(
-                ImageSelectionListView.as_view())),
+                views_image_selection.ImageSelectionListView.as_view())),
         name='imageselection_list'),
 
     url(r'^session/image-selection/with-pending-uploads/list/$',
         cache_control(private=True)(
             login_required(
-                ImageSelectionWithPendingUploadsListView.as_view())),
+                views_image_selection.ImageSelectionWithPendingUploadsListView.as_view())),
         name='imageselection_with_pending_uploads_list'),
 
     url(r'^session/image-selection/upload-pending/(?P<pk>\d+)/$',
         cache_control(private=True)(
-            login_required(ImageSelectionUploadPendingView.as_view())),
+            login_required(views_image_selection.ImageSelectionUploadPendingView.as_view())),
         name='imageselection_upload_pending'),
 
     url(r'^session/image-selection/redirect/(?P<pk>\d+)/$',
-        'lumina.views.imageselection_redirect',
+        views_image_selection.imageselection_redirect,
         name='imageselection_redirect'),
 
     url(r'^session/image-selection/detail/(?P<pk>\d+)/$',
         cache_control(private=True)(
-            login_required(ImageSelectionDetailView.as_view())),
+            login_required(views_image_selection.ImageSelectionDetailView.as_view())),
         name='imageselection_detail'),
 
     url(r'^session/image-selection/select_images/(?P<pk>\d+)/$',
         cache_control(private=True)(
-            login_required(ImageSelectionForCustomerView.as_view())),
+            login_required(views_image_selection.ImageSelectionForCustomerView.as_view())),
         name='imageselection_select_images'),
 
     # ===========================================================================
