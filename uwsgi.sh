@@ -17,8 +17,15 @@ echo ""
 echo "HTTP: http://127.0.0.1:$HTTP_PORT/"
 echo ""
 
-uwsgi --module=lumina.wsgi:application \
+uwsgi \
+	--module=lumina.wsgi:application \
 	--env DJANGO_SETTINGS_MODULE=lumina.settings_uwsgi \
-	--master --processes=1 --enable-threads \
-	--home=${VIRTUAL_ENV} --http=127.0.0.1:$HTTP_PORT \
-	--python-path=${BASEDIR} --static-map /static=${BASEDIR}/deploy/dev/static
+	--master \
+	--processes=1 \
+	--enable-threads \
+	--home=${VIRTUAL_ENV} \
+	--http=127.0.0.1:$HTTP_PORT \
+	--python-path=${BASEDIR} \
+	--static-map /static=${BASEDIR}/deploy/dev/static \
+	--master-fifo /tmp/.lumina-uwsgi \
+	$*
