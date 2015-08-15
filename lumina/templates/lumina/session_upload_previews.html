@@ -70,6 +70,32 @@
 	</div><!-- /.modal -->
 
 
+
+	<div class="modal" id="uploadingThumbnailsModal" tabindex="-1">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-body">
+			  <h3>
+				  <i class="fa fa-refresh fa-spin"></i>
+				  Subiendo vistas previas...
+			  </h3>
+			  <p>
+				  Por favor, espere mientras las vistas previas son
+				  subidas al servidor...
+			  </p>
+				<div class="progress">
+				  <div class="progress-bar progress-bar-striped active"
+					   role="progressbar" style="width: 100%">
+				  </div>
+				</div>
+
+		  </div>
+		</div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+
+
     <h3>Agregar imágenes de previsualización</h3>
     <form action="{% url 'session_upload_previews_upload' object.id %}" method="post" enctype="multipart/form-data">
         <!-- { % csrf_token % } -->
@@ -137,7 +163,7 @@ function onFinishedLoadingThumbnails() {
 		$('#statistics_modal').modal('hide');
 	});
 
-	$('.progress-bar-striped').removeClass('active');
+	$('#thumbnailLoadingProgress').removeClass('active');
 	$('#formSubmitButton').removeClass('disabled');
 	$('#formSubmitButton').click(uploadThumbnails);
 }
@@ -447,6 +473,11 @@ function generateAndShowThumbnails() {
 function uploadThumbnails(event) {
 
 	event.preventDefault(); // avoid form submition
+
+	$('#uploadingThumbnailsModal').modal({
+		backdrop : 'static',
+		keyboard : false
+	});
 
 	var images = {};
 	for (var i = 0; i < document.LUM_PREVIEW_IMAGES.length; i++) {
