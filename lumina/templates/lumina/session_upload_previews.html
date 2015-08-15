@@ -9,46 +9,6 @@
 
     {% block content %}
 
-    <h3>Agregar imágenes de previsualización</h3>
-    <form action="{% url 'session_upload_previews_upload' object.id %}" method="post" enctype="multipart/form-data">
-        <!-- { % csrf_token % } -->
-        <table class="table">
-
-            <tr class="formControlRow">
-                <td>Imagenes</td>
-                <td>
-                    <input id="fileInput" type="file" name="images" multiple>
-                </td>
-            </tr>
-
-            <tr class="formControlRow">
-                <td>Tamaño máximo</td>
-                <td>
-                    <select>
-                        <option>250x250</option>
-                        <option>600x600</option>
-                        <option>800x800</option>
-                        <option>1000x1000</option>
-                        <option>1500x1500</option>
-                        <option>2000x2000</option>
-                    </select>
-                </td>
-            </tr>
-
-            <tr>
-                <td colspan="2">
-					<button class="btn btn-primary disabled"
-							id="formSubmitButton">Subir imágenes</button>
-                </td>
-            </tr>
-
-        </table>
-    </form>
-
-    <div id="thumbnails_preview"></div>
-
-    <ul id="status"></ul>
-
 	<div class="modal" id="statistics_modal" tabindex="-1">
 	  <div class="modal-dialog">
 		<div class="modal-content">
@@ -108,6 +68,47 @@
 		</div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
+
+
+    <h3>Agregar imágenes de previsualización</h3>
+    <form action="{% url 'session_upload_previews_upload' object.id %}" method="post" enctype="multipart/form-data">
+        <!-- { % csrf_token % } -->
+        <table class="table">
+
+            <tr class="formControlRow">
+                <td>Imagenes</td>
+                <td>
+                    <input id="fileInput" type="file" name="images" multiple>
+                </td>
+            </tr>
+
+            <tr class="formControlRow">
+                <td>Tamaño máximo</td>
+                <td>
+                    <select>
+                        <option>250x250</option>
+                        <option>600x600</option>
+                        <option>800x800</option>
+                        <option>1000x1000</option>
+                        <option>1500x1500</option>
+                        <option>2000x2000</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+					<button class="btn btn-primary disabled"
+							id="formSubmitButton">Subir imágenes</button>
+                </td>
+            </tr>
+
+        </table>
+    </form>
+
+    <div id="thumbnails_preview"></div>
+
+    <ul id="status"></ul>
 
     {% endblock content %}
 
@@ -470,7 +471,7 @@ function uploadThumbnails(event) {
 		}
 	}).fail(function(msg) {
 		console.error(msg);
-		// alert("ERROR");
+		alert("ERROR");
 		// window.location.replace('/');
 	});
 
