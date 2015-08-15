@@ -60,6 +60,19 @@
 
 				<div id="statistics">
 					<table class="table">
+
+						<tr>
+							<td colspan="2">
+
+								<div class="progress">
+								  <div class="progress-bar progress-bar-striped active"
+									   role="progressbar" style="width: 0%" id="thumbnailLoadingProgress">
+								  </div>
+								</div>
+
+							</td>
+						</tr>
+
 						<tr>
 							<th width="5%">Files:</th>
 							<td>
@@ -109,6 +122,9 @@
 
 function readablizeBytes(bytes) {
 	var s = [ 'bytes', 'kB', 'MB', 'GB', 'TB', 'PB' ];
+	if (bytes == 0) {
+		return "0 " + s[0];
+	}
 	var e = Math.floor(Math.log(bytes) / Math.log(1024));
 	return (bytes / Math.pow(1024, e)).toFixed(2) + " "
 			+ s[e];
@@ -120,14 +136,15 @@ function onFinishedLoadingThumbnails() {
 		$('#statistics_modal').modal('hide');
 	});
 
+	$('.progress-bar-striped').removeClass('active');
 	$('#formSubmitButton').removeClass('disabled');
 	$('#formSubmitButton').click(uploadThumbnails);
 }
 
-function showStatisticsDialog(fileCount) {
+function showStatisticsDialog() {
 	$('#stats_orig_size')[0].textContent = '';
 	$('#stats_preview_size')[0].textContent = '';
-	$('#stats_files_count')[0].textContent = '' + fileCount;
+	$('#stats_files_count')[0].textContent = '' + document.LUM_TOTAL_FILE_COUNT;
 	$('#stats_files_processed')[0].textContent = '0';
 
 	$('#statistics_modal').modal({
@@ -143,9 +160,11 @@ function updateStatistics() {
 	$('#stats_orig_size')[0].textContent = readablizeBytes(document.LUM_SUM_SIZE_ORIGINAL);
 	$('#stats_preview_size')[0].textContent = readablizeBytes(document.LUM_SUM_SIZE_PREVIEW);
 
-	// REMEMBER: document.LUM_PROCESSED_FILE_COUNT is incremented after updating statistics!
-	var processed_including_current = document.LUM_PROCESSED_FILE_COUNT + 1;
-	$('#stats_files_processed')[0].textContent = processed_including_current;
+	var processsedCount = document.LUM_TOTAL_FILE_COUNT - document.FILES.length;
+	$('#stats_files_processed')[0].textContent = '' + processsedCount;
+
+	var progressPercent = ((processsedCount / document.LUM_TOTAL_FILE_COUNT) * 100);
+	$('#thumbnailLoadingProgress').width("" + progressPercent + "%");
 
 }
 
@@ -162,7 +181,6 @@ function appendErrorMessageFileIsNotAnImage(non_image_file) {
 	li.textContent = "" + non_image_file.name + " no es una imagen valida";
 	status.append(li);
 
-	updateStatistics();
 	window.setTimeout(processFile, 1);
 }
 
@@ -294,7 +312,6 @@ function generateThumbnailAndAppendToHtml(image_file, img) {
 		var hexHash = spark.end();
 		console.log("SparkMD5.hash(): md5sum: " + hexHash);
 
-		updateStatistics();
 		window.setTimeout(processFile, 1);
 	};
 
@@ -351,7 +368,9 @@ function resizeImage(img, max_width, max_height, quality) {
 }
 
 function processFile() {
+	updateStatistics();
 	var imageFile = document.FILES.shift();
+
 	if(typeof(imageFile) == 'undefined') {
 		onFinishedLoadingThumbnails();
 		return;
@@ -363,12 +382,10 @@ function processFile() {
 	// http://stackoverflow.com/questions/12570834/how-can-i-get-the-file-size-image-height-and-width-before-upload
 	img.onerror = function() {
 		appendErrorMessageFileIsNotAnImage(imageFile);
-		document.LUM_PROCESSED_FILE_COUNT += 1;
 	};
 
 	img.onload = function() {
 		generateThumbnailAndAppendToHtml(imageFile, this);
-		document.LUM_PROCESSED_FILE_COUNT += 1;
 	};
 }
 
@@ -382,19 +399,17 @@ function generateAndShowThumbnails() {
 	document.LUM_PREVIEW_FILENAMES = new Array();
 	document.LUM_SUM_SIZE_ORIGINAL = 0;
 	document.LUM_SUM_SIZE_PREVIEW = 0;
-	document.LUM_PROCESSED_FILE_COUNT = 0;
-
+	document.LUM_TOTAL_FILE_COUNT = 0;
 	$('#thumbnails_preview').empty();
 	$('#status').empty();
 
 	var selectedFiles = $("#fileInput")[0].files;
-
 	if (selectedFiles.length <= 0)
 		return;
 
 	$('.formControlRow').toggle();
-	showStatisticsDialog(selectedFiles.length);
 	document.LUM_TOTAL_FILE_COUNT = selectedFiles.length;
+	showStatisticsDialog(); // uses 'document.LUM_TOTAL_FILE_COUNT'
 
 	var i;
 	for (i = 0; i < selectedFiles.length; i++) {
