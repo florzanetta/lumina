@@ -1,6 +1,6 @@
-import mailer
 import logging
 
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 
 from lumina.models import SessionQuote
@@ -13,7 +13,7 @@ def send_emails(subject, to_email_list, body):
         subject, to_email_list))
     from_email = "Lumina <notifications@lumina-photo.com.ar>"
     try:
-        mailer.send_mail(subject, body, from_email, to_email_list, fail_silently=False)
+        send_mail(subject, body, from_email, [to_email_list], fail_silently=False)
         logger.info("Email to %s, with subject '%s' queued", to_email_list, subject)
     except:
         logger.exception("Couldn't queue email to %s", to_email_list)

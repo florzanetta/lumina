@@ -18,10 +18,6 @@ uWSGI==2.0.10
 # pygal
 pygal==1.7.0
 
-# --- django-mailer (just in case we overwrite this file with contents of freeze)
-# git+https://github.com/pinax/django-mailer.git@88436a1318ad4e14d6dd3f8ac6256059af43a2f0#egg=django-mailer
-git+https://github.com/pinax/django-mailer.git@88436a1318ad4e14d6dd3f8ac6256059af43a2f0#egg=django-mailer 
-
 # django-localflavor
 django-localflavor==1.1
 

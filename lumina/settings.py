@@ -101,7 +101,6 @@ INSTALLED_APPS = (
     'autocomplete_light',
     'crispy_forms',
     'lumina',
-    'mailer',
 )
 
 LOGIN_REDIRECT_URL = 'home'
@@ -135,11 +134,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
+        # 'django.request': {
+        #     'handlers': ['mail_admins'],
+        #     'level': 'ERROR',
+        #     'propagate': True,
+        # },
     }
 }
 
