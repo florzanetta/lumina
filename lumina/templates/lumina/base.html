@@ -10,6 +10,8 @@
 	<title>{% block title %}Lumina{% endblock %}</title>
 
 	<link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/static/font-awesome-4.4.0/css/font-awesome.min.css" rel="stylesheet">
+
 	<style type="text/css">
 		ul.errorlist li {
 			color: #e00;
@@ -28,6 +30,12 @@
     <script src="/static/jquery-1.11.2.min.js"></script>
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
     {% include 'autocomplete_light/static.html' %}
+    <script type="application/javascript">
+
+        function toggleUserNotifications() {
+            $('#luminaUserNotifications').toggle();
+        }
+    </script>
 
 	{% block extra_headers %}
 	{% endblock extra_headers %}
@@ -176,6 +184,13 @@
 
       <ul class="nav navbar-nav navbar-right">
 
+            <li>
+                <a href="javascript:void(0);" onclick="toggleUserNotifications();">
+                    <i class="fa fa-bullhorn {% if user_notifications %}text-danger{% endif %}"></i>
+                    <span class="badge {% if user_notifications %}alert-danger{% endif %}">{{ user_notifications|length }}</span>
+                </a>
+            </li>
+
             {% if user.is_authenticated %}
 
                 <!-- Items de drop-down  -->
@@ -217,6 +232,25 @@
 
 
 <div class="container">
+
+    {% if user_notifications %}
+    <div id="luminaUserNotifications" style="display: none;">
+        {% for notification in user_notifications %}
+            <div class="row">
+                <div class="col-xs-offset-6 col-xs-6">
+                    <div class="alert alert-info" role="alert">
+                        <i class="fa fa-bullhorn"></i>
+                        {{ notification.message }}
+                        {% if notification.link %}
+                            · <a class="alert-link" href="{{notification.link}}">
+                                <i class="fa fa-link"></i> Link</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     {% for message in messages %}
 

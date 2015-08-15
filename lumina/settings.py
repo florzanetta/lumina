@@ -81,6 +81,8 @@ TEMPLATES = [
                 "django.core.context_processors.media",
                 "django.core.context_processors.static",
                 "django.core.context_processors.tz",
+                # ----- Lumina
+                "lumina.context_processors.user_notifications",
             ],
         },
     },
