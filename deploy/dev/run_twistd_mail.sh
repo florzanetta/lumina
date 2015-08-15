@@ -9,11 +9,13 @@ else
         source ${BASEDIR}/virtualenv-mail/bin/activate
 fi
 
+USERS=""
+for num in $(seq 9) ; do
+	USERS="$USERS --user=fotografo${num}=fotografo${num} --user=cliente${num}=cliente${num}"
+done
+
 twistd \
 	-n mail \
-	-d lumina.com.ar=${BASEDIR}/deploy/dev/mailboxes-lumina.com.ar \
-	--user=lumina=lumina \
-	--user=photo1=photo1 \
-	--user=photo2=photo2 \
-	--user=customer1=customer1 \
-	--user=customer2=customer2
+	-d lumina-photo.com.ar=${BASEDIR}/deploy/dev/mailboxes-lumina.com.ar \
+	--user=notifications=notifications \
+	$USERS
