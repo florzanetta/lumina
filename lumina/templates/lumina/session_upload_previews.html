@@ -14,7 +14,7 @@
         <!-- { % csrf_token % } -->
         <table class="table">
 
-            <tr>
+            <tr id="fileInputRow">
                 <td>Imagenes</td>
                 <td>
                     <input id="fileinput" type="file" name="images" multiple>
@@ -38,9 +38,6 @@
             <tr>
                 <td></td>
                 <td>
-                    <!--
-                    <input type="button" value="Subir inmediatamente" class="btn btn-primary">
-                    -->
                     <a href="javascript:void(0);" onclick="upload_previews();"
                         data-loading-text="Seleccione las imagenes..." class="btn btn-primary" id="submit_button">Subir
                         previsualizacion</a>
@@ -53,334 +50,342 @@
 
     <ul id="status"></ul>
 
-    <div id="statistics_modal" class="modal hide" tabindex="-1" role="dialog">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h3 id="myModalLabel">Generando previsualizaciones...</h3>
-        </div>
-        <div class="modal-body">
-            <div id="statistics">
-                <table class="table table-condensed">
-                    <tr>
-                        <th width="5%">Files:</th>
-                        <td>
-                            <span id="stats_files_count"></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th width="5%">Processed:</th>
-                        <td>
-                            <span id="stats_files_processed"></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th width="5%">Original:</th>
-                        <td>
-                            <span id="stats_orig_size"></span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Preview:</th>
-                        <td>
-                            <span id="stats_preview_size"></span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn" data-dismiss="modal" id="close_statistics_modal" data-loading-text="Procesando...">Cerrar</button>
-        </div>
-    </div>
+	<div class="modal" id="statistics_modal" tabindex="-1">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="myModalLabel">Generando previsualizaciones...</h3>
+		  </div>
+		  <div class="modal-body">
 
-    {% endblock content %} {% block javascript_bottom %}
-    <script type="text/javascript">
-					function readablizeBytes(bytes) {
-						var s = [ 'bytes', 'kB', 'MB', 'GB', 'TB', 'PB' ];
-						var e = Math.floor(Math.log(bytes) / Math.log(1024));
-						return (bytes / Math.pow(1024, e)).toFixed(2) + " "
-								+ s[e];
-					}
+				<div id="statistics">
+					<table class="table">
+						<tr>
+							<th width="5%">Files:</th>
+							<td>
+								<span id="stats_files_count"></span>
+							</td>
+						</tr>
+						<tr>
+							<th width="5%">Processed:</th>
+							<td>
+								<span id="stats_files_processed"></span>
+							</td>
+						</tr>
+						<tr>
+							<th width="5%">Original:</th>
+							<td>
+								<span id="stats_orig_size"></span>
+							</td>
+						</tr>
+						<tr>
+							<th>Preview:</th>
+							<td>
+								<span id="stats_preview_size"></span>
+							</td>
+						</tr>
+					</table>
+				</div>
 
-					function finished_loading_thumbnails() {
-						$('#submit_button').button('reset');
-						$('#close_statistics_modal').button('reset');
-					}
+		  </div>
+		  <div class="modal-footer">
+				<button class="btn btn-primary" data-dismiss="modal"
+						data-loading-text="Procesando..."
+						onclick="$('#statistics_modal').modal('hide');">Cerrar</button>
+		  </div>
+		</div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
-					function show_statistics_modal() {
-						$('#stats_orig_size')[0].textContent = '';
-						$('#stats_preview_size')[0].textContent = '';
-						$('#stats_files_count')[0].textContent = document.LUM_TOTAL_FILE_COUNT;
-						$('#stats_files_processed')[0].textContent = '0';
+    {% endblock content %}
 
-						$('#close_statistics_modal').button('loading');
-						$('#statistics_modal').modal({
-							backdrop : 'static',
-							keyboard : false
-						});
-					}
+{% block javascript_bottom %}
+<script type="text/javascript">
 
-					function update_statistics() {
-						$('#stats_orig_size')[0].textContent = readablizeBytes(document.LUM_SIZE_ORIGINAL);
-						$('#stats_preview_size')[0].textContent = readablizeBytes(document.LUM_SIZE_PREVIEW);
+function readablizeBytes(bytes) {
+	var s = [ 'bytes', 'kB', 'MB', 'GB', 'TB', 'PB' ];
+	var e = Math.floor(Math.log(bytes) / Math.log(1024));
+	return (bytes / Math.pow(1024, e)).toFixed(2) + " "
+			+ s[e];
+}
 
-						// REMEMBER: document.LUM_PROCESSED_FILE_COUNT is incremented after updating statistics!
-						var processed_including_current = document.LUM_PROCESSED_FILE_COUNT + 1;
-						$('#stats_files_processed')[0].textContent = processed_including_current;
+function finished_loading_thumbnails() {
+	$('#submit_button').button('reset');
+}
 
-						if (processed_including_current >= document.LUM_TOTAL_FILE_COUNT) {
-							finished_loading_thumbnails();
-						}
-					}
+function show_statistics_modal() {
+	$('#stats_orig_size')[0].textContent = '';
+	$('#stats_preview_size')[0].textContent = '';
+	$('#stats_files_count')[0].textContent = document.LUM_TOTAL_FILE_COUNT;
+	$('#stats_files_processed')[0].textContent = '0';
 
-					function add_preview_img_error(non_image_file) {
-						var status = $('#status');
-						var li = document.createElement("li");
-						li.className = "text-error";
-						li.textContent = "" + non_image_file.name
-								+ " no es una imagen valida";
-						status.append(li);
-					}
+	$('#statistics_modal').modal({
+		backdrop : 'static',
+		keyboard : false
+	});
+}
 
-					function add_preview_img(image_file, img) {
-						var thumbnails = $('#thumbnails_preview')[0];
-						var tmp;
+function update_statistics() {
+	$('#stats_orig_size')[0].textContent = readablizeBytes(document.LUM_SIZE_ORIGINAL);
+	$('#stats_preview_size')[0].textContent = readablizeBytes(document.LUM_SIZE_PREVIEW);
 
-						var ret = resizeMe(img, 400, 400, 0.5);
-						var url = ret[0];
-						var width = ret[1];
-						var height = ret[2];
+	// REMEMBER: document.LUM_PROCESSED_FILE_COUNT is incremented after updating statistics!
+	var processed_including_current = document.LUM_PROCESSED_FILE_COUNT + 1;
+	$('#stats_files_processed')[0].textContent = processed_including_current;
 
-						console.info("URL: " + url)
+	if (processed_including_current >= document.LUM_TOTAL_FILE_COUNT) {
+		finished_loading_thumbnails();
+	}
+}
 
-						//
-						// 1st DIV
-						//
-						var div = document.createElement("div");
-						var newImg = document.createElement("img");
-						newImg.src = url;
-						newImg.className = "img-polaroid";
-						div.appendChild(newImg);
-						document.LUM_PREVIEW_IMAGES.push(url);
-						document.LUM_PREVIEW_FILENAMES.push(image_file.name);
-						thumbnails.appendChild(div);
+function add_preview_img_error(non_image_file) {
+	var status = $('#status');
+	var li = document.createElement("li");
+	li.className = "text-error";
+	li.textContent = "" + non_image_file.name
+			+ " no es una imagen valida";
+	status.append(li);
+}
 
-						//
-						// 2nd DIV
-						//
-						div = document.createElement("div");
+function add_preview_img(image_file, img) {
+	var thumbnails = $('#thumbnails_preview')[0];
+	var tmp;
 
-						// File
-						var small = document.createElement("small");
-						tmp = document.createElement("strong");
-						tmp.textContent = "Original file: ";
-						small.appendChild(tmp);
+	var ret = resizeMe(img, 400, 400, 0.5);
+	var url = ret[0];
+	var width = ret[1];
+	var height = ret[2];
 
-						tmp = document.createElement("span");
-						tmp.textContent = "" + image_file.name + " - ";
-						small.appendChild(tmp);
+	console.info("URL: " + url)
 
-						// File size
-						tmp = document.createElement("strong");
-						tmp.textContent = "Size: ";
-						small.appendChild(tmp);
+	//
+	// 1st DIV
+	//
+	var div = document.createElement("div");
+	var newImg = document.createElement("img");
+	newImg.src = url;
+	newImg.className = "img-polaroid";
+	div.appendChild(newImg);
+	document.LUM_PREVIEW_IMAGES.push(url);
+	document.LUM_PREVIEW_FILENAMES.push(image_file.name);
+	thumbnails.appendChild(div);
 
-						tmp = document.createElement("span");
-						tmp.textContent = "" + readablizeBytes(image_file.size)
-								+ " - ";
-						small.appendChild(tmp);
+	//
+	// 2nd DIV
+	//
+	div = document.createElement("div");
 
-						// Img. dimensions
-						tmp = document.createElement("strong");
-						tmp.textContent = "Dimensions: ";
-						small.appendChild(tmp);
+	// File
+	var small = document.createElement("small");
+	tmp = document.createElement("strong");
+	tmp.textContent = "Original file: ";
+	small.appendChild(tmp);
 
-						tmp = document.createElement("span");
-						tmp.textContent = "" + img.width + "x" + img.height;
-						small.appendChild(tmp);
+	tmp = document.createElement("span");
+	tmp.textContent = "" + image_file.name + " - ";
+	small.appendChild(tmp);
 
-						div.appendChild(small);
-						thumbnails.appendChild(div);
+	// File size
+	tmp = document.createElement("strong");
+	tmp.textContent = "Size: ";
+	small.appendChild(tmp);
 
-						//
-						// 3rd DIV
-						//
+	tmp = document.createElement("span");
+	tmp.textContent = "" + readablizeBytes(image_file.size)
+			+ " - ";
+	small.appendChild(tmp);
 
-						var preview_file_size = window.atob(url.substring(23)).length;
+	// Img. dimensions
+	tmp = document.createElement("strong");
+	tmp.textContent = "Dimensions: ";
+	small.appendChild(tmp);
 
-						div = document.createElement("div");
-						small = document.createElement("small");
+	tmp = document.createElement("span");
+	tmp.textContent = "" + img.width + "x" + img.height;
+	small.appendChild(tmp);
 
-						// File size
-						tmp = document.createElement("strong");
-						tmp.textContent = "Preview size: ";
-						small.appendChild(tmp);
+	div.appendChild(small);
+	thumbnails.appendChild(div);
 
-						tmp = document.createElement("span");
-						tmp.textContent = ""
-								+ readablizeBytes(preview_file_size);
-						small.appendChild(tmp);
+	//
+	// 3rd DIV
+	//
 
-						// Img. dimensions
-						tmp = document.createElement("strong");
-						tmp.textContent = " - Dimensions: ";
-						small.appendChild(tmp);
+	var preview_file_size = window.atob(url.substring(23)).length;
 
-						tmp = document.createElement("span");
-						tmp.textContent = "" + width + "x" + height;
-						small.appendChild(tmp);
+	div = document.createElement("div");
+	small = document.createElement("small");
 
-						// Speedup
-						var speedup = ((preview_file_size * 1.0)
-								/ (image_file.size * 1.0) * 100.0)
-						tmp = document.createElement("strong");
-						tmp.textContent = " - Radio: ";
-						small.appendChild(tmp);
+	// File size
+	tmp = document.createElement("strong");
+	tmp.textContent = "Preview size: ";
+	small.appendChild(tmp);
 
-						tmp = document.createElement("span");
-						tmp.textContent = "" + speedup.toFixed(2) + "%";
-						small.appendChild(tmp);
+	tmp = document.createElement("span");
+	tmp.textContent = ""
+			+ readablizeBytes(preview_file_size);
+	small.appendChild(tmp);
 
-						div.appendChild(small);
-						thumbnails.appendChild(div);
+	// Img. dimensions
+	tmp = document.createElement("strong");
+	tmp.textContent = " - Dimensions: ";
+	small.appendChild(tmp);
 
-						//
-						// HR
-						//
-						var hr = document.createElement("hr");
-						thumbnails.appendChild(hr);
+	tmp = document.createElement("span");
+	tmp.textContent = "" + width + "x" + height;
+	small.appendChild(tmp);
 
-						document.LUM_SIZE_ORIGINAL += image_file.size;
-						document.LUM_SIZE_PREVIEW += preview_file_size;
-						update_statistics();
-					}
+	// Speedup
+	var speedup = ((preview_file_size * 1.0)
+			/ (image_file.size * 1.0) * 100.0)
+	tmp = document.createElement("strong");
+	tmp.textContent = " - Radio: ";
+	small.appendChild(tmp);
 
-					// https://github.com/josefrichter/resize/blob/master/public/preprocess.js
-					function resizeMe(img, max_width, max_height, quality) {
+	tmp = document.createElement("span");
+	tmp.textContent = "" + speedup.toFixed(2) + "%";
+	small.appendChild(tmp);
 
-						// Initially, W & H has original size
-						var width = img.width;
-						var height = img.height;
+	div.appendChild(small);
+	thumbnails.appendChild(div);
 
-						// calculate the width and height, constraining the proportions
-						if (width > height) {
-							if (width > max_width) {
-								//height *= max_width / width;
-								height = Math
-										.round(height *= max_width / width);
-								width = max_width;
-							}
-						} else {
-							if (height > max_height) {
-								//width *= max_height / height;
-								width = Math
-										.round(width *= max_height / height);
-								height = max_height;
-							}
-						}
+	//
+	// HR
+	//
+	var hr = document.createElement("hr");
+	thumbnails.appendChild(hr);
 
-						// Now, W & H has the size for preview
+	document.LUM_SIZE_ORIGINAL += image_file.size;
+	document.LUM_SIZE_PREVIEW += preview_file_size;
+	update_statistics();
+}
 
-						// resize the canvas and draw the image data into it
-						var canvas = document.createElement('canvas');
-						canvas.width = width;
-						canvas.height = height;
-						var ctx = canvas.getContext("2d");
-						ctx.drawImage(img, 0, 0, width, height);
+// https://github.com/josefrichter/resize/blob/master/public/preprocess.js
+function resizeMe(img, max_width, max_height, quality) {
 
-						// xhgdeorox // preview.appendChild(canvas); // do the actual resized preview
-						console.info("Canvas: " + canvas);
+	// Initially, W & H has original size
+	var width = img.width;
+	var height = img.height;
 
-						// get the data from canvas as 70% JPG (can be also PNG, etc.)
-						// return canvas.toDataURL("image/jpeg", 0.7);
-						var dataUrl = canvas.toDataURL("image/jpeg", quality);
-						console.info("dataUrl: " + dataUrl);
-						return [ dataUrl, width, height ];
-					}
+	// calculate the width and height, constraining the proportions
+	if (width > height) {
+		if (width > max_width) {
+			//height *= max_width / width;
+			height = Math
+					.round(height *= max_width / width);
+			width = max_width;
+		}
+	} else {
+		if (height > max_height) {
+			//width *= max_height / height;
+			width = Math
+					.round(width *= max_height / height);
+			height = max_height;
+		}
+	}
 
-					function process_file(image_file) {
-						var img = document.createElement("img");
-						img.src = window.URL.createObjectURL(image_file);
+	// Now, W & H has the size for preview
 
-						// http://stackoverflow.com/questions/12570834/how-can-i-get-the-file-size-image-height-and-width-before-upload
-						img.onerror = function() {
-							add_preview_img_error(image_file);
-							document.LUM_PROCESSED_FILE_COUNT += 1;
-						};
+	// resize the canvas and draw the image data into it
+	var canvas = document.createElement('canvas');
+	canvas.width = width;
+	canvas.height = height;
+	var ctx = canvas.getContext("2d");
+	ctx.drawImage(img, 0, 0, width, height);
 
-						img.onload = function() {
-							add_preview_img(image_file, this);
-							document.LUM_PROCESSED_FILE_COUNT += 1;
-						};
-					}
+	// xhgdeorox // preview.appendChild(canvas); // do the actual resized preview
+	console.info("Canvas: " + canvas);
 
-					function show_thumbnail() {
-						document.LUM_PREVIEW_IMAGES = new Array();
-						document.LUM_PREVIEW_FILENAMES = new Array();
-						document.LUM_SIZE_ORIGINAL = 0;
-						document.LUM_SIZE_PREVIEW = 0;
-						document.LUM_PROCESSED_FILE_COUNT = 0;
+	// get the data from canvas as 70% JPG (can be also PNG, etc.)
+	// return canvas.toDataURL("image/jpeg", 0.7);
+	var dataUrl = canvas.toDataURL("image/jpeg", quality);
+	console.info("dataUrl: " + dataUrl);
+	return [ dataUrl, width, height ];
+}
 
-						$('#thumbnails_preview').empty();
-						$('#status').empty();
+function process_file(image_file) {
+	var img = document.createElement("img");
+	img.src = window.URL.createObjectURL(image_file);
 
-						var fileInput = $("#fileinput")[0];
-						var fileList = fileInput.files;
-						var filesToUpload = fileList;
+	// http://stackoverflow.com/questions/12570834/how-can-i-get-the-file-size-image-height-and-width-before-upload
+	img.onerror = function() {
+		add_preview_img_error(image_file);
+		document.LUM_PROCESSED_FILE_COUNT += 1;
+	};
 
-						if (filesToUpload.length == 0) {
-							$('#submit_button').button('loading');
-							return;
-						}
+	img.onload = function() {
+		add_preview_img(image_file, this);
+		document.LUM_PROCESSED_FILE_COUNT += 1;
+	};
+}
 
-						document.LUM_TOTAL_FILE_COUNT = filesToUpload.length;
-						show_statistics_modal(); // Call *AFTER* setting doc.LUM_TOTAL_FILE_COUNT 
+function show_thumbnail() {
+	document.LUM_PREVIEW_IMAGES = new Array();
+	document.LUM_PREVIEW_FILENAMES = new Array();
+	document.LUM_SIZE_ORIGINAL = 0;
+	document.LUM_SIZE_PREVIEW = 0;
+	document.LUM_PROCESSED_FILE_COUNT = 0;
 
-						for (x = 0; x < filesToUpload.length; x++) {
-							// This for runs almost inmediatly, but the processing of 
-							// the images not! The processing is made in sort of
-							// background thread.....
-							var fileToUpload = filesToUpload[x];
-							process_file(fileToUpload);
-						}
+	$('#thumbnails_preview').empty();
+	$('#status').empty();
 
-					}
+	var filesToUpload = $("#fileinput")[0].files;
 
-					function upload_previews() {
-						var images = {};
-						for (i = 0; i < document.LUM_PREVIEW_IMAGES.length; i++) {
-							images['img' + i] = document.LUM_PREVIEW_IMAGES[i];
-							images['img' + i + '_filename'] = document.LUM_PREVIEW_FILENAMES[i];
-							console.info("URL[" + i + "]="
-									+ document.LUM_PREVIEW_IMAGES[i]);
-						}
+	if (filesToUpload.length == 0) {
+		$('#submit_button').button('loading');
+		return;
+	}
 
-						$.ajax({
-							type : "POST",
-							url : "{% url 'session_upload_previews_upload' object.id %}",
-							data : images
-						}).done(function(msg) {
-							console.info("Ajax: " + msg)
-							if (msg['status'] == 'ok') {
-								window.location.replace(msg['redirect']);
-							} else {
-								alert("ERROR - status != ok");
-								window.location.replace('/');
-							}
-						}).fail(function(msg) {
-							console.error(msg);
-							alert("ERROR");
-							// window.location.replace('/');
-						});
+	document.LUM_TOTAL_FILE_COUNT = filesToUpload.length;
+	show_statistics_modal(); // Call *AFTER* setting doc.LUM_TOTAL_FILE_COUNT
 
-					}
+	for (var x = 0; x < filesToUpload.length; x++) {
+		// This for runs almost inmediatly, but the processing of
+		// the images not! The processing is made in sort of
+		// background thread.....
+		var fileToUpload = filesToUpload[x];
+		process_file(fileToUpload);
+	}
 
-					$(document).ready(function() {
-						$('#fileinput').bind('change', show_thumbnail);
-						$('#submit_button').button('loading');
-					});
-				</script>
-    {% endblock %}
+}
+
+function upload_previews() {
+	var images = {};
+	for (i = 0; i < document.LUM_PREVIEW_IMAGES.length; i++) {
+		images['img' + i] = document.LUM_PREVIEW_IMAGES[i];
+		images['img' + i + '_filename'] = document.LUM_PREVIEW_FILENAMES[i];
+		console.info("URL[" + i + "]="
+				+ document.LUM_PREVIEW_IMAGES[i]);
+	}
+
+	$.ajax({
+		type : "POST",
+		url : "{% url 'session_upload_previews_upload' object.id %}",
+		data : images
+	}).done(function(msg) {
+		console.info("Ajax: " + msg)
+		if (msg['status'] == 'ok') {
+			window.location.replace(msg['redirect']);
+		} else {
+			alert("ERROR - status != ok");
+			window.location.replace('/');
+		}
+	}).fail(function(msg) {
+		console.error(msg);
+		alert("ERROR");
+		// window.location.replace('/');
+	});
+
+}
+
+$(document).ready(function() {
+	$('#fileinput').bind('change', show_thumbnail);
+	$('#submit_button').button('loading');
+});
+
+</script>
+{% endblock %}
 
 </body>
 </html>
