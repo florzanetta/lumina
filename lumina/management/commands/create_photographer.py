@@ -21,7 +21,7 @@ class Command(BaseCommand):
                                        default_terms='Terms and conditions (...)')
 
         user = LuminaUser.objects.create(username=username,
-                                         email="{}@example.com".format(username),
+                                         email="{}@lumina-photo.com.ar".format(username),
                                          user_type=LuminaUser.PHOTOGRAPHER,
                                          studio=studio,
                                          user_for_customer=None,
