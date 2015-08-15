@@ -672,7 +672,8 @@ class SessionListView(ListView):
     model = Session
 
     def _archived(self):
-        return self.request.REQUEST.get('archived', '0') == '1'
+        return '1' in [self.request.GET.get('archived', None),
+                       self.request.POST.get('archived', None)]
 
     def get_context_data(self, **kwargs):
         context = super(SessionListView, self).get_context_data(**kwargs)
