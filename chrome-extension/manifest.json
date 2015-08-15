@@ -9,6 +9,7 @@
 		// "notifications",
 		"alarms",
 		"storage",
+	    "fileSystem",
 		"http://localhost:8000/"
 	],
 	
