@@ -27,4 +27,5 @@ uwsgi \
 	--python-path=${BASEDIR} \
 	--static-map /static=${BASEDIR}/deploy/dev/static \
 	--master-fifo /tmp/.lumina-uwsgi \
+	--attach-daemon ${BASEDIR}/deploy/dev/run_twistd_mail.sh \
 	$*

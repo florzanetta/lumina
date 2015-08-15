@@ -48,3 +48,8 @@ nosetests.xml
 /chrome-user-data-dir
 /lumina_local_settings.py
 /virtualenv
+/.idea
+/.thunderbird
+/virtualenv-mail
+/deploy/dev/mailboxes-lumina.com.ar
+/presentacion-*
