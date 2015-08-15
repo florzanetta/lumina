@@ -37,7 +37,7 @@
                     <i class="fa fa-eye"></i>
                     Vista previa
 
-                    {% if image.original_file_checksum %}
+                    {% if image.studio == user.studio and image.original_file_checksum %}
                         - Checksum de original: 0x{{image.original_file_checksum}}
                     {% endif %}
                 </small>
