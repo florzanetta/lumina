@@ -127,6 +127,12 @@ var luminaService = {
 		
 		if (resp['pending_uploads_count'] > 0) {
 			console.info("HAY UPLOADS PENDIENTES! - pending_uploads_count: " + resp['pending_uploads_count']);
+			var pending_uploads = resp['pending_uploads'];
+			for (var i = 0; i < pending_uploads.length; i++) {
+				var aPendingUpload = pending_uploads[i];
+				console.info(" + Pendiente: [" + aPendingUpload.id + "] " + aPendingUpload.name);
+			}
+
 		} else {
 			console.info("No hay uploads pendientes");
 		}
