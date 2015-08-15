@@ -53,3 +53,5 @@ nosetests.xml
 /virtualenv-mail
 /deploy/dev/mailboxes-lumina.com.ar
 /presentacion-*
+/twistd.pid
+/lumina.sqlite*
