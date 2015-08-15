@@ -63,7 +63,7 @@ def login(request):
 
 def _photographer_home(request):
     image_selection_with_pending_uploads = \
-        ImageSelection.objects.image_selections_pending_to_upload_full_quality_images(
+        ImageSelection.objects.full_quality_pending_uploads(
             request.user)
     image_selection_with_pending_uploads_count = image_selection_with_pending_uploads.count()
 

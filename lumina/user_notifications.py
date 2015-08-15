@@ -22,9 +22,7 @@ def get_photographer_notifications(user):
     assert user.is_photographer()
     notifications = []
 
-    image_selection_with_pending_uploads = \
-        models.ImageSelection.objects.image_selections_pending_to_upload_full_quality_images(user)
-    pending_uploads_count = image_selection_with_pending_uploads.count()
+    pending_uploads_count = models.ImageSelection.objects.full_quality_pending_uploads(user).count()
 
     if pending_uploads_count > 0:
         notifications.append(Notification(

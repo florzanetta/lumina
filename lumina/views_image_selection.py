@@ -81,7 +81,7 @@ class ImageSelectionWithPendingUploadsListView(ListView):
     model = ImageSelection
 
     def get_queryset(self):
-        return ImageSelection.objects.image_selections_pending_to_upload_full_quality_images(
+        return ImageSelection.objects.full_quality_pending_uploads(
             self.request.user)
 
     def get_context_data(self, **kwargs):
@@ -95,7 +95,7 @@ class ImageSelectionUploadPendingView(DetailView):
     template_name = 'lumina/imageselection_upload_pending.html'
 
     def get_queryset(self):
-        return ImageSelection.objects.image_selections_pending_to_upload_full_quality_images(
+        return ImageSelection.objects.full_quality_pending_uploads(
             self.request.user)
 
     def get_context_data(self, **kwargs):

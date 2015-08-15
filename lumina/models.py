@@ -446,7 +446,7 @@ class ImageSelectionManager(models.Manager):
             qs = qs.filter(status=ImageSelection.STATUS_WAITING)
         return qs
 
-    def image_selections_pending_to_upload_full_quality_images(self, user):
+    def full_quality_pending_uploads(self, user):
         """
         Returns ImageSelection instances which user has selected the images,
         but has at least one images that doesn't have the full-quality version.
