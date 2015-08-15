@@ -32,7 +32,7 @@ STATIC_ROOT = os.path.join(BASEDIR, "deploy", "dev", "static")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.expanduser('~/lumina.sqlite'),
+        'NAME': os.path.join(BASEDIR, "lumina.sqlite"),
     }
 }
 
