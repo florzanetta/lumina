@@ -1,6 +1,6 @@
 from lumina.settings import *  # noqa
 
-DEBUG = False
+DEBUG = True
 
 #
 # Dump object with {% dump_objects %}
