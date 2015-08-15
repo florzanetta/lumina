@@ -265,12 +265,6 @@ urlpatterns = patterns(
 
     url(r'^report/(\d+)/$', 'lumina.views_reports.view_report', name='view_report'),
 
-    # ===========================================================================
-    # Rest API
-    # ===========================================================================
-
-    url(r'^rest/', include('lumina.urls_rest')),
-
     #
     # Other
     #
