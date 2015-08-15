@@ -147,9 +147,6 @@ function updateStatistics() {
 	var processed_including_current = document.LUM_PROCESSED_FILE_COUNT + 1;
 	$('#stats_files_processed')[0].textContent = processed_including_current;
 
-	if (processed_including_current >= document.LUM_TOTAL_FILE_COUNT) {
-		onFinishedLoadingThumbnails();
-	}
 }
 
 /**
@@ -162,9 +159,11 @@ function appendErrorMessageFileIsNotAnImage(non_image_file) {
 	var status = $('#status');
 	var li = document.createElement("li");
 	li.className = "text-error";
-	li.textContent = "" + non_image_file.name
-			+ " no es una imagen valida";
+	li.textContent = "" + non_image_file.name + " no es una imagen valida";
 	status.append(li);
+
+	updateStatistics();
+	window.setTimeout(processFile, 1);
 }
 
 /**
@@ -282,7 +281,6 @@ function generateThumbnailAndAppendToHtml(image_file, img) {
 
 	document.LUM_SUM_SIZE_ORIGINAL += image_file.size;
 	document.LUM_SUM_SIZE_PREVIEW += preview_file_size;
-	updateStatistics();
 
 	// ------------------------
 
@@ -295,6 +293,9 @@ function generateThumbnailAndAppendToHtml(image_file, img) {
 		spark.appendBinary(binary);
 		var hexHash = spark.end();
 		console.log("SparkMD5.hash(): md5sum: " + hexHash);
+
+		updateStatistics();
+		window.setTimeout(processFile, 1);
 	};
 
 	reader.readAsBinaryString(image_file);
@@ -349,7 +350,13 @@ function resizeImage(img, max_width, max_height, quality) {
 	return [ dataUrl, width, height ];
 }
 
-function processFile(imageFile) {
+function processFile() {
+	var imageFile = document.FILES.shift();
+	if(typeof(imageFile) == 'undefined') {
+		onFinishedLoadingThumbnails();
+		return;
+	};
+
 	var img = document.createElement("img");
 	img.src = window.URL.createObjectURL(imageFile);
 
@@ -370,6 +377,7 @@ function processFile(imageFile) {
  * files contents and generates the thumbnails.
  */
 function generateAndShowThumbnails() {
+	document.FILES = new Array();
 	document.LUM_PREVIEW_IMAGES = new Array();
 	document.LUM_PREVIEW_FILENAMES = new Array();
 	document.LUM_SUM_SIZE_ORIGINAL = 0;
@@ -385,19 +393,15 @@ function generateAndShowThumbnails() {
 		return;
 
 	$('.formControlRow').toggle();
-
 	showStatisticsDialog(selectedFiles.length);
-
 	document.LUM_TOTAL_FILE_COUNT = selectedFiles.length;
 
-	for (var x = 0; x < selectedFiles.length; x++) {
-		// This for runs almost inmediatly, but the processing of
-		// the images not! The processing is made in sort of
-		// background thread.....
-		var fileToUpload = selectedFiles[x];
-		processFile(fileToUpload);
+	var i;
+	for (i = 0; i < selectedFiles.length; i++) {
+		document.FILES.push(selectedFiles[i]);
 	}
 
+	processFile();
 }
 
 function uploadThumbnails() {
