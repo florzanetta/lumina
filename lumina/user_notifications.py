@@ -1,3 +1,8 @@
+from django.core.urlresolvers import reverse
+
+from lumina import models
+
+
 class Notification:
 
     def __init__(self, message, link=None):
@@ -15,11 +20,20 @@ class Notification:
 
 def get_photographer_notifications(user):
     assert user.is_photographer()
-    return [Notification("a notification for photog", link="/"),
-            Notification("another notification for photog")]
+    notifications = []
+
+    image_selection_with_pending_uploads = \
+        models.ImageSelection.objects.image_selections_pending_to_upload_full_quality_images(user)
+    pending_uploads_count = image_selection_with_pending_uploads.count()
+
+    if pending_uploads_count > 0:
+        notifications.append(Notification(
+            "Hay {}(s) sesiones pendientes".format(pending_uploads_count),
+            link=reverse('imageselection_with_pending_uploads_list')))
+
+    return notifications
 
 
 def get_customer_notifications(user):
     assert user.is_for_customer()
-    return [Notification("a notification for customer", link="/"),
-            Notification("another notification for customer")]
+    return []

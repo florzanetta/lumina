@@ -67,13 +67,6 @@ def _photographer_home(request):
             request.user)
     image_selection_with_pending_uploads_count = image_selection_with_pending_uploads.count()
 
-    if image_selection_with_pending_uploads_count:
-        messages.warning(request,
-                         'Hay {} solicitud{} de selección de fotos '
-                         'esperando que se suban la fotografías en calidad total'
-                         ''.format(image_selection_with_pending_uploads_count,
-                                   '' if image_selection_with_pending_uploads_count == 1 else 'es'))
-
     ctx = {
         'session_count': Session.objects.visible_sessions(request.user).count(),
         'image_count': Image.objects.visible_images(request.user).count(),
