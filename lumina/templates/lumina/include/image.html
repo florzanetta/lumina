@@ -32,10 +32,15 @@
 		                </label>
                     {% endif %}
 
-            {% if image.image %}
-            {% else %}
-                <i class="icon-warning-sign"></i>
-                <small><em>Esta imagen sólo está disponible como <strong>vista previa</strong></em></small>
+            {% if not image.image %}
+                <small class="text-muted">
+                    <i class="fa fa-eye"></i>
+                    Vista previa
+
+                    {% if image.original_file_checksum %}
+                        - Checksum de original: 0x{{image.original_file_checksum}}
+                    {% endif %}
+                </small>
             {% endif %}
 
             {% if show_dates %}

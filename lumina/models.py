@@ -615,6 +615,9 @@ class Image(models.Model):
     thumbnail_content_type = models.CharField(max_length=64,
                                               verbose_name="tipo de contenido de previsualizacion",
                                               null=True, blank=True)
+    original_file_checksum = models.CharField(max_length=64,
+                                              verbose_name="checksum de archivo original",
+                                              null=True, blank=True)
 
     # REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
     studio = models.ForeignKey(Studio, verbose_name="estudio")

@@ -444,6 +444,7 @@ def session_upload_previews_upload(request, session_id):
 
         thumb_base64 = request.POST[key]
         filename = request.POST[key + '_filename']
+        original_file_checksum = request.POST[key + '_checksum']
 
         # thumb_base64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQA(...)AP/2Q=="
         assert thumb_base64.startswith(PREFIX)
@@ -451,7 +452,8 @@ def session_upload_previews_upload(request, session_id):
         thumb_contents = base64.decodestring(bytes(thumb_base64, 'ascii'))
 
         new_image = Image(session=session, studio=request.user.studio,
-                          thumbnail_content_type='image/jpg')
+                          thumbnail_content_type='image/jpg',
+                          original_file_checksum=original_file_checksum)
 
         new_image.set_thumbnail_original_filename(filename)
         new_image.thumbnail_size = len(thumb_contents)
