@@ -118,10 +118,10 @@ urlpatterns = patterns(
                 views_image_selection.ImageSelectionWithPendingUploadsListView.as_view())),
         name='imageselection_with_pending_uploads_list'),
 
-    url(r'^session/image-selection/upload-pending/(?P<pk>\d+)/$',
+    url(r'^session/image-selection/upload-pending/(?P<pk>\d+)/manual-upload/$',
         cache_control(private=True)(
-            login_required(views_image_selection.ImageSelectionUploadPendingView.as_view())),
-        name='imageselection_upload_pending'),
+            login_required(views_image_selection.UploadPendingManualView.as_view())),
+        name='imageselection_upload_pending_manual'),
 
     url(r'^session/image-selection/redirect/(?P<pk>\d+)/$',
         views_image_selection.imageselection_redirect,

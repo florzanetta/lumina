@@ -90,16 +90,16 @@ class ImageSelectionWithPendingUploadsListView(ListView):
         return context
 
 
-class ImageSelectionUploadPendingView(DetailView):
+class UploadPendingManualView(DetailView):
     model = ImageSelection
-    template_name = 'lumina/imageselection_upload_pending.html'
+    template_name = 'lumina/imageselection_upload_pending_manual.html'
 
     def get_queryset(self):
         return ImageSelection.objects.full_quality_pending_uploads(
             self.request.user)
 
     def get_context_data(self, **kwargs):
-        context = super(ImageSelectionUploadPendingView, self).get_context_data(**kwargs)
+        context = super(UploadPendingManualView, self).get_context_data(**kwargs)
         context['selected_images_without_full_quality'] = \
             self.object.get_selected_images_without_full_quality()
         return context
@@ -132,7 +132,7 @@ class ImageSelectionUploadPendingView(DetailView):
             return HttpResponseRedirect(reverse('imageselection_redirect',
                                                 args=[pk]))
         else:
-            return HttpResponseRedirect(reverse('imageselection_upload_pending',
+            return HttpResponseRedirect(reverse('imageselection_upload_pending_manual',
                                                 args=[pk]))
 
 
