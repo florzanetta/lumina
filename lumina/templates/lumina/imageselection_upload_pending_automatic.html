@@ -1,0 +1,93 @@
+{% extends "lumina/base.html" %} {% load lumina_extras %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}
+    Lumina - Peticiones de selección de imágenes de album {{ object.album.name }}
+    {% endblock %}</title>
+</head>
+<body>
+
+    <!--
+    This template shows an 'read-only' version of ImageSelection
+    (for both photographers and customers)
+-->
+
+{% block content %}
+
+    <h3>Peticiones de selección de imágenes de la sesión {{ object.session.name }}</h3>
+
+    <small><strong>Sesión:</strong> {{ object.session.name }}</small>
+    <br>
+
+    <small><strong>Estado:</strong> {{ object.get_status_display }}</small>
+    <br>
+
+    {% if selected_images_without_full_quality %}
+        <h5>Vistas previas de las imágenes de la sesión:</h5>
+
+        <table class="table">
+            {% for image in selected_images_without_full_quality %}
+            <tr>
+                <td width="1%">
+                    <div class="media">
+                        <a class="pull-left" href="javascript:void(0);"> <img class="media-object"
+                            src="{% url 'image_thumb_64x64' image.pk %}" style="min-width: 80px;">
+                        </a>
+                    </div>
+                </td>
+                <td width="99%">
+                    <h4>
+                        {% if image.image %}
+                            {{ image.original_filename }}
+                        {% else %}
+                            {{ image.thumbnail_original_filename }}
+                        {% endif %}
+                    </h4>
+                    <div style="display: none;" data-image-id="{{image.id}}">
+                        <div id="original-filename-{{image.id}}"
+                             data-value="{{image.original_filename}}"></div>
+                        <div id="original-file-checksum-{{image.id}}"
+                             data-value="{{image.original_file_checksum}}"></div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    {% else %}
+
+        <p>Todas las fotografías han sido subidas.</p>
+
+    {% endif %}
+
+{% endblock content %}
+
+{% block javascript_bottom %}
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+    document.IMAGES = Array();
+
+	$('*[data-image-id]').each(function(index, element) {
+        var imageId = $(element).data('image-id');
+        var checksum = $('#original-file-checksum-' + imageId).data('value');
+        var originalFilename = $('#original-filename-' + imageId).data('value');
+        console.log("image-id: " + imageId);
+        console.log("  + checksum: " + checksum);
+        console.log("  + originalFilename: " + originalFilename);
+        document.IMAGES.push({
+            imageId: imageId,
+            checksum: checksum,
+            originalFilename: originalFilename
+        });
+    });
+});
+
+</script>
+{% endblock %}
+
+</body>
+</html>

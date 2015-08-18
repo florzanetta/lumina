@@ -136,6 +136,26 @@ class UploadPendingManualView(DetailView):
                                                 args=[pk]))
 
 
+class UploadPendingAutomaticView(DetailView):
+    """
+    Upload originial images, automating the selection of the images
+    using the checksum of the original images (uploaded when the previews
+    where uploaded).
+    """
+    model = ImageSelection
+    template_name = 'lumina/imageselection_upload_pending_automatic.html'
+
+    def get_queryset(self):
+        return ImageSelection.objects.full_quality_pending_uploads(
+            self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super(UploadPendingAutomaticView, self).get_context_data(**kwargs)
+        context['selected_images_without_full_quality'] = \
+            self.object.get_selected_images_without_full_quality()
+        return context
+
+
 class ImageSelectionCreateView(CreateView):
     """
     With this view, the photographer creates a request

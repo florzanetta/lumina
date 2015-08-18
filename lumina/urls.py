@@ -123,6 +123,11 @@ urlpatterns = patterns(
             login_required(views_image_selection.UploadPendingManualView.as_view())),
         name='imageselection_upload_pending_manual'),
 
+    url(r'^session/image-selection/upload-pending/(?P<pk>\d+)/automatic-upload/$',
+        cache_control(private=True)(
+            login_required(views_image_selection.UploadPendingAutomaticView.as_view())),
+        name='imageselection_upload_pending_automatic'),
+
     url(r'^session/image-selection/redirect/(?P<pk>\d+)/$',
         views_image_selection.imageselection_redirect,
         name='imageselection_redirect'),
