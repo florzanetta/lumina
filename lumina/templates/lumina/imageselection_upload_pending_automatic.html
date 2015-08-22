@@ -350,9 +350,21 @@ function generateAndShowThumbnails() {
 	processFile();
 }
 
-function uploadAnImage(checksum, anImageToUpload) {
+function onFinishedUploadingImages() {
+    alert("FIN");
+}
 
-    var qParams = "checksum=" + checksum + "&imageId=" + anImageToUpload.imageId;
+function uploadAnImage(imagesToUpload) {
+
+    var anImageToUpload = imagesToUpload.shift();
+	if(typeof(anImageToUpload) == 'undefined') {
+		onFinishedUploadingImages();
+		return;
+	};
+
+    console.info("Starting upload of '" + anImageToUpload.uploadFilename + "' - checksum: " + anImageToUpload.checksum);
+
+    var qParams = "checksum=" + anImageToUpload.checksum + "&imageId=" + anImageToUpload.imageId;
 
     $.ajax({
         type : "POST",
@@ -363,10 +375,13 @@ function uploadAnImage(checksum, anImageToUpload) {
     }).done(function(msg) {
         console.info("upload of '" + anImageToUpload.uploadFilename + "' finished. status: " + msg['status']);
         console.info(" - server side claculated_checksum: " + msg['claculated_checksum']);
+        window.setTimeout(function(){ uploadAnImage(imagesToUpload); }, 1);
 
     }).fail(function(msg) {
         console.error(msg);
         alert("ERROR");
+
+        window.setTimeout(function(){ uploadAnImage(imagesToUpload); }, 1);
     });
 
 }
@@ -374,6 +389,8 @@ function uploadAnImage(checksum, anImageToUpload) {
 function uploadThumbnails(event) {
 
 	event.preventDefault(); // avoid form submition
+
+    var imagesToUpload = Array();
 
     for(var checksum in document.PREVIEW_ONLY_IMAGES_BY_CHECKSUM) {
         var anImageToUpload = document.PREVIEW_ONLY_IMAGES_BY_CHECKSUM[checksum];
@@ -388,10 +405,10 @@ function uploadThumbnails(event) {
             continue;
         }
 
-        console.info("Starting upload of '" + anImageToUpload.uploadFilename + "' - checksum: " + checksum);
-        uploadAnImage(checksum, anImageToUpload);
-
+        imagesToUpload.push(anImageToUpload);
     }
+
+    window.setTimeout(function(){ uploadAnImage(imagesToUpload); }, 1);
 
     //	$('#uploadingThumbnailsModal').modal({
     //		backdrop : 'static',
