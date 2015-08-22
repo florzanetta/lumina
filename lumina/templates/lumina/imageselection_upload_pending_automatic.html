@@ -562,6 +562,22 @@ function uploadThumbnails(event) {
 
 	event.preventDefault(); // avoid form submition
 
+    for(var checksum in document.KNOWN_IMAGES_BY_CHECKSUM) {
+        var anImageToUpload = document.KNOWN_IMAGES_BY_CHECKSUM[checksum];
+
+        if(anImageToUpload.uploadFilename == null) {
+            console.info("Ignoring image (uploadFilename == null) - checksum: " + checksum)
+            continue;
+        }
+        if(anImageToUpload.uploadBinaryContents == null) {
+            console.info("Ignoring image (uploadBinaryContents == null) - checksum: " + checksum)
+            continue;
+        }
+
+        alert("Upload " + anImageToUpload.uploadFilename + "(" + checksum + ")")
+
+    }
+
     //	$('#uploadingThumbnailsModal').modal({
     //		backdrop : 'static',
     //		keyboard : false
