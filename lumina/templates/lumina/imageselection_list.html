@@ -21,9 +21,15 @@
 		        <div class="media-heading">
                 {% if for_pending_uploads %}
                     <!-- Point to pending-uploads view -->
-                    <a href="{% url 'imageselection_upload_pending_manual' pet.id %}">
+                    <a href="{% url 'imageselection_upload_pending_automatic' pet.id %}">
                         <strong>Sesión</strong>:
                             {{ pet.session.name }}</a>
+
+                    ·
+
+                    <small><a href="{% url 'imageselection_upload_pending_manual' pet.id %}">
+                        Selección manual
+                    </a></small>
                 {% else %}
                     <!-- Point to image-selection view -->
                     <a href="{% url 'imageselection_redirect' pet.id %}">
