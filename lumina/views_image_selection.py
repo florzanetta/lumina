@@ -3,7 +3,9 @@
 import hashlib
 import json
 import logging
+import uuid
 
+from django.core.files.base import ContentFile
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.views.generic.edit import CreateView
@@ -190,7 +192,8 @@ class UploadPendingAutomaticView(DetailView):
             }
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-        # TODO: save full-quality image file
+        image.image.save(str(uuid.uuid4()), ContentFile(binary_data))
+        image.save()
 
         response_data = {
             'status': 'ok',
