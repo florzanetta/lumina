@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import json
 import logging
 
 from django.shortcuts import render_to_response
@@ -7,6 +8,7 @@ from django.template.context import RequestContext
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.http.response import HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -154,6 +156,24 @@ class UploadPendingAutomaticView(DetailView):
         context['selected_images_without_full_quality'] = \
             self.object.get_selected_images_without_full_quality()
         return context
+
+    def post(self, request, *args, **kwargs):
+        logger.info("checksum: %s", request.GET['checksum'])
+        import hashlib
+        m = hashlib.md5()
+        binary_data = request.body
+        logger.info("len(binary_data): %s", len(binary_data))
+        m.update(binary_data)
+        claculated_checksum = m.hexdigest()
+
+        logger.info("claculated_checksum: %s", claculated_checksum)
+
+        response_data = {
+            'status': 'ok',
+            'img_count': 1,
+            'claculated_checksum': claculated_checksum
+        }
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
 class ImageSelectionCreateView(CreateView):

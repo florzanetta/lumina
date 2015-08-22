@@ -574,7 +574,28 @@ function uploadThumbnails(event) {
             continue;
         }
 
-        alert("Upload " + anImageToUpload.uploadFilename + "(" + checksum + ")")
+        console.info("Starting upload of '" + anImageToUpload.uploadFilename + "' - checksum: " + checksum);
+
+        $.ajax({
+            type : "POST",
+            url : "{% url 'imageselection_upload_pending_automatic' object.id %}?checksum=" + checksum,
+            data : anImageToUpload.uploadBinaryContents,
+            processData : false
+        }).done(function(msg) {
+            console.info("upload finished. status: " + msg['status']);
+            console.info(" - server side claculated_checksum: " + msg['claculated_checksum']);
+            //            console.info("Ajax: " + msg)
+            //            if (msg['status'] == 'ok') {
+            //                window.location.replace(msg['redirect']);
+            //            } else {
+            //                alert("ERROR - status != ok");
+            //                window.location.replace('/');
+            //            }
+        }).fail(function(msg) {
+            console.error(msg);
+            alert("ERROR");
+            // window.location.replace('/');
+        });
 
     }
 
