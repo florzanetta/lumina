@@ -156,7 +156,7 @@
 
 $(document).ready(function() {
 
-    document.IMAGES = Array();
+    document.KNOWN_IMAGES_BY_CHECKSUM = {};
 
 	$('*[data-image-id]').each(function(index, element) {
         var imageId = $(element).data('image-id');
@@ -164,12 +164,13 @@ $(document).ready(function() {
         var originalFilename = $('#original-filename-' + imageId).data('value');
         console.log("  + checksum: " + checksum);
         console.log("  + originalFilename: " + originalFilename);
-        document.IMAGES.push({
+        document.KNOWN_IMAGES_BY_CHECKSUM[checksum] = {
             imageId: imageId,
             checksum: checksum,
             originalFilename: originalFilename,
-            imageToUpload: null
-        });
+            uploadFilename: null,
+            uploadBinaryContents: null
+        };
     });
 
     $('#fileInput').bind('change', generateAndShowThumbnails);
@@ -214,19 +215,21 @@ $(document).ready(function() {
 
 function matchNewUploadsToPendingImagesByMd5sum() {
 
-    console.info("matchNewUploadsToPendingImagesByMd5sum(): length: " + document.IMAGES.length);
-    for(var i=0; i<document.IMAGES.length; i++) {
-        var anImageToUpload = document.IMAGES[i];
+    console.info("matchNewUploadsToPendingImagesByMd5sum(): length: " + Object.keys(document.KNOWN_IMAGES_BY_CHECKSUM).length);
+    for(var checksum in document.KNOWN_IMAGES_BY_CHECKSUM) {
+        var anImageToUpload = document.KNOWN_IMAGES_BY_CHECKSUM[checksum];
 
-        if(document.LUM_FILES_MD5SUM[anImageToUpload.checksum]) {
-            console.info("matchNewUploadsToPendingImagesByMd5sum(): FOUND image with checksum " + anImageToUpload.checksum);
-            anImageToUpload.imageToUpload = document.LUM_FILES_MD5SUM[anImageToUpload.checksum];
+        if(document.LUM_FILES_TO_UPLOAD_MD5SUM[checksum]) {
+            console.info("matchNewUploadsToPendingImagesByMd5sum(): FOUND image with checksum " + checksum);
+            anImageToUpload.uploadFilename = document.LUM_FILES_TO_UPLOAD_MD5SUM[anImageToUpload.checksum].fileName;
+            anImageToUpload.uploadBinaryContents = document.LUM_FILES_TO_UPLOAD_MD5SUM[anImageToUpload.checksum].binaryContents;
             $('.icon-image-md5sum-' + anImageToUpload.checksum).removeClass("fa-question-circle").addClass("fa-check-square-o");
         } else {
-            console.info("matchNewUploadsToPendingImagesByMd5sum(): NOT FOUND image with checksum " + anImageToUpload.checksum);
+            console.info("matchNewUploadsToPendingImagesByMd5sum(): NOT FOUND image with checksum " + checksum);
             $('.icon-image-md5sum-' + anImageToUpload.checksum).removeClass("fa-question-circle").addClass("fa-minus-square-o");
         }
     }
+
 }
 
 function onFinishedLoadingThumbnails() {
@@ -407,10 +410,18 @@ function generateThumbnailAndAppendToHtml(image_file, img) {
 		var spark = new SparkMD5();
 		spark.appendBinary(binary);
 		var hexHash = spark.end();
-		console.log("SparkMD5.hash(): md5sum of '" + image_file.name + "': " + hexHash);
-        //		document.LUM_MD5SUM.push(hexHash);
 
-        document.LUM_FILES_MD5SUM[hexHash] = image_file.name;
+        if(document.KNOWN_IMAGES_BY_CHECKSUM[hexHash]) {
+		    console.log("SparkMD5.hash(): md5sum of '" + image_file.name + "' is for a PENDING UPLOAD: " + hexHash);
+            document.LUM_FILES_TO_UPLOAD_MD5SUM[hexHash] = {
+                fileName: image_file.name,
+                binaryContents: binary
+            };
+        } else {
+		    console.log("SparkMD5.hash(): md5sum of '" + image_file.name + "' is NOT for a PENDING UPLOAD: " + hexHash);
+        }
+
+        //		document.LUM_MD5SUM.push(hexHash);
 
         //		//
         //		// 4th DIV
@@ -529,7 +540,7 @@ function generateAndShowThumbnails() {
 	//$('#thumbnails_preview').empty();
 	//$('#status').empty();
 
-    document.LUM_FILES_MD5SUM = {};
+    document.LUM_FILES_TO_UPLOAD_MD5SUM = {};
 
 	var selectedFiles = $("#fileInput")[0].files;
 	if (selectedFiles.length <= 0)
