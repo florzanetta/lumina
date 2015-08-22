@@ -149,6 +149,8 @@
 
     {% endif %}
 
+    <ul id="status"></ul>
+
 {% endblock content %}
 
 {% block javascript_bottom %}
@@ -156,7 +158,7 @@
 
 $(document).ready(function() {
 
-    document.KNOWN_IMAGES_BY_CHECKSUM = {};
+    document.PREVIEW_ONLY_IMAGES_BY_CHECKSUM = {};
 
 	$('*[data-image-id]').each(function(index, element) {
         var imageId = $(element).data('image-id');
@@ -164,12 +166,11 @@ $(document).ready(function() {
         var originalFilename = $('#original-filename-' + imageId).data('value');
         console.log("  + checksum: " + checksum);
         console.log("  + originalFilename: " + originalFilename);
-        document.KNOWN_IMAGES_BY_CHECKSUM[checksum] = {
+        document.PREVIEW_ONLY_IMAGES_BY_CHECKSUM[checksum] = {
             imageId: imageId,
             checksum: checksum,
             originalFilename: originalFilename,
             uploadFilename: null,
-            uploadBinaryContents: null
         };
     });
 
@@ -215,14 +216,13 @@ $(document).ready(function() {
 
 function matchNewUploadsToPendingImagesByMd5sum() {
 
-    console.info("matchNewUploadsToPendingImagesByMd5sum(): length: " + Object.keys(document.KNOWN_IMAGES_BY_CHECKSUM).length);
-    for(var checksum in document.KNOWN_IMAGES_BY_CHECKSUM) {
-        var anImageToUpload = document.KNOWN_IMAGES_BY_CHECKSUM[checksum];
+    console.info("matchNewUploadsToPendingImagesByMd5sum(): length: " + Object.keys(document.PREVIEW_ONLY_IMAGES_BY_CHECKSUM).length);
+    for(var checksum in document.PREVIEW_ONLY_IMAGES_BY_CHECKSUM) {
+        var anImageToUpload = document.PREVIEW_ONLY_IMAGES_BY_CHECKSUM[checksum];
 
         if(document.LUM_FILES_TO_UPLOAD_MD5SUM[checksum]) {
             console.info("matchNewUploadsToPendingImagesByMd5sum(): FOUND image with checksum " + checksum);
             anImageToUpload.uploadFilename = document.LUM_FILES_TO_UPLOAD_MD5SUM[anImageToUpload.checksum].fileName;
-            anImageToUpload.uploadBinaryContents = document.LUM_FILES_TO_UPLOAD_MD5SUM[anImageToUpload.checksum].binaryContents;
             anImageToUpload.file = document.LUM_FILES_TO_UPLOAD_MD5SUM[anImageToUpload.checksum].file;
             $('.icon-image-md5sum-' + anImageToUpload.checksum).removeClass("fa-question-circle").addClass("fa-check-square-o");
         } else {
@@ -274,21 +274,21 @@ function updateStatistics() {
 
 }
 
-///**
-// * This method is called for each of the files selected by the user
-// * that are NOT images.
-// *
-// * @See generateThumbnailAndAppendToHtml: called when the file IS an image
-// */
-//function appendErrorMessageFileIsNotAnImage(non_image_file) {
-//	var status = $('#status');
-//	var li = document.createElement("li");
-//	li.className = "text-error";
-//	li.textContent = "" + non_image_file.name + " no es una imagen valida";
-//	status.append(li);
-//
-//	window.setTimeout(processFile, 1);
-//}
+/**
+ * This method is called for each of the files selected by the user
+ * that are NOT images.
+ *
+ * @See generateThumbnailAndAppendToHtml: called when the file IS an image
+ */
+function appendErrorMessageFileIsNotAnImage(non_image_file) {
+	var status = $('#status');
+	var li = document.createElement("li");
+	li.className = "text-danger";
+	li.textContent = "" + non_image_file.name + " no es una imagen valida";
+	status.append(li);
+
+	window.setTimeout(processFile, 1);
+}
 
 /**
  * This method is called for each of the files/images selected by the user,
@@ -412,7 +412,7 @@ function generateThumbnailAndAppendToHtml(image_file, img) {
 		spark.appendBinary(binary);
 		var hexHash = spark.end();
 
-        if(document.KNOWN_IMAGES_BY_CHECKSUM[hexHash]) {
+        if(document.PREVIEW_ONLY_IMAGES_BY_CHECKSUM[hexHash]) {
 		    console.log("SparkMD5.hash(): md5sum of '" + image_file.name + "' is for a PENDING UPLOAD: " + hexHash);
             document.LUM_FILES_TO_UPLOAD_MD5SUM[hexHash] = {
                 fileName: image_file.name,
@@ -473,8 +473,7 @@ function processFile() {
 
 	/* http://stackoverflow.com/questions/12570834/how-can-i-get-the-file-size-image-height-and-width-before-upload */
 	img.onerror = function() {
-		// appendErrorMessageFileIsNotAnImage(imageFile);
-        alert("img.onerror()");
+		appendErrorMessageFileIsNotAnImage(imageFile);
 	};
 
 	img.onload = function() {
@@ -519,8 +518,6 @@ function uploadAnImage(checksum, anImageToUpload) {
 
     var qParams = "checksum=" + checksum + "&imageId=" + anImageToUpload.imageId;
 
-    console.info(" - File: " + anImageToUpload.file);
-
     $.ajax({
         type : "POST",
         url : "{% url 'imageselection_upload_pending_automatic' object.id %}?" + qParams,
@@ -542,20 +539,20 @@ function uploadThumbnails(event) {
 
 	event.preventDefault(); // avoid form submition
 
-    for(var checksum in document.KNOWN_IMAGES_BY_CHECKSUM) {
-        var anImageToUpload = document.KNOWN_IMAGES_BY_CHECKSUM[checksum];
+    for(var checksum in document.PREVIEW_ONLY_IMAGES_BY_CHECKSUM) {
+        var anImageToUpload = document.PREVIEW_ONLY_IMAGES_BY_CHECKSUM[checksum];
 
         if(anImageToUpload.uploadFilename == null) {
             console.info("Ignoring image (uploadFilename == null) - checksum: " + checksum)
             continue;
         }
-        if(anImageToUpload.uploadBinaryContents == null) {
-            console.info("Ignoring image (uploadBinaryContents == null) - checksum: " + checksum)
+
+        if(anImageToUpload.file == null) {
+            console.info("Ignoring image (file == null) - checksum: " + checksum)
             continue;
         }
 
         console.info("Starting upload of '" + anImageToUpload.uploadFilename + "' - checksum: " + checksum);
-
         uploadAnImage(checksum, anImageToUpload);
 
     }
