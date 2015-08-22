@@ -51,18 +51,6 @@
 								<span id="stats_files_processed"></span>
 							</td>
 						</tr>
-						<tr>
-							<th width="5%">Original:</th>
-							<td>
-								<span id="stats_orig_size"></span>
-							</td>
-						</tr>
-						<tr>
-							<th>Preview:</th>
-							<td>
-								<span id="stats_preview_size"></span>
-							</td>
-						</tr>
 					</table>
 				</div>
 
@@ -219,8 +207,6 @@ function onFinishedLoadingThumbnails() {
 }
 
 function showStatisticsDialog() {
-	$('#stats_orig_size')[0].textContent = '';
-	$('#stats_preview_size')[0].textContent = '';
 	$('#stats_files_count')[0].textContent = '' + document.LUM_TOTAL_FILE_COUNT;
 	$('#stats_files_processed')[0].textContent = '0';
 
@@ -234,9 +220,6 @@ function showStatisticsDialog() {
  * Update statistics on dialog model
  */
 function updateStatistics() {
-    //	$('#stats_orig_size')[0].textContent = readablizeBytes(document.LUM_SUM_SIZE_ORIGINAL);
-    //	$('#stats_preview_size')[0].textContent = readablizeBytes(document.LUM_SUM_SIZE_PREVIEW);
-
 	var processsedCount = document.LUM_TOTAL_FILE_COUNT - document.FILES.length;
 	$('#stats_files_processed')[0].textContent = '' + processsedCount;
 
