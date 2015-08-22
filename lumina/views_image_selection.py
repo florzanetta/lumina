@@ -180,7 +180,16 @@ class UploadPendingAutomaticView(DetailView):
             }
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-        # TODO: lookup image
+        image = self.get_object().selected_images.get(pk=int(client_reported_image_id))
+        if claculated_checksum != image.original_file_checksum:
+            logger.warn("claculated_checksum != image.original_file_checksum - calculated: %s - original: %s",
+                        claculated_checksum,
+                        image.original_file_checksum)
+            response_data = {
+                'status': 'error',
+            }
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+
         # TODO: save full-quality image file
 
         response_data = {
