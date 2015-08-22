@@ -16,6 +16,70 @@
 
 {% block content %}
 
+	<div class="modal" id="statistics_modal" tabindex="-1">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h3 id="myModalLabel">Generando checksums...</h3>
+		  </div>
+		  <div class="modal-body">
+
+				<div id="statistics">
+					<table class="table">
+
+						<tr>
+							<td colspan="2">
+
+								<div class="progress">
+								  <div class="progress-bar progress-bar-striped active"
+									   role="progressbar" style="width: 0%" id="thumbnailLoadingProgress">
+								  </div>
+								</div>
+
+							</td>
+						</tr>
+
+						<tr>
+							<th width="5%">Files:</th>
+							<td>
+								<span id="stats_files_count"></span>
+							</td>
+						</tr>
+						<tr>
+							<th width="5%">Processed:</th>
+							<td>
+								<span id="stats_files_processed"></span>
+							</td>
+						</tr>
+						<tr>
+							<th width="5%">Original:</th>
+							<td>
+								<span id="stats_orig_size"></span>
+							</td>
+						</tr>
+						<tr>
+							<th>Preview:</th>
+							<td>
+								<span id="stats_preview_size"></span>
+							</td>
+						</tr>
+					</table>
+				</div>
+
+		  </div>
+		  <div class="modal-footer">
+				<button class="btn btn-primary disabled"
+						id="statistics_modal_close_button">Cerrar</button>
+		  </div>
+		</div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+
+
+
+
+
     <h3>Peticiones de selección de imágenes de la sesión {{ object.session.name }}</h3>
 
     <small><strong>Sesión:</strong> {{ object.session.name }}</small>
@@ -165,22 +229,12 @@ function matchNewUploadsToPendingImagesByMd5sum() {
     }
 }
 
-//function readablizeBytes(bytes) {
-//	var s = [ 'bytes', 'kB', 'MB', 'GB', 'TB', 'PB' ];
-//	if (bytes == 0) {
-//		return "0 " + s[0];
-//	}
-//	var e = Math.floor(Math.log(bytes) / Math.log(1024));
-//	return (bytes / Math.pow(1024, e)).toFixed(2) + " "
-//			+ s[e];
-//}
-
 function onFinishedLoadingThumbnails() {
-    //	$('#statistics_modal_close_button').removeClass('disabled');
-    //	$('#statistics_modal_close_button').click(function() {
-    //		$('#statistics_modal').modal('hide');
-    //	});
-    //
+    $('#statistics_modal_close_button').removeClass('disabled');
+    $('#statistics_modal_close_button').click(function() {
+        $('#statistics_modal').modal('hide');
+    });
+
     //	$('#thumbnailLoadingProgress').removeClass('active');
 
     $('#formSubmitButton').removeClass('disabled');
@@ -189,32 +243,32 @@ function onFinishedLoadingThumbnails() {
     matchNewUploadsToPendingImagesByMd5sum();
 }
 
-//function showStatisticsDialog() {
-//	$('#stats_orig_size')[0].textContent = '';
-//	$('#stats_preview_size')[0].textContent = '';
-//	$('#stats_files_count')[0].textContent = '' + document.LUM_TOTAL_FILE_COUNT;
-//	$('#stats_files_processed')[0].textContent = '0';
-//
-//	$('#statistics_modal').modal({
-//		backdrop : 'static',
-//		keyboard : false
-//	});
-//}
+function showStatisticsDialog() {
+	$('#stats_orig_size')[0].textContent = '';
+	$('#stats_preview_size')[0].textContent = '';
+	$('#stats_files_count')[0].textContent = '' + document.LUM_TOTAL_FILE_COUNT;
+	$('#stats_files_processed')[0].textContent = '0';
 
-///**
-// * Update statistics on dialog model
-// */
-//function updateStatistics() {
-//	$('#stats_orig_size')[0].textContent = readablizeBytes(document.LUM_SUM_SIZE_ORIGINAL);
-//	$('#stats_preview_size')[0].textContent = readablizeBytes(document.LUM_SUM_SIZE_PREVIEW);
-//
-//	var processsedCount = document.LUM_TOTAL_FILE_COUNT - document.FILES.length;
-//	$('#stats_files_processed')[0].textContent = '' + processsedCount;
-//
-//	var progressPercent = ((processsedCount / document.LUM_TOTAL_FILE_COUNT) * 100);
-//	$('#thumbnailLoadingProgress').width("" + progressPercent + "%");
-//
-//}
+	$('#statistics_modal').modal({
+		backdrop : 'static',
+		keyboard : false
+	});
+}
+
+/**
+ * Update statistics on dialog model
+ */
+function updateStatistics() {
+    //	$('#stats_orig_size')[0].textContent = readablizeBytes(document.LUM_SUM_SIZE_ORIGINAL);
+    //	$('#stats_preview_size')[0].textContent = readablizeBytes(document.LUM_SUM_SIZE_PREVIEW);
+
+	var processsedCount = document.LUM_TOTAL_FILE_COUNT - document.FILES.length;
+	$('#stats_files_processed')[0].textContent = '' + processsedCount;
+
+	var progressPercent = ((processsedCount / document.LUM_TOTAL_FILE_COUNT) * 100);
+	$('#thumbnailLoadingProgress').width("" + progressPercent + "%");
+
+}
 
 ///**
 // * This method is called for each of the files selected by the user
@@ -354,7 +408,7 @@ function generateThumbnailAndAppendToHtml(image_file, img) {
 		spark.appendBinary(binary);
 		var hexHash = spark.end();
 		console.log("SparkMD5.hash(): md5sum of '" + image_file.name + "': " + hexHash);
-		document.LUM_MD5SUM.push(hexHash);
+        //		document.LUM_MD5SUM.push(hexHash);
 
         document.LUM_FILES_MD5SUM[hexHash] = image_file.name;
 
@@ -438,7 +492,7 @@ function generateThumbnailAndAppendToHtml(image_file, img) {
 //}
 
 function processFile() {
-    //	updateStatistics();
+    updateStatistics();
 	var imageFile = document.FILES.shift();
 
 	if(typeof(imageFile) == 'undefined') {
@@ -466,11 +520,11 @@ function processFile() {
  */
 function generateAndShowThumbnails() {
 	document.FILES = new Array();
-	document.LUM_PREVIEW_IMAGES = new Array();
-	document.LUM_PREVIEW_FILENAMES = new Array();
-	document.LUM_MD5SUM = new Array();
-	document.LUM_SUM_SIZE_ORIGINAL = 0;
-	document.LUM_SUM_SIZE_PREVIEW = 0;
+    //	document.LUM_PREVIEW_IMAGES = new Array();
+    //	document.LUM_PREVIEW_FILENAMES = new Array();
+    //	document.LUM_MD5SUM = new Array();
+    //	document.LUM_SUM_SIZE_ORIGINAL = 0;
+    //	document.LUM_SUM_SIZE_PREVIEW = 0;
 	document.LUM_TOTAL_FILE_COUNT = 0;
 	//$('#thumbnails_preview').empty();
 	//$('#status').empty();
@@ -483,7 +537,7 @@ function generateAndShowThumbnails() {
 
 	$('.formControlRow').toggle();
 	document.LUM_TOTAL_FILE_COUNT = selectedFiles.length;
-	// showStatisticsDialog(); // uses 'document.LUM_TOTAL_FILE_COUNT'
+	showStatisticsDialog(); // uses 'document.LUM_TOTAL_FILE_COUNT'
 
 	var i;
 	for (i = 0; i < selectedFiles.length; i++) {
