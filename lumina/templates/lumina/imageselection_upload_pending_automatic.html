@@ -223,6 +223,7 @@ function matchNewUploadsToPendingImagesByMd5sum() {
             console.info("matchNewUploadsToPendingImagesByMd5sum(): FOUND image with checksum " + checksum);
             anImageToUpload.uploadFilename = document.LUM_FILES_TO_UPLOAD_MD5SUM[anImageToUpload.checksum].fileName;
             anImageToUpload.uploadBinaryContents = document.LUM_FILES_TO_UPLOAD_MD5SUM[anImageToUpload.checksum].binaryContents;
+            anImageToUpload.file = document.LUM_FILES_TO_UPLOAD_MD5SUM[anImageToUpload.checksum].file;
             $('.icon-image-md5sum-' + anImageToUpload.checksum).removeClass("fa-question-circle").addClass("fa-check-square-o");
         } else {
             console.info("matchNewUploadsToPendingImagesByMd5sum(): NOT FOUND image with checksum " + checksum);
@@ -415,7 +416,8 @@ function generateThumbnailAndAppendToHtml(image_file, img) {
 		    console.log("SparkMD5.hash(): md5sum of '" + image_file.name + "' is for a PENDING UPLOAD: " + hexHash);
             document.LUM_FILES_TO_UPLOAD_MD5SUM[hexHash] = {
                 fileName: image_file.name,
-                binaryContents: binary
+                binaryContents: binary,
+                file: image_file
             };
         } else {
 		    console.log("SparkMD5.hash(): md5sum of '" + image_file.name + "' is NOT for a PENDING UPLOAD: " + hexHash);
@@ -454,52 +456,7 @@ function generateThumbnailAndAppendToHtml(image_file, img) {
 }
 
 
-///**
-// * Do the actual resize of the image
-// */
 //function resizeImage(img, max_width, max_height, quality) {
-//	/*
-//	 * https://github.com/josefrichter/resize/blob/master/public/preprocess.js
-//	 */
-//
-//	// Initially, W & H has original size
-//	var width = img.width;
-//	var height = img.height;
-//
-//	// calculate the width and height, constraining the proportions
-//	if (width > height) {
-//		if (width > max_width) {
-//			//height *= max_width / width;
-//			height = Math
-//					.round(height *= max_width / width);
-//			width = max_width;
-//		}
-//	} else {
-//		if (height > max_height) {
-//			//width *= max_height / height;
-//			width = Math
-//					.round(width *= max_height / height);
-//			height = max_height;
-//		}
-//	}
-//
-//	// Now, W & H has the size for preview
-//
-//	// resize the canvas and draw the image data into it
-//	var canvas = document.createElement('canvas');
-//	canvas.width = width;
-//	canvas.height = height;
-//	var ctx = canvas.getContext("2d");
-//	ctx.drawImage(img, 0, 0, width, height);
-//
-//	// xhgdeorox // preview.appendChild(canvas); // do the actual resized preview
-//	console.info("Canvas: " + canvas);
-//
-//	// get the data from canvas as 70% JPG (can be also PNG, etc.)
-//	// return canvas.toDataURL("image/jpeg", 0.7);
-//	var dataUrl = canvas.toDataURL("image/jpeg", quality);
-//	console.info("dataUrl: " + dataUrl);
-//	return [ dataUrl, width, height ];
 //}
 
 function processFile() {
@@ -558,6 +515,29 @@ function generateAndShowThumbnails() {
 	processFile();
 }
 
+function uploadAnImage(checksum, anImageToUpload) {
+
+    var qParams = "checksum=" + checksum + "&imageId=" + anImageToUpload.imageId;
+
+    console.info(" - File: " + anImageToUpload.file);
+
+    $.ajax({
+        type : "POST",
+        url : "{% url 'imageselection_upload_pending_automatic' object.id %}?" + qParams,
+        data : anImageToUpload.file,
+        processData : false
+
+    }).done(function(msg) {
+        console.info("upload of '" + anImageToUpload.uploadFilename + "' finished. status: " + msg['status']);
+        console.info(" - server side claculated_checksum: " + msg['claculated_checksum']);
+
+    }).fail(function(msg) {
+        console.error(msg);
+        alert("ERROR");
+    });
+
+}
+
 function uploadThumbnails(event) {
 
 	event.preventDefault(); // avoid form submition
@@ -576,26 +556,7 @@ function uploadThumbnails(event) {
 
         console.info("Starting upload of '" + anImageToUpload.uploadFilename + "' - checksum: " + checksum);
 
-        $.ajax({
-            type : "POST",
-            url : "{% url 'imageselection_upload_pending_automatic' object.id %}?checksum=" + checksum,
-            data : anImageToUpload.uploadBinaryContents,
-            processData : false
-        }).done(function(msg) {
-            console.info("upload finished. status: " + msg['status']);
-            console.info(" - server side claculated_checksum: " + msg['claculated_checksum']);
-            //            console.info("Ajax: " + msg)
-            //            if (msg['status'] == 'ok') {
-            //                window.location.replace(msg['redirect']);
-            //            } else {
-            //                alert("ERROR - status != ok");
-            //                window.location.replace('/');
-            //            }
-        }).fail(function(msg) {
-            console.error(msg);
-            alert("ERROR");
-            // window.location.replace('/');
-        });
+        uploadAnImage(checksum, anImageToUpload);
 
     }
 

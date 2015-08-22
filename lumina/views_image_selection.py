@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import hashlib
 import json
 import logging
 
@@ -158,15 +159,29 @@ class UploadPendingAutomaticView(DetailView):
         return context
 
     def post(self, request, *args, **kwargs):
-        logger.info("checksum: %s", request.GET['checksum'])
-        import hashlib
-        m = hashlib.md5()
+        client_calculated_checksum = request.GET['checksum']
+        client_reported_image_id = request.GET['imageId']
         binary_data = request.body
-        logger.info("len(binary_data): %s", len(binary_data))
-        m.update(binary_data)
-        claculated_checksum = m.hexdigest()
+        logger.debug("Receiving full-quality image - checksum: %s - imageId: %s - length: %s",
+                     client_calculated_checksum,
+                     client_reported_image_id,
+                     len(binary_data))
 
-        logger.info("claculated_checksum: %s", claculated_checksum)
+        md5sum_hasher = hashlib.md5()
+        md5sum_hasher.update(binary_data)
+        claculated_checksum = md5sum_hasher.hexdigest()
+
+        if client_calculated_checksum != claculated_checksum:
+            logger.warn("client_calculated_checksum != claculated_checksum - client: %s - server: %s",
+                        client_calculated_checksum,
+                        claculated_checksum)
+            response_data = {
+                'status': 'error',
+            }
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+        # TODO: lookup image
+        # TODO: save full-quality image file
 
         response_data = {
             'status': 'ok',
