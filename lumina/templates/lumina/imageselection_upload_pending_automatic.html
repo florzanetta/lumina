@@ -31,6 +31,9 @@
             {% for image in selected_images_without_full_quality %}
             <tr>
                 <td width="1%">
+                    <i class="fa fa-question-circle icon-image-md5sum-{{image.original_file_checksum}}"></i>
+                </td>
+                <td width="1%">
                     <div class="media">
                         <a class="pull-left" href="javascript:void(0);"> <img class="media-object"
                             src="{% url 'image_thumb_64x64' image.pk %}" style="min-width: 80px;">
@@ -56,6 +59,26 @@
             {% endfor %}
         </table>
 
+        <form>
+            <table class="table">
+
+                <tr class="formControlRow">
+                    <td>Imagenes</td>
+                    <td>
+                        <input id="fileInput" type="file" name="images" multiple>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <button class="btn btn-primary disabled"
+                                id="formSubmitButton">Subir imágenes</button>
+                    </td>
+                </tr>
+
+            </table>
+        </form>
+
     {% else %}
 
         <p>Todas las fotografías han sido subidas.</p>
@@ -80,12 +103,436 @@ $(document).ready(function() {
         document.IMAGES.push({
             imageId: imageId,
             checksum: checksum,
-            originalFilename: originalFilename
+            originalFilename: originalFilename,
+            imageToUpload: null
         });
     });
+
+    $('#fileInput').bind('change', generateAndShowThumbnails);
+
 });
 
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- FROM: https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js -->
+<script src="/static/lumina/js/crypto-js-3.1.2-sha1.js"></script>
+<!-- FROM: https://github.com/satazor/SparkMD5 -->
+<script src="/static/lumina/js/spark-md5.min.js"></script>
+
+<script type="text/javascript">
+
+function matchNewUploadsToPendingImagesByMd5sum() {
+
+    console.info("matchNewUploadsToPendingImagesByMd5sum(): length: " + document.IMAGES.length);
+    for(var i=0; i<document.IMAGES.length; i++) {
+        var anImageToUpload = document.IMAGES[i];
+
+        if(document.LUM_FILES_MD5SUM[anImageToUpload.checksum]) {
+            console.info("matchNewUploadsToPendingImagesByMd5sum(): FOUND image with checksum " + anImageToUpload.checksum);
+            anImageToUpload.imageToUpload = document.LUM_FILES_MD5SUM[anImageToUpload.checksum];
+            $('.icon-image-md5sum-' + anImageToUpload.checksum).removeClass("fa-question-circle").addClass("fa-check-square-o");
+        } else {
+            console.info("matchNewUploadsToPendingImagesByMd5sum(): NOT FOUND image with checksum " + anImageToUpload.checksum);
+            $('.icon-image-md5sum-' + anImageToUpload.checksum).removeClass("fa-question-circle").addClass("fa-minus-square-o");
+        }
+    }
+}
+
+//function readablizeBytes(bytes) {
+//	var s = [ 'bytes', 'kB', 'MB', 'GB', 'TB', 'PB' ];
+//	if (bytes == 0) {
+//		return "0 " + s[0];
+//	}
+//	var e = Math.floor(Math.log(bytes) / Math.log(1024));
+//	return (bytes / Math.pow(1024, e)).toFixed(2) + " "
+//			+ s[e];
+//}
+
+function onFinishedLoadingThumbnails() {
+    //	$('#statistics_modal_close_button').removeClass('disabled');
+    //	$('#statistics_modal_close_button').click(function() {
+    //		$('#statistics_modal').modal('hide');
+    //	});
+    //
+    //	$('#thumbnailLoadingProgress').removeClass('active');
+
+    $('#formSubmitButton').removeClass('disabled');
+    $('#formSubmitButton').click(uploadThumbnails);
+
+    matchNewUploadsToPendingImagesByMd5sum();
+}
+
+//function showStatisticsDialog() {
+//	$('#stats_orig_size')[0].textContent = '';
+//	$('#stats_preview_size')[0].textContent = '';
+//	$('#stats_files_count')[0].textContent = '' + document.LUM_TOTAL_FILE_COUNT;
+//	$('#stats_files_processed')[0].textContent = '0';
+//
+//	$('#statistics_modal').modal({
+//		backdrop : 'static',
+//		keyboard : false
+//	});
+//}
+
+///**
+// * Update statistics on dialog model
+// */
+//function updateStatistics() {
+//	$('#stats_orig_size')[0].textContent = readablizeBytes(document.LUM_SUM_SIZE_ORIGINAL);
+//	$('#stats_preview_size')[0].textContent = readablizeBytes(document.LUM_SUM_SIZE_PREVIEW);
+//
+//	var processsedCount = document.LUM_TOTAL_FILE_COUNT - document.FILES.length;
+//	$('#stats_files_processed')[0].textContent = '' + processsedCount;
+//
+//	var progressPercent = ((processsedCount / document.LUM_TOTAL_FILE_COUNT) * 100);
+//	$('#thumbnailLoadingProgress').width("" + progressPercent + "%");
+//
+//}
+
+///**
+// * This method is called for each of the files selected by the user
+// * that are NOT images.
+// *
+// * @See generateThumbnailAndAppendToHtml: called when the file IS an image
+// */
+//function appendErrorMessageFileIsNotAnImage(non_image_file) {
+//	var status = $('#status');
+//	var li = document.createElement("li");
+//	li.className = "text-error";
+//	li.textContent = "" + non_image_file.name + " no es una imagen valida";
+//	status.append(li);
+//
+//	window.setTimeout(processFile, 1);
+//}
+
+/**
+ * This method is called for each of the files/images selected by the user,
+ * when the file is a image.
+ *
+ * @See appendErrorMessageFileIsNotAnImage: called when the file is NOT an image
+ */
+function generateThumbnailAndAppendToHtml(image_file, img) {
+
+    //	var thumbnails = $('#thumbnails_preview')[0];
+    //	var tmp;
+    //
+    //	var ret = resizeImage(img, 400, 400, 0.5);
+    //	var url = ret[0];
+    //	var width = ret[1];
+    //	var height = ret[2];
+    //
+    //	console.info("URL: " + url)
+    //
+    //	//
+    //	// 1st DIV
+    //	//
+    //	var div = document.createElement("div");
+    //	var newImg = document.createElement("img");
+    //	newImg.src = url;
+    //	newImg.className = "img-polaroid";
+    //	div.appendChild(newImg);
+    //	document.LUM_PREVIEW_IMAGES.push(url);
+    //	document.LUM_PREVIEW_FILENAMES.push(image_file.name);
+    //	thumbnails.appendChild(div);
+    //
+    //	//
+    //	// 2nd DIV
+    //	//
+    //	div = document.createElement("div");
+    //
+    //	// File
+    //	var small = document.createElement("small");
+    //	tmp = document.createElement("strong");
+    //	tmp.textContent = "Original file: ";
+    //	small.appendChild(tmp);
+    //
+    //	tmp = document.createElement("span");
+    //	tmp.textContent = "" + image_file.name + " - ";
+    //	small.appendChild(tmp);
+    //
+    //	// File size
+    //	tmp = document.createElement("strong");
+    //	tmp.textContent = "Size: ";
+    //	small.appendChild(tmp);
+    //
+    //	tmp = document.createElement("span");
+    //	tmp.textContent = "" + readablizeBytes(image_file.size)
+    //			+ " - ";
+    //	small.appendChild(tmp);
+    //
+    //	// Img. dimensions
+    //	tmp = document.createElement("strong");
+    //	tmp.textContent = "Dimensions: ";
+    //	small.appendChild(tmp);
+    //
+    //	tmp = document.createElement("span");
+    //	tmp.textContent = "" + img.width + "x" + img.height;
+    //	small.appendChild(tmp);
+    //
+    //	div.appendChild(small);
+    //	thumbnails.appendChild(div);
+    //
+    //	//
+    //	// 3rd DIV
+    //	//
+    //
+    //	var preview_file_size = window.atob(url.substring(23)).length;
+    //
+    //	div = document.createElement("div");
+    //	small = document.createElement("small");
+    //
+    //	// File size
+    //	tmp = document.createElement("strong");
+    //	tmp.textContent = "Preview size: ";
+    //	small.appendChild(tmp);
+    //
+    //	tmp = document.createElement("span");
+    //	tmp.textContent = ""
+    //			+ readablizeBytes(preview_file_size);
+    //	small.appendChild(tmp);
+    //
+    //	// Img. dimensions
+    //	tmp = document.createElement("strong");
+    //	tmp.textContent = " - Dimensions: ";
+    //	small.appendChild(tmp);
+    //
+    //	tmp = document.createElement("span");
+    //	tmp.textContent = "" + width + "x" + height;
+    //	small.appendChild(tmp);
+    //
+    //	// Speedup
+    //	var speedup = ((preview_file_size * 1.0) / (image_file.size * 1.0) * 100.0)
+    //	tmp = document.createElement("strong");
+    //	tmp.textContent = " - Radio: ";
+    //	small.appendChild(tmp);
+    //
+    //	tmp = document.createElement("span");
+    //	tmp.textContent = "" + speedup.toFixed(2) + "%";
+    //	small.appendChild(tmp);
+    //
+    //	div.appendChild(small);
+    //	thumbnails.appendChild(div);
+    //
+    //	document.LUM_SUM_SIZE_ORIGINAL += image_file.size;
+    //	document.LUM_SUM_SIZE_PREVIEW += preview_file_size;
+
+	// ------------------------
+
+	var reader = new FileReader();
+	reader.onload = function(event) {
+		var binary = event.target.result;
+		// var sha1sum = CryptoJS.SHA1(binary).toString();
+		// console.log("CryptoJS.SHA1(): sha1sum: " + sha1sum);
+		var spark = new SparkMD5();
+		spark.appendBinary(binary);
+		var hexHash = spark.end();
+		console.log("SparkMD5.hash(): md5sum of '" + image_file.name + "': " + hexHash);
+		document.LUM_MD5SUM.push(hexHash);
+
+        document.LUM_FILES_MD5SUM[hexHash] = image_file.name;
+
+        //		//
+        //		// 4th DIV
+        //		//
+        //		div = document.createElement("div");
+        //
+        //		// Checksum
+        //		var small = document.createElement("small");
+        //		tmp = document.createElement("strong");
+        //		tmp.textContent = "Checksum de original: ";
+        //		small.appendChild(tmp);
+        //
+        //		tmp = document.createElement("span");
+        //		tmp.textContent = "0x" + hexHash;
+        //		small.appendChild(tmp);
+        //
+        //		div.appendChild(small);
+        //		thumbnails.appendChild(div);
+        //
+        //		//
+        //		// HR
+        //		//
+        //		var hr = document.createElement("hr");
+        //		thumbnails.appendChild(hr);
+
+		window.setTimeout(processFile, 1);
+	};
+
+	reader.readAsBinaryString(image_file);
+}
+
+
+///**
+// * Do the actual resize of the image
+// */
+//function resizeImage(img, max_width, max_height, quality) {
+//	/*
+//	 * https://github.com/josefrichter/resize/blob/master/public/preprocess.js
+//	 */
+//
+//	// Initially, W & H has original size
+//	var width = img.width;
+//	var height = img.height;
+//
+//	// calculate the width and height, constraining the proportions
+//	if (width > height) {
+//		if (width > max_width) {
+//			//height *= max_width / width;
+//			height = Math
+//					.round(height *= max_width / width);
+//			width = max_width;
+//		}
+//	} else {
+//		if (height > max_height) {
+//			//width *= max_height / height;
+//			width = Math
+//					.round(width *= max_height / height);
+//			height = max_height;
+//		}
+//	}
+//
+//	// Now, W & H has the size for preview
+//
+//	// resize the canvas and draw the image data into it
+//	var canvas = document.createElement('canvas');
+//	canvas.width = width;
+//	canvas.height = height;
+//	var ctx = canvas.getContext("2d");
+//	ctx.drawImage(img, 0, 0, width, height);
+//
+//	// xhgdeorox // preview.appendChild(canvas); // do the actual resized preview
+//	console.info("Canvas: " + canvas);
+//
+//	// get the data from canvas as 70% JPG (can be also PNG, etc.)
+//	// return canvas.toDataURL("image/jpeg", 0.7);
+//	var dataUrl = canvas.toDataURL("image/jpeg", quality);
+//	console.info("dataUrl: " + dataUrl);
+//	return [ dataUrl, width, height ];
+//}
+
+function processFile() {
+    //	updateStatistics();
+	var imageFile = document.FILES.shift();
+
+	if(typeof(imageFile) == 'undefined') {
+		onFinishedLoadingThumbnails();
+		return;
+	};
+
+	var img = document.createElement("img");
+	img.src = window.URL.createObjectURL(imageFile);
+
+	/* http://stackoverflow.com/questions/12570834/how-can-i-get-the-file-size-image-height-and-width-before-upload */
+	img.onerror = function() {
+		// appendErrorMessageFileIsNotAnImage(imageFile);
+        alert("img.onerror()");
+	};
+
+	img.onload = function() {
+		generateThumbnailAndAppendToHtml(imageFile, this);
+	};
+}
+
+/**
+ * Executed when the user selects the files, loads the
+ * files contents and calculates the checksum.
+ */
+function generateAndShowThumbnails() {
+	document.FILES = new Array();
+	document.LUM_PREVIEW_IMAGES = new Array();
+	document.LUM_PREVIEW_FILENAMES = new Array();
+	document.LUM_MD5SUM = new Array();
+	document.LUM_SUM_SIZE_ORIGINAL = 0;
+	document.LUM_SUM_SIZE_PREVIEW = 0;
+	document.LUM_TOTAL_FILE_COUNT = 0;
+	//$('#thumbnails_preview').empty();
+	//$('#status').empty();
+
+    document.LUM_FILES_MD5SUM = {};
+
+	var selectedFiles = $("#fileInput")[0].files;
+	if (selectedFiles.length <= 0)
+		return;
+
+	$('.formControlRow').toggle();
+	document.LUM_TOTAL_FILE_COUNT = selectedFiles.length;
+	// showStatisticsDialog(); // uses 'document.LUM_TOTAL_FILE_COUNT'
+
+	var i;
+	for (i = 0; i < selectedFiles.length; i++) {
+		document.FILES.push(selectedFiles[i]);
+	}
+
+	processFile();
+}
+
+function uploadThumbnails(event) {
+
+	event.preventDefault(); // avoid form submition
+
+    //	$('#uploadingThumbnailsModal').modal({
+    //		backdrop : 'static',
+    //		keyboard : false
+    //	});
+    //
+    //	var images = {};
+    //	for (var i = 0; i < document.LUM_PREVIEW_IMAGES.length; i++) {
+    //		images['img' + i] = document.LUM_PREVIEW_IMAGES[i];
+    //		images['img' + i + '_filename'] = document.LUM_PREVIEW_FILENAMES[i];
+    //		images['img' + i + '_checksum'] = document.LUM_MD5SUM[i];
+    //		console.info("URL[" + i + "]="
+    //				+ document.LUM_PREVIEW_IMAGES[i]);
+    //	}
+    //
+    //	$.ajax({
+    //		type : "POST",
+    //		url : "{% url 'session_upload_previews_upload' object.id %}",
+    //		data : images
+    //	}).done(function(msg) {
+    //		console.info("Ajax: " + msg)
+    //		if (msg['status'] == 'ok') {
+    //			window.location.replace(msg['redirect']);
+    //		} else {
+    //			alert("ERROR - status != ok");
+    //			window.location.replace('/');
+    //		}
+    //	}).fail(function(msg) {
+    //		console.error(msg);
+    //		alert("ERROR");
+    //		// window.location.replace('/');
+    //	});
+
+}
+
+</script>
+
 {% endblock %}
 
 </body>
