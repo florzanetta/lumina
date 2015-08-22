@@ -161,6 +161,10 @@ class UploadPendingAutomaticView(DetailView):
         return context
 
     def post(self, request, *args, **kwargs):
+        """
+        This post receives the upload, one by one, of the files in full-quality,
+        using Ajax and checking the checksum in client-side
+        """
         client_calculated_checksum = request.GET['checksum']
         client_reported_image_id = request.GET['imageId']
         binary_data = request.body

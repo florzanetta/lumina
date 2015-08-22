@@ -180,35 +180,6 @@ $(document).ready(function() {
 
 </script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- FROM: https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js -->
-<script src="/static/lumina/js/crypto-js-3.1.2-sha1.js"></script>
 <!-- FROM: https://github.com/satazor/SparkMD5 -->
 <script src="/static/lumina/js/spark-md5.min.js"></script>
 
@@ -239,7 +210,7 @@ function onFinishedLoadingThumbnails() {
         $('#statistics_modal').modal('hide');
     });
 
-    //	$('#thumbnailLoadingProgress').removeClass('active');
+    $('#thumbnailLoadingProgress').removeClass('active');
 
     $('#formSubmitButton').removeClass('disabled');
     $('#formSubmitButton').click(uploadThumbnails);
@@ -298,116 +269,9 @@ function appendErrorMessageFileIsNotAnImage(non_image_file) {
  */
 function generateThumbnailAndAppendToHtml(image_file, img) {
 
-    //	var thumbnails = $('#thumbnails_preview')[0];
-    //	var tmp;
-    //
-    //	var ret = resizeImage(img, 400, 400, 0.5);
-    //	var url = ret[0];
-    //	var width = ret[1];
-    //	var height = ret[2];
-    //
-    //	console.info("URL: " + url)
-    //
-    //	//
-    //	// 1st DIV
-    //	//
-    //	var div = document.createElement("div");
-    //	var newImg = document.createElement("img");
-    //	newImg.src = url;
-    //	newImg.className = "img-polaroid";
-    //	div.appendChild(newImg);
-    //	document.LUM_PREVIEW_IMAGES.push(url);
-    //	document.LUM_PREVIEW_FILENAMES.push(image_file.name);
-    //	thumbnails.appendChild(div);
-    //
-    //	//
-    //	// 2nd DIV
-    //	//
-    //	div = document.createElement("div");
-    //
-    //	// File
-    //	var small = document.createElement("small");
-    //	tmp = document.createElement("strong");
-    //	tmp.textContent = "Original file: ";
-    //	small.appendChild(tmp);
-    //
-    //	tmp = document.createElement("span");
-    //	tmp.textContent = "" + image_file.name + " - ";
-    //	small.appendChild(tmp);
-    //
-    //	// File size
-    //	tmp = document.createElement("strong");
-    //	tmp.textContent = "Size: ";
-    //	small.appendChild(tmp);
-    //
-    //	tmp = document.createElement("span");
-    //	tmp.textContent = "" + readablizeBytes(image_file.size)
-    //			+ " - ";
-    //	small.appendChild(tmp);
-    //
-    //	// Img. dimensions
-    //	tmp = document.createElement("strong");
-    //	tmp.textContent = "Dimensions: ";
-    //	small.appendChild(tmp);
-    //
-    //	tmp = document.createElement("span");
-    //	tmp.textContent = "" + img.width + "x" + img.height;
-    //	small.appendChild(tmp);
-    //
-    //	div.appendChild(small);
-    //	thumbnails.appendChild(div);
-    //
-    //	//
-    //	// 3rd DIV
-    //	//
-    //
-    //	var preview_file_size = window.atob(url.substring(23)).length;
-    //
-    //	div = document.createElement("div");
-    //	small = document.createElement("small");
-    //
-    //	// File size
-    //	tmp = document.createElement("strong");
-    //	tmp.textContent = "Preview size: ";
-    //	small.appendChild(tmp);
-    //
-    //	tmp = document.createElement("span");
-    //	tmp.textContent = ""
-    //			+ readablizeBytes(preview_file_size);
-    //	small.appendChild(tmp);
-    //
-    //	// Img. dimensions
-    //	tmp = document.createElement("strong");
-    //	tmp.textContent = " - Dimensions: ";
-    //	small.appendChild(tmp);
-    //
-    //	tmp = document.createElement("span");
-    //	tmp.textContent = "" + width + "x" + height;
-    //	small.appendChild(tmp);
-    //
-    //	// Speedup
-    //	var speedup = ((preview_file_size * 1.0) / (image_file.size * 1.0) * 100.0)
-    //	tmp = document.createElement("strong");
-    //	tmp.textContent = " - Radio: ";
-    //	small.appendChild(tmp);
-    //
-    //	tmp = document.createElement("span");
-    //	tmp.textContent = "" + speedup.toFixed(2) + "%";
-    //	small.appendChild(tmp);
-    //
-    //	div.appendChild(small);
-    //	thumbnails.appendChild(div);
-    //
-    //	document.LUM_SUM_SIZE_ORIGINAL += image_file.size;
-    //	document.LUM_SUM_SIZE_PREVIEW += preview_file_size;
-
-	// ------------------------
-
 	var reader = new FileReader();
 	reader.onload = function(event) {
 		var binary = event.target.result;
-		// var sha1sum = CryptoJS.SHA1(binary).toString();
-		// console.log("CryptoJS.SHA1(): sha1sum: " + sha1sum);
 		var spark = new SparkMD5();
 		spark.appendBinary(binary);
 		var hexHash = spark.end();
@@ -422,32 +286,6 @@ function generateThumbnailAndAppendToHtml(image_file, img) {
         } else {
 		    console.log("SparkMD5.hash(): md5sum of '" + image_file.name + "' is NOT for a PENDING UPLOAD: " + hexHash);
         }
-
-        //		document.LUM_MD5SUM.push(hexHash);
-
-        //		//
-        //		// 4th DIV
-        //		//
-        //		div = document.createElement("div");
-        //
-        //		// Checksum
-        //		var small = document.createElement("small");
-        //		tmp = document.createElement("strong");
-        //		tmp.textContent = "Checksum de original: ";
-        //		small.appendChild(tmp);
-        //
-        //		tmp = document.createElement("span");
-        //		tmp.textContent = "0x" + hexHash;
-        //		small.appendChild(tmp);
-        //
-        //		div.appendChild(small);
-        //		thumbnails.appendChild(div);
-        //
-        //		//
-        //		// HR
-        //		//
-        //		var hr = document.createElement("hr");
-        //		thumbnails.appendChild(hr);
 
 		window.setTimeout(processFile, 1);
 	};
@@ -489,12 +327,10 @@ function generateAndShowThumbnails() {
 	document.FILES = new Array();
     //	document.LUM_PREVIEW_IMAGES = new Array();
     //	document.LUM_PREVIEW_FILENAMES = new Array();
-    //	document.LUM_MD5SUM = new Array();
     //	document.LUM_SUM_SIZE_ORIGINAL = 0;
     //	document.LUM_SUM_SIZE_PREVIEW = 0;
 	document.LUM_TOTAL_FILE_COUNT = 0;
-	//$('#thumbnails_preview').empty();
-	//$('#status').empty();
+	$('#status').empty();
 
     document.LUM_FILES_TO_UPLOAD_MD5SUM = {};
 
@@ -560,33 +396,6 @@ function uploadThumbnails(event) {
     //	$('#uploadingThumbnailsModal').modal({
     //		backdrop : 'static',
     //		keyboard : false
-    //	});
-    //
-    //	var images = {};
-    //	for (var i = 0; i < document.LUM_PREVIEW_IMAGES.length; i++) {
-    //		images['img' + i] = document.LUM_PREVIEW_IMAGES[i];
-    //		images['img' + i + '_filename'] = document.LUM_PREVIEW_FILENAMES[i];
-    //		images['img' + i + '_checksum'] = document.LUM_MD5SUM[i];
-    //		console.info("URL[" + i + "]="
-    //				+ document.LUM_PREVIEW_IMAGES[i]);
-    //	}
-    //
-    //	$.ajax({
-    //		type : "POST",
-    //		url : "{% url 'session_upload_previews_upload' object.id %}",
-    //		data : images
-    //	}).done(function(msg) {
-    //		console.info("Ajax: " + msg)
-    //		if (msg['status'] == 'ok') {
-    //			window.location.replace(msg['redirect']);
-    //		} else {
-    //			alert("ERROR - status != ok");
-    //			window.location.replace('/');
-    //		}
-    //	}).fail(function(msg) {
-    //		console.error(msg);
-    //		alert("ERROR");
-    //		// window.location.replace('/');
     //	});
 
 }
