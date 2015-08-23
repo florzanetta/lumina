@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
-
 import autocomplete_light
 
 from lumina import views_image_selection
@@ -11,10 +10,8 @@ from lumina.views import SessionListView, SessionDetailView, SessionCreateView, 
     UserListView, ImageListView, UserCreateView, UserUpdateView, \
     SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView, \
     ImageCreateView, ImageUpdateView, SessionUploadPreviewsView,\
-    SessionQuoteCreateView, SessionQuoteListView, SessionQuoteDetailView,\
-    SessionQuoteUpdateView, \
-    SessionQuoteAlternativeSelectView, SessionQuoteAlternativeCreateView,\
     UserPreferenceUpdateView
+from lumina.views_session_quote import *
 
 autocomplete_light.autodiscover()  # BEFORE admin.autodiscover()
 admin.autodiscover()
