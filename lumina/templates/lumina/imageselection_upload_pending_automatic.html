@@ -16,7 +16,7 @@
 
 {% block content %}
 
-	<div class="modal" id="statistics_modal" tabindex="-1">
+	<div class="modal" id="thumbnail_generation_modal" tabindex="-1">
 	  <div class="modal-dialog">
 		<div class="modal-content">
 		  <div class="modal-header">
@@ -55,7 +55,7 @@
 		  </div>
 		  <div class="modal-footer">
 				<button class="btn btn-primary disabled"
-						id="statistics_modal_close_button">Cerrar</button>
+						id="thumbnail_generation_modal_close_button">Cerrar</button>
 		  </div>
 		</div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
@@ -191,9 +191,9 @@ function matchNewUploadsToPendingImagesByMd5sum() {
 }
 
 function onFinishedLoadingThumbnails() {
-    $('#statistics_modal_close_button').removeClass('disabled');
-    $('#statistics_modal_close_button').click(function() {
-        $('#statistics_modal').modal('hide');
+    $('#thumbnail_generation_modal_close_button').removeClass('disabled');
+    $('#thumbnail_generation_modal_close_button').click(function() {
+        $('#thumbnail_generation_modal').modal('hide');
     });
 
     $('#thumbnailLoadingProgress').removeClass('active');
@@ -204,20 +204,22 @@ function onFinishedLoadingThumbnails() {
     matchNewUploadsToPendingImagesByMd5sum();
 }
 
-function showStatisticsDialog() {
+// EX: showStatisticsDialog()
+function showThumbnailGenerationProgressDialog() {
 	$('#stats_files_count')[0].textContent = '' + document.LUM_TOTAL_FILE_COUNT;
 	$('#stats_files_processed')[0].textContent = '0';
 
-	$('#statistics_modal').modal({
+	$('#thumbnail_generation_modal').modal({
 		backdrop : 'static',
 		keyboard : false
 	});
 }
 
+// EX: updateStatistics()
 /**
  * Update statistics on dialog model
  */
-function updateStatistics() {
+function updateThumbnailGenerationProgressDialog() {
 	var processsedCount = document.LUM_TOTAL_FILE_COUNT - document.FILES.length;
 	$('#stats_files_processed')[0].textContent = '' + processsedCount;
 
@@ -239,7 +241,7 @@ function appendErrorMessageFileIsNotAnImage(non_image_file) {
 	li.textContent = "" + non_image_file.name + " no es una imagen valida";
 	status.append(li);
 
-	window.setTimeout(processFile, 1);
+	window.setTimeout(recursiveThumbnailGeneration, 1);
 }
 
 /**
@@ -268,7 +270,7 @@ function generateThumbnailAndAppendToHtml(image_file, img) {
 		    console.log("SparkMD5.hash(): md5sum of '" + image_file.name + "' is NOT for a PENDING UPLOAD: " + hexHash);
         }
 
-		window.setTimeout(processFile, 1);
+		window.setTimeout(recursiveThumbnailGeneration, 1);
 	};
 
 	reader.readAsBinaryString(image_file);
@@ -278,8 +280,9 @@ function generateThumbnailAndAppendToHtml(image_file, img) {
 //function resizeImage(img, max_width, max_height, quality) {
 //}
 
-function processFile() {
-    updateStatistics();
+// EX: processFile()
+function recursiveThumbnailGeneration() {
+    updateThumbnailGenerationProgressDialog();
 	var imageFile = document.FILES.shift();
 
 	if(typeof(imageFile) == 'undefined') {
@@ -321,21 +324,21 @@ function generateAndShowThumbnails() {
 
 	$('.formControlRow').toggle();
 	document.LUM_TOTAL_FILE_COUNT = selectedFiles.length;
-	showStatisticsDialog(); // uses 'document.LUM_TOTAL_FILE_COUNT'
+	showThumbnailGenerationProgressDialog(); // uses 'document.LUM_TOTAL_FILE_COUNT'
 
 	var i;
 	for (i = 0; i < selectedFiles.length; i++) {
 		document.FILES.push(selectedFiles[i]);
 	}
 
-	processFile();
+	recursiveThumbnailGeneration();
 }
 
 function onFinishedUploadingImages() {
     alert("FIN");
 }
 
-function uploadAnImage(imagesToUpload) {
+function recursiveUploadAnImage(imagesToUpload) {
 
     var anImageToUpload = imagesToUpload.shift();
 	if(typeof(anImageToUpload) == 'undefined') {
@@ -356,13 +359,13 @@ function uploadAnImage(imagesToUpload) {
     }).done(function(msg) {
         console.info("upload of '" + anImageToUpload.uploadFilename + "' finished. status: " + msg['status']);
         console.info(" - server side claculated_checksum: " + msg['claculated_checksum']);
-        window.setTimeout(function(){ uploadAnImage(imagesToUpload); }, 1);
+        window.setTimeout(function(){ recursiveUploadAnImage(imagesToUpload); }, 1);
 
     }).fail(function(msg) {
         console.error(msg);
         alert("ERROR");
 
-        window.setTimeout(function(){ uploadAnImage(imagesToUpload); }, 1);
+        window.setTimeout(function(){ recursiveUploadAnImage(imagesToUpload); }, 1);
     });
 
 }
@@ -389,7 +392,7 @@ function uploadThumbnails(event) {
         imagesToUpload.push(anImageToUpload);
     }
 
-    window.setTimeout(function(){ uploadAnImage(imagesToUpload); }, 1);
+    window.setTimeout(function(){ recursiveUploadAnImage(imagesToUpload); }, 1);
 
     //	$('#uploadingThumbnailsModal').modal({
     //		backdrop : 'static',
