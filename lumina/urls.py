@@ -5,7 +5,7 @@ from django.views.decorators.cache import cache_control
 import autocomplete_light
 
 from lumina import views_image_selection
-from lumina.views import (
+from lumina.views_user import (
     UserListView,  UserCreateView, UserUpdateView,
     UserPreferenceUpdateView
 )
