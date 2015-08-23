@@ -63,6 +63,50 @@
 
 
 
+	<div class="modal" id="ajax_upload_modal" tabindex="-1">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h3>Subiendo archivos...</h3>
+		  </div>
+		  <div class="modal-body">
+
+                <table class="table">
+
+                    <tr>
+                        <td colspan="2">
+
+                            <div class="progress">
+                              <div class="progress-bar progress-bar-striped active"
+                                   role="progressbar" style="width: 0%" id="ajax_upload_progress_bar">
+                              </div>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th width="5%">Files:</th>
+                        <td>
+                            <span id="ajax_upload_total_files_count"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="5%">Processed:</th>
+                        <td>
+                            <span id="ajax_upload_files_processed"></span>
+                        </td>
+                    </tr>
+                </table>
+
+		  </div>
+		  <div class="modal-footer">
+				<button class="btn btn-primary disabled"
+						id="ajax_upload_dialog_close_button">Cerrar</button>
+		  </div>
+		</div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
 
 
@@ -215,10 +259,10 @@ function showThumbnailGenerationProgressDialog() {
 	});
 }
 
-// EX: updateStatistics()
 /**
  * Update statistics on dialog model
  */
+// EX: updateStatistics()
 function updateThumbnailGenerationProgressDialog() {
 	var processsedCount = document.LUM_TOTAL_FILE_COUNT - document.FILES.length;
 	$('#thumbnail_files_processed')[0].textContent = '' + processsedCount;
@@ -334,7 +378,34 @@ function generateAndShowThumbnails() {
 	recursiveThumbnailGeneration();
 }
 
+/*
+ * ==========================================================================================
+ * Uploading of images
+ * ==========================================================================================
+ */
+
+function showAjaxUploadProgressDialog(totalUploadCount) {
+	$('#ajax_upload_total_files_count')[0].textContent = '' + totalUploadCount;
+	$('#ajax_upload_files_processed')[0].textContent = '0';
+
+	$('#ajax_upload_modal').modal({
+		backdrop : 'static',
+		keyboard : false
+	});
+}
+
 function onFinishedUploadingImages() {
+
+    $('#ajax_upload_dialog_close_button').removeClass('disabled');
+    $('#ajax_upload_dialog_close_button').click(function() {
+        $('#ajax_upload_modal').modal('hide');
+    });
+
+    //    $('#thumbnail_loading_progress').removeClass('active');
+    //
+    //    $('#formSubmitButton').removeClass('disabled');
+    //    $('#formSubmitButton').click(uploadThumbnails);
+
     alert("FIN");
 }
 
@@ -391,6 +462,8 @@ function uploadThumbnails(event) {
 
         imagesToUpload.push(anImageToUpload);
     }
+
+    showAjaxUploadProgressDialog(imagesToUpload.length);
 
     window.setTimeout(function(){ recursiveUploadAnImage(imagesToUpload); }, 1);
 
