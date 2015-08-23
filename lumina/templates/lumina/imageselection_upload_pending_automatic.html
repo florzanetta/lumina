@@ -443,13 +443,15 @@ function recursiveUploadAnImage(imagesToUpload) {
     }).done(function(msg) {
         console.info("upload of '" + anImageToUpload.uploadFilename + "' finished. status: " + msg['status']);
         console.info(" - server side claculated_checksum: " + msg['claculated_checksum']);
+        console.info(" - pending_count: " + msg['pending_count']);
         window.setTimeout(function(){ recursiveUploadAnImage(imagesToUpload); }, 1);
 
     }).fail(function(msg) {
         console.error(msg);
-        alert("ERROR");
+        alert("Se detecto un error mientras se realizaba el upload...");
+        window.location.reload();
 
-        window.setTimeout(function(){ recursiveUploadAnImage(imagesToUpload); }, 1);
+        // window.setTimeout(function(){ recursiveUploadAnImage(imagesToUpload); }, 1);
     });
 
 }

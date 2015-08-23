@@ -199,10 +199,19 @@ class UploadPendingAutomaticView(DetailView):
         image.image.save(str(uuid.uuid4()), ContentFile(binary_data))
         image.save()
 
+        try:
+            pending_count = self.get_queryset().get(pk=kwargs[self.pk_url_kwarg]).\
+                selected_images.filter(image='').count()
+        except ImageSelection.DoesNotExist:
+            pending_count = 0
+        except Image.DoesNotExist:
+            pending_count = 0
+
         response_data = {
             'status': 'ok',
             'img_count': 1,
-            'claculated_checksum': claculated_checksum
+            'claculated_checksum': claculated_checksum,
+            'pending_count': pending_count
         }
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
