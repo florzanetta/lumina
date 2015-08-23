@@ -8,8 +8,7 @@ from django.contrib import messages
 from django.views.decorators.cache import cache_control
 from django.core.urlresolvers import reverse
 
-from lumina.models import (
-    SharedSessionByEmail)
+from lumina.models import SharedSessionByEmail
 from lumina.forms import SharedSessionByEmailCreateForm
 from lumina.mail import send_email
 from lumina.views import _image_thumb, _image_download

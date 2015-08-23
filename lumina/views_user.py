@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import logging
+
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django.contrib import messages
@@ -14,6 +16,8 @@ __all__ = [
     'UserCreateView',
     'UserUpdateView',
 ]
+
+logger = logging.getLogger(__name__)
 
 
 # ===============================================================================

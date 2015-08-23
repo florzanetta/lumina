@@ -23,21 +23,6 @@ from lumina.models import Session, Image, ImageSelection
 from lumina.forms import ImageSelectionCreateForm, ImageSelectionAutoCreateForm
 from lumina.mail import send_email
 
-
-#
-# FIXME: create preference instance when creating a user
-# FIXME: update password in UserPreferenceUpdateView
-# FIXME: use selecte PreviewSize when generating previews
-#
-
-#
-# List of generic CBV:
-# - https://docs.djangoproject.com/en/1.5/ref/class-based-views/
-#
-# Cache:
-#  - https://docs.djangoproject.com/en/1.5/topics/cache/#controlling-cache-using-other-headers
-#
-
 logger = logging.getLogger(__name__)
 
 
