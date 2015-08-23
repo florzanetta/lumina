@@ -17,38 +17,48 @@
         {% csrf_token %}
 
         <div class="row" style="margin-bottom: 10px;">
-            <div class="span2"  style="text-align: right;">Fecha de creación:</div>
-            <div class="span5">
-                    <input type="text" class="input-medium" placeholder="Fecha (desde)">
+            <div class="col-xs-2"  style="text-align: right;">
+                <label for="inputFechaDesde">Fecha de creación:</label>
             </div>
-            <div class="span5">
-                     <input type="text" class="input-medium" placeholder="Fecha (hasta)">
+            <div class="col-xs-10">
+                <input type="text" class="form-control" id="inputFechaDesde" placeholder="Fecha (desde)">
+                <input type="text" class="form-control" placeholder="Fecha (hasta)">
             </div>
         </div>
 
         <div class="row" style="margin-bottom: 10px;">
-            <div class="span2"  style="text-align: right;">Cliente:</div>
-            <div class="span4">
-                    <select>
-                      <option>Todos</option>
-                    </select>
+            <div class="col-xs-2"  style="text-align: right;">
+                <label for="inputCliente">Cliente:</label>
             </div>
-            <div class="span2"  style="text-align: right;">Tipo de sesión:</div>
-            <div class="span4">
-                    <select>
+            <div class="col-xs-10">
+                    <select id="inputCliente" class="form-control">
                       <option>Todos</option>
                     </select>
             </div>
         </div>
-        
+
         <div class="row" style="margin-bottom: 10px;">
-            <div class="span12" style="text-align: right;">
+            <div class="col-xs-2"  style="text-align: right;">
+                <label for="inputTipoDeSesion">Tipo de sesión:</label>
+            </div>
+            <div class="col-xs-10">
+                    <select id="inputTipoDeSesion" class="form-control">
+                      <option>Todos</option>
+                    </select>
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-xs-2"  style="text-align: right;">
+            </div>
+            <div class="col-xs-10">
                 <input type="submit" value="Buscar" class="btn btn-primary">
             </div>
         </div>
         
     </form>
     <hr>
+
     {% endif %}
 
     {% for a_session in object_list %}

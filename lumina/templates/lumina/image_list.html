@@ -9,63 +9,62 @@
 
 {% block content %}
 
-	<h3>Imagenes de '{{ user.get_full_name }}'</h3>
+	<h3>Buscar imágenes</h3>
 
-    <h5>Buscar</h5>
     <form method="post" class="form-inline">
 
 		<div class="row" style="margin-bottom: 10px;">
-            <div class="span2"  style="text-align: right;">Fecha:</div>
-            <div class="span5">
-		            <input type="text" class="input-medium" placeholder="Fecha (desde)">
-			</div>
-			<div class="span5">
-				     <input type="text" class="input-medium" placeholder="Fecha (hasta)">
+            <div class="col-xs-2"  style="text-align: right;">Fecha:</div>
+            <div class="col-xs-10">
+		            <input type="text" class="form-control" placeholder="Fecha (desde)">
+                    ·
+                    <input type="text" class="form-control" placeholder="Fecha (hasta)">
 			</div>
 		</div>
 
         <div class="row" style="margin-bottom: 10px;">
-            <div class="span2"  style="text-align: right;">Tamaño:</div>
-            <div class="span5">
-		            <input type="text" class="input-medium" placeholder="Tamaño (desde)"> MB.
-            </div>
-            <div class="span5">
-		            <input type="text" class="input-medium" placeholder="Tamaño (hasta)"> MB.
-            </div>
-        </div>
-        
-        <div class="row" style="margin-bottom: 10px;">
-            <div class="span2"  style="text-align: right;">Cliente:</div>
-            <div class="span4">
-                    <select>
-                      <option>Todos</option>
-                    </select>
-            </div>
-            <div class="span2"  style="text-align: right;">Tipo de cliente:</div>
-            <div class="span4">
-                    <select>
-                      <option>Todos</option>
-                    </select>
+            <div class="col-xs-2"  style="text-align: right;">Tamaño:</div>
+            <div class="col-xs-10">
+		            <input type="text" class="form-control" placeholder="Tamaño (desde)">
+                    ·
+		            <input type="text" class="form-control" placeholder="Tamaño (hasta)"> MiB (megabytes)
             </div>
         </div>
         
         <div class="row" style="margin-bottom: 10px;">
-            <div class="span2"  style="text-align: right;">Tipo de sesión:</div>
-            <div class="span4">
-                    <select>
+            <div class="col-xs-2"  style="text-align: right;">Cliente:</div>
+            <div class="col-xs-4">
+                    <select class="form-control">
                       <option>Todos</option>
                     </select>
             </div>
-            <div class="span2"  style="text-align: right;">Fotógrafo:</div>
-            <div class="span4">
-                    <select>
+            <div class="col-xs-2"  style="text-align: right;">Tipo de cliente:</div>
+            <div class="col-xs-4">
+                    <select class="form-control">
                       <option>Todos</option>
                     </select>
             </div>
         </div>
         
         <div class="row" style="margin-bottom: 10px;">
-            <div class="span12" style="text-align: right;">
+            <div class="col-xs-2"  style="text-align: right;">Tipo de sesión:</div>
+            <div class="col-xs-4">
+                    <select class="form-control">
+                      <option>Todos</option>
+                    </select>
+            </div>
+            <div class="col-xs-2"  style="text-align: right;">Fotógrafo:</div>
+            <div class="col-xs-4">
+                    <select class="form-control">
+                      <option>Todos</option>
+                    </select>
+            </div>
+        </div>
+        
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-xs-2"  style="text-align: right;">
+            </div>
+            <div class="col-xs-10">
                 <input type="button" value="Buscar" class="btn btn-primary">
             </div>
         </div>
