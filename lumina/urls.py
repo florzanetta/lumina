@@ -5,12 +5,14 @@ from django.views.decorators.cache import cache_control
 import autocomplete_light
 
 from lumina import views_image_selection
-from lumina.views import SessionListView, SessionDetailView, SessionCreateView, \
-    SessionUpdateView, CustomerListView, CustomerCreateView, CustomerUpdateView, \
-    UserListView, ImageListView, UserCreateView, UserUpdateView, \
-    SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView, \
-    ImageCreateView, ImageUpdateView, SessionUploadPreviewsView,\
+from lumina.views import (
+    CustomerListView, CustomerCreateView, CustomerUpdateView,
+    UserListView, ImageListView, UserCreateView, UserUpdateView,
+    SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView,
+    ImageCreateView, ImageUpdateView,
     UserPreferenceUpdateView
+)
+from lumina.views_session import *
 from lumina.views_session_quote import *
 
 autocomplete_light.autodiscover()  # BEFORE admin.autodiscover()
@@ -55,7 +57,7 @@ urlpatterns = patterns(
         name='session_upload_previews'),
 
     url(r'^session/upload-previews/(?P<session_id>\d+)/upload/',
-        'lumina.views.session_upload_previews_upload',
+        session_upload_previews_upload,
         name='session_upload_previews_upload'),
 
 
