@@ -39,13 +39,13 @@
                     </tr>
 
                     <tr>
-                        <th width="5%">Files:</th>
+                        <th width="5%">Total:</th>
                         <td>
                             <span id="thumbnail_total_files_count"></span>
                         </td>
                     </tr>
                     <tr>
-                        <th width="5%">Processed:</th>
+                        <th width="5%">Procesados:</th>
                         <td>
                             <span id="thumbnail_files_processed"></span>
                         </td>
@@ -86,13 +86,13 @@
                     </tr>
 
                     <tr>
-                        <th width="5%">Files:</th>
+                        <th width="5%">Total:</th>
                         <td>
                             <span id="ajax_upload_total_files_count"></span>
                         </td>
                     </tr>
                     <tr>
-                        <th width="5%">Processed:</th>
+                        <th width="5%">Subidos:</th>
                         <td>
                             <span id="ajax_upload_files_processed"></span>
                         </td>
@@ -410,14 +410,11 @@ function onFinishedUploadingImages() {
     $('#ajax_upload_dialog_close_button').removeClass('disabled');
     $('#ajax_upload_dialog_close_button').click(function() {
         $('#ajax_upload_modal').modal('hide');
+        window.location.reload();
     });
 
-    //    $('#thumbnail_loading_progress').removeClass('active');
-    //
-    //    $('#formSubmitButton').removeClass('disabled');
-    //    $('#formSubmitButton').click(uploadThumbnails);
+    $('#ajax_upload_progress_bar').removeClass('active');
 
-    alert("FIN");
 }
 
 function recursiveUploadAnImage(imagesToUpload) {
