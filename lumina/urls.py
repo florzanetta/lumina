@@ -6,12 +6,12 @@ import autocomplete_light
 
 from lumina import views_image_selection
 from lumina.views import (
-    UserListView, ImageListView, UserCreateView, UserUpdateView,
-    SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView,
-    ImageCreateView, ImageUpdateView,
+    UserListView,  UserCreateView, UserUpdateView,
     UserPreferenceUpdateView
 )
 from lumina.views_customer import *
+from lumina.views_image import *
+from lumina.views_shared_session import *
 from lumina.views_session import *
 from lumina.views_session_quote import *
 
@@ -78,12 +78,12 @@ urlpatterns = patterns(
 
     url(r'^session/shared-by-email/anonymous/view/'
         '(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
-        'lumina.views.shared_session_by_email_image_thumb_64x64',
+        shared_session_by_email_image_thumb_64x64,
         name='shared_session_by_email_image_thumb_64x64'),
 
     url(r'^session/shared-by-email/anonymous/download/'
         '(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
-        'lumina.views.shared_session_by_email_image_download',
+        shared_session_by_email_image_download,
         name='shared_session_by_email_image_download'),
 
     # ===========================================================================
