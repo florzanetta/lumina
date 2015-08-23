@@ -15,7 +15,7 @@
 
 {% elif object.status == 'Q' %}
     {# STATUS_QUOTING #}
-    <span class="label"><i class="icon-pencil icon-white"></i>
+    <span class="label label-default"><i class="icon-pencil icon-white"></i>
         {{ object.get_status_display }}</span>
 
 {% elif object.status == 'E' %}
@@ -24,5 +24,5 @@
         {{ object.get_status_display }}</span>
 
 {% else %}
-    <span class="label">{{ object.get_status_display }}</span>
+    <span class="label label-default">{{ object.get_status_display }}</span>
 {% endif %}

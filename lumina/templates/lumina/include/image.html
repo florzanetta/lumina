@@ -11,9 +11,11 @@
         <div>
 
             {% if image.image %}
-		              <small> <span class="label">{{ image.size|filesizeformat }}</span></small>
+		              <small> <span class="label label-default">{{ image.size|filesizeformat }}</span></small>
+                      <!--
 		              &nbsp;
-		              <small><span class="label">{{ image.content_type }}</span></small>
+		              <small><span class="label label-default">{{ image.content_type }}</span></small>
+		              -->
             {% endif %}
 		
 					  {% if hide_download %}
