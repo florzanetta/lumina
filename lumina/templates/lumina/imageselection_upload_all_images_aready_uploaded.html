@@ -1,0 +1,33 @@
+{% extends "lumina/base.html" %} {% load lumina_extras %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}
+    Lumina - Peticiones de selección de imágenes de album {{ object.album.name }}
+    {% endblock %}</title>
+</head>
+<body>
+
+    <!--
+    This template shows an 'read-only' version of ImageSelection
+    (for both photographers and customers)
+-->
+
+{% block content %}
+
+    <h3>Peticiones de selección de imágenes de la sesión {{ object.session.name }}</h3>
+
+    <small><strong>Sesión:</strong> {{ object.session.name }}</small>
+    <br>
+
+    <small><strong>Estado:</strong> {{ object.get_status_display }}</small>
+    <br>
+
+    <p>&nbsp;</p>
+    <p class="alert alert-danger">
+        Ya han sido subidas todas las fotografías en calidad total
+        requeridas por el cliente.
+    </p>
+
+{% endblock content %}

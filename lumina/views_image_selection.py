@@ -6,12 +6,12 @@ import logging
 import uuid
 
 from django.core.files.base import ContentFile
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template.context import RequestContext
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, Http404
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -99,6 +99,13 @@ class UploadPendingManualView(DetailView):
     model = ImageSelection
     template_name = 'lumina/imageselection_upload_pending_manual.html'
 
+    def get(self, *args, **kwargs):
+        try:
+            return super(UploadPendingManualView, self).get(*args, **kwargs)
+        except Http404:
+            return redirect(reverse('imageselection_upload_pending_all_images_aready_uploaded',
+                                    args=[kwargs[self.pk_url_kwarg]]))
+
     def get_queryset(self):
         return ImageSelection.objects.full_quality_pending_uploads(
             self.request.user)
@@ -153,6 +160,13 @@ class UploadPendingAutomaticView(DetailView):
     def get_queryset(self):
         return ImageSelection.objects.full_quality_pending_uploads(
             self.request.user)
+
+    def get(self, *args, **kwargs):
+        try:
+            return super(UploadPendingAutomaticView, self).get(*args, **kwargs)
+        except Http404:
+            return redirect(reverse('imageselection_upload_pending_all_images_aready_uploaded',
+                                    args=[kwargs[self.pk_url_kwarg]]))
 
     def get_context_data(self, **kwargs):
         context = super(UploadPendingAutomaticView, self).get_context_data(**kwargs)
@@ -214,6 +228,15 @@ class UploadPendingAutomaticView(DetailView):
             'pending_count': pending_count
         }
         return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
+class UploadPendingAllImagesAlreadyUploadedView(DetailView):
+    """Show error message when all the images where uploaded"""
+    model = ImageSelection
+    template_name = "lumina/imageselection_upload_all_images_aready_uploaded.html"
+
+    def get_queryset(self):
+        return ImageSelection.objects.all_my_accessible_imageselections(self.request.user)
 
 
 class ImageSelectionCreateView(CreateView):
