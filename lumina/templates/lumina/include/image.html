@@ -28,10 +28,14 @@
                       {% endif %}
 		
 		            {% if checkbox_for_selection %}
-						<label class="checkbox" for="selected_images_{{ image.id }}"><input
-		                        type="checkbox" name="selected_images" value="{{ image.id }}"
-		                        id="selected_images_{{ image.id }}"> Seleccionar
+                      <div class="checkbox">
+						<label for="selected_images_{{ image.id }}">
+                            <input type="checkbox" name="selected_images" value="{{ image.id }}"
+		                            id="selected_images_{{ image.id }}">
+                            Seleccionar
 		                </label>
+                      </div>
+
                     {% endif %}
 
             {% if not image.image %}
