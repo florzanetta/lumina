@@ -22,6 +22,24 @@
 			font-size: small;
 			color: gray;
 		}
+
+        /*
+         * https://google-webfonts-helper.herokuapp.com/fonts/roboto?subsets=latin,latin-ext
+         */
+        /* roboto-regular - latin-ext_latin */
+        @font-face {
+          font-family: 'Roboto';
+          font-style: normal;
+          font-weight: 400;
+          src: local('Roboto'), local('Roboto-Regular'),
+               url('/static/lumina/roboto-fonts/roboto-v15-latin-ext_latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+ */
+               url('/static/lumina/roboto-fonts/roboto-v15-latin-ext_latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+        }
+
+        * {
+            font-family: 'Roboto', sans-serif;
+        }
+
 		{% block css %}
 		{% endblock %}
 	</style>
