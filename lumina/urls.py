@@ -6,12 +6,12 @@ import autocomplete_light
 
 from lumina import views_image_selection
 from lumina.views import (
-    CustomerListView, CustomerCreateView, CustomerUpdateView,
     UserListView, ImageListView, UserCreateView, UserUpdateView,
     SharedSessionByEmailCreateView, SharedSessionByEmailAnonymousView,
     ImageCreateView, ImageUpdateView,
     UserPreferenceUpdateView
 )
+from lumina.views_customer import *
 from lumina.views_session import *
 from lumina.views_session_quote import *
 

@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import os
 import uuid
 import zipfile
 
+import os
 from io import BytesIO
-
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.views.generic.edit import CreateView, UpdateView
@@ -18,18 +17,17 @@ from django.contrib.auth.views import login as django_login
 from django.contrib import messages
 from django.core.files.storage import default_storage
 from django.views.decorators.cache import cache_control
-from django.core.urlresolvers import reverse, reverse_lazy
-from django.core.exceptions import ObjectDoesNotExist, \
-    PermissionDenied
+from django.core.urlresolvers import reverse
+
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 
 from lumina.pil_utils import generate_thumbnail
-from lumina.models import Session, Image, LuminaUser, Customer, \
-    SharedSessionByEmail, ImageSelection, SessionQuote, UserPreferences
-from lumina.forms import CustomerCreateForm, CustomerUpdateForm, UserCreateForm, UserUpdateForm, \
+from lumina.models import (
+    Session, Image, LuminaUser, SharedSessionByEmail, ImageSelection, SessionQuote, UserPreferences)
+from lumina.forms import UserCreateForm, UserUpdateForm, \
     SharedSessionByEmailCreateForm, ImageCreateForm, ImageUpdateForm, \
     UserPreferencesUpdateForm, CustomAuthenticationForm
 from lumina.mail import send_email
-
 
 #
 # FIXME: create preference instance when creating a user
@@ -395,59 +393,6 @@ class ImageUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ImageUpdateView, self).get_context_data(**kwargs)
         context['form'].fields['session'].queryset = self.request.user.studio.session_set.all()
-        return context
-
-
-# ===============================================================================
-# Customer
-# ===============================================================================
-
-class CustomerListView(ListView):
-    model = Customer
-    template_name = 'lumina/customer_list.html'
-
-    def get_queryset(self):
-        return self.request.user.all_my_customers()
-
-
-class CustomerCreateView(CreateView):
-    model = Customer
-    form_class = CustomerCreateForm
-    template_name = 'lumina/base_create_update_form.html'
-    success_url = reverse_lazy('customer_list')
-
-    def form_valid(self, form):
-        form.instance.studio = self.request.user.studio
-        ret = super(CustomerCreateView, self).form_valid(form)
-        messages.success(self.request, 'El cliente fue creado correctamente')
-        return ret
-
-    def get_context_data(self, **kwargs):
-        context = super(CustomerCreateView, self).get_context_data(**kwargs)
-        context['title'] = "Agregar cliente"
-        context['submit_label'] = "Agregar"
-        return context
-
-
-class CustomerUpdateView(UpdateView):
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
-    model = Customer
-    form_class = CustomerUpdateForm
-    template_name = 'lumina/base_create_update_form.html'
-    success_url = reverse_lazy('customer_list')
-
-    def get_queryset(self):
-        return self.request.user.all_my_customers()
-
-    def form_valid(self, form):
-        ret = super(CustomerUpdateView, self).form_valid(form)
-        messages.success(self.request, 'El cliente fue actualizado correctamente')
-        return ret
-
-    def get_context_data(self, **kwargs):
-        context = super(CustomerUpdateView, self).get_context_data(**kwargs)
-        context['title'] = "Actualizar cliente"
-        context['submit_label'] = "Actualizar"
         return context
 
 
