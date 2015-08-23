@@ -22,6 +22,7 @@ from django.core.exceptions import SuspiciousOperation
 from lumina.models import Session, Image, ImageSelection
 from lumina.forms import ImageSelectionCreateForm, ImageSelectionAutoCreateForm
 from lumina.mail import send_email
+from lumina.views_utils import _image_download_as_zip
 
 logger = logging.getLogger(__name__)
 
@@ -459,3 +460,18 @@ class ImageSelectionDetailView(DetailView):
             raise SuspiciousOperation()
 
         return ctx
+
+
+@login_required
+@cache_control(private=True)
+def image_selection_download_selected_as_zip(request, image_selecion_id):
+    """
+    Download all the images that a customer has selected in
+    a ImageSelection instance.
+    """
+    qs = ImageSelection.objects.all_my_accessible_imageselections(request.user)
+    image_selection = qs.get(pk=image_selecion_id)
+    assert image_selection.status == ImageSelection.STATUS_IMAGES_SELECTED
+
+    images = image_selection.selected_images.all()
+    return _image_download_as_zip(request, images)

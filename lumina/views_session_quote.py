@@ -16,6 +16,7 @@ from lumina.forms import SessionQuoteCreateForm, SessionQuoteUpdateForm, \
     SessionQuoteAlternativeCreateForm, SessionQuoteUpdate2Form
 from lumina.mail import send_email_for_session_quote
 from lumina import views
+import lumina.views_utils
 
 __all__ = [
     'SessionQuoteCreateView',
@@ -140,7 +141,7 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
         buttons.append({'link_url': reverse('quote_detail', args=[self.object.id]),
                         'link_label': "Volver", })
         context['extra_buttons'] = buttons
-        views._put_session_statuses_in_context(context)
+        lumina.views_utils._put_session_statuses_in_context(context)
         return context
 
     def get_success_url(self):
@@ -291,7 +292,7 @@ class SessionQuoteDetailView(DetailView):
 
         context['selected_quote'] = self.object.get_selected_quote()
         context['extra_buttons'] = buttons
-        views._put_session_statuses_in_context(context)
+        lumina.views_utils._put_session_statuses_in_context(context)
 
         return context
 
@@ -366,7 +367,7 @@ class SessionQuoteAlternativeSelectView(DetailView):
         else:
             raise Exception("Invalid 'status': {}".format(self.object.status))
 
-        views._put_session_statuses_in_context(context)
+        lumina.views_utils._put_session_statuses_in_context(context)
 
         return context
 

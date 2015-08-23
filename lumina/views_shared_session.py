@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse
 from lumina.models import SharedSessionByEmail
 from lumina.forms import SharedSessionByEmailCreateForm
 from lumina.mail import send_email
-from lumina.views import _image_thumb, _image_download
+from lumina.views_utils import _image_thumb, _image_download, _image_download
 
 __all__ = [
     'SharedSessionByEmailAnonymousView',

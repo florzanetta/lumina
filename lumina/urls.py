@@ -1,8 +1,9 @@
+import autocomplete_light
+
 from django.contrib import admin
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
-import autocomplete_light
 
 from lumina import views_image_selection
 from lumina.views_user import (
@@ -175,7 +176,7 @@ urlpatterns = patterns(
         name='image_download'),
 
     url(r'^image/image_selection/(\d+)/download_all/$',
-        'lumina.views.image_selection_download_selected_as_zip',
+        views_image_selection.image_selection_download_selected_as_zip,
         name='image_selection_download_selected_as_zip'),
 
     # ===========================================================================
@@ -275,9 +276,9 @@ urlpatterns = patterns(
     #
     # Other
     #
-    url(r'^admin/check/403$', 'lumina.views.check_403', name='check_403'),
-    url(r'^admin/check/404$', 'lumina.views.check_404', name='check_404'),
-    url(r'^admin/check/500$', 'lumina.views.check_500', name='check_500'),
+    url(r'^admin/check/403$', 'lumina.views_utils.check_403', name='check_403'),
+    url(r'^admin/check/404$', 'lumina.views_utils.check_404', name='check_404'),
+    url(r'^admin/check/500$', 'lumina.views_utils.check_500', name='check_500'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/login/$', 'lumina.views.login', name='login'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
