@@ -31,7 +31,7 @@
 
                             <div class="progress">
                               <div class="progress-bar progress-bar-striped active"
-                                   role="progressbar" style="width: 0%" id="thumbnailLoadingProgress">
+                                   role="progressbar" style="width: 0%" id="thumbnail_loading_progress">
                               </div>
                             </div>
 
@@ -41,13 +41,13 @@
                     <tr>
                         <th width="5%">Files:</th>
                         <td>
-                            <span id="stats_files_count"></span>
+                            <span id="thumbnail_total_files_count"></span>
                         </td>
                     </tr>
                     <tr>
                         <th width="5%">Processed:</th>
                         <td>
-                            <span id="stats_files_processed"></span>
+                            <span id="thumbnail_files_processed"></span>
                         </td>
                     </tr>
                 </table>
@@ -196,7 +196,7 @@ function onFinishedLoadingThumbnails() {
         $('#thumbnail_generation_modal').modal('hide');
     });
 
-    $('#thumbnailLoadingProgress').removeClass('active');
+    $('#thumbnail_loading_progress').removeClass('active');
 
     $('#formSubmitButton').removeClass('disabled');
     $('#formSubmitButton').click(uploadThumbnails);
@@ -206,8 +206,8 @@ function onFinishedLoadingThumbnails() {
 
 // EX: showStatisticsDialog()
 function showThumbnailGenerationProgressDialog() {
-	$('#stats_files_count')[0].textContent = '' + document.LUM_TOTAL_FILE_COUNT;
-	$('#stats_files_processed')[0].textContent = '0';
+	$('#thumbnail_total_files_count')[0].textContent = '' + document.LUM_TOTAL_FILE_COUNT;
+	$('#thumbnail_files_processed')[0].textContent = '0';
 
 	$('#thumbnail_generation_modal').modal({
 		backdrop : 'static',
@@ -221,10 +221,10 @@ function showThumbnailGenerationProgressDialog() {
  */
 function updateThumbnailGenerationProgressDialog() {
 	var processsedCount = document.LUM_TOTAL_FILE_COUNT - document.FILES.length;
-	$('#stats_files_processed')[0].textContent = '' + processsedCount;
+	$('#thumbnail_files_processed')[0].textContent = '' + processsedCount;
 
 	var progressPercent = ((processsedCount / document.LUM_TOTAL_FILE_COUNT) * 100);
-	$('#thumbnailLoadingProgress').width("" + progressPercent + "%");
+	$('#thumbnail_loading_progress').width("" + progressPercent + "%");
 
 }
 
