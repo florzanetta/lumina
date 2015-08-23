@@ -443,7 +443,6 @@ function recursiveUploadAnImage(imagesToUpload) {
     }).done(function(msg) {
         console.info("upload of '" + anImageToUpload.uploadFilename + "' finished. status: " + msg['status']);
         console.info(" - server side claculated_checksum: " + msg['claculated_checksum']);
-        console.info(" - pending_count: " + msg['pending_count']);
         window.setTimeout(function(){ recursiveUploadAnImage(imagesToUpload); }, 1);
 
     }).fail(function(msg) {
