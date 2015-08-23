@@ -394,6 +394,17 @@ function showAjaxUploadProgressDialog(totalUploadCount) {
 	});
 }
 
+function updateAjaxUploadProgressDialog(imagesToUpload) {
+    var total = parseInt($('#ajax_upload_total_files_count')[0].textContent);
+    var processsedCount = total - imagesToUpload.length;
+
+    $('#ajax_upload_files_processed')[0].textContent = '' + processsedCount;
+
+    var progressPercent = ((processsedCount / total) * 100);
+    $('#ajax_upload_progress_bar').width("" + progressPercent + "%");
+
+}
+
 function onFinishedUploadingImages() {
 
     $('#ajax_upload_dialog_close_button').removeClass('disabled');
@@ -410,6 +421,8 @@ function onFinishedUploadingImages() {
 }
 
 function recursiveUploadAnImage(imagesToUpload) {
+
+    updateAjaxUploadProgressDialog(imagesToUpload);
 
     var anImageToUpload = imagesToUpload.shift();
 	if(typeof(anImageToUpload) == 'undefined') {
