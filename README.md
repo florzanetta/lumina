@@ -150,6 +150,15 @@ To avoid breaking the builds, you could add a pre-commit hook that run the pep8 
     $ ln -s ../../.pre-commit-git-hook pre-commit
 
 
+Icons: attribution
+------------------
+
+Icons made by Freepik from www.flaticon.com is licensed under CC BY 3.0
+
+GLYPHICONS from Bootstrap - http://glyphicons.com/ - Jan Kovarik
+
+Font Awesome 4.4.0 - Created by Dave Gandy
+
 Licence
 -------
 
