@@ -241,7 +241,7 @@ function generateThumbnailAndAppendToHtml(image_file, img) {
 	var thumbnails = $('#thumbnails_preview')[0];
 	var tmp;
 
-	var ret = resizeImage(img, 400, 400, 0.5);
+	var ret = resizeImage(img, document.LUMINA_PREVIEW_SIZE, document.LUMINA_PREVIEW_SIZE, 0.5);
 	var url = ret[0];
 	var width = ret[1];
 	var height = ret[2];
@@ -529,6 +529,7 @@ function uploadThumbnails(event) {
 }
 
 function setPreviewSize(selectedSize) {
+	document.LUMINA_PREVIEW_SIZE = parseInt(selectedSize);
 	$('.formControlRowSelectPreviewSize').hide('fast', function() {
 		$('.formControlRowFileSelector').show('slow');
 	});
@@ -536,6 +537,7 @@ function setPreviewSize(selectedSize) {
 }
 
 $(document).ready(function() {
+	document.LUMINA_PREVIEW_SIZE = 0;
 	$('#fileInput').bind('change', generateAndShowThumbnails);
 	$('.formControlRowSelectPreviewSize').show('slow');
 });
