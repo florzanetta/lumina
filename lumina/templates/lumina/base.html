@@ -110,9 +110,10 @@
                             {% endif %}
 
                             <li><a href="{% url 'quote_list' %}">Lista de presupuestos</a></li>
+
                             {% if user.is_photographer %} <!-- user is photographer -->
                             {% else %} <!-- user is client -->
-                                <li><a href="{% url 'quote_list_pending_for_customer' %}">Lista de presupuestos (pendientes de aceptar)</a></li>
+                                <li><a href="{% url 'quote_list_pending_for_customer' %}">Lista de presupuestos pendientes de aceptar</a></li>
                             {% endif %}
 
                         </ul>
