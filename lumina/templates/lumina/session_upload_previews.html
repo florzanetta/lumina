@@ -101,43 +101,43 @@
         <table class="table">
 
 			{% if preview_sizes %}
-            <tr class="formControlRow">
-                <td>Tamaño de previsualización</td>
-                <td>
-					{% for preview_size in preview_sizes %}
-						<a href="javascript:setPreviewSize('{{preview_size.max_size}}');"
-								class="btn btn-primary">{{preview_size}}</a>
-					{% endfor %}
-                </td>
-            </tr>
+				<tr class="formControlRowSelectPreviewSize" style="display: none;">
+					<td width="20%">Tamaño de previsualización</td>
+					<td>
+						{% for preview_size in preview_sizes %}
+							<a href="javascript:setPreviewSize('{{preview_size.max_size}}');"
+									class="btn btn-primary">{{preview_size}}</a>
+						{% endfor %}
+
+						<div>&nbsp;</div>
+						<div class="alert alert-info">
+							<h3 style="margin-top: 0px;"><i class="fa fa-question-circle"></i> Ayuda</h3>
+							<p>Seleccione el tamaño de las previsualizaciones.</p>
+						</div>
+					</td>
+				</tr>
 			{% else %}
-            <tr class="formControlRow">
-                <td>Tamaño de previsualización</td>
-                <td>
-					<div class="alert alert-danger">
-						<p>El estudio fotográfico no ha especificado los tamaños de previsualización válidos.</p>
-						<p>Para configurarlos, por favor <a href="{% url 'studio_preview_sizes' %}">acceda aquí</a>.</p>
-					</div>
-                </td>
-            </tr>
+				<tr>
+					<td width="20%">Tamaño de previsualización</td>
+					<td>
+						<div class="alert alert-danger">
+							<p>El estudio fotográfico no ha especificado los tamaños de previsualización válidos.</p>
+							<p>Para configurarlos, por favor <a href="{% url 'studio_preview_sizes' %}">acceda aquí</a>.</p>
+						</div>
+					</td>
+				</tr>
 			{% endif %}
 
-            <tr class="formControlRow">
-                <td>Imagenes</td>
+            <tr class="formControlRowFileSelector" style="display: none;">
+                <td width="20%">Imagenes</td>
                 <td>
                     <input id="fileInput" type="file" name="images" multiple>
-                </td>
-            </tr>
 
-            <tr class="formControlRow">
-                <td>Tamaño máximo</td>
-                <td>
-                    <select name="preview_size" id="select-preview-size">
-						<option value="">--</option>
-						{% for preview_size in preview_sizes %}
-							<option value="{{preview_size.id}}">{{ preview_size }}</option>
-						{% endfor %}
-                    </select>
+					<div>&nbsp;</div>
+					<div class="alert alert-info">
+						<h3 style="margin-top: 0px;"><i class="fa fa-question-circle"></i> Ayuda</h3>
+						<p>Seleccione los archivos.</p>
+					</div>
                 </td>
             </tr>
 
@@ -478,7 +478,7 @@ function generateAndShowThumbnails() {
 	if (selectedFiles.length <= 0)
 		return;
 
-	$('.formControlRow').toggle();
+	$('.formControlRowFileSelector').hide();
 	document.LUM_TOTAL_FILE_COUNT = selectedFiles.length;
 	showStatisticsDialog(); // uses 'document.LUM_TOTAL_FILE_COUNT'
 
@@ -528,8 +528,16 @@ function uploadThumbnails(event) {
 
 }
 
+function setPreviewSize(selectedSize) {
+	$('.formControlRowSelectPreviewSize').hide('fast', function() {
+		$('.formControlRowFileSelector').show('slow');
+	});
+
+}
+
 $(document).ready(function() {
 	$('#fileInput').bind('change', generateAndShowThumbnails);
+	$('.formControlRowSelectPreviewSize').show('slow');
 });
 
 </script>
