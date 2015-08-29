@@ -67,7 +67,7 @@
                             <td style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
                             <td style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
                             <td width="5%" style="text-align: right;"><input
-                                type="radio" name="selected_quote" value="{{alt.image_quantity}}_{{alt.cost}}"></td>
+                                type="radio" name="selected_quote" value="{{alt.id}}"></td>
                         </tr>
                     {% empty %}
                         <tr>

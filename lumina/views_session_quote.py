@@ -198,11 +198,11 @@ class SessionQuoteDetailView(DetailView):
             return HttpResponseRedirect(reverse('quote_detail',
                                                 args=[quote.id]))
 
-        elif 'button_cancel_and_new_version' in request.POST:
-            # FIXME: implement this!
-            messages.error(self.request, "La creacion de nuevas versiones "
-                                         "de presupuestos todavia no esta implementada.")
-            return HttpResponseRedirect(reverse('home'))
+        # elif 'button_cancel_and_new_version' in request.POST:
+        #     # FIXME: implement this!
+        #     messages.error(self.request, "La creacion de nuevas versiones "
+        #                                  "de presupuestos todavia no esta implementada.")
+        #     return HttpResponseRedirect(reverse('home'))
 
         elif 'button_archive_quote' in request.POST:
             # FIXME: implement this!
@@ -246,9 +246,9 @@ class SessionQuoteDetailView(DetailView):
             else:
                 buttons.append({'name': 'button_cancel',
                                 'submit_label': "Cancelar presupuesto", 'confirm': True, })
-                buttons.append({'name': 'button_cancel_and_new_version',
-                                'submit_label': "Cancelar presupuesto y crear nueva versión",
-                                'confirm': True, })
+                # buttons.append({'name': 'button_cancel_and_new_version',
+                #                 'submit_label': "Cancelar presupuesto y crear nueva versión",
+                #                 'confirm': True, })
                 buttons.append({'name': 'button_update_quote_alternatives',
                                 'submit_label': "Editar presup. alternativos", })
 
@@ -268,16 +268,16 @@ class SessionQuoteDetailView(DetailView):
             else:
                 buttons.append({'name': 'button_cancel',
                                 'submit_label': "Cancelar presupuesto", 'confirm': True, })
-                buttons.append({'name': 'button_cancel_and_new_version',
-                                'submit_label': "Cancelar presupuesto y crear nueva versión",
-                                'confirm': True, })
+                # buttons.append({'name': 'button_cancel_and_new_version',
+                #                 'submit_label': "Cancelar presupuesto y crear nueva versión",
+                #                 'confirm': True, })
                 buttons.append({'name': 'button_update_quote_alternatives',
                                 'submit_label': "Editar presup. alternativos", })
                 buttons.append({'name': 'button_archive_quote',
                                 'submit_label': "Archivar", })
                 if self.object.session is None:
                     buttons.append({'name': 'button_create_session',
-                                    'submit_label': "Crear sesión", })
+                                    'submit_label': "Crear sesión desde presupuesto", })
 
         elif self.object.status == SessionQuote.STATUS_CANCELED:
             # Canceled
@@ -316,18 +316,17 @@ class SessionQuoteAlternativeSelectView(DetailView):
             if 'accept_terms' not in request.POST:
                 messages.error(self.request, 'Debe aceptar las condiciones')
                 return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
-            alternative = request.POST['selected_quote']
+            selected_alternative = request.POST['selected_quote']
 
-            if alternative == '0':
-                params = None
+            if selected_alternative != '0':
+                alternative_id = None
             else:
-                alt_quantity, alt_cost = alternative.split('_')
-                params = [int(alt_quantity), decimal.Decimal(alt_cost)]
+                alternative_id = int(selected_alternative)
 
             if quote.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE:
-                quote.accept(request.user, params)
+                quote.accept(request.user, alternative_id)
             elif quote.status == SessionQuote.STATUS_ACCEPTED:
-                quote.update_quote_alternative(request.user, params)
+                quote.update_quote_alternative(request.user, alternative_id)
             else:
                 raise SuspiciousOperation()
 

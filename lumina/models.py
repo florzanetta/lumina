@@ -778,7 +778,7 @@ class SessionQuote(models.Model):
         self.save()
         # FIXME: IMPLEMENT THIS
 
-    def accept(self, user, alternative_data):
+    def accept(self, user, alternative_id=None):
         """
         The customer accept the quote.
 
@@ -792,22 +792,11 @@ class SessionQuote(models.Model):
         assert user.user_for_customer.studio == self.studio
         assert self.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE
 
-        assert type(alternative_data) in (NoneType, list, tuple)
-
-        if alternative_data is None:
-            pass
-            # done!
-        elif type(alternative_data) in (list, tuple):
-            assert len(alternative_data) == 2
-            alt_quantity, alt_cost = alternative_data
-            assert type(alt_quantity) == int
-            assert type(alt_cost) == decimal.Decimal
-            sqa = self.quote_alternatives.get(image_quantity=alt_quantity,
-                                              cost=alt_cost)
+        if alternative_id is not None:
+            sqa = SessionQuoteAlternative.objects.get(pk=alternative_id,
+                                                      session_quote=self)
+            assert self.accepted_quote_alternative is None
             self.accepted_quote_alternative = sqa
-            # done!
-        else:
-            raise Exception('Invalid alternative_data')
 
         # change state after checks
         self.status = SessionQuote.STATUS_ACCEPTED
