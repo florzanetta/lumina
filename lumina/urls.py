@@ -273,6 +273,13 @@ urlpatterns = patterns(
 
     url(r'^report/(\d+)/$', 'lumina.views_reports.view_report', name='view_report'),
 
+    # ===========================================================================
+    # Studio preferences
+    # ===========================================================================
+
+    # FIXME: implement this view
+    url(r'^studio/preview_sizes/$', 'lumina.views.home', name='studio_preview_sizes'),
+
     #
     # Other
     #

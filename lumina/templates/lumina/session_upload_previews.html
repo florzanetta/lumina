@@ -100,6 +100,28 @@
         <!-- { % csrf_token % } -->
         <table class="table">
 
+			{% if preview_sizes %}
+            <tr class="formControlRow">
+                <td>Tamaño de previsualización</td>
+                <td>
+					{% for preview_size in preview_sizes %}
+						<a href="javascript:setPreviewSize('{{preview_size.max_size}}');"
+								class="btn btn-primary">{{preview_size}}</a>
+					{% endfor %}
+                </td>
+            </tr>
+			{% else %}
+            <tr class="formControlRow">
+                <td>Tamaño de previsualización</td>
+                <td>
+					<div class="alert alert-danger">
+						<p>El estudio fotográfico no ha especificado los tamaños de previsualización válidos.</p>
+						<p>Para configurarlos, por favor <a href="{% url 'studio_preview_sizes' %}">acceda aquí</a>.</p>
+					</div>
+                </td>
+            </tr>
+			{% endif %}
+
             <tr class="formControlRow">
                 <td>Imagenes</td>
                 <td>
