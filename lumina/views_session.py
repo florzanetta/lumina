@@ -150,6 +150,11 @@ class SessionUploadPreviewsView(DetailView):
     def get_queryset(self):
         return Session.objects.modificable_sessions(self.request.user)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['preview_sizes'] = self.request.user.studio.preview_sizes.all()
+        return context
+
 
 @csrf_exempt
 def session_upload_previews_upload(request, session_id):

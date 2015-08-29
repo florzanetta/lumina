@@ -110,13 +110,11 @@
             <tr class="formControlRow">
                 <td>Tamaño máximo</td>
                 <td>
-                    <select>
-                        <option>250x250</option>
-                        <option>600x600</option>
-                        <option>800x800</option>
-                        <option>1000x1000</option>
-                        <option>1500x1500</option>
-                        <option>2000x2000</option>
+                    <select name="preview_size" id="select-preview-size">
+						<option value="">--</option>
+						{% for preview_size in preview_sizes %}
+							<option value="{{preview_size.id}}">{{ preview_size }}</option>
+						{% endfor %}
                     </select>
                 </td>
             </tr>
