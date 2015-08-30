@@ -17,6 +17,8 @@ from django.core.files.base import ContentFile
 
 from lumina.models import Session, Image
 from lumina import forms
+from lumina import models
+
 
 logger = logging.getLogger(__name__)
 
@@ -86,6 +88,12 @@ class SessionSearchView(ListView, FormMixin):
             qs = qs.exclude(archived=True)
         else:
             logger.warn("Invalid value for self.form['archived_status']: %s", form['archived_status'])
+
+        if form.cleaned_data['customer']:
+            qs = qs.filter(customer=form.cleaned_data['customer'])
+
+        if form.cleaned_data['session_type']:
+            qs = qs.filter(session_type=form.cleaned_data['session_type'])
 
         qs = qs.order_by('customer__name', 'name')
         return qs
