@@ -52,19 +52,8 @@
                             <i class="icon-calendar"></i> <span title="Creación: {{a_session.created|date}} - Última actualización: {{a_session.last_modified|date}}">
                                 <small><em>Última actualización:</em> hace <strong>{{ a_session.last_modified|timesince }}</strong></small></span>
 
-                        <!--
-                          -
-                          <small>
-                              Compartido con <span class="badge badge-info">{ { a_session.shared_with.count } }</span>
-                              cliente{ { a_session.shared_with.count|pluralize:",s" } }.
-                          </small>
-                          -
-                          <small>
-                              Compartido con <span class="badge badge-info">{ { a_session.shares_via_email.count } }</span>
-                              persona{ { a_session.shares_via_email.count|pluralize:",s" } } via email.
-                          </small>
-                        -->
                     </div>
+
                     {% with quote=a_session.get_active_quote %}
                         <div style="padding-top: 5px;">
                             {% if quote %}
@@ -76,30 +65,34 @@
                 </div>
             </div>
             <hr>
+
         {% empty %}
             <h4>No se encontraron sessiones fotográficas</h4>
             <hr>
+
         {% endfor %}
 
-        <nav>
-          <ul class="pagination">
-            <li>
-              <a href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-            <li>
-              <a href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
+        {% if show_search_form %}
+            <nav>
+              <ul class="pagination">
+                <li>
+                  <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li>
+                  <a href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+        {% endif %}
 
     {% endif %}
 
