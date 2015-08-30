@@ -1,1 +1,14 @@
 {% extends "lumina/base.html" %}
+
+{% block content %}
+
+    <h3>{{ report_title }}</h3>
+
+    {% block report_form %}
+    {% endblock report_form %}
+
+    <hr>
+
+    <figure style="max-width: 800px; max-height: 500px;">{{ svg_chart|safe }}</figure>
+
+{% endblock content %}
