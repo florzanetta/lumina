@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse
 from lumina.models import SharedSessionByEmail
 from lumina.forms import SharedSessionByEmailCreateForm
 from lumina.mail import send_email
-from lumina.views_utils import _image_thumb, _image_download, _image_download
+from lumina.views_utils import generate_thumbnail_of_image, download_image, download_image
 
 __all__ = [
     'SharedSessionByEmailAnonymousView',
@@ -37,14 +37,14 @@ class SharedSessionByEmailAnonymousView(DetailView):
 @cache_control(private=True)
 def shared_session_by_email_image_thumb_64x64(request, random_hash, image_id):
     shared_album = SharedSessionByEmail.objects.get(random_hash=random_hash)
-    return _image_thumb(request, shared_album.get_image_from_session(image_id), 64)
+    return generate_thumbnail_of_image(request, shared_album.get_image_from_session(image_id), 64)
 
 
 @cache_control(private=True)
 def shared_session_by_email_image_download(request, random_hash, image_id):
     shared_album = SharedSessionByEmail.objects.get(random_hash=random_hash)
     image = shared_album.get_image_from_session(image_id)
-    return _image_download(request, image)
+    return download_image(request, image)
 
 
 class SharedSessionByEmailCreateView(CreateView):

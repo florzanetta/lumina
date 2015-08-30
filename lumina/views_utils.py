@@ -29,7 +29,7 @@ def _put_session_statuses_in_context(context):
     context['status_STATUS_CANCELED'] = statuses_dict[SessionQuote.STATUS_CANCELED]
 
 
-def _image_thumb(request, image, *args, **kwargs):
+def generate_thumbnail_of_image(request, image, *args, **kwargs):
     """Returns an HttoResponse with a thumbnail of the image.
 
     The '*args' and '**kwargs' are passed to `generate_thumbnail()`
@@ -42,7 +42,7 @@ def _image_thumb(request, image, *args, **kwargs):
         return HttpResponseRedirect('/static/lumina/img/unknown-icon-64x64.png')
 
 
-def _image_download(request, image):
+def download_image(request, image):
     """Sends the original uploaded file to the user"""
     full_filename = default_storage.path(image.image.path)
     filename_to_user = image.original_filename
@@ -69,7 +69,7 @@ def _image_download(request, image):
     return response
 
 
-def _image_download_as_zip(request, images):
+def download_images_as_zip(request, images):
     """
     Sends many images to the client.
 

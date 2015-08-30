@@ -10,7 +10,7 @@ from django.views.decorators.cache import cache_control
 
 from lumina.models import Session, Image, ImageSelection, SessionQuote
 from lumina.forms import CustomAuthenticationForm
-from lumina.views_utils import _image_thumb, _image_download
+from lumina.views_utils import generate_thumbnail_of_image, download_image
 
 
 #
@@ -85,18 +85,18 @@ def home(request):
 @cache_control(private=True)
 def image_thumb_64x64(request, image_id):
     image = Image.objects.visible_images(request.user).get(pk=image_id)
-    return _image_thumb(request, image, 64)
+    return generate_thumbnail_of_image(request, image, 64)
 
 
 @login_required
 @cache_control(private=True)
-def image_thumb(request, image_id, max_size=None):
+def image_thumb(request, image_id):
     image = Image.objects.visible_images(request.user).get(pk=image_id)
-    return _image_thumb(request, image, 64)
+    return generate_thumbnail_of_image(request, image, 64)
 
 
 @login_required
 @cache_control(private=True)
 def image_download(request, image_id):
     image = Image.objects.get_for_download(request.user, int(image_id))
-    return _image_download(request, image)
+    return download_image(request, image)

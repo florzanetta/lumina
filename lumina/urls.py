@@ -5,13 +5,16 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
+from lumina import views
+from lumina import views_image_selection_creation
+from lumina import views_image_selection_upload
 from lumina import views_image_selection
-import lumina.views_image_selection_creation
-import lumina.views_image_selection_upload
+
 from lumina.views_user import (
     UserListView,  UserCreateView, UserUpdateView,
     UserPreferenceUpdateView
 )
+
 from lumina.views_customer import *
 from lumina.views_image import *
 from lumina.views_shared_session import *
@@ -29,7 +32,7 @@ urlpatterns = patterns(
     # ===========================================================================
     # Home
     # ===========================================================================
-    url(r'^$', 'lumina.views.home', name='home'),
+    url(r'^$', views.home, name='home'),
 
     # ===========================================================================
     # Session
@@ -95,12 +98,12 @@ urlpatterns = patterns(
     url(r'^session/image-selection/create/$',
         cache_control(private=True)(
             login_required(
-                lumina.views_image_selection_creation.ImageSelectionCreateView.as_view())),
+                views_image_selection_creation.ImageSelectionCreateView.as_view())),
         name='image_selection_create'),
 
     url(
         r'^session/image-selection/create/(?P<pk>\d+)/$',
-        lumina.views_image_selection_creation.image_selection_create_from_quote,
+        views_image_selection_creation.image_selection_create_from_quote,
         name='image_selection_create_from_quote'),
 
     url(r'^session/image-selection/list/$',
@@ -117,17 +120,17 @@ urlpatterns = patterns(
 
     url(r'^session/image-selection/upload-pending/(?P<pk>\d+)/manual-upload/$',
         cache_control(private=True)(
-            login_required(lumina.views_image_selection_upload.UploadPendingManualView.as_view())),
+            login_required(views_image_selection_upload.UploadPendingManualView.as_view())),
         name='imageselection_upload_pending_manual'),
 
     url(r'^session/image-selection/upload-pending/(?P<pk>\d+)/automatic-upload/$',
         cache_control(private=True)(
-            login_required(lumina.views_image_selection_upload.UploadPendingAutomaticView.as_view())),
+            login_required(views_image_selection_upload.UploadPendingAutomaticView.as_view())),
         name='imageselection_upload_pending_automatic'),
 
     url(r'^session/image-selection/upload-pending/(?P<pk>\d+)/all-images-already-uploaded/$',
         cache_control(private=True)(
-            login_required(lumina.views_image_selection_upload.UploadPendingAllImagesAlreadyUploadedView.as_view())),
+            login_required(views_image_selection_upload.UploadPendingAllImagesAlreadyUploadedView.as_view())),
         name='imageselection_upload_pending_all_images_aready_uploaded'),
 
     url(r'^session/image-selection/redirect/(?P<pk>\d+)/$',
@@ -162,14 +165,16 @@ urlpatterns = patterns(
             login_required(ImageUpdateView.as_view())),
         name='image_update'),
 
-    url(r'^image/(\d+)/thumb/$', 'lumina.views.image_thumb',
+    url(r'^image/(\d+)/thumb/$',
+        views.image_thumb,
         name='image_thumb'),
 
-    url(r'^image/(\d+)/thumb/64x64/$', 'lumina.views.image_thumb_64x64',
+    url(r'^image/(\d+)/thumb/64x64/$',
+        views.image_thumb_64x64,
         name='image_thumb_64x64'),
 
     url(r'^image/(\d+)/download/$',
-        'lumina.views.image_download',
+        views.image_download,
         name='image_download'),
 
     url(r'^image/image_selection/(\d+)/download_all/$',
