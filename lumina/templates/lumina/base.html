@@ -87,7 +87,7 @@
                             <!-- Items de drop-down  -->
                             {% if user.is_photographer %} <!-- user is photographer -->
                                     <li><a href="{% url 'session_list' %}">Lista de sesiones</a></li>
-                                    <li><a href="{% url 'session_search' %}?archived=1">Buscar</a></li>
+                                    <li><a href="{% url 'session_search' %}">Buscar</a></li>
                                     <li><a href="{% url 'session_create' %}">Agregar sesión</a></li>
                                     <li><a href="{% url 'shared_session_by_email_create' %}">Compartir sesión</a></li>
                                     <li><a href="{% url 'imageselection_with_pending_uploads_list' %}">Solicitudes esperando uploads</a></li>
