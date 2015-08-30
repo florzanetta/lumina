@@ -2,6 +2,7 @@
 
 import logging
 
+from django.conf import settings
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.http.response import HttpResponseRedirect
@@ -213,7 +214,7 @@ def image_selection_download_selected_as_zip(request, image_selecion_id):
 
 
 @login_required
-@cache_control(private=True)
+@cache_control(private=True, max_age=settings.LUMINA_THUMBNAIL_CACHE)
 def image_selection_thumbnail(request, image_selection_id, image_id):
     qs = ImageSelection.objects.all_my_accessible_imageselections(request.user)
     image_selection = qs.get(pk=image_selection_id)

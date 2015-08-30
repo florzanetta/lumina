@@ -9,6 +9,9 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Dump object with {% dump_objects %}
 LUMINA_DUMP_OBJECTS = False
 
+# How many seconds cache the thumbnails
+LUMINA_THUMBNAIL_CACHE = 3600  # 1 hour
+
 # ===== Django =====
 
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/

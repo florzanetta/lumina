@@ -2,6 +2,7 @@
 
 import uuid
 
+from django.conf import settings
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.contrib import messages
@@ -34,7 +35,7 @@ class SharedSessionByEmailAnonymousView(DetailView):
     template_name = 'lumina/sharedalbum_anonymous_view.html'
 
 
-@cache_control(private=True)
+@cache_control(private=True, max_age=settings.LUMINA_THUMBNAIL_CACHE)
 def shared_session_by_email_image_thumb_64x64(request, random_hash, image_id):
     shared_album = SharedSessionByEmail.objects.get(random_hash=random_hash)
     return generate_thumbnail_of_image(request, shared_album.get_image_from_session(image_id), 64)

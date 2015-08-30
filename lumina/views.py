@@ -2,6 +2,7 @@
 
 import logging
 
+from django.conf import settings
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
@@ -82,14 +83,14 @@ def home(request):
 
 
 @login_required
-@cache_control(private=True)
+@cache_control(private=True, max_age=settings.LUMINA_THUMBNAIL_CACHE)
 def image_thumb_64x64(request, image_id):
     image = Image.objects.visible_images(request.user).get(pk=image_id)
     return generate_thumbnail_of_image(request, image, 64)
 
 
 @login_required
-@cache_control(private=True)
+@cache_control(private=True, max_age=settings.LUMINA_THUMBNAIL_CACHE)
 def image_thumb(request, image_id):
     image = Image.objects.visible_images(request.user).get(pk=image_id)
     return generate_thumbnail_of_image(request, image, 64)
