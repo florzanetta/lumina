@@ -25,9 +25,11 @@ def get_photographer_notifications(user):
     pending_uploads_count = models.ImageSelection.objects.full_quality_pending_uploads(user).count()
 
     if pending_uploads_count > 0:
-        notifications.append(Notification(
-            "Hay {}(s) sesiones pendientes".format(pending_uploads_count),
-            link=reverse('imageselection_with_pending_uploads_list')))
+        if pending_uploads_count == 1:
+            msg = "Hay 1 sesión fotográfica esperando a que se suban imágenes"
+        else:
+            msg = "Hay {} sesiones fotográficas esperando a que se suban imágenes".format(pending_uploads_count)
+        notifications.append(Notification(msg, link=reverse('imageselection_with_pending_uploads_list')))
 
     return notifications
 
