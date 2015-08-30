@@ -167,6 +167,17 @@ class SessionSearchForm(forms.Form):
         self.fields['customer'].queryset = Customer.objects.customers_of(photographer)
         self.fields['session_type'].queryset = SessionType.objects.session_type_of(photographer)
 
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha_creacion_desde = cleaned_data.get("fecha_creacion_desde")
+        fecha_creacion_hasta = cleaned_data.get("fecha_creacion_hasta")
+
+        if fecha_creacion_desde and fecha_creacion_hasta:
+            if fecha_creacion_desde > fecha_creacion_hasta:
+                msg = "'Fecha de creacion (desde)' debe ser anterior a 'Fecha de creacion (hasta)'"
+                self.add_error('fecha_creacion_desde', msg)
+                self.add_error('fecha_creacion_hasta', msg)
+
 
 # ===============================================================================
 # Image
