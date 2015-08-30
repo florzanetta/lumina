@@ -9,6 +9,7 @@ from lumina import views
 from lumina import views_image_selection_creation
 from lumina import views_image_selection_upload
 from lumina import views_image_selection
+from lumina import views_reports
 
 from lumina.views_user import (
     UserListView,  UserCreateView, UserUpdateView,
@@ -283,7 +284,22 @@ urlpatterns = patterns(
     # Reports
     # ===========================================================================
 
-    url(r'^report/(\d+)/$', 'lumina.views_reports.view_report', name='view_report'),
+    url(r'^report/cost_vs_charged_by_customer_type/$',
+        views_reports.view_report_cost_vs_charged_by_customer_type,
+        name='report_cost_vs_charged_by_customer_type'),
+
+    url(r'^report/extended_quotes_through_time/$',
+        views_reports.view_extended_quotes_through_time,
+        name='report_extended_quotes_through_time'),
+
+    url(r'^report/extended_quotes_by_customer/$',
+        views_reports.view_extended_quotes_by_customer,
+        name='report_extended_quotes_by_customer'),
+
+    url(r'^report/income_by_customer_type/$',
+        views_reports.view_income_by_customer_type,
+        name='report_income_by_customer_type'),
+
 
     # ===========================================================================
     # Studio preferences

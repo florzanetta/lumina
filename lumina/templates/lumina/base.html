@@ -162,10 +162,10 @@
                                 <ul class="dropdown-menu" role="menu">
 
                                     <!-- Items de drop-down  -->
-                                    <li><a href="{% url 'view_report' 1 %}">Costo (hs) vs Monto cobtrado ($)</a></li>
-                                    <li><a href="{% url 'view_report' 2 %}">Presupuestos expandidos (en el tiempo)</a></li>
-                                    <li><a href="{% url 'view_report' 3 %}">Presupuestos expandidos (por cliente)</a></li>
-                                    <li><a href="{% url 'view_report' 4 %}">Ingresos ($) por tipo de cliente</a></li>
+                                    <li><a href="{% url 'report_cost_vs_charged_by_customer_type' %}">Costo (hs) vs Monto cobtrado ($)</a></li>
+                                    <li><a href="{% url 'report_extended_quotes_through_time' %}">Presupuestos expandidos (en el tiempo)</a></li>
+                                    <li><a href="{% url 'report_extended_quotes_by_customer' %}">Presupuestos expandidos (por cliente)</a></li>
+                                    <li><a href="{% url 'report_income_by_customer_type' %}">Ingresos ($) por tipo de cliente</a></li>
 
                                 </ul>
                             </li>

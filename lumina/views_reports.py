@@ -18,8 +18,14 @@ logger = logging.getLogger(__name__)
 # FIXME: for all SQLs, check that works on PostgreSql!
 
 
-def _report_1(request, ctx):
-    ctx['report_title'] = 'Costo (hs) vs Monto cobtrado ($) por tipo de cliente'
+@login_required
+@cache_control(private=True)
+def view_report_cost_vs_charged_by_customer_type(request):
+    assert request.user.is_photographer()
+
+    ctx = dict({})
+
+    ctx['report_title'] = 'Costo (hs) vs Monto cobrado ($) por tipo de cliente'
     chart = pygal.XY(  # @UndefinedVariable
                        stroke=False, legend_at_bottom=True, x_title="Horas", y_title="$")
     chart.title = ctx['report_title']
@@ -66,8 +72,16 @@ def _report_1(request, ctx):
     ctx['svg_chart'] = chart.render()
     ctx['show_form_1'] = True
 
+    return render_to_response(
+        'lumina/reports/report_generic.html', ctx,
+        context_instance=RequestContext(request))
 
-def _report_2(request, ctx):
+
+@login_required
+@cache_control(private=True)
+def view_extended_quotes_through_time(request):
+    ctx = dict({})
+
     ctx['report_title'] = 'Presupuestos expandidos (en el tiempo)'
     chart = pygal.StackedBar(legend_at_bottom=True, y_title="$", x_label_rotation=20)  # @UndefinedVariable
     chart.title = ctx['report_title']
@@ -125,8 +139,16 @@ def _report_2(request, ctx):
     ctx['svg_chart'] = chart.render()
     ctx['show_form_2'] = True
 
+    return render_to_response(
+        'lumina/reports/report_generic.html', ctx,
+        context_instance=RequestContext(request))
 
-def _report_3(request, ctx):
+
+@login_required
+@cache_control(private=True)
+def view_extended_quotes_by_customer(request):
+    ctx = dict({})
+
     ctx['report_title'] = 'Presupuestos expandidos (por cliente)'
     chart = pygal.StackedBar(legend_at_bottom=True, y_title="$")  # @UndefinedVariable
     chart.title = ctx['report_title']
@@ -181,8 +203,16 @@ def _report_3(request, ctx):
     ctx['svg_chart'] = chart.render()
     ctx['show_form_3'] = True
 
+    return render_to_response(
+        'lumina/reports/report_generic.html', ctx,
+        context_instance=RequestContext(request))
 
-def _report_4(request, ctx):
+
+@login_required
+@cache_control(private=True)
+def view_income_by_customer_type(request):
+    ctx = dict({})
+
     ctx['report_title'] = 'Ingresos ($) por tipo de cliente'
     chart = pygal.Pie(legend_at_bottom=True)  # @UndefinedVariable
     chart.title = ctx['report_title']
@@ -236,28 +266,6 @@ def _report_4(request, ctx):
     chart.print_values = True
     ctx['svg_chart'] = chart.render()
     ctx['show_form_4'] = True
-
-
-@login_required
-@cache_control(private=True)
-def view_report(request, report_id):
-    assert request.user.is_photographer()
-    report_id = int(report_id)
-    ctx = {}
-    if report_id == 1:
-        _report_1(request, ctx)
-
-    elif report_id == 2:
-        _report_2(request, ctx)
-
-    elif report_id == 3:
-        _report_3(request, ctx)
-
-    elif report_id == 4:
-        _report_4(request, ctx)
-
-    else:
-        raise SuspiciousOperation()
 
     return render_to_response(
         'lumina/reports/report_generic.html', ctx,
