@@ -5,7 +5,7 @@ import json
 import logging
 import uuid
 
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, FormView, FormMixin
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.http.response import HttpResponse, HttpResponseRedirect
@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
 
 from lumina.models import Session, Image
-from lumina.forms import SessionCreateForm, SessionUpdateForm
+from lumina import forms
 
 logger = logging.getLogger(__name__)
 
@@ -49,17 +49,44 @@ class SessionListView(ListView):
         return qs.order_by('customer__name', 'name')
 
 
-class SessionSearchView(ListView):
+class SessionSearchView(ListView, FormMixin):
     model = Session
+
+    def get(self, request, *args, **kwargs):
+        self.form = self.get_form(form_class=forms.SessionSearchForm)
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.form = self.get_form(form_class=forms.SessionSearchForm)
+        return self.get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['list_archived'] = True
+        context['form'] = self.form
         return context
 
     def get_queryset(self):
+        assert isinstance(self.form, forms.SessionSearchForm)
+        if self.request.method == 'GET':
+            return Session.objects.none()
+
+        if not self.form.is_valid():
+            messages.error(self.request,
+                           "Los parámetros de la búsqueda son inválidos")
+            return Session.objects.none()
+
+        # Buscamos
         qs = Session.objects.visible_sessions(self.request.user)
-        qs = qs.filter(archived=True)
+        if self.form.cleaned_data['archived_status'] == forms.SessionSearchForm.ARCHIVED_STATUS_ALL:
+            pass
+        elif self.form.cleaned_data['archived_status'] == forms.SessionSearchForm.ARCHIVED_STATUS_ARCHIVED:
+            qs = qs.filter(archived=True)
+        elif self.form.cleaned_data['archived_status'] == forms.SessionSearchForm.ARCHIVED_STATUS_ACTIVE:
+            qs = qs.exclude(archived=True)
+        else:
+            logger.warn("Invalid value for self.form['archived_status']: %s", self.form['archived_status'])
+
         return qs.order_by('customer__name', 'name')
 
 
@@ -99,7 +126,7 @@ class SessionCreateUpdateMixin():
 
 class SessionCreateView(CreateView, SessionCreateUpdateMixin):
     model = Session
-    form_class = SessionCreateForm
+    form_class = forms.SessionCreateForm
     template_name = 'lumina/base_create_update_form.html'
 
     def get_form(self, form_class):
@@ -123,7 +150,7 @@ class SessionCreateView(CreateView, SessionCreateUpdateMixin):
 class SessionUpdateView(UpdateView, SessionCreateUpdateMixin):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = Session
-    form_class = SessionUpdateForm
+    form_class = forms.SessionUpdateForm
     template_name = 'lumina/base_create_update_form.html'
 
     def get_form(self, form_class):

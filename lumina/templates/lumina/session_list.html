@@ -1,5 +1,5 @@
 {% extends "lumina/base.html" %}
-{% load lumina_extras %}
+{% load lumina_extras %}{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,55 +10,11 @@
 
 {% block content %}
 
-	<h3>Sesiones</h3>
-
     {% if list_archived %}
-    <form action="." method="post" class="form-inline">
-        {% csrf_token %}
-
-        <div class="row" style="margin-bottom: 10px;">
-            <div class="col-xs-2"  style="text-align: right;">
-                <label for="inputFechaDesde">Fecha de creación:</label>
-            </div>
-            <div class="col-xs-10">
-                <input type="text" class="form-control" id="inputFechaDesde" placeholder="Fecha (desde)">
-                <input type="text" class="form-control" placeholder="Fecha (hasta)">
-            </div>
-        </div>
-
-        <div class="row" style="margin-bottom: 10px;">
-            <div class="col-xs-2"  style="text-align: right;">
-                <label for="inputCliente">Cliente:</label>
-            </div>
-            <div class="col-xs-10">
-                    <select id="inputCliente" class="form-control">
-                      <option>Todos</option>
-                    </select>
-            </div>
-        </div>
-
-        <div class="row" style="margin-bottom: 10px;">
-            <div class="col-xs-2"  style="text-align: right;">
-                <label for="inputTipoDeSesion">Tipo de sesión:</label>
-            </div>
-            <div class="col-xs-10">
-                    <select id="inputTipoDeSesion" class="form-control">
-                      <option>Todos</option>
-                    </select>
-            </div>
-        </div>
-
-        <div class="row" style="margin-bottom: 10px;">
-            <div class="col-xs-2"  style="text-align: right;">
-            </div>
-            <div class="col-xs-10">
-                <input type="submit" value="Buscar" class="btn btn-primary">
-            </div>
-        </div>
-        
-    </form>
-    <hr>
-
+        {% crispy form form.helper %}
+        <hr>
+    {% else %}
+	    <h3>Sesiones</h3>
     {% endif %}
 
     {% for a_session in object_list %}

@@ -11,6 +11,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from crispy_forms import bootstrap
 from crispy_forms import helper
 from crispy_forms import layout
+
 from localflavor.ar.forms import ARCUITField
 
 from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail, \
@@ -108,6 +109,57 @@ class SessionUpdateForm(forms.ModelForm):
         # widgets = {
         #    'shared_with': CheckboxSelectMultiple(),
         # }
+
+
+class SessionSearchForm(forms.Form):
+
+    ARCHIVED_STATUS_ALL = 'ALL'
+    ARCHIVED_STATUS_ARCHIVED = 'ARCHIVED'
+    ARCHIVED_STATUS_ACTIVE = 'ACTIVE'
+
+    ARCHIVED_STATUS_CHOICES = (
+        (ARCHIVED_STATUS_ALL, 'Todas'),
+        (ARCHIVED_STATUS_ARCHIVED, 'Archivadas'),
+        (ARCHIVED_STATUS_ACTIVE, 'Activas'),
+    )
+    archived_status = forms.ChoiceField(choices=ARCHIVED_STATUS_CHOICES,
+                                        widget=forms.RadioSelect,
+                                        initial=ARCHIVED_STATUS_ALL,
+                                        label='Archivados')
+    fecha_creacion_desde = forms.CharField(max_length=20,
+                                           required=False,
+                                           widget=forms.PasswordInput(),
+                                           label='Fecha de creación',
+                                           help_text="Fecha de creacion (desde)")
+    fecha_creacion_hasta = forms.CharField(max_length=20,
+                                           required=False,
+                                           widget=forms.PasswordInput(),
+                                           label='Fecha de creación',
+                                           help_text="Fecha de creacion (hasta)")
+    customer = forms.ChoiceField(choices=[], label='Cliente', required=False)
+    session_type = forms.ChoiceField(choices=[], label='Tipo de sesión', required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = helper.FormHelper()
+        # self.helper.form_tag = False
+        self.helper.form_action = 'session_search'
+        # self.helper.form_class = 'xxx-form-horizontal'
+        # self.helper.label_class = 'xxx-helper-label_class'
+        # self.helper.field_class = 'xxx-helper-field_class'
+        self.helper.layout = helper.Layout(
+            layout.Fieldset(
+                'Busqueda de sesiones',
+                bootstrap.InlineRadios('archived_status'),
+                'fecha_creacion_desde',
+                'fecha_creacion_hasta',
+                'customer',
+                'session_type',
+            ),
+            bootstrap.FormActions(
+                layout.Submit('submit', 'Buscar'),
+            ),
+        )
 
 
 # ===============================================================================
