@@ -28,6 +28,11 @@
 	<small><strong>Cant. de imagenes permitidas:</strong>
 		{{ object.image_quantity }}</small><br>
 
+    {% if user.is_photographer %}
+        <small><strong>Tamaño max. de previsualizaciones:</strong>
+            {{ object.preview_size }}</small><br>
+    {% endif %}
+
     <h5>Imágenes de la sesión:</h5>
 
     {% for image in images_to_show %}

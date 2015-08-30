@@ -155,8 +155,7 @@ def image_selection_item(context, image_selection, image):
 
     image_filename = image.original_filename or image.thumbnail_original_filename
 
-    # thumbnail_url = reverse('image_selection_thumbnail', args=[image_selection.id, image.id])
-    thumbnail_url = reverse('image_thumb_64x64', args=[image.id])
+    thumbnail_url = reverse('image_selection_thumbnail', args=[image_selection.id, image.id])
 
     if user.is_for_customer():
         for_customer = True

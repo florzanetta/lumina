@@ -14,6 +14,7 @@ from django.core.exceptions import SuspiciousOperation
 
 from lumina.models import ImageSelection
 from lumina.mail import send_email
+from lumina import views_utils
 from lumina.views_utils import _image_download_as_zip
 
 logger = logging.getLogger(__name__)
@@ -209,3 +210,13 @@ def image_selection_download_selected_as_zip(request, image_selecion_id):
 
     images = image_selection.selected_images.all()
     return _image_download_as_zip(request, images)
+
+
+@login_required
+@cache_control(private=True)
+def image_selection_thumbnail(request, image_selection_id, image_id):
+    qs = ImageSelection.objects.all_my_accessible_imageselections(request.user)
+    image_selection = qs.get(pk=image_selection_id)
+    image = image_selection.session.image_set.get(pk=image_id)
+
+    return views_utils._image_thumb(request, image, image_selection.preview_size.max_size)

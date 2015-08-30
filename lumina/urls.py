@@ -176,6 +176,10 @@ urlpatterns = patterns(
         views_image_selection.image_selection_download_selected_as_zip,
         name='image_selection_download_selected_as_zip'),
 
+    url(r'^image/image_selection/(?P<image_selection_id>\d+)/thumbnail/(?P<image_id>\d+)/$',
+        views_image_selection.image_selection_thumbnail,
+        name='image_selection_thumbnail'),
+
     # ===========================================================================
     # Customer
     # ===========================================================================
