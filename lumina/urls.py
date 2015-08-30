@@ -43,6 +43,12 @@ urlpatterns = patterns(
                 SessionListView.as_view())),
         name='session_list'),
 
+    url(r'^session/search/$',
+        cache_control(private=True)(
+            login_required(
+                SessionSearchView.as_view())),
+        name='session_search'),
+
     url(r'^session/detail/(?P<pk>\d+)/$',
         cache_control(private=True)(
             login_required(SessionDetailView.as_view())),

@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 __all__ = [
     'SessionListView',
+    'SessionSearchView',
     'SessionDetailView',
     'SessionCreateView',
     'SessionUpdateView',
@@ -36,27 +37,29 @@ __all__ = [
 # ===============================================================================
 
 class SessionListView(ListView):
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-    #    #django.views.generic.list.ListView
     model = Session
-
-    def _archived(self):
-        return '1' in [self.request.GET.get('archived', None),
-                       self.request.POST.get('archived', None)]
 
     def get_context_data(self, **kwargs):
         context = super(SessionListView, self).get_context_data(**kwargs)
-        context['list_archived'] = self._archived()
         return context
 
     def get_queryset(self):
         qs = Session.objects.visible_sessions(self.request.user)
-        if self._archived():
-            qs = qs.filter(archived=True)
-        else:
-            # qs.filter(archived=False) -> DOES NOT WORKS
-            # at least with sqlite
-            qs = qs.exclude(archived=True)
+        qs = qs.exclude(archived=True)
+        return qs.order_by('customer__name', 'name')
+
+
+class SessionSearchView(ListView):
+    model = Session
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['list_archived'] = True
+        return context
+
+    def get_queryset(self):
+        qs = Session.objects.visible_sessions(self.request.user)
+        qs = qs.filter(archived=True)
         return qs.order_by('customer__name', 'name')
 
 
