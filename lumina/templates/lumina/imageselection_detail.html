@@ -15,10 +15,9 @@
 
 {% block content %}
 
-    <h3>Peticiones de selección de imágenes de la sesión {{ object.session.name }}</h3>
+    <h3>Peticiones de selección de imágenes</h3>
 
-    <small><strong>Sesión:</strong>
-        {{ object.session.name }}</small><br>
+	<h4><strong>Sesión:</strong> {{ object.session.name }}</h4>
 
 	<small><strong>Estado:</strong>
 		{{ object.get_status_display }}</small><br>
