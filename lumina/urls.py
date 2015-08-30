@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
 from lumina import views_image_selection
+import lumina.views_image_selection_creation
+import lumina.views_image_selection_upload
 from lumina.views_user import (
     UserListView,  UserCreateView, UserUpdateView,
     UserPreferenceUpdateView
@@ -93,12 +95,12 @@ urlpatterns = patterns(
     url(r'^session/image-selection/create/$',
         cache_control(private=True)(
             login_required(
-                views_image_selection.ImageSelectionCreateView.as_view())),
+                lumina.views_image_selection_creation.ImageSelectionCreateView.as_view())),
         name='image_selection_create'),
 
     url(
         r'^session/image-selection/create/(?P<pk>\d+)/$',
-        views_image_selection.image_selection_create_from_quote,
+        lumina.views_image_selection_creation.image_selection_create_from_quote,
         name='image_selection_create_from_quote'),
 
     url(r'^session/image-selection/list/$',
@@ -115,17 +117,17 @@ urlpatterns = patterns(
 
     url(r'^session/image-selection/upload-pending/(?P<pk>\d+)/manual-upload/$',
         cache_control(private=True)(
-            login_required(views_image_selection.UploadPendingManualView.as_view())),
+            login_required(lumina.views_image_selection_upload.UploadPendingManualView.as_view())),
         name='imageselection_upload_pending_manual'),
 
     url(r'^session/image-selection/upload-pending/(?P<pk>\d+)/automatic-upload/$',
         cache_control(private=True)(
-            login_required(views_image_selection.UploadPendingAutomaticView.as_view())),
+            login_required(lumina.views_image_selection_upload.UploadPendingAutomaticView.as_view())),
         name='imageselection_upload_pending_automatic'),
 
     url(r'^session/image-selection/upload-pending/(?P<pk>\d+)/all-images-already-uploaded/$',
         cache_control(private=True)(
-            login_required(views_image_selection.UploadPendingAllImagesAlreadyUploadedView.as_view())),
+            login_required(lumina.views_image_selection_upload.UploadPendingAllImagesAlreadyUploadedView.as_view())),
         name='imageselection_upload_pending_all_images_aready_uploaded'),
 
     url(r'^session/image-selection/redirect/(?P<pk>\d+)/$',
