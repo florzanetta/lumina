@@ -73,31 +73,39 @@
         {% endfor %}
 
         {% if show_search_form %}
-
             <nav>
-              <ul class="pagination">
+              <ul class="pagination pagination-lg">
 
-                {% if object_list.has_previous %}
-                    <li>
+                <li class="{% if not object_list.has_previous %} disabled {% endif %}">
+                    {% if object_list.has_previous %}
                       <a href="javascript:goToPage('{{ object_list.previous_page_number }}');">
                         &laquo;
                       </a>
-                    </li>
-                {% endif %}
+                    {% else %}
+                      <a href="javascript:void(0);">
+                        &laquo;
+                      </a>
+                    {% endif %}
+                </li>
 
                   <li>
-                      <a href="#">
-                        Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}
+                      <a href="javascript:void(0);">
+                        Página {{ object_list.number }} de {{ object_list.paginator.num_pages }}
                       </a>
                   </li>
 
-                {% if object_list.has_next %}
-                    <li>
+                <li class="{% if not object_list.has_next %} disabled {% endif %}">
+                    {% if object_list.has_next %}
                       <a href="javascript:goToPage('{{ object_list.next_page_number }}');">
                         &raquo;
                       </a>
-                    </li>
-                {% endif %}
+                    {% else %}
+                      <a href="javascript:void(0);">
+                        &raquo;
+                      </a>
+                    {% endif %}
+                </li>
+
               </ul>
             </nav>
         {% endif %}
