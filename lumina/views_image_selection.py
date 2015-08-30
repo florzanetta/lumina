@@ -145,7 +145,7 @@ class ImageSelectionDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ImageSelectionDetailView, self).get_context_data(**kwargs)
-        image_selection = ctx['object']
+        image_selection = self.object
         assert isinstance(image_selection, ImageSelection)
 
         # Compare `id` because of the use of UserProxyManager
@@ -154,11 +154,11 @@ class ImageSelectionDetailView(DetailView):
             if image_selection.session.studio != self.request.user.studio:
                 raise SuspiciousOperation()
             ctx['images_to_show'] = image_selection.session.image_set.all()
-            ctx['selected_images'] = image_selection.selected_images.all()
+            selected_images = image_selection.selected_images.all()
 
             # Check if all the selected images are avaiable in full-quality
             all_selected_are_available_in_full_quality = True
-            for image in ctx['selected_images']:
+            for image in selected_images:
                 if not image.image:
                     all_selected_are_available_in_full_quality = False
                     break

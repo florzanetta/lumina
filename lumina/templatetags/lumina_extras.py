@@ -8,10 +8,12 @@ import logging
 
 from django import template
 from django.core import serializers
+from django.core.urlresolvers import reverse
 from django.db.models.query import QuerySet
 from django.template.context import Context
 from django.conf import settings
 
+from lumina import models
 
 logger = logging.getLogger(__name__)
 
@@ -118,3 +120,60 @@ def session_quote_status(parser, token):
         raise template.TemplateSyntaxError("{0} tag requires a single argument".format(
             token.contents.split()[0]))
     return SessionQuoteStatusNode(session_quote)
+
+
+# ===============================================================================
+# Thumbnails for ImageSelection
+# ===============================================================================
+
+@register.inclusion_tag('lumina/templatetags/image_selection_item.html', takes_context=True)
+def image_selection_item(context, image_selection, image):
+    """
+    Generate an item in a list of images of an 'image selection'.
+
+    :param context: template context
+    :param image_selection: the ImageSelection instance
+    :param image: the Image instance
+    :return:
+    """
+    assert isinstance(image_selection, models.ImageSelection)
+    assert isinstance(image, models.Image)
+
+    user = context['user']
+    assert isinstance(user, models.LuminaUser)
+
+    try:
+        selected_images = context['LUMINA_CACHE_selected_images']
+    except KeyError:
+        selected_images = image_selection.selected_images.all()
+        context['LUMINA_CACHE_selected_images'] = selected_images
+
+    if image.image:
+        full_quality = True
+    else:
+        full_quality = False
+
+    image_filename = image.original_filename or image.thumbnail_original_filename
+
+    # thumbnail_url = reverse('image_selection_thumbnail', args=[image_selection.id, image.id])
+    thumbnail_url = reverse('image_thumb_64x64', args=[image.id])
+
+    if user.is_for_customer():
+        for_customer = True
+    else:
+        for_customer = False
+
+    if image_selection.status == models.ImageSelection.STATUS_WAITING:
+        waiting_selection = True
+    else:
+        waiting_selection = False
+
+    return {
+        'image': image,
+        'image_filename': image_filename,
+        'thumbnail_url': thumbnail_url,
+        'for_customer': for_customer,
+        'waiting_selection': waiting_selection,
+        'image_selected_by_customer': image in selected_images,
+        'full_quality': full_quality,
+    }

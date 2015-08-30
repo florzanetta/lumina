@@ -1,0 +1,98 @@
+<!--
+{# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #}
+{# Template for the {% image_selection_item %} custom tag                 #}
+{# This is used to show a thumbnail of the image, in the context          #}
+{# of a 'image selection'.                                                #}
+{#                                                                        #}
+{# Photographers and customers see the thumbnail in the required          #}
+{# size, with the watermark (if configured)                               #}
+{#                                                                        #}
+{# Customer may see the form controls                                     #}
+{# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #}
+-->
+<div class="media">
+    <a class="pull-left" href="javascript:void(0);">
+        <img class="media-object" src="{{ thumbnail_url }}">
+    </a>
+    <div class="media-body">
+
+        {% if for_customer %}
+            <!-- Customer -->
+
+            {% if waiting_selection %}
+
+                <label for="selected_images_{{ image.id }}">
+                    <input type="checkbox"
+                           name="selected_images"
+                           value="{{ image.id }}"
+                           id="selected_images_{{ image.id }}">
+                    {{ image_filename }}
+                </label>
+
+            {% else %}
+                <p>
+                    <strong>{{ image_filename }}</strong>
+                </p>
+
+                <p>
+                    {% if full_quality %}
+                        <a href="{% url 'image_download' image.pk %}" class="lumina_download_image">
+                            <i class="fa fa-download"></i> Bajar
+                        </a>
+                        &nbsp;
+                        <small>
+                            <span class="label label-default">{{ image.size|filesizeformat }}</span>
+                        </small>
+                    {% else %}
+                        <small class="text-muted">
+                            <i class="fa fa-exclamation-circle"></i> Sólo vista previa.
+                            Podrá bajar la foto original después que el fotógrafo la suba.
+                        </small>
+                    {% endif %}
+                </p>
+
+            {% endif %}
+
+        {% else %}
+            <!-- Photographer -->
+
+            <p>
+                {% if not waiting_selection %}
+                    {% if image_selected_by_customer %}
+                        <span class="label label-success">
+                            <i class="fa fa-check-square-o"></i> Elegida por el cliente
+                        </span>
+                    {% endif %}
+                {% endif %}
+                &nbsp;
+                <strong>{{ image_filename }}</strong>
+            </p>
+
+            <p>
+                {% if full_quality %}
+                    <a href="{% url 'image_download' image.pk %}" class="lumina_download_image">
+                        <i class="fa fa-download"></i> Bajar
+                    </a>
+                    &nbsp;
+                    <small>
+                        <span class="label label-default">{{ image.size|filesizeformat }}</span>
+                    </small>
+                {% else %}
+                    {% if image_selected_by_customer and not waiting_selection %}
+                        <small class="text-danger">
+                            <i class="fa fa-exclamation-circle"></i>
+                            <strong>El cliente está esperando</strong> a que se suba la foto original para poder bajarla.
+                        </small>
+                    {% else %}
+                        <small class="text-muted">
+                            <i class="fa fa-exclamation-circle"></i> Sólo vista previa.
+                        </small>
+                    {% endif %}
+                {% endif %}
+            </p>
+
+        {% endif %}
+
+
+    </div>
+</div>
