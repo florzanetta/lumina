@@ -16,7 +16,7 @@ from localflavor.ar.forms import ARCUITField
 
 from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail, \
     Image, ImageSelection, SessionQuote, SessionQuoteAlternative,\
-    UserPreferences
+    UserPreferences, SessionType
 
 
 # ===============================================================================
@@ -137,10 +137,16 @@ class SessionSearchForm(forms.Form):
                                            widget=forms.PasswordInput(),
                                            label='Fecha de creación',
                                            help_text="Fecha de creacion (hasta)")
-    customer = forms.ChoiceField(choices=[], label='Cliente', required=False)
-    session_type = forms.ChoiceField(choices=[], label='Tipo de sesión', required=False)
+    customer = forms.ModelChoiceField(Session.objects.none(),
+                                      empty_label='Todos los clientes',
+                                      label='Cliente',
+                                      required=False)
+    session_type = forms.ModelChoiceField(SessionType.objects.none(),
+                                          empty_label='Todos los tipos de sesiones',
+                                          label='Tipo de sesión',
+                                          required=False)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, photographer=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = helper.FormHelper()
         self.helper.form_action = 'session_search'
@@ -159,6 +165,11 @@ class SessionSearchForm(forms.Form):
                 layout.Submit('submit', 'Buscar'),
             ),
         )
+
+        assert isinstance(photographer, LuminaUser)
+        assert photographer.is_photographer()
+        self.fields['customer'].queryset = Customer.objects.customers_of(photographer)
+        self.fields['session_type'].queryset = SessionType.objects.session_type_of(photographer)
 
 
 # ===============================================================================

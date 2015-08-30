@@ -242,7 +242,7 @@ class Customer(models.Model):
     objects = CustomerManager()
 
     def __str__(self):
-        return "Customer {0}".format(self.name)
+        return self.name
 
 
 # ===============================================================================
@@ -966,9 +966,17 @@ class CustomerType(models.Model):
 # SessionType
 # ===============================================================================
 
+class SessionTypeManager(models.Manager):
+
+    def session_type_of(self, photographer):
+        return self.filter(studio=photographer.studio)
+
+
 class SessionType(models.Model):
     name = models.CharField(max_length=100, verbose_name="tipo de sesión")
     studio = models.ForeignKey('Studio', related_name='session_types', verbose_name="estudio")
+
+    objects = SessionTypeManager()
 
     def __str__(self):
         return self.name

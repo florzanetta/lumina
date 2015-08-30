@@ -52,6 +52,11 @@ class SessionListView(ListView):
 class SessionSearchView(ListView, FormMixin):
     model = Session
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['photographer'] = self.request.user
+        return kwargs
+
     def get(self, request, *args, **kwargs):
         self.form = self.get_form(form_class=forms.SessionSearchForm)
         self.search_result_qs = None
