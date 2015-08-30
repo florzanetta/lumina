@@ -125,7 +125,8 @@ class SessionSearchForm(forms.Form):
     archived_status = forms.ChoiceField(choices=ARCHIVED_STATUS_CHOICES,
                                         widget=forms.RadioSelect,
                                         initial=ARCHIVED_STATUS_ALL,
-                                        label='Archivados')
+                                        label='Archivados',
+                                        required=False)
     fecha_creacion_desde = forms.CharField(max_length=20,
                                            required=False,
                                            widget=forms.PasswordInput(),
@@ -142,20 +143,18 @@ class SessionSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = helper.FormHelper()
-        # self.helper.form_tag = False
         self.helper.form_action = 'session_search'
-        # self.helper.form_class = 'xxx-form-horizontal'
-        # self.helper.label_class = 'xxx-helper-label_class'
-        # self.helper.field_class = 'xxx-helper-field_class'
+
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
+
         self.helper.layout = helper.Layout(
-            layout.Fieldset(
-                'Busqueda de sesiones',
-                bootstrap.InlineRadios('archived_status'),
-                'fecha_creacion_desde',
-                'fecha_creacion_hasta',
-                'customer',
-                'session_type',
-            ),
+            bootstrap.InlineRadios('archived_status'),
+            'fecha_creacion_desde',
+            'fecha_creacion_hasta',
+            'customer',
+            'session_type',
             bootstrap.FormActions(
                 layout.Submit('submit', 'Buscar'),
             ),

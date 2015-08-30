@@ -11,7 +11,12 @@
 {% block content %}
 
     {% if list_archived %}
-        {% crispy form form.helper %}
+        <div class="panel panel-info">
+            <div class="panel-heading">Búsqueda de sesiones</div>
+            <div class="panel-body">
+                {% crispy form form.helper %}
+            </div>
+        </div>
         <hr>
     {% else %}
 	    <h3>Sesiones</h3>
