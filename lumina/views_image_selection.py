@@ -219,4 +219,7 @@ def image_selection_thumbnail(request, image_selection_id, image_id):
     image_selection = qs.get(pk=image_selection_id)
     image = image_selection.session.image_set.get(pk=image_id)
 
-    return views_utils._image_thumb(request, image, image_selection.preview_size.max_size)
+    return views_utils._image_thumb(request,
+                                    image,
+                                    image_selection.preview_size.max_size,
+                                    add_watermark=True)

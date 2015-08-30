@@ -29,11 +29,16 @@ def _put_session_statuses_in_context(context):
     context['status_STATUS_CANCELED'] = statuses_dict[SessionQuote.STATUS_CANCELED]
 
 
-def _image_thumb(request, image, max_size=None):
+def _image_thumb(request, image, *args, **kwargs):
+    """Returns an HttoResponse with a thumbnail of the image.
+
+    The '*args' and '**kwargs' are passed to `generate_thumbnail()`
+    """
     try:
-        thumb = generate_thumbnail(image, max_size)
+        thumb = generate_thumbnail(image, *args, **kwargs)
         return HttpResponse(thumb, content_type='image/jpg')
     except IOError:
+        logger.exception("Couldn't generate thumbnail for image %s", image.id)
         return HttpResponseRedirect('/static/lumina/img/unknown-icon-64x64.png')
 
 
