@@ -15,7 +15,6 @@ from django.core.exceptions import SuspiciousOperation
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
 
-from lumina.models import Session, Image
 from lumina import forms
 from lumina import models
 
@@ -39,7 +38,7 @@ __all__ = [
 # ===============================================================================
 
 class SessionListView(ListView):
-    model = Session
+    model = models.Session
 
     def get_context_data(self, **kwargs):
         context = super(SessionListView, self).get_context_data(**kwargs)
@@ -47,13 +46,13 @@ class SessionListView(ListView):
         return context
 
     def get_queryset(self):
-        qs = Session.objects.visible_sessions(self.request.user)
+        qs = models.Session.objects.visible_sessions(self.request.user)
         qs = qs.exclude(archived=True)
         return qs.order_by('customer__name', 'name')
 
 
 class SessionSearchView(ListView, FormMixin):
-    model = Session
+    model = models.Session
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -77,10 +76,10 @@ class SessionSearchView(ListView, FormMixin):
         if not form.is_valid():
             messages.error(request,
                            "Los parámetros de la búsqueda son inválidos")
-            return Session.objects.none()
+            return models.Session.objects.none()
 
         # Do the search
-        qs = Session.objects.visible_sessions(request.user)
+        qs = models.Session.objects.visible_sessions(request.user)
         if form.cleaned_data['archived_status'] == forms.SessionSearchForm.ARCHIVED_STATUS_ALL:
             pass
         elif form.cleaned_data['archived_status'] == forms.SessionSearchForm.ARCHIVED_STATUS_ARCHIVED:
@@ -115,13 +114,13 @@ class SessionSearchView(ListView, FormMixin):
         return context
 
     def get_queryset(self):
-        return Session.objects.none()
+        return models.Session.objects.none()
 
 
 class SessionDetailView(DetailView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
     #    #django.views.generic.detail.DetailView
-    model = Session
+    model = models.Session
 
     def post(self, request, *args, **kwargs):
         session = self.get_object()
@@ -141,7 +140,7 @@ class SessionDetailView(DetailView):
         raise SuspiciousOperation()
 
     def get_queryset(self):
-        return Session.objects.visible_sessions(self.request.user)
+        return models.Session.objects.visible_sessions(self.request.user)
 
 
 class SessionCreateUpdateMixin():
@@ -153,7 +152,7 @@ class SessionCreateUpdateMixin():
 
 
 class SessionCreateView(CreateView, SessionCreateUpdateMixin):
-    model = Session
+    model = models.Session
     form_class = forms.SessionCreateForm
     template_name = 'lumina/base_create_update_form.html'
 
@@ -177,7 +176,7 @@ class SessionCreateView(CreateView, SessionCreateUpdateMixin):
 
 class SessionUpdateView(UpdateView, SessionCreateUpdateMixin):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
-    model = Session
+    model = models.Session
     form_class = forms.SessionUpdateForm
     template_name = 'lumina/base_create_update_form.html'
 
@@ -187,7 +186,7 @@ class SessionUpdateView(UpdateView, SessionCreateUpdateMixin):
         return form
 
     def get_queryset(self):
-        return Session.objects.modificable_sessions(self.request.user)
+        return models.Session.objects.modificable_sessions(self.request.user)
 
     def form_valid(self, form):
         ret = super(SessionUpdateView, self).form_valid(form)
@@ -202,11 +201,11 @@ class SessionUpdateView(UpdateView, SessionCreateUpdateMixin):
 
 
 class SessionUploadPreviewsView(DetailView):
-    model = Session
+    model = models.Session
     template_name = "lumina/session_upload_previews.html"
 
     def get_queryset(self):
-        return Session.objects.modificable_sessions(self.request.user)
+        return models.Session.objects.modificable_sessions(self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -236,9 +235,10 @@ def session_upload_previews_upload(request, session_id):
         thumb_base64 = thumb_base64[len(PREFIX):]
         thumb_contents = base64.decodestring(bytes(thumb_base64, 'ascii'))
 
-        new_image = Image(session=session, studio=request.user.studio,
-                          thumbnail_content_type='image/jpg',
-                          original_file_checksum=original_file_checksum)
+        new_image = models.Image(session=session,
+                                 studio=request.user.studio,
+                                 thumbnail_content_type='image/jpg',
+                                 original_file_checksum=original_file_checksum)
 
         new_image.set_thumbnail_original_filename(filename)
         new_image.thumbnail_size = len(thumb_contents)
