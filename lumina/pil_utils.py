@@ -4,6 +4,7 @@ from io import BytesIO
 from PIL import Image as PilImage
 from PIL import ImageFont
 from PIL import ImageDraw
+from PIL import ImageEnhance
 
 
 from django.core.files.storage import default_storage
@@ -39,19 +40,31 @@ def generate_thumbnail(image, max_size=None):
     font_size = 10
     watermark_font = ImageFont.truetype(FONT, font_size)
     watermark_text_width, watermark_text_height = watermark_font.getsize(text)
-    while watermark_text_width < (max_text_size * 0.9):
+    while watermark_text_width < (max_text_size * 0.8):
         font_size += 2
         watermark_font = ImageFont.truetype(FONT, font_size)
         watermark_text_width, watermark_text_height = watermark_font.getsize(text)
 
-    draw = ImageDraw.Draw(img, 'RGBA')
+    # draw = ImageDraw.Draw(img, 'RGBA')
+    watermark = PilImage.new('RGBA', img.size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(watermark, 'RGBA')
     pos_x = int((image_width - watermark_text_width) / 2)
     pos_y = int(((image_height - watermark_text_height) / 2))
 
     draw.text([pos_x, pos_y - watermark_text_height], text, font=watermark_font)
     draw.text([pos_x, pos_y + watermark_text_height], text, font=watermark_font)
 
+    angle = 20
+    watermark = watermark.rotate(angle, PilImage.BICUBIC)
+
+    opacity = 0.8
+    alpha = watermark.split()[3]
+    alpha = ImageEnhance.Brightness(alpha).enhance(opacity)
+    watermark.putalpha(alpha)
+
+    # FIXME: transparency!!!
+
     output_file = BytesIO()
-    img.save(output_file, "JPEG")
+    PilImage.composite(watermark, img, watermark).save(output_file, 'JPEG')
     del img  # no need to close it
     return output_file.getvalue()
