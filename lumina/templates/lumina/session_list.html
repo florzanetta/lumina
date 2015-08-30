@@ -103,7 +103,7 @@
 
     {% endif %}
 
-    {% if not show_search_form %}
+    {% if show_add_session_button %}
         {% if user.is_photographer %}
         <p>
             <a href="{% url 'session_create' %}" class="btn btn-primary">Agregar sesión</a>

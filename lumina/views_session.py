@@ -43,6 +43,7 @@ class SessionListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(SessionListView, self).get_context_data(**kwargs)
+        context['show_add_session_button'] = True
         return context
 
     def get_queryset(self):
