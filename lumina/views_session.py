@@ -95,6 +95,12 @@ class SessionSearchView(ListView, FormMixin):
         if form.cleaned_data['session_type']:
             qs = qs.filter(session_type=form.cleaned_data['session_type'])
 
+        if form.cleaned_data['fecha_creacion_desde']:
+            qs = qs.filter(created__gte=form.cleaned_data['fecha_creacion_desde'])
+
+        if form.cleaned_data['fecha_creacion_hasta']:
+            qs = qs.filter(created__lte=form.cleaned_data['fecha_creacion_hasta'])
+
         qs = qs.order_by('customer__name', 'name')
         return qs
 

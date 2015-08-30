@@ -127,14 +127,10 @@ class SessionSearchForm(forms.Form):
                                         initial=ARCHIVED_STATUS_ALL,
                                         label='Archivadas',
                                         required=False)
-    fecha_creacion_desde = forms.CharField(max_length=20,
-                                           required=False,
-                                           widget=forms.PasswordInput(),
+    fecha_creacion_desde = forms.DateField(required=False,
                                            label='Fecha de creación',
                                            help_text="Fecha de creacion (desde)")
-    fecha_creacion_hasta = forms.CharField(max_length=20,
-                                           required=False,
-                                           widget=forms.PasswordInput(),
+    fecha_creacion_hasta = forms.DateField(required=False,
                                            label='Fecha de creación',
                                            help_text="Fecha de creacion (hasta)")
     customer = forms.ModelChoiceField(Session.objects.none(),
