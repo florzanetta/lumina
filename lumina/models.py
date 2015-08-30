@@ -794,6 +794,7 @@ class SessionQuote(models.Model):
         assert self.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE
 
         if alternative_id is not None:
+            assert isinstance(alternative_id, int)
             sqa = SessionQuoteAlternative.objects.get(pk=alternative_id,
                                                       session_quote=self)
             assert self.accepted_quote_alternative is None

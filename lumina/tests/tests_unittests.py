@@ -535,14 +535,6 @@ class SessionQuoteModelTests(TestCase):
             self.assertEqual(q_accept_2.status, SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE,
                              'Invalid status: ' + q_accept_2.get_status_display())
 
-        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, 'some_string')
-        _c()
-        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, '0')
-        _c()
-        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, 0)
-        _c()
-        self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, 1)
-        _c()
         self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, (1, 2, 3))
         _c()
         self.assertRaises(AssertionError, q_accept_2.accept, self.user_for_customer, [1, 2, 3])
@@ -555,9 +547,9 @@ class SessionQuoteModelTests(TestCase):
         self.assertRaises(SessionQuoteAlternative.DoesNotExist,
                           q_accept_2.accept,
                           self.user_for_customer,
-                          [10, decimal.Decimal('220.22')])
+                          SessionQuoteAlternative.objects.all().order_by('-id')[0].id + 1)
 
-        q_accept_2.accept(self.user_for_customer, (20, decimal.Decimal('220.22')))
+        q_accept_2.accept(self.user_for_customer, q_accept_2.quote_alternatives.all()[0].id)
         self.assertEqual(q_accept_2.status, SessionQuote.STATUS_ACCEPTED)
 
     def test_get_waiting_for_customer_response(self):
