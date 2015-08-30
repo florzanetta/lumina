@@ -10,7 +10,6 @@ from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
-from django.core.exceptions import SuspiciousOperation
 from django.db import connection
 
 logger = logging.getLogger(__name__)
@@ -73,7 +72,7 @@ def view_report_cost_vs_charged_by_customer_type(request):
     ctx['show_form_1'] = True
 
     return render_to_response(
-        'lumina/reports/report_generic.html', ctx,
+        'lumina/reports/report_cost_vs_charged_by_customer_type.html', ctx,
         context_instance=RequestContext(request))
 
 
@@ -140,7 +139,7 @@ def view_extended_quotes_through_time(request):
     ctx['show_form_2'] = True
 
     return render_to_response(
-        'lumina/reports/report_generic.html', ctx,
+        'lumina/reports/report_extended_quotes_through_time.html', ctx,
         context_instance=RequestContext(request))
 
 
@@ -204,7 +203,7 @@ def view_extended_quotes_by_customer(request):
     ctx['show_form_3'] = True
 
     return render_to_response(
-        'lumina/reports/report_generic.html', ctx,
+        'lumina/reports/report_extended_quotes_by_customer.html', ctx,
         context_instance=RequestContext(request))
 
 
@@ -268,5 +267,5 @@ def view_income_by_customer_type(request):
     ctx['show_form_4'] = True
 
     return render_to_response(
-        'lumina/reports/report_generic.html', ctx,
+        'lumina/reports/report_income_by_customer_type.html', ctx,
         context_instance=RequestContext(request))
