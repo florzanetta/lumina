@@ -169,6 +169,7 @@ class Studio(models.Model):
     """
     name = models.CharField(max_length=100, verbose_name="Nombre")
     default_terms = models.TextField(null=True, blank=True)
+    watermark_text = models.CharField(max_length=40, default='')
 
     objects = StudioManager()
 

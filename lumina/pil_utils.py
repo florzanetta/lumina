@@ -36,7 +36,7 @@ def generate_thumbnail(image, max_size=None):
     image_width, image_height = img.size
     max_text_size = min(image_width, max_size)
 
-    text = image.studio.name
+    text = image.studio.watermark_text or image.studio.name
     font_size = 10
     watermark_font = ImageFont.truetype(FONT, font_size)
     watermark_text_width, watermark_text_height = watermark_font.getsize(text)
