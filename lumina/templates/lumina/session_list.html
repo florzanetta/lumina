@@ -10,9 +10,11 @@
 
 {% block content %}
 
-    {% if list_archived %}
+    {% if show_search_form %}
         <div class="panel panel-info">
-            <div class="panel-heading">Búsqueda de sesiones</div>
+            <div class="panel-heading">
+                <h4>Búsqueda de sesiones</h4>
+            </div>
             <div class="panel-body">
                 {% crispy form form.helper %}
             </div>
@@ -22,86 +24,91 @@
 	    <h3>Sesiones</h3>
     {% endif %}
 
-    {% for a_session in object_list %}
+    {% if not hide_search_result %}
+        {% for a_session in object_list %}
 
-        {% ifchanged a_session.customer.id %} 
-            <h4>{{ a_session.customer.name }}</h4>
-        {% endifchanged %}
+            {% ifchanged a_session.customer.id %}
+                <h4>{{ a_session.customer.name }}</h4>
+            {% endifchanged %}
 
-		<div class="media">
-		    <a class="pull-left" href="javascript:void(0);">
-		        <img class="media-object" src="/static/lumina/img/album-64.png">
-		    </a>
-		    <div class="media-body">
-		        <div class="media-heading"><a
-		               href="{% url 'session_detail' a_session.pk %}">{{ a_session.name }}</a>
-		        </div>
-		        <div>
-                        <small>
-                            <span class="badge badge-info">{{ a_session.image_set.count }}</span>
-                            imagen{{ a_session.image_set.count|pluralize:",es" }}
-                        </small>
-                        -
-                        <i class="icon-tag"></i> <small><em>Tipo:</em> <strong>{{ a_session.session_type }}</strong></small>
-                        -
-                        <i class="icon-user"></i> <small><em>Fotógrafo:</em> <strong>{{ a_session.photographer }}</strong></small>
-                        -
-                        <i class="icon-calendar"></i> <span title="Creación: {{a_session.created|date}} - Última actualización: {{a_session.last_modified|date}}">
-                            <small><em>Última actualización:</em> hace <strong>{{ a_session.last_modified|timesince }}</strong></small></span>
-                        
-                    <!--
-                      -
-                      <small>
-                          Compartido con <span class="badge badge-info">{ { a_session.shared_with.count } }</span>
-                          cliente{ { a_session.shared_with.count|pluralize:",s" } }.
-                      </small>
-		              -
-		              <small>
-		                  Compartido con <span class="badge badge-info">{ { a_session.shares_via_email.count } }</span>
-	                      persona{ { a_session.shares_via_email.count|pluralize:",s" } } via email.
-		              </small>
-                    -->
-		        </div>
-                {% with quote=a_session.get_active_quote %}
-                    <div style="padding-top: 5px;">
-                        {% if quote %}
-                            <i class="icon-briefcase"></i> <small><a class=""
-                                href="{% url 'quote_detail' quote.id %}">Ver presupuesto</a></small>
-                        {% endif %}
+            <div class="media">
+                <a class="pull-left" href="javascript:void(0);">
+                    <img class="media-object" src="/static/lumina/img/album-64.png">
+                </a>
+                <div class="media-body">
+                    <div class="media-heading"><a
+                           href="{% url 'session_detail' a_session.pk %}">{{ a_session.name }}</a>
                     </div>
-                {% endwith %}
-		    </div>
-		</div>
-		<hr>
-    {% empty %}
-       <p>No hay sessiones...</p>
-        <hr>
-    {% endfor %}
+                    <div>
+                            <small>
+                                <span class="badge badge-info">{{ a_session.image_set.count }}</span>
+                                imagen{{ a_session.image_set.count|pluralize:",es" }}
+                            </small>
+                            -
+                            <i class="icon-tag"></i> <small><em>Tipo:</em> <strong>{{ a_session.session_type }}</strong></small>
+                            -
+                            <i class="icon-user"></i> <small><em>Fotógrafo:</em> <strong>{{ a_session.photographer }}</strong></small>
+                            -
+                            <i class="icon-calendar"></i> <span title="Creación: {{a_session.created|date}} - Última actualización: {{a_session.last_modified|date}}">
+                                <small><em>Última actualización:</em> hace <strong>{{ a_session.last_modified|timesince }}</strong></small></span>
 
-    <nav>
-      <ul class="pagination">
-        <li>
-          <a href="#" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
-        <li>
-          <a href="#" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
+                        <!--
+                          -
+                          <small>
+                              Compartido con <span class="badge badge-info">{ { a_session.shared_with.count } }</span>
+                              cliente{ { a_session.shared_with.count|pluralize:",s" } }.
+                          </small>
+                          -
+                          <small>
+                              Compartido con <span class="badge badge-info">{ { a_session.shares_via_email.count } }</span>
+                              persona{ { a_session.shares_via_email.count|pluralize:",s" } } via email.
+                          </small>
+                        -->
+                    </div>
+                    {% with quote=a_session.get_active_quote %}
+                        <div style="padding-top: 5px;">
+                            {% if quote %}
+                                <i class="icon-briefcase"></i> <small><a class=""
+                                    href="{% url 'quote_detail' quote.id %}">Ver presupuesto</a></small>
+                            {% endif %}
+                        </div>
+                    {% endwith %}
+                </div>
+            </div>
+            <hr>
+        {% empty %}
+            <h4>No se encontraron sessiones fotográficas</h4>
+            <hr>
+        {% endfor %}
 
-    {% if user.is_photographer %}
-    <p>
-        <a href="{% url 'session_create' %}" class="btn btn-primary">Agregar sesión</a>
-    </p>
+        <nav>
+          <ul class="pagination">
+            <li>
+              <a href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+            <li>
+              <a href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+    {% endif %}
+
+    {% if not show_search_form %}
+        {% if user.is_photographer %}
+        <p>
+            <a href="{% url 'session_create' %}" class="btn btn-primary">Agregar sesión</a>
+        </p>
+        {% endif %}
     {% endif %}
 
     {% dump_objects user object_list %}

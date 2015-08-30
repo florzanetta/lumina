@@ -54,40 +54,48 @@ class SessionSearchView(ListView, FormMixin):
 
     def get(self, request, *args, **kwargs):
         self.form = self.get_form(form_class=forms.SessionSearchForm)
+        self.search_result_qs = None
+
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.form = self.get_form(form_class=forms.SessionSearchForm)
-        return self.get(request, *args, **kwargs)
+        self.search_result_qs = self._do_search(request, self.form)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['list_archived'] = True
-        context['form'] = self.form
-        return context
+        return super().get(request, *args, **kwargs)
 
-    def get_queryset(self):
-        assert isinstance(self.form, forms.SessionSearchForm)
-        if self.request.method == 'GET':
-            return Session.objects.none()
-
-        if not self.form.is_valid():
-            messages.error(self.request,
+    def _do_search(self, request, form):
+        # Validate form
+        if not form.is_valid():
+            messages.error(request,
                            "Los parámetros de la búsqueda son inválidos")
             return Session.objects.none()
 
-        # Buscamos
-        qs = Session.objects.visible_sessions(self.request.user)
-        if self.form.cleaned_data['archived_status'] == forms.SessionSearchForm.ARCHIVED_STATUS_ALL:
+        # Do the search
+        qs = Session.objects.visible_sessions(request.user)
+        if form.cleaned_data['archived_status'] == forms.SessionSearchForm.ARCHIVED_STATUS_ALL:
             pass
-        elif self.form.cleaned_data['archived_status'] == forms.SessionSearchForm.ARCHIVED_STATUS_ARCHIVED:
+        elif form.cleaned_data['archived_status'] == forms.SessionSearchForm.ARCHIVED_STATUS_ARCHIVED:
             qs = qs.filter(archived=True)
-        elif self.form.cleaned_data['archived_status'] == forms.SessionSearchForm.ARCHIVED_STATUS_ACTIVE:
+        elif form.cleaned_data['archived_status'] == forms.SessionSearchForm.ARCHIVED_STATUS_ACTIVE:
             qs = qs.exclude(archived=True)
         else:
-            logger.warn("Invalid value for self.form['archived_status']: %s", self.form['archived_status'])
+            logger.warn("Invalid value for self.form['archived_status']: %s", form['archived_status'])
 
-        return qs.order_by('customer__name', 'name')
+        qs = qs.order_by('customer__name', 'name')
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['show_search_form'] = True
+        context['form'] = self.form
+        # overwrites 'object_list' from `get_queryset()`
+        context['object_list'] = self.search_result_qs
+        context['hide_search_result'] = self.search_result_qs is None
+        return context
+
+    def get_queryset(self):
+        return Session.objects.none()
 
 
 class SessionDetailView(DetailView):
