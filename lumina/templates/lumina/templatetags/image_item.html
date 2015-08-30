@@ -1,0 +1,37 @@
+<!--
+{# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #}
+{# Template for the {% image_item %} custom tag                           #}
+{# This is used to show a thumbnail of the image, in the context          #}
+{# of a list of images (search result or images of a session)             #}
+{#                                                                        #}
+{# Only the photographer should see this items                            #}
+{# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #}
+-->
+<div class="media">
+    <a class="pull-left" href="javascript:void(0);">
+        <img class="media-object" src="{{ thumbnail_url }}">
+    </a>
+    <div class="media-body">
+
+        <p>
+            <strong><a href="{% url 'image_update' image.pk %}">{{ image_filename }}</a></strong>
+        </p>
+
+        <p>
+            {% if full_quality %}
+                <a href="{% url 'image_download' image.pk %}">
+                    <i class="fa fa-download"></i> Bajar
+                </a>
+                &nbsp;
+                <small>
+                    <span class="label label-default">{{ image.size|filesizeformat }}</span>
+                </small>
+            {% else %}
+                <small class="text-muted">
+                    <i class="fa fa-exclamation-circle"></i> Sólo vista previa.
+                </small>
+            {% endif %}
+        </p>
+
+    </div>
+</div>

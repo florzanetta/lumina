@@ -123,7 +123,7 @@ def session_quote_status(parser, token):
 
 
 # ===============================================================================
-# Thumbnails for ImageSelection
+# Thumbnails for images
 # ===============================================================================
 
 @register.inclusion_tag('lumina/templatetags/image_selection_item.html', takes_context=True)
@@ -174,5 +174,38 @@ def image_selection_item(context, image_selection, image):
         'for_customer': for_customer,
         'waiting_selection': waiting_selection,
         'image_selected_by_customer': image in selected_images,
+        'full_quality': full_quality,
+    }
+
+
+@register.inclusion_tag('lumina/templatetags/image_item.html', takes_context=True)
+def image_item(context, image):
+    """
+    Generate an item in a list of images (as part of search result or images of a session).
+
+    :param context: template context
+    :param image: the Image instance
+    :return:
+    """
+    assert isinstance(image, models.Image)
+
+    user = context['user']
+    assert isinstance(user, models.LuminaUser)
+    assert user.is_photographer()
+
+    if image.image:
+        full_quality = True
+    else:
+        full_quality = False
+
+    image_filename = image.original_filename or image.thumbnail_original_filename
+
+    thumbnail_url = reverse('image_thumb_64x64', args=[image.id])
+    # thumbnail_url = reverse('image_selection_thumbnail', args=[image_selection.id, image.id])
+
+    return {
+        'image': image,
+        'image_filename': image_filename,
+        'thumbnail_url': thumbnail_url,
         'full_quality': full_quality,
     }

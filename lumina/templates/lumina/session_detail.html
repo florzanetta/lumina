@@ -1,4 +1,4 @@
-{% extends "lumina/base.html" %}
+{% extends "lumina/base.html" %} {% load lumina_extras %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -75,7 +75,8 @@
 
     <h5>Imágenes del album:</h5>
     {% for image in object.image_set.all %}
-        {% include 'lumina/include/image.html' with image=image user=user read_write=True only %}
+        {% image_item image %}
+        <hr>
     {% empty %}
         <p>No hay imagenes...</p>
 	    <hr>
@@ -134,7 +135,19 @@
                    <td width="100%">
                         <div>
 	                        <i class="icon-user"></i>
-                                <a href="{% url 'imageselection_detail' imageselection.id %}">{{ imageselection.customer.name }}</a>
+                            <a href="{% url 'imageselection_detail' imageselection.id %}">{{ imageselection.customer.name }}</a>
+
+                            ·
+                            <small>
+                                {{ imageselection.preview_size }}
+                            </small>
+
+                            {% if imageselection.quote %}
+                            ·
+                            <small>
+                                <a href="{% url 'quote_detail' imageselection.quote.id %}">(presupuesto)</a>
+                            </small>
+                            {% endif %}
                         </div>
                         <div>
                             <em><small>{{ imageselection.get_status_display }}</small></em>

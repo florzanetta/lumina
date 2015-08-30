@@ -1,4 +1,4 @@
-{% extends "lumina/base.html" %}
+{% extends "lumina/base.html" %} {% load lumina_extras %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -74,7 +74,8 @@
     <hr>
 
     {% for image in object_list %}
-        {% include 'lumina/include/image.html' with image=image user=user read_write=True show_dates=True only %}
+        {% image_item image %}
+        <hr>
     {% empty %}
         <p>No hay imagenes...</p>
     {% endfor %}
