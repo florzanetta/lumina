@@ -321,24 +321,6 @@ def image_selection_create_from_quote(request, pk):
         context_instance=RequestContext(request))
 
 
-# class ImageSelectionAutoCreateView(DetailView):
-#    """
-#    With this view, the photographer creates a request
-#    to the customer when the session has a quote associated.
-#    """
-#    model = Session
-#    template_name = 'lumina/imageselection_create_from_quote.html'
-#
-#    def get_queryset(self):
-#        # FIXME: `visible_sessions()` shouldn't be used here!
-#        return Session.objects.visible_sessions(self.request.user)
-#
-#    def get_context_data(self, **kwargs):
-#        context = super(ImageSelectionAutoCreateView, self).get_context_data(**kwargs)
-#        context['form'] = ImageSelectionAutoCreateForm()
-#        return context
-
-
 class ImageSelectionForCustomerView(DetailView):
     """
     With this view, the customer selects the images he/she wants.

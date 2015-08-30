@@ -96,11 +96,6 @@ urlpatterns = patterns(
                 views_image_selection.ImageSelectionCreateView.as_view())),
         name='image_selection_create'),
 
-    #    url(r'^session/image-selection/create/(?P<pk>\d+)/$',
-    #        cache_control(private=True)(
-    #            login_required(
-    #                ImageSelectionAutoCreateView.as_view())),
-    #        name='image_selection_create_from_quote'),
     url(
         r'^session/image-selection/create/(?P<pk>\d+)/$',
         views_image_selection.image_selection_create_from_quote,
