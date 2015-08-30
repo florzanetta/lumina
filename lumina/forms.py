@@ -141,11 +141,13 @@ class SessionSearchForm(forms.Form):
                                           empty_label='Todos los tipos de sesiones',
                                           label='Tipo de sesión',
                                           required=False)
+    page = forms.CharField(max_length=5, required=False, widget=forms.HiddenInput)
 
     def __init__(self, photographer=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = helper.FormHelper()
         self.helper.form_action = 'session_search'
+        self.helper.form_id = 'form-session-search'
 
         self.helper.form_class = 'form-horizontal'
         self.helper.label_class = 'col-lg-2'
@@ -157,8 +159,9 @@ class SessionSearchForm(forms.Form):
             'fecha_creacion_hasta',
             'customer',
             'session_type',
+            'page',
             bootstrap.FormActions(
-                layout.Submit('submit', 'Buscar'),
+                layout.Submit('submit_button', 'Buscar', css_id='form-submit-button'),
             ),
         )
 

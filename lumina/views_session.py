@@ -14,6 +14,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import SuspiciousOperation
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
+from django.core import paginator
 
 from lumina import forms
 from lumina import models
@@ -53,6 +54,8 @@ class SessionListView(ListView):
 
 class SessionSearchView(ListView, FormMixin):
     model = models.Session
+
+    PAGE_RESULT_SIZE = 2
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -102,6 +105,17 @@ class SessionSearchView(ListView, FormMixin):
             qs = qs.filter(created__lte=form.cleaned_data['fecha_creacion_hasta'])
 
         qs = qs.order_by('customer__name', 'name')
+
+        # ----- <Paginate> -----
+        result_paginator = paginator.Paginator(qs, self.PAGE_RESULT_SIZE)
+        try:
+            qs = result_paginator.page(self.form.cleaned_data['page'])
+        except paginator.PageNotAnInteger:  # If page is not an integer, deliver first page.
+            qs = result_paginator.page(1)
+        except paginator.EmptyPage:  # If page is out of range (e.g. 9999), deliver last page of results.
+            qs = result_paginator.page(result_paginator.num_pages)
+        # ----- </Paginate> -----
+
         return qs
 
     def get_context_data(self, **kwargs):

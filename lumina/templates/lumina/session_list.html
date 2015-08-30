@@ -73,23 +73,31 @@
         {% endfor %}
 
         {% if show_search_form %}
+
             <nav>
               <ul class="pagination">
-                <li>
-                  <a href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                  </a>
-                </li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li>
-                  <a href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                  </a>
-                </li>
+
+                {% if object_list.has_previous %}
+                    <li>
+                      <a href="javascript:goToPage('{{ object_list.previous_page_number }}');">
+                        &laquo;
+                      </a>
+                    </li>
+                {% endif %}
+
+                  <li>
+                      <a href="#">
+                        Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}
+                      </a>
+                  </li>
+
+                {% if object_list.has_next %}
+                    <li>
+                      <a href="javascript:goToPage('{{ object_list.next_page_number }}');">
+                        &raquo;
+                      </a>
+                    </li>
+                {% endif %}
               </ul>
             </nav>
         {% endif %}
@@ -104,9 +112,29 @@
         {% endif %}
     {% endif %}
 
-    {% dump_objects user object_list %}
+    {% dump_objects user object_list object_list.paginator %}
 
 {% endblock content %}
+
+
+{% block javascript_bottom %}
+
+<script type="application/javascript">
+
+function goToPage(pageNum) {
+    $('#id_page').val(pageNum);
+    $('#form-session-search')[0].reset();
+    $('#form-session-search').submit();
+}
+
+$(document).ready(function() {
+    $('#form-submit-button').click(function() {
+        $('#id_page').val('1');
+    });
+});
+</script>
+
+{% endblock %}
 
 </body>
 </html>
