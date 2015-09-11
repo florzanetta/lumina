@@ -150,17 +150,24 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
 
 
 class SessionQuoteListView(ListView):
+    """
+    List all the NON-archived quotes (only usefull for photographers)
+    """
     model = SessionQuote
 
     def get_queryset(self):
+        assert self.request.user.is_photographer()
         qs = SessionQuote.objects.visible_sessionquote(self.request.user)
+        qs = qs.filter(archived=False)
         return qs.order_by('customer__name', 'id')
 
 
 class SessionQuotePendigForCustomerListView(SessionQuoteListView):
 
     def get_queryset(self):
-        return super().get_queryset().filter(status=SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
+        qs = SessionQuote.objects.visible_sessionquote(self.request.user)
+        qs = qs.filter(status=SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
+        return qs.order_by('customer__name', 'id')
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(custom_title="Listado de presupuestos pendientes de aceptar",

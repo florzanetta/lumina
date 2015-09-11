@@ -100,10 +100,9 @@
 
                             {% if user.is_photographer %} <!-- user is photographer -->
                                     <li><a href="{% url 'quote_create' %}">Crear presupuesto</a></li>
+                                    <li><a href="{% url 'quote_list' %}">Lista de presupuestos</a></li>
                             {% else %} <!-- user is client -->
                             {% endif %}
-
-                            <li><a href="{% url 'quote_list' %}">Lista de presupuestos</a></li>
 
                             {% if user.is_photographer %} <!-- user is photographer -->
                             {% else %} <!-- user is client -->
