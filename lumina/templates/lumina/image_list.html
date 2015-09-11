@@ -1,4 +1,5 @@
-{% extends "lumina/base.html" %} {% load lumina_extras %}
+{% extends "lumina/base.html" %}
+{% load lumina_extras %}{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,98 +10,89 @@
 
 {% block content %}
 
-	<h3>Buscar imágenes</h3>
-
-    <form method="post" class="form-inline">
-
-		<div class="row" style="margin-bottom: 10px;">
-            <div class="col-xs-2"  style="text-align: right;">Fecha:</div>
-            <div class="col-xs-10">
-		            <input type="text" class="form-control" placeholder="Fecha (desde)">
-                    ·
-                    <input type="text" class="form-control" placeholder="Fecha (hasta)">
-			</div>
-		</div>
-
-        <div class="row" style="margin-bottom: 10px;">
-            <div class="col-xs-2"  style="text-align: right;">Tamaño:</div>
-            <div class="col-xs-10">
-		            <input type="text" class="form-control" placeholder="Tamaño (desde)">
-                    ·
-		            <input type="text" class="form-control" placeholder="Tamaño (hasta)"> MiB (megabytes)
-            </div>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4>Búsqueda de imágenes</h4>
         </div>
-        
-        <div class="row" style="margin-bottom: 10px;">
-            <div class="col-xs-2"  style="text-align: right;">Cliente:</div>
-            <div class="col-xs-4">
-                    <select class="form-control">
-                      <option>Todos</option>
-                    </select>
-            </div>
-            <div class="col-xs-2"  style="text-align: right;">Tipo de cliente:</div>
-            <div class="col-xs-4">
-                    <select class="form-control">
-                      <option>Todos</option>
-                    </select>
-            </div>
+        <div class="panel-body">
+            {% crispy form form.helper %}
         </div>
-        
-        <div class="row" style="margin-bottom: 10px;">
-            <div class="col-xs-2"  style="text-align: right;">Tipo de sesión:</div>
-            <div class="col-xs-4">
-                    <select class="form-control">
-                      <option>Todos</option>
-                    </select>
-            </div>
-            <div class="col-xs-2"  style="text-align: right;">Fotógrafo:</div>
-            <div class="col-xs-4">
-                    <select class="form-control">
-                      <option>Todos</option>
-                    </select>
-            </div>
-        </div>
-        
-        <div class="row" style="margin-bottom: 10px;">
-            <div class="col-xs-2"  style="text-align: right;">
-            </div>
-            <div class="col-xs-10">
-                <input type="button" value="Buscar" class="btn btn-primary">
-            </div>
-        </div>
-        
-        
-    </form>
+    </div>
     <hr>
 
-    {% for image in object_list %}
-        {% image_item image %}
-        <hr>
-    {% empty %}
-        <p>No hay imagenes...</p>
-    {% endfor %}
+    {% if not hide_search_result %}
 
-    <nav>
-      <ul class="pagination">
-        <li>
-          <a href="#" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
-        <li>
-          <a href="#" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
+        {% for image in object_list %}
+            {% image_item image %}
+            <hr>
+        {% empty %}
 
-	{% endblock content %}
+            <h4>
+                No se encontraron imagenes que concuerden con los parámetros de búsqueda
+            </h4>
+            <hr>
+
+        {% endfor %}
+
+        <!-- pagination -->
+        <nav>
+          <ul class="pagination pagination-lg">
+
+            <li class="{% if not object_list.has_previous %} disabled {% endif %}">
+                {% if object_list.has_previous %}
+                  <a href="javascript:goToPage('{{ object_list.previous_page_number }}');">
+                    &laquo;
+                  </a>
+                {% else %}
+                  <a href="javascript:void(0);">
+                    &laquo;
+                  </a>
+                {% endif %}
+            </li>
+
+              <li>
+                  <a href="javascript:void(0);">
+                    Página {{ object_list.number }} de {{ object_list.paginator.num_pages }}
+                  </a>
+              </li>
+
+            <li class="{% if not object_list.has_next %} disabled {% endif %}">
+                {% if object_list.has_next %}
+                  <a href="javascript:goToPage('{{ object_list.next_page_number }}');">
+                    &raquo;
+                  </a>
+                {% else %}
+                  <a href="javascript:void(0);">
+                    &raquo;
+                  </a>
+                {% endif %}
+            </li>
+
+          </ul>
+        </nav>
+
+    {% endif %} <!-- hide_search_result -->
+
+{% endblock content %}
+
+{% block javascript_bottom %}
+
+<script type="application/javascript">
+
+function goToPage(pageNum) {
+    $('#id_page').val(pageNum);
+    $('#form-image-search')[0].reset();
+    $('#form-image-search').submit();
+}
+
+$(document).ready(function() {
+    $('#form-submit-button').click(function() {
+        $('#id_page').val('1');
+    });
+});
+</script>
+
+{% endblock %}
 
 </body>
 </html>
