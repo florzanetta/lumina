@@ -364,7 +364,7 @@ class SessionQuoteSearchForm(forms.Form):
         # FIXME: `photographer=None` <<< quedo de 'copy & paste'
         super().__init__(*args, **kwargs)
         self.helper = helper.FormHelper()
-        self.helper.form_action = 'session_quote_search'
+        self.helper.form_action = 'quote_search'
         self.helper.form_id = 'form-session-quote-search'
 
         self.helper.form_class = 'form-horizontal'

@@ -161,6 +161,11 @@ class SessionQuoteListView(ListView):
         qs = qs.filter(archived=False)
         return qs.order_by('customer__name', 'id')
 
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(
+            show_add_session_button=True,
+            **kwargs)
+
 
 class SessionQuotePendigForCustomerListView(SessionQuoteListView):
 
@@ -209,7 +214,7 @@ class SessionQuoteSearchView(ListView, FormMixin):
             return SessionQuote.objects.none()
 
         # Do the search
-        qs = SessionQuote.objects.visible_sessions(request.user)
+        qs = SessionQuote.objects.visible_sessionquote(request.user)
         if form.cleaned_data['archived_status'] == forms.SessionQuoteSearchForm.ARCHIVED_STATUS_ALL:
             pass
         elif form.cleaned_data['archived_status'] == forms.SessionQuoteSearchForm.ARCHIVED_STATUS_ARCHIVED:
@@ -252,7 +257,6 @@ class SessionQuoteSearchView(ListView, FormMixin):
         # overwrites 'object_list' from `get_queryset()`
         context['object_list'] = self.search_result_qs
         context['hide_search_result'] = self.search_result_qs is None
-        context['custom_title'] = "Búsqueda de presupuestos"
         return context
 
 
