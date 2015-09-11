@@ -133,7 +133,7 @@ class SessionSearchForm(forms.Form):
     fecha_creacion_hasta = forms.DateField(required=False,
                                            label='Fecha de creación',
                                            help_text="Fecha de creacion (hasta)")
-    customer = forms.ModelChoiceField(Session.objects.none(),
+    customer = forms.ModelChoiceField(Customer.objects.none(),
                                       empty_label='Todos los clientes',
                                       label='Cliente',
                                       required=False)
