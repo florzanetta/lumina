@@ -108,7 +108,7 @@ class UserUpdateView(UpdateView):
 class UserPreferenceUpdateView(UpdateView):
     model = UserPreferences
     form_class = UserPreferencesUpdateForm
-    template_name = 'lumina/user_preferences_update.html'
+    template_name = 'lumina/base_create_update_crispy_form.html'
 
     def get_object(self, queryset=None):
         try:
