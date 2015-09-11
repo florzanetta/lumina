@@ -344,12 +344,12 @@ class SessionQuoteSearchForm(forms.Form):
                                         label='Archivados',
                                         required=False)
 
-    # fecha_creacion_desde = forms.DateField(required=False,
-    #                                        label='Fecha de creación',
-    #                                        help_text="Fecha de creacion (desde)")
-    # fecha_creacion_hasta = forms.DateField(required=False,
-    #                                        label='Fecha de creación',
-    #                                        help_text="Fecha de creacion (hasta)")
+    fecha_creacion_desde = forms.DateField(required=False,
+                                           label='Fecha de creación',
+                                           help_text="Fecha de creacion (desde)")
+    fecha_creacion_hasta = forms.DateField(required=False,
+                                           label='Fecha de creación',
+                                           help_text="Fecha de creacion (hasta)")
     # customer = forms.ModelChoiceField(Session.objects.none(),
     #                                   empty_label='Todos los clientes',
     #                                   label='Cliente',
@@ -374,8 +374,8 @@ class SessionQuoteSearchForm(forms.Form):
         if user.is_photographer():
             self.helper.layout = helper.Layout(
                 bootstrap.InlineRadios('archived_status'),
-                # 'fecha_creacion_desde',
-                # 'fecha_creacion_hasta',
+                'fecha_creacion_desde',
+                'fecha_creacion_hasta',
                 # 'customer',
                 # 'session_type',
                 # 'page',
@@ -385,8 +385,8 @@ class SessionQuoteSearchForm(forms.Form):
             )
         else:
             self.helper.layout = helper.Layout(
-                # 'fecha_creacion_desde',
-                # 'fecha_creacion_hasta',
+                'fecha_creacion_desde',
+                'fecha_creacion_hasta',
                 # 'customer',
                 # 'session_type',
                 # 'page',
@@ -397,16 +397,16 @@ class SessionQuoteSearchForm(forms.Form):
         # self.fields['customer'].queryset = Customer.objects.customers_of(photographer)
         # self.fields['session_type'].queryset = SessionType.objects.session_type_of(photographer)
 
-    # def clean(self):
-    #     cleaned_data = super().clean()
-    #     fecha_creacion_desde = cleaned_data.get("fecha_creacion_desde")
-    #     fecha_creacion_hasta = cleaned_data.get("fecha_creacion_hasta")
-    #
-    #     if fecha_creacion_desde and fecha_creacion_hasta:
-    #         if fecha_creacion_desde > fecha_creacion_hasta:
-    #             msg = "'Fecha de creacion (desde)' debe ser anterior a 'Fecha de creacion (hasta)'"
-    #             self.add_error('fecha_creacion_desde', msg)
-    #             self.add_error('fecha_creacion_hasta', msg)
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha_creacion_desde = cleaned_data.get("fecha_creacion_desde")
+        fecha_creacion_hasta = cleaned_data.get("fecha_creacion_hasta")
+
+        if fecha_creacion_desde and fecha_creacion_hasta:
+            if fecha_creacion_desde > fecha_creacion_hasta:
+                msg = "'Fecha de creacion (desde)' debe ser anterior a 'Fecha de creacion (hasta)'"
+                self.add_error('fecha_creacion_desde', msg)
+                self.add_error('fecha_creacion_hasta', msg)
 
 
 # ===============================================================================
