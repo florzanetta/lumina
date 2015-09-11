@@ -266,6 +266,12 @@ urlpatterns = patterns(
                 SessionQuotePendigForCustomerListView.as_view())),
         name='quote_list_pending_for_customer'),
 
+    url(r'^quote/search/$',
+        cache_control(private=True)(
+            login_required(
+                SessionQuoteSearchView.as_view())),
+        name='quote_search'),
+
     url(r'^quote/detail/(?P<pk>\d+)/$',
         cache_control(private=True)(
             login_required(SessionQuoteDetailView.as_view())),

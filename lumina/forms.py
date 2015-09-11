@@ -327,6 +327,79 @@ class SessionQuoteUpdate2Form(forms.ModelForm):
         fields = []
 
 
+class SessionQuoteSearchForm(forms.Form):
+
+    ARCHIVED_STATUS_ALL = 'ALL'
+    ARCHIVED_STATUS_ARCHIVED = 'ARCHIVED'
+    ARCHIVED_STATUS_ACTIVE = 'ACTIVE'
+
+    ARCHIVED_STATUS_CHOICES = (
+        (ARCHIVED_STATUS_ALL, 'Todas'),
+        (ARCHIVED_STATUS_ARCHIVED, 'Archivadas'),
+        (ARCHIVED_STATUS_ACTIVE, 'Activas'),
+    )
+    archived_status = forms.ChoiceField(choices=ARCHIVED_STATUS_CHOICES,
+                                        widget=forms.RadioSelect,
+                                        initial=ARCHIVED_STATUS_ALL,
+                                        label='Archivados',
+                                        required=False)
+
+    # fecha_creacion_desde = forms.DateField(required=False,
+    #                                        label='Fecha de creación',
+    #                                        help_text="Fecha de creacion (desde)")
+    # fecha_creacion_hasta = forms.DateField(required=False,
+    #                                        label='Fecha de creación',
+    #                                        help_text="Fecha de creacion (hasta)")
+    # customer = forms.ModelChoiceField(Session.objects.none(),
+    #                                   empty_label='Todos los clientes',
+    #                                   label='Cliente',
+    #                                   required=False)
+    # session_type = forms.ModelChoiceField(SessionType.objects.none(),
+    #                                       empty_label='Todos los tipos de sesiones',
+    #                                       label='Tipo de sesión',
+    #                                       required=False)
+    # page = forms.CharField(max_length=5, required=False, widget=forms.HiddenInput)
+
+    def __init__(self, photographer=None, *args, **kwargs):
+        # FIXME: `photographer=None` <<< quedo de 'copy & paste'
+        super().__init__(*args, **kwargs)
+        self.helper = helper.FormHelper()
+        self.helper.form_action = 'session_quote_search'
+        self.helper.form_id = 'form-session-quote-search'
+
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
+
+        self.helper.layout = helper.Layout(
+            bootstrap.InlineRadios('archived_status'),
+            # 'fecha_creacion_desde',
+            # 'fecha_creacion_hasta',
+            # 'customer',
+            # 'session_type',
+            # 'page',
+            bootstrap.FormActions(
+                layout.Submit('submit_button', 'Buscar', css_id='form-submit-button'),
+            ),
+        )
+
+        # assert isinstance(photographer, LuminaUser)
+        # assert photographer.is_photographer()
+        # self.fields['customer'].queryset = Customer.objects.customers_of(photographer)
+        # self.fields['session_type'].queryset = SessionType.objects.session_type_of(photographer)
+
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     fecha_creacion_desde = cleaned_data.get("fecha_creacion_desde")
+    #     fecha_creacion_hasta = cleaned_data.get("fecha_creacion_hasta")
+    #
+    #     if fecha_creacion_desde and fecha_creacion_hasta:
+    #         if fecha_creacion_desde > fecha_creacion_hasta:
+    #             msg = "'Fecha de creacion (desde)' debe ser anterior a 'Fecha de creacion (hasta)'"
+    #             self.add_error('fecha_creacion_desde', msg)
+    #             self.add_error('fecha_creacion_hasta', msg)
+
+
 # ===============================================================================
 # SessionQuoteAlternative
 # ===============================================================================
