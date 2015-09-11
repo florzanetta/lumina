@@ -257,13 +257,13 @@ urlpatterns = patterns(
     url(r'^quote/list/$',
         cache_control(private=True)(
             login_required(
-                SessionQuoteListView.as_view(filter=''))),
+                SessionQuoteListView.as_view())),
         name='quote_list'),
 
     url(r'^quote/list/pending_for_cusomter/$',
         cache_control(private=True)(
             login_required(
-                SessionQuoteListView.as_view(filter='pending_for_customer'))),
+                SessionQuotePendigForCustomerListView.as_view())),
         name='quote_list_pending_for_customer'),
 
     url(r'^quote/detail/(?P<pk>\d+)/$',

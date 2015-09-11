@@ -22,6 +22,7 @@ __all__ = [
     'SessionQuoteCreateView',
     'SessionQuoteUpdateView',
     'SessionQuoteListView',
+    'SessionQuotePendigForCustomerListView',
     'SessionQuoteDetailView',
     'SessionQuoteAlternativeSelectView',
     'SessionQuoteAlternativeCreateView',
@@ -150,13 +151,20 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
 
 class SessionQuoteListView(ListView):
     model = SessionQuote
-    filter = ''
 
     def get_queryset(self):
         qs = SessionQuote.objects.visible_sessionquote(self.request.user)
-        if self.filter == 'pending_for_customer':
-            qs = qs.filter(status=SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
         return qs.order_by('customer__name', 'id')
+
+
+class SessionQuotePendigForCustomerListView(SessionQuoteListView):
+
+    def get_queryset(self):
+        return super().get_queryset().filter(status=SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(custom_title="Listado de presupuestos pendientes de aceptar",
+                                        **kwargs)
 
 
 class SessionQuoteDetailView(DetailView):
