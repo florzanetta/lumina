@@ -327,7 +327,7 @@ class SessionQuoteAlternativeSelectView(DetailView):
                 return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
             selected_alternative = request.POST['selected_quote']
 
-            if selected_alternative != '0':
+            if selected_alternative == '0':
                 alternative_id = None
             else:
                 alternative_id = int(selected_alternative)
