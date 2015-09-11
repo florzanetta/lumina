@@ -316,6 +316,8 @@ class Session(models.Model):
 
     archived = models.BooleanField(default=False, verbose_name="Archivada")
 
+    album_icon = models.ForeignKey('Image', blank=True, null=True, related_name='+')
+
     objects = SessionManager()
 
     def clean(self):
@@ -353,7 +355,8 @@ class Session(models.Model):
 
     def set_image_as_album_icon(self, image):
         assert isinstance(image, Image)
-        # FIXME: IMPLEMENT
+        self.album_icon = image
+        self.save()
 
 
 # ===============================================================================
