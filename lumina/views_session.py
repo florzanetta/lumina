@@ -122,7 +122,7 @@ class SessionSearchView(ListView, FormMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['show_search_form'] = True
+        context['is_search'] = True
         context['form'] = self.form
         # overwrites 'object_list' from `get_queryset()`
         context['object_list'] = self.search_result_qs

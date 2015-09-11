@@ -10,7 +10,7 @@
 
 {% block content %}
 
-    {% if show_search_form %}
+    {% if is_search %}
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4>Búsqueda de presupuestos</h4>
@@ -73,7 +73,7 @@
             <hr>
         {% endfor %}
 
-        {% if show_search_form %} <!-- pagination -->
+        {% if is_search %} <!-- pagination -->
             <nav>
               <ul class="pagination pagination-lg">
 
