@@ -5,7 +5,7 @@ import json
 import logging
 import uuid
 
-from django.views.generic.edit import CreateView, UpdateView, FormView, FormMixin
+from django.views.generic.edit import CreateView, UpdateView, FormMixin
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.http.response import HttpResponse, HttpResponseRedirect
@@ -28,6 +28,7 @@ __all__ = [
     'SessionSearchView',
     'SessionDetailView',
     'SetImageAsAlbumIconView',
+    'AlbumIconView',
     'SessionCreateView',
     'SessionUpdateView',
     'SessionUploadPreviewsView',
@@ -179,6 +180,21 @@ class SetImageAsAlbumIconView(DetailView):
 
         messages.success(self.request, 'La imagen fue seteada como el icono del album')
         return HttpResponseRedirect(reverse('session_detail', args=[session.id]))
+
+
+class AlbumIconView(DetailView):
+    model = models.Session
+
+    def get_queryset(self):
+        return models.Session.objects.visible_sessions(self.request.user)
+
+    def get(self, request, *args, **kwargs):
+        session = self.get_object()
+        if session.album_icon:
+            thumbnail_url = reverse('image_thumb_64x64', args=[session.album_icon.id])
+            return HttpResponseRedirect(thumbnail_url)
+        else:
+            return HttpResponseRedirect('/static/lumina/img/album-64.png')
 
 
 class SessionCreateUpdateMixin():

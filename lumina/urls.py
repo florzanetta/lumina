@@ -60,6 +60,11 @@ urlpatterns = patterns(
             login_required(SetImageAsAlbumIconView.as_view())),
         name='set_image_as_album_icon'),
 
+    url(r'^session/(?P<pk>\d+)/album-icon/$',
+        cache_control(private=True)(
+            login_required(AlbumIconView.as_view())),
+        name='session_album_icon'),
+
     url(r'^session/create/$',
         cache_control(private=True)(
             login_required(SessionCreateView.as_view())),
