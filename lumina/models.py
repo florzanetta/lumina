@@ -351,6 +351,10 @@ class Session(models.Model):
         # FIXME: this works, but is pure evil... like Newman!
         return self.quotes.get()
 
+    def set_image_as_album_icon(self, image):
+        assert isinstance(image, Image)
+        # FIXME: IMPLEMENT
+
 
 # ===============================================================================
 # SharedSessionByEmail
@@ -632,7 +636,10 @@ class Image(models.Model):
     objects = ImageManager()
 
     def __str__(self):
-        return "Image {0}".format(self.original_filename)
+        if self.image:
+            return "Image {0}".format(self.image)
+        else:
+            return "Image {0} (thumb-only)".format(self.thumbnail_image)
 
     def get_absolute_url(self):
         return reverse('image_update', kwargs={'pk': self.pk})

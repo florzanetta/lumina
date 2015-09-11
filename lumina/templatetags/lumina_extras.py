@@ -179,7 +179,7 @@ def image_selection_item(context, image_selection, image):
 
 
 @register.inclusion_tag('lumina/templatetags/image_item.html', takes_context=True)
-def image_item(context, image):
+def image_item(context, image, show_set_as_album_icon_button=False):
     """
     Generate an item in a list of images (as part of search result or images of a session).
 
@@ -208,4 +208,5 @@ def image_item(context, image):
         'image_filename': image_filename,
         'thumbnail_url': thumbnail_url,
         'full_quality': full_quality,
+        'show_set_as_album_icon_button': show_set_as_album_icon_button and user.is_photographer(),
     }

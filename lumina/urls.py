@@ -55,6 +55,11 @@ urlpatterns = patterns(
             login_required(SessionDetailView.as_view())),
         name='session_detail'),
 
+    url(r'^session/(?P<pk>\d+)/set-image-as-album-icon/(?P<image_id>\d+)/$',
+        cache_control(private=True)(
+            login_required(SetImageAsAlbumIconView.as_view())),
+        name='set_image_as_album_icon'),
+
     url(r'^session/create/$',
         cache_control(private=True)(
             login_required(SessionCreateView.as_view())),
@@ -64,6 +69,8 @@ urlpatterns = patterns(
         cache_control(private=True)(
             login_required(SessionUpdateView.as_view())),
         name='session_update'),
+
+    # UPLOADS
 
     url(r'^session/upload-previews/(?P<pk>\d+)/$',
         cache_control(private=True)(login_required(SessionUploadPreviewsView.as_view())),

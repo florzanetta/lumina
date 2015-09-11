@@ -27,6 +27,7 @@ __all__ = [
     'SessionListView',
     'SessionSearchView',
     'SessionDetailView',
+    'SetImageAsAlbumIconView',
     'SessionCreateView',
     'SessionUpdateView',
     'SessionUploadPreviewsView',
@@ -155,6 +156,29 @@ class SessionDetailView(DetailView):
 
     def get_queryset(self):
         return models.Session.objects.visible_sessions(self.request.user)
+
+
+class SetImageAsAlbumIconView(DetailView):
+    model = models.Session
+
+    def get_queryset(self):
+        return models.Session.objects.visible_sessions(self.request.user)
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+
+        if not request.user.is_photographer():
+            raise SuspiciousOperation("User is not a photographer")
+
+        session = self.get_object()
+        image = session.image_set.all().get(pk=kwargs['image_id'])
+
+        session.set_image_as_album_icon(image)
+
+        messages.success(self.request, 'La imagen fue seteada como el icono del album')
+        return HttpResponseRedirect(reverse('session_detail', args=[session.id]))
 
 
 class SessionCreateUpdateMixin():
