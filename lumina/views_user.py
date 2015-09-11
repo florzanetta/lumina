@@ -122,6 +122,7 @@ class UserPreferenceUpdateView(UpdateView):
         initial['first_name'] = self.request.user.first_name
         initial['last_name'] = self.request.user.last_name
         initial['email'] = self.request.user.email
+        initial['cellphone'] = self.request.user.cellphone
         return initial
 
     def get_success_url(self):
@@ -139,6 +140,7 @@ class UserPreferenceUpdateView(UpdateView):
         user.first_name = form.cleaned_data['first_name']
         user.last_name = form.cleaned_data['last_name']
         user.email = form.cleaned_data['email']
+        user.cellphone = form.cleaned_data['cellphone']
         user.save()
         return ret
 

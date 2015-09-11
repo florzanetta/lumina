@@ -294,6 +294,11 @@ class UserPreferencesUpdateForm(forms.ModelForm):
         required=True,
         label='Correo electrónico')
 
+    # cellphone = models.CharField(max_length=20, null=True, blank=True, verbose_name="Celular")
+    cellphone = forms.CharField(
+        max_length=20, required=False,
+        label='Celular')
+
     password1 = forms.CharField(
         max_length=20, required=False, widget=forms.PasswordInput(), label='Contrasena',
         help_text="Ingrese la nueva contraseña (si desea cambiarla)")
@@ -315,6 +320,7 @@ class UserPreferencesUpdateForm(forms.ModelForm):
                 'first_name',
                 'last_name',
                 'email',
+                'cellphone',
                 'password1',
                 'password2',
                 'send_emails',
@@ -334,7 +340,7 @@ class UserPreferencesUpdateForm(forms.ModelForm):
 
     class Meta:
         model = UserPreferences
-        fields = ('send_emails', 'password1', 'password2',)
+        fields = ('send_emails',)
 
 
 # ===============================================================================
