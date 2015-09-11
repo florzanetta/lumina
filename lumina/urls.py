@@ -231,6 +231,11 @@ urlpatterns = patterns(
             login_required(views_customer_type.CustomerTypeListView.as_view())),
         name='customer_type_list'),
 
+    url(r'^customer-type/create/$',
+        cache_control(private=True)(
+            login_required(views_customer_type.CustomerTypeCreateView.as_view())),
+        name='customer_type_create'),
+
     # ===========================================================================
     # Users
     # ===========================================================================

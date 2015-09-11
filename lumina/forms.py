@@ -14,6 +14,7 @@ from crispy_forms import layout
 
 from localflavor.ar.forms import ARCUITField
 
+from lumina import models
 from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail, \
     Image, ImageSelection, SessionQuote, SessionQuoteAlternative,\
     UserPreferences, SessionType
@@ -273,6 +274,45 @@ class CustomerCreateForm(forms.ModelForm):
         )
 
 CustomerUpdateForm = CustomerCreateForm
+
+
+# ===============================================================================
+# CustomerType
+# ===============================================================================
+
+class CustomerTypeCreateForm(forms.ModelForm):
+
+    def __init__(self, studio=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = helper.FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
+
+        self.studio = studio
+
+        self.helper.layout = helper.Layout(
+            layout.Fieldset(
+                'Crear nuevo tipo de cliente',
+                'name',
+            ),
+            bootstrap.FormActions(
+                layout.Submit('submit_button', 'Crear', css_id='form-submit-button'),
+            ),
+        )
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.studio = self.studio
+
+        if commit:
+            instance.save()
+
+        return instance
+
+    class Meta:
+        model = models.CustomerType
+        fields = ('name',)
 
 
 # ===============================================================================
