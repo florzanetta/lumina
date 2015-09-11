@@ -288,6 +288,25 @@ class UserPreferencesUpdateForm(forms.ModelForm):
         label='Contrasena (otra vez)',
         help_text="Repita la nueva contraseña (si desea cambiarla)")
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = helper.FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
+
+        self.helper.layout = helper.Layout(
+            layout.Fieldset(
+                'Actualizar preferencias de usuario',
+                'password1',
+                'password2',
+                'send_emails',
+            ),
+            bootstrap.FormActions(
+                layout.Submit('submit_button', 'Guardar', css_id='form-submit-button'),
+            ),
+        )
+
     def clean(self):
         super(UserPreferencesUpdateForm, self).clean()
         password1 = self.cleaned_data.get('password1')

@@ -108,22 +108,27 @@ class UserUpdateView(UpdateView):
 class UserPreferenceUpdateView(UpdateView):
     model = UserPreferences
     form_class = UserPreferencesUpdateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/user_preferences_update.html'
+
+    def get_object(self, queryset=None):
+        try:
+            return self.request.user.preferences
+        except UserPreferences.DoesNotExist:
+            UserPreferences.objects.create(user=self.request.user)
+            return self.request.user.preferences
 
     def get_success_url(self):
-        # TODO: fix this
-        return reverse('home')
+        return reverse('user_preferences_update')
 
     def form_valid(self, form):
-        ret = super(UserPreferenceUpdateView, self).form_valid(form)
-        messages.success(self.request, 'Las preferencias fueron guardados correctamente')
+        ret = super().form_valid(form)
+        if form.cleaned_data['password1']:
+            self.object.user.set_password(form.cleaned_data['password1'])
+            messages.success(self.request, 'Las preferencias y la contraseña fueron guardadas correctamente')
+        else:
+            messages.success(self.request, 'Las preferencias fueron guardados correctamente')
         return ret
 
-    def get_queryset(self):
-        return UserPreferences.objects.filter(user=self.request.user)
-
     def get_context_data(self, **kwargs):
-        context = super(UserPreferenceUpdateView, self).get_context_data(**kwargs)
-        context['title'] = "Actualizar preferencias"
-        context['submit_label'] = "Actualizar"
+        context = super().get_context_data(**kwargs)
         return context

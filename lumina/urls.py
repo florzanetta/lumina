@@ -240,10 +240,10 @@ urlpatterns = patterns(
             login_required(UserUpdateView.as_view())),
         name='customer_user_update'),
 
-    url(r'^user/preferences/(?P<pk>\d+)/$',
+    url(r'^user/preferences/$',
         cache_control(private=True)(
             login_required(UserPreferenceUpdateView.as_view())),
-        name='customer_user_preferences_update'),
+        name='user_preferences_update'),
 
     # ===========================================================================
     # SessionQuote
