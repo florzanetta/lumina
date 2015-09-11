@@ -149,8 +149,6 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
 
 
 class SessionQuoteListView(ListView):
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-    #    #django.views.generic.list.ListView
     model = SessionQuote
     filter = ''
 
