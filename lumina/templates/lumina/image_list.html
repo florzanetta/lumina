@@ -23,6 +23,15 @@
     {% if not hide_search_result %}
 
         {% for image in object_list %}
+
+            {% ifchanged image.session.customer.id %}
+                <h4>{{ image.session.customer.name }}</h4>
+            {% endifchanged %}
+
+            {% ifchanged image.session.id %}
+                <h5>{{ image.session.name }}</h5>
+            {% endifchanged %}
+
             {% image_item image %}
             <hr>
         {% empty %}

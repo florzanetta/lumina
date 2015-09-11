@@ -76,7 +76,11 @@ class ImageListView(ListView, FormMixin):
             qs = qs.filter(created__lte=form.cleaned_data['fecha_creacion_hasta'])
 
         # ----- <OrderBy> -----
-        qs = qs.order_by('session__customer__name', 'created')
+        qs = qs.order_by('session__customer__name',
+                         'session__customer__id',
+                         'session__name',
+                         'session__id',
+                         'created')
         # ----- </OrderBy> -----
 
         # ----- <Paginate> -----
