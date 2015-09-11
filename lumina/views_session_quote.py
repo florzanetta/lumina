@@ -9,6 +9,7 @@ from django.http.response import HttpResponseRedirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.exceptions import SuspiciousOperation
+from django.core import paginator as django_paginator
 
 from lumina.models import SessionQuote, SessionQuoteAlternative
 from lumina.forms import SessionQuoteCreateForm, SessionQuoteUpdateForm, \
@@ -214,7 +215,7 @@ class SessionQuoteSearchView(ListView, FormMixin):
                            "Los parámetros de la búsqueda son inválidos")
             return SessionQuote.objects.none()
 
-        # Common filters
+        # -- Common filters
         qs = SessionQuote.objects.visible_sessionquote(request.user)
         qs = qs.order_by('customer__name', 'name')
 
@@ -224,10 +225,23 @@ class SessionQuoteSearchView(ListView, FormMixin):
         if form.cleaned_data['fecha_creacion_hasta']:
             qs = qs.filter(created__lte=form.cleaned_data['fecha_creacion_hasta'])
 
+        # -- Specific filter for photographer/customer
         if self.request.user.is_photographer():
-            return self._do_search_for_photographer(request, form, qs)
+            qs = self._do_search_for_photographer(request, form, qs)
         else:
-            return self._do_search_for_customer(request, form, qs)
+            qs = self._do_search_for_customer(request, form, qs)
+
+        # ----- <Paginate> -----
+        result_paginator = django_paginator.Paginator(qs, self.PAGE_RESULT_SIZE)
+        try:
+            qs = result_paginator.page(self.form.cleaned_data['page'])
+        except django_paginator.PageNotAnInteger:  # If page is not an integer, deliver first page.
+            qs = result_paginator.page(1)
+        except django_paginator.EmptyPage:  # If page is out of range (e.g. 9999), deliver last page of results.
+            qs = result_paginator.page(result_paginator.num_pages)
+        # ----- </Paginate> -----
+
+        return qs
 
     def _do_search_for_customer(self, request, form, qs):
         """Returns QuerySet"""
@@ -247,19 +261,6 @@ class SessionQuoteSearchView(ListView, FormMixin):
 
         if form.cleaned_data['customer']:
             qs = qs.filter(customer=form.cleaned_data['customer'])
-
-        # if form.cleaned_data['session_type']:
-        #     qs = qs.filter(session_type=form.cleaned_data['session_type'])
-
-        # # ----- <Paginate> -----
-        # result_paginator = paginator.Paginator(qs, self.PAGE_RESULT_SIZE)
-        # try:
-        #     qs = result_paginator.page(self.form.cleaned_data['page'])
-        # except paginator.PageNotAnInteger:  # If page is not an integer, deliver first page.
-        #     qs = result_paginator.page(1)
-        # except paginator.EmptyPage:  # If page is out of range (e.g. 9999), deliver last page of results.
-        #     qs = result_paginator.page(result_paginator.num_pages)
-        # # ----- </Paginate> -----
 
         return qs
 

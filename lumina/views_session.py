@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import SuspiciousOperation
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
-from django.core import paginator
+from django.core import paginator as django_paginator
 
 from lumina import forms
 from lumina import models
@@ -109,12 +109,12 @@ class SessionSearchView(ListView, FormMixin):
         qs = qs.order_by('customer__name', 'name')
 
         # ----- <Paginate> -----
-        result_paginator = paginator.Paginator(qs, self.PAGE_RESULT_SIZE)
+        result_paginator = django_paginator.Paginator(qs, self.PAGE_RESULT_SIZE)
         try:
             qs = result_paginator.page(self.form.cleaned_data['page'])
-        except paginator.PageNotAnInteger:  # If page is not an integer, deliver first page.
+        except django_paginator.PageNotAnInteger:  # If page is not an integer, deliver first page.
             qs = result_paginator.page(1)
-        except paginator.EmptyPage:  # If page is out of range (e.g. 9999), deliver last page of results.
+        except django_paginator.EmptyPage:  # If page is out of range (e.g. 9999), deliver last page of results.
             qs = result_paginator.page(result_paginator.num_pages)
         # ----- </Paginate> -----
 
