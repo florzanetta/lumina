@@ -191,7 +191,7 @@ class SessionQuoteSearchView(ListView, FormMixin):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        # @@@ kwargs['photographer'] = self.request.user
+        kwargs['user'] = self.request.user
         return kwargs
 
     def get(self, request, *args, **kwargs):
@@ -207,14 +207,28 @@ class SessionQuoteSearchView(ListView, FormMixin):
         return super().get(request, *args, **kwargs)
 
     def _do_search(self, request, form):
+        """Returns QuerySet"""
         # Validate form
         if not form.is_valid():
             messages.error(request,
                            "Los parámetros de la búsqueda son inválidos")
             return SessionQuote.objects.none()
 
-        # Do the search
+        # Common filters
         qs = SessionQuote.objects.visible_sessionquote(request.user)
+        qs = qs.order_by('customer__name', 'name')
+
+        if self.request.user.is_photographer():
+            return self._do_search_for_photographer(request, form, qs)
+        else:
+            return self._do_search_for_customer(request, form, qs)
+
+    def _do_search_for_customer(self, request, form, qs):
+        """Returns QuerySet"""
+        return qs
+
+    def _do_search_for_photographer(self, request, form, qs):
+        """Returns QuerySet"""
         if form.cleaned_data['archived_status'] == forms.SessionQuoteSearchForm.ARCHIVED_STATUS_ALL:
             pass
         elif form.cleaned_data['archived_status'] == forms.SessionQuoteSearchForm.ARCHIVED_STATUS_ARCHIVED:
@@ -235,8 +249,6 @@ class SessionQuoteSearchView(ListView, FormMixin):
         #
         # if form.cleaned_data['fecha_creacion_hasta']:
         #     qs = qs.filter(created__lte=form.cleaned_data['fecha_creacion_hasta'])
-
-        qs = qs.order_by('customer__name', 'name')
 
         # # ----- <Paginate> -----
         # result_paginator = paginator.Paginator(qs, self.PAGE_RESULT_SIZE)

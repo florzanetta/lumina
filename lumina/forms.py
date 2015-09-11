@@ -360,8 +360,7 @@ class SessionQuoteSearchForm(forms.Form):
     #                                       required=False)
     # page = forms.CharField(max_length=5, required=False, widget=forms.HiddenInput)
 
-    def __init__(self, photographer=None, *args, **kwargs):
-        # FIXME: `photographer=None` <<< quedo de 'copy & paste'
+    def __init__(self, user=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = helper.FormHelper()
         self.helper.form_action = 'quote_search'
@@ -371,20 +370,30 @@ class SessionQuoteSearchForm(forms.Form):
         self.helper.label_class = 'col-lg-2'
         self.helper.field_class = 'col-lg-8'
 
-        self.helper.layout = helper.Layout(
-            bootstrap.InlineRadios('archived_status'),
-            # 'fecha_creacion_desde',
-            # 'fecha_creacion_hasta',
-            # 'customer',
-            # 'session_type',
-            # 'page',
-            bootstrap.FormActions(
-                layout.Submit('submit_button', 'Buscar', css_id='form-submit-button'),
-            ),
-        )
-
-        # assert isinstance(photographer, LuminaUser)
-        # assert photographer.is_photographer()
+        assert isinstance(user, LuminaUser)
+        if user.is_photographer():
+            self.helper.layout = helper.Layout(
+                bootstrap.InlineRadios('archived_status'),
+                # 'fecha_creacion_desde',
+                # 'fecha_creacion_hasta',
+                # 'customer',
+                # 'session_type',
+                # 'page',
+                bootstrap.FormActions(
+                    layout.Submit('submit_button', 'Buscar', css_id='form-submit-button'),
+                ),
+            )
+        else:
+            self.helper.layout = helper.Layout(
+                # 'fecha_creacion_desde',
+                # 'fecha_creacion_hasta',
+                # 'customer',
+                # 'session_type',
+                # 'page',
+                bootstrap.FormActions(
+                    layout.Submit('submit_button', 'Buscar', css_id='form-submit-button'),
+                ),
+            )
         # self.fields['customer'].queryset = Customer.objects.customers_of(photographer)
         # self.fields['session_type'].queryset = SessionType.objects.session_type_of(photographer)
 
