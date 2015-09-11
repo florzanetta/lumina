@@ -202,31 +202,20 @@ class ImageUpdateForm(forms.ModelForm):
 
 class ImageSearchForm(forms.Form):
 
-    # ARCHIVED_STATUS_ALL = 'ALL'
-    # ARCHIVED_STATUS_ARCHIVED = 'ARCHIVED'
-    # ARCHIVED_STATUS_ACTIVE = 'ACTIVE'
-    #
-    # ARCHIVED_STATUS_CHOICES = (
-    #     (ARCHIVED_STATUS_ALL, 'Todas'),
-    #     (ARCHIVED_STATUS_ARCHIVED, 'Archivadas'),
-    #     (ARCHIVED_STATUS_ACTIVE, 'Activas'),
-    # )
-    # archived_status = forms.ChoiceField(choices=ARCHIVED_STATUS_CHOICES,
-    #                                     widget=forms.RadioSelect,
-    #                                     initial=ARCHIVED_STATUS_ALL,
-    #                                     label='Archivados',
-    #                                     required=False)
-
     fecha_creacion_desde = forms.DateField(required=False,
                                            label='Fecha de creación',
                                            help_text="Fecha de creacion (desde)")
     fecha_creacion_hasta = forms.DateField(required=False,
                                            label='Fecha de creación',
                                            help_text="Fecha de creacion (hasta)")
-    # customer = forms.ModelChoiceField(Customer.objects.none(),
-    #                                   empty_label='Todos los clientes',
-    #                                   label='Cliente',
-    #                                   required=False)
+    customer = forms.ModelChoiceField(Customer.objects.none(),
+                                      empty_label='Todos los clientes',
+                                      label='Cliente',
+                                      required=False)
+    session_type = forms.ModelChoiceField(SessionType.objects.none(),
+                                          empty_label='Todos los tipos de sesiones',
+                                          label='Tipo de sesión',
+                                          required=False)
     # page = forms.CharField(max_length=5, required=False, widget=forms.HiddenInput)
 
     def __init__(self, user=None, *args, **kwargs):
@@ -243,16 +232,17 @@ class ImageSearchForm(forms.Form):
         assert user.is_photographer()
 
         self.helper.layout = helper.Layout(
-            # bootstrap.InlineRadios('archived_status'),
             'fecha_creacion_desde',
             'fecha_creacion_hasta',
-            # 'customer',
+            'customer',
+            'session_type',
             # 'page',
             bootstrap.FormActions(
                 layout.Submit('submit_button', 'Buscar', css_id='form-submit-button'),
             ),
         )
-        # self.fields['customer'].queryset = Customer.objects.customers_of(user)
+        self.fields['customer'].queryset = Customer.objects.customers_of(user)
+        self.fields['session_type'].queryset = SessionType.objects.session_type_of(user)
 
     def clean(self):
         cleaned_data = super().clean()

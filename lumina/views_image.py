@@ -62,20 +62,11 @@ class ImageListView(ListView, FormMixin):
 
         # Do the search
         qs = Image.objects.visible_images(self.request.user)
-        # if form.cleaned_data['archived_status'] == ImageSearchForm.ARCHIVED_STATUS_ALL:
-        #     pass
-        # elif form.cleaned_data['archived_status'] == ImageSearchForm.ARCHIVED_STATUS_ARCHIVED:
-        #     qs = qs.filter(archived=True)
-        # elif form.cleaned_data['archived_status'] == ImageSearchForm.ARCHIVED_STATUS_ACTIVE:
-        #     qs = qs.exclude(archived=True)
-        # else:
-        #     logger.warn("Invalid value for self.form['archived_status']: %s", form['archived_status'])
-        #
-        # if form.cleaned_data['customer']:
-        #     qs = qs.filter(customer=form.cleaned_data['customer'])
-        #
-        # if form.cleaned_data['session_type']:
-        #     qs = qs.filter(session_type=form.cleaned_data['session_type'])
+        if form.cleaned_data['customer']:
+            qs = qs.filter(session__customer=form.cleaned_data['customer'])
+
+        if form.cleaned_data['session_type']:
+            qs = qs.filter(session__session_type=form.cleaned_data['session_type'])
 
         if form.cleaned_data['fecha_creacion_desde']:
             qs = qs.filter(created__gte=form.cleaned_data['fecha_creacion_desde'])
@@ -83,9 +74,9 @@ class ImageListView(ListView, FormMixin):
         if form.cleaned_data['fecha_creacion_hasta']:
             qs = qs.filter(created__lte=form.cleaned_data['fecha_creacion_hasta'])
 
-        # # ----- <OrderBy> -----
-        # qs = qs.order_by('customer__name', 'name')
-        # # ----- </OrderBy> -----
+        # ----- <OrderBy> -----
+        qs = qs.order_by('session__customer__name', 'created')
+        # ----- </OrderBy> -----
 
         # # ----- <Paginate> -----
         # result_paginator = django_paginator.Paginator(qs, self.PAGE_RESULT_SIZE)
