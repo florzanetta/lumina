@@ -15,6 +15,7 @@ from django.core.exceptions import SuspiciousOperation
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
 from django.core import paginator as django_paginator
+from django.conf import settings
 
 from lumina import forms
 from lumina import models
@@ -57,7 +58,7 @@ class SessionListView(ListView):
 class SessionSearchView(ListView, FormMixin):
     model = models.Session
 
-    PAGE_RESULT_SIZE = 2
+    PAGE_RESULT_SIZE = settings.LUMINA_DEFAULT_PAGINATION_SIZE
 
     def get_queryset(self):
         return models.Session.objects.none()

@@ -12,6 +12,9 @@ LUMINA_DUMP_OBJECTS = False
 # How many seconds cache the thumbnails
 LUMINA_THUMBNAIL_CACHE = 3600  # 1 hour
 
+# How many result show in a 'page' when paginating
+LUMINA_DEFAULT_PAGINATION_SIZE = 20
+
 # ===== Django =====
 
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/

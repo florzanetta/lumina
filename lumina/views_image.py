@@ -3,6 +3,7 @@
 from django.views.generic.edit import CreateView, UpdateView, FormMixin
 from django.views.generic.list import ListView
 from django.contrib import messages
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core import paginator as django_paginator
 
@@ -23,7 +24,7 @@ __all__ = [
 
 class ImageListView(ListView, FormMixin):
     model = Image
-    PAGE_RESULT_SIZE = 2
+    PAGE_RESULT_SIZE = settings.LUMINA_DEFAULT_PAGINATION_SIZE
 
     def get_queryset(self):
         return Image.objects.none()

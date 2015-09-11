@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.exceptions import SuspiciousOperation
 from django.core import paginator as django_paginator
+from django.conf import settings
 
 from lumina.models import SessionQuote, SessionQuoteAlternative
 from lumina.forms import SessionQuoteCreateForm, SessionQuoteUpdateForm, \
@@ -185,7 +186,7 @@ class SessionQuoteSearchView(ListView, FormMixin):
     model = SessionQuote
     template_name = ''
 
-    PAGE_RESULT_SIZE = 2
+    PAGE_RESULT_SIZE = settings.LUMINA_DEFAULT_PAGINATION_SIZE
 
     def get_queryset(self):
         return SessionQuote.objects.none()
