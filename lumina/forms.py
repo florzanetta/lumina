@@ -280,26 +280,40 @@ CustomerUpdateForm = CustomerCreateForm
 # CustomerType
 # ===============================================================================
 
-class CustomerTypeCreateForm(forms.ModelForm):
+class GenericCustomerTypeForm(forms.ModelForm):
 
-    def __init__(self, studio=None, *args, **kwargs):
+    FORM_TITLE = ''
+    SUBMIT_LABEL = ''
+
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = helper.FormHelper()
         self.helper.form_class = 'form-horizontal'
         self.helper.label_class = 'col-lg-2'
         self.helper.field_class = 'col-lg-8'
 
-        self.studio = studio
-
         self.helper.layout = helper.Layout(
             layout.Fieldset(
-                'Crear nuevo tipo de cliente',
+                self.FORM_TITLE,
                 'name',
             ),
             bootstrap.FormActions(
-                layout.Submit('submit_button', 'Crear', css_id='form-submit-button'),
+                layout.Submit('submit_button', self.SUBMIT_LABEL, css_id='form-submit-button'),
             ),
         )
+
+    class Meta:
+        model = models.CustomerType
+        fields = ('name',)
+
+
+class CustomerTypeCreateForm(GenericCustomerTypeForm):
+    FORM_TITLE = 'Crear nuevo tipo de cliente'
+    SUBMIT_LABEL = 'Crear'
+
+    def __init__(self, studio=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.studio = studio
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -310,9 +324,10 @@ class CustomerTypeCreateForm(forms.ModelForm):
 
         return instance
 
-    class Meta:
-        model = models.CustomerType
-        fields = ('name',)
+
+class CustomerTypeUpdateForm(GenericCustomerTypeForm):
+    FORM_TITLE = 'Actualizar tipo de cliente'
+    SUBMIT_LABEL = 'Actualizar'
 
 
 # ===============================================================================

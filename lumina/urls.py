@@ -236,6 +236,11 @@ urlpatterns = patterns(
             login_required(views_customer_type.CustomerTypeCreateView.as_view())),
         name='customer_type_create'),
 
+    url(r'^customer-type/(?P<customer_type_id>\d+)/update/$',
+        cache_control(private=True)(
+            login_required(views_customer_type.CustomerTypeUpdateView.as_view())),
+        name='customer_type_update'),
+
     # ===========================================================================
     # Users
     # ===========================================================================

@@ -4,7 +4,6 @@ import logging
 
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
-from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 
@@ -33,6 +32,19 @@ class CustomerTypeCreateView(SuccessMessageMixin,
         form_kwargs = super().get_form_kwargs()
         form_kwargs['studio'] = self.request.user.studio
         return form_kwargs
+
+
+class CustomerTypeUpdateView(SuccessMessageMixin,
+                             UpdateView):
+    model = models.CustomerType
+    pk_url_kwarg = 'customer_type_id'
+    form_class = forms.CustomerTypeUpdateForm
+    template_name = 'lumina/base_create_update_crispy_form.html'
+    success_url = reverse_lazy('customer_type_list')
+    success_message = 'El tipo de cliente ha sido actualizado exitosamente'
+
+    def get_queryset(self):
+        return self.request.user.all_my_customer_types()
 
 # class CustomerUpdateView(UpdateView):
 #     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
