@@ -59,6 +59,18 @@ class SessionSearchView(ListView, FormMixin):
 
     PAGE_RESULT_SIZE = 2
 
+    def get_queryset(self):
+        return models.Session.objects.none()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_search'] = True
+        context['form'] = self.form
+        # overwrites 'object_list' from `get_queryset()`
+        context['object_list'] = self.search_result_qs
+        context['hide_search_result'] = self.search_result_qs is None
+        return context
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['photographer'] = self.request.user
@@ -119,18 +131,6 @@ class SessionSearchView(ListView, FormMixin):
         # ----- </Paginate> -----
 
         return qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['is_search'] = True
-        context['form'] = self.form
-        # overwrites 'object_list' from `get_queryset()`
-        context['object_list'] = self.search_result_qs
-        context['hide_search_result'] = self.search_result_qs is None
-        return context
-
-    def get_queryset(self):
-        return models.Session.objects.none()
 
 
 class SessionDetailView(DetailView):
