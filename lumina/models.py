@@ -8,7 +8,7 @@ from django.core.exceptions import PermissionDenied, ValidationError, \
     SuspiciousOperation
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils import timezone
-
+from django.db.models.functions import Lower
 
 # py3
 NoneType = type(None)
@@ -120,7 +120,7 @@ class LuminaUser(AbstractUser):
 
     def all_my_customer_types(self):
         assert self.user_type == LuminaUser.PHOTOGRAPHER
-        return CustomerType.objects.filter(studio=self.studio).order_by('name')
+        return CustomerType.objects.filter(studio=self.studio).order_by(Lower('name'))
 
     def _check(self):
         if self.is_photographer():

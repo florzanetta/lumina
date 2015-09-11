@@ -8,11 +8,10 @@
     <table class="table">
         {% for customer_type in object_list %}
             <tr>
-                <td width="10%">
-                    <a href="{% url 'customer_type_update' customer_type.id %}">Edit</a>
-                </td>
-                <td width="90%">
-                    {{customer_type.name}}
+                <td>
+                    <a href="{% url 'customer_type_update' customer_type.id %}">
+                        {{customer_type.name}}
+                    </a>
                 </td>
             </tr>
         {% empty %}
