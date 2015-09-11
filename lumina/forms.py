@@ -280,6 +280,20 @@ CustomerUpdateForm = CustomerCreateForm
 # ===============================================================================
 
 class UserPreferencesUpdateForm(forms.ModelForm):
+
+    # first_name = models.CharField(_('first name'), max_length=30, blank=True)
+    first_name = forms.CharField(
+        max_length=30, required=True,
+        label='Nombre')
+    # last_name = models.CharField(_('last name'), max_length=30, blank=True)
+    last_name = forms.CharField(
+        max_length=30, required=True,
+        label='Apellido')
+    # email = models.EmailField(_('email address'), blank=True)
+    email = forms.EmailField(
+        required=True,
+        label='Correo electrónico')
+
     password1 = forms.CharField(
         max_length=20, required=False, widget=forms.PasswordInput(), label='Contrasena',
         help_text="Ingrese la nueva contraseña (si desea cambiarla)")
@@ -298,6 +312,9 @@ class UserPreferencesUpdateForm(forms.ModelForm):
         self.helper.layout = helper.Layout(
             layout.Fieldset(
                 'Actualizar preferencias de usuario',
+                'first_name',
+                'last_name',
+                'email',
                 'password1',
                 'password2',
                 'send_emails',
