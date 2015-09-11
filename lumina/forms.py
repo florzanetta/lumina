@@ -350,10 +350,10 @@ class SessionQuoteSearchForm(forms.Form):
     fecha_creacion_hasta = forms.DateField(required=False,
                                            label='Fecha de creación',
                                            help_text="Fecha de creacion (hasta)")
-    # customer = forms.ModelChoiceField(Session.objects.none(),
-    #                                   empty_label='Todos los clientes',
-    #                                   label='Cliente',
-    #                                   required=False)
+    customer = forms.ModelChoiceField(Customer.objects.none(),
+                                      empty_label='Todos los clientes',
+                                      label='Cliente',
+                                      required=False)
     # session_type = forms.ModelChoiceField(SessionType.objects.none(),
     #                                       empty_label='Todos los tipos de sesiones',
     #                                       label='Tipo de sesión',
@@ -376,25 +376,24 @@ class SessionQuoteSearchForm(forms.Form):
                 bootstrap.InlineRadios('archived_status'),
                 'fecha_creacion_desde',
                 'fecha_creacion_hasta',
-                # 'customer',
+                'customer',
                 # 'session_type',
                 # 'page',
                 bootstrap.FormActions(
                     layout.Submit('submit_button', 'Buscar', css_id='form-submit-button'),
                 ),
             )
+            self.fields['customer'].queryset = Customer.objects.customers_of(user)
         else:
             self.helper.layout = helper.Layout(
                 'fecha_creacion_desde',
                 'fecha_creacion_hasta',
-                # 'customer',
                 # 'session_type',
                 # 'page',
                 bootstrap.FormActions(
                     layout.Submit('submit_button', 'Buscar', css_id='form-submit-button'),
                 ),
             )
-        # self.fields['customer'].queryset = Customer.objects.customers_of(photographer)
         # self.fields['session_type'].queryset = SessionType.objects.session_type_of(photographer)
 
     def clean(self):

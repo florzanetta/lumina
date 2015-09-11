@@ -231,6 +231,7 @@ class SessionQuoteSearchView(ListView, FormMixin):
 
     def _do_search_for_customer(self, request, form, qs):
         """Returns QuerySet"""
+        qs = qs.filter(customer=request.user.user_for_customer)
         return qs
 
     def _do_search_for_photographer(self, request, form, qs):
@@ -244,9 +245,9 @@ class SessionQuoteSearchView(ListView, FormMixin):
         else:
             logger.warn("Invalid value for self.form['archived_status']: %s", form['archived_status'])
 
-        # if form.cleaned_data['customer']:
-        #     qs = qs.filter(customer=form.cleaned_data['customer'])
-        #
+        if form.cleaned_data['customer']:
+            qs = qs.filter(customer=form.cleaned_data['customer'])
+
         # if form.cleaned_data['session_type']:
         #     qs = qs.filter(session_type=form.cleaned_data['session_type'])
 
