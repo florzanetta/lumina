@@ -10,6 +10,7 @@ from lumina import views_image_selection_creation
 from lumina import views_image_selection_upload
 from lumina import views_image_selection
 from lumina import views_reports
+from lumina import views_customer_type
 
 from lumina.views_user import (
     UserListView,  UserCreateView, UserUpdateView,
@@ -221,6 +222,14 @@ urlpatterns = patterns(
         cache_control(private=True)(
             login_required(CustomerUpdateView.as_view())),
         name='customer_update'),
+
+    # ===========================================================================
+    # Customer Types
+    # ===========================================================================
+    url(r'^customer-type/list/$',
+        cache_control(private=True)(
+            login_required(views_customer_type.CustomerTypeListView.as_view())),
+        name='customer_type_list'),
 
     # ===========================================================================
     # Users

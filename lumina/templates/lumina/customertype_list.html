@@ -1,0 +1,20 @@
+{% extends "lumina/base.html" %}
+{% load lumina_extras %}
+
+{% block content %}
+
+	<h3>Tipos de clientes disponibles</h3>
+
+    <table class="table">
+        {% for customer_type in object_list %}
+            <tr>
+                <td>
+                    {{customer_type.name}}
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td>No se ha definido ningun tipo de cliente</td></tr>
+        {% endfor %}
+    </table>
+
+{% endblock content %}

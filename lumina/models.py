@@ -118,6 +118,10 @@ class LuminaUser(AbstractUser):
         return LuminaUser.objects.filter(user_type=LuminaUser.CUSTOMER,
                                          user_for_customer__studio=self.studio)
 
+    def all_my_customer_types(self):
+        assert self.user_type == LuminaUser.PHOTOGRAPHER
+        return CustomerType.objects.filter(studio=self.studio).order_by('name')
+
     def _check(self):
         if self.is_photographer():
             assert self.studio is not None, "Photographer does NOT have a studio"
