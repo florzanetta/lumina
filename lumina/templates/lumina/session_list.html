@@ -67,7 +67,14 @@
             <hr>
 
         {% empty %}
-            <h4>No se encontraron sessiones fotográficas</h4>
+
+            <h4>
+                {% if is_search %}
+                    No se encontraron sesiones fotográficas que concuerden con los parámetros de búsqueda
+                {% else %}
+                    No hay sesiones fotográficas para mostrar
+                {% endif %}
+            </h4>
             <hr>
 
         {% endfor %}

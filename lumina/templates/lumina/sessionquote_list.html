@@ -69,8 +69,15 @@
             </div>
             <hr>
         {% empty %}
-           <p>No hay presupuestos...</p>
+            <h4>
+                {% if is_search %}
+                    No se encontraron presupuestos que concuerden con los parámetros de búsqueda
+                {% else %}
+                    No hay presupuestos para mostrar
+                {% endif %}
+            </h4>
             <hr>
+
         {% endfor %}
 
         {% if is_search %} <!-- pagination -->
