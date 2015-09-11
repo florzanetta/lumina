@@ -99,27 +99,11 @@ def full_name_with_username(user):
 # Session quote status
 # ===============================================================================
 
-class SessionQuoteStatusNode(template.Node):
-    def __init__(self, session_quote):
-        self.session_quote = template.Variable(session_quote)
-
-    def render(self, context):
-        t = template.loader.get_template('lumina/templatetags/session_quote_status.html')
-        return t.render(Context({
-            'object': self.session_quote.resolve(context),
-        }))
-
-
-@register.tag
-def session_quote_status(parser, token):
-    try:
-        # split_contents() knows not to split quoted strings.
-        split_contents = token.split_contents()
-        session_quote = split_contents[1]
-    except ValueError:
-        raise template.TemplateSyntaxError("{0} tag requires a single argument".format(
-            token.contents.split()[0]))
-    return SessionQuoteStatusNode(session_quote)
+@register.inclusion_tag('lumina/templatetags/session_quote_status.html')
+def session_quote_status(session_quote):
+    return {
+        'object': session_quote,
+    }
 
 
 # ===============================================================================
