@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-Created on Jun 1, 2013
-
-@author: Horacio G. de Oro
-"""
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.urlresolvers import reverse_lazy
@@ -16,43 +11,10 @@ from crispy_forms import layout
 from localflavor.ar.forms import ARCUITField
 
 from lumina import models
-from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail, \
+from lumina import forms_utils
+from lumina.models import LuminaUser, Customer, SharedSessionByEmail, \
     Image, ImageSelection, SessionQuote, SessionQuoteAlternative,\
     UserPreferences, SessionType
-
-
-class GenericCreateUpdateModelForm(forms.ModelForm):
-
-    FORM_TITLE = None
-    SUBMIT_LABEL = None
-    CANCEL_URL = None
-    FIELDS = []
-
-    def get_cancel_url(self):
-        assert self.CANCEL_URL is not None, "form.CANCEL_URL must be set or `get_cancel_url()` overwritten"
-        return self.CANCEL_URL
-
-    def __init__(self, *args, **kwargs):
-        assert self.FORM_TITLE is not None
-        assert self.SUBMIT_LABEL is not None
-        assert self.FIELDS
-
-        super().__init__(*args, **kwargs)
-        self.helper = helper.FormHelper()
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-lg-2'
-        self.helper.field_class = 'col-lg-8'
-
-        self.helper.layout = helper.Layout(
-            layout.Fieldset(
-                self.FORM_TITLE,
-                *self.FIELDS
-            ),
-            bootstrap.FormActions(
-                layout.Submit('submit_button', self.SUBMIT_LABEL, css_id='form-submit-button'),
-                layout.HTML("<a class='btn btn-primary' href='{}'>Cancelar</a>".format(self.get_cancel_url())),
-            ),
-        )
 
 
 # ===============================================================================
@@ -130,7 +92,7 @@ class ImageSelectionAutoCreateForm(forms.ModelForm):
 # Session
 # ===============================================================================
 
-class _GenericSessionForm(GenericCreateUpdateModelForm):
+class _GenericSessionForm(forms_utils.GenericCreateUpdateModelForm):
 
     CANCEL_URL = reverse_lazy('session_list')
     FIELDS = ['name', 'session_type', 'photographer', 'customer', 'worked_hours']
@@ -299,7 +261,7 @@ class ImageSearchForm(forms.Form):
 # Customer
 # ===============================================================================
 
-class _GenericCustomerForm(GenericCreateUpdateModelForm):
+class _GenericCustomerForm(forms_utils.GenericCreateUpdateModelForm):
 
     CANCEL_URL = reverse_lazy('customer_list')
     FIELDS = [
@@ -332,7 +294,7 @@ class CustomerUpdateForm(_GenericCustomerForm):
 # CustomerType
 # ===============================================================================
 
-class _GenericCustomerTypeForm(GenericCreateUpdateModelForm):
+class _GenericCustomerTypeForm(forms_utils.GenericCreateUpdateModelForm):
 
     CANCEL_URL = reverse_lazy('customer_type_list')
     FIELDS = ['name']
@@ -356,7 +318,7 @@ class CustomerTypeUpdateForm(_GenericCustomerTypeForm):
 # CustomerType
 # ===============================================================================
 
-class _GenericSessionTypeForm(GenericCreateUpdateModelForm):
+class _GenericSessionTypeForm(forms_utils.GenericCreateUpdateModelForm):
 
     CANCEL_URL = reverse_lazy('session_type_list')
     FIELDS = ['name']
@@ -380,7 +342,7 @@ class SessionTypeUpdateForm(_GenericSessionTypeForm):
 # CustomerType
 # ===============================================================================
 
-class _GenericPreviewSizeForm(GenericCreateUpdateModelForm):
+class _GenericPreviewSizeForm(forms_utils.GenericCreateUpdateModelForm):
 
     CANCEL_URL = reverse_lazy('preview_size_list')
     FIELDS = ['max_size']
@@ -472,7 +434,7 @@ class UserPreferencesUpdateForm(forms.ModelForm):
 # User
 # ===============================================================================
 
-class _GenericUserCreateUpdateForm(GenericCreateUpdateModelForm):
+class _GenericUserCreateUpdateForm(forms_utils.GenericCreateUpdateModelForm):
 
     PASSWORD_REQUIRED = None  # `True` or `False` (fails if not overwritting)
     HELP_TEXT_FOR_PASSWORD = None  # `str`, or 'None'
