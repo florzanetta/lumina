@@ -4,13 +4,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>{% block title %}Lumina - Usuarios{% endblock %}</title>
+<title>{% block title %}Lumina - Lista de clientes{% endblock %}</title>
 </head>
 <body>
 
 {% block content %}
 
-	<h3>Clientes de '{{ user.get_full_name }}'</h3>
+	<h3>Lista de clientes</h3>
 
     {% for customer in object_list %}
 		<div class="media">

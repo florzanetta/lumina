@@ -208,24 +208,6 @@ urlpatterns = patterns(
         name='image_selection_thumbnail'),
 
     # ===========================================================================
-    # Customer
-    # ===========================================================================
-    url(r'^customer/list/$',
-        cache_control(private=True)(
-            login_required(CustomerListView.as_view())),
-        name='customer_list'),
-
-    url(r'^customer/create/$',
-        cache_control(private=True)(
-            login_required(CustomerCreateView.as_view())),
-        name='customer_create'),
-
-    url(r'^customer/update/(?P<pk>\d+)/$',
-        cache_control(private=True)(
-            login_required(CustomerUpdateView.as_view())),
-        name='customer_update'),
-
-    # ===========================================================================
     # Customer Types
     # ===========================================================================
     url(r'^customer-type/list/$',
@@ -254,8 +236,47 @@ urlpatterns = patterns(
         name='customer_type_unarchive'),
 
     # ===========================================================================
+    # Customer
+    # ===========================================================================
+
+    url(r'^customer/list/$',
+        cache_control(private=True)(
+            login_required(CustomerListView.as_view())),
+        name='customer_list'),
+
+    url(r'^customer/create/$',
+        cache_control(private=True)(
+            login_required(CustomerCreateView.as_view())),
+        name='customer_create'),
+
+    url(r'^customer/update/(?P<pk>\d+)/$',
+        cache_control(private=True)(
+            login_required(CustomerUpdateView.as_view())),
+        name='customer_update'),
+
+    # ===========================================================================
+    # Customer's Users
+    # ===========================================================================
+
+    url(r'^customer/user/list/(?P<customer_id>\d+)/$',
+        cache_control(private=True)(
+            login_required(UserListView.as_view())),
+        name='customer_user_list'),
+
+    url(r'^customer/user/create/(?P<customer_id>\d+)/$',
+        cache_control(private=True)(
+            login_required(UserCreateView.as_view())),
+        name='customer_user_create'),
+
+    url(r'^customer/user/update/(?P<pk>\d+)/$',
+        cache_control(private=True)(
+            login_required(UserUpdateView.as_view())),
+        name='customer_user_update'),
+
+    # ===========================================================================
     # Session Types
     # ===========================================================================
+
     url(r'^session-type/list/$',
         cache_control(private=True)(
             login_required(views_session_type.SessionTypeListView.as_view())),
@@ -286,9 +307,6 @@ urlpatterns = patterns(
     # Preview Size
     # ===========================================================================
 
-    # # FIXME: implement this view
-    # url(r'^studio/preview_sizes/$', 'lumina.views.home', name='studio_preview_sizes'),
-
     url(r'^preview-size/list/$',
         cache_control(private=True)(
             login_required(views_preview_size.PreviewSizeListView.as_view())),
@@ -314,24 +332,9 @@ urlpatterns = patterns(
             login_required(views_preview_size.PreviewSizeArchiveView.as_view(archive=False))),
         name='preview_size_unarchive'),
 
-
     # ===========================================================================
-    # Users
+    # User Preferences
     # ===========================================================================
-    url(r'^customer/user/list/(?P<customer_id>\d+)/$',
-        cache_control(private=True)(
-            login_required(UserListView.as_view())),
-        name='customer_user_list'),
-
-    url(r'^customer/user/create/(?P<customer_id>\d+)/$',
-        cache_control(private=True)(
-            login_required(UserCreateView.as_view())),
-        name='customer_user_create'),
-
-    url(r'^customer/user/update/(?P<pk>\d+)/$',
-        cache_control(private=True)(
-            login_required(UserUpdateView.as_view())),
-        name='customer_user_update'),
 
     url(r'^user/preferences/$',
         cache_control(private=True)(
