@@ -354,6 +354,12 @@ class _GenericPreviewSizeForm(forms_utils.GenericCreateUpdateModelForm):
         model = models.PreviewSize
         fields = ('max_size',)
 
+    def _get_validation_exclusions(self):
+        # HACK to force ModelForm validate uniqueness.
+        # Works in `PreviewSizeCreateForm` because we manually put `instance` kwarg
+        validation_exclusions = super()._get_validation_exclusions()
+        return [_ for _ in validation_exclusions if _ != 'studio']
+
 
 class PreviewSizeCreateForm(_GenericPreviewSizeForm):
     FORM_TITLE = 'Crear nuevo tamaño de previsualizaciones'

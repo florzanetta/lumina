@@ -31,6 +31,12 @@ class PreviewSizeCreateView(SuccessMessageMixin,
     success_url = reverse_lazy('preview_size_list')
     success_message = 'Un nuevo tamaño de previsualización ha sido creado exitosamente'
 
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        # Required so ModelForm can validate uniqueness
+        form_kwargs['instance'] = models.PreviewSize(studio=self.request.user.studio)
+        return form_kwargs
+
     def form_valid(self, form):
         form.instance.studio = self.request.user.studio
         ret = super().form_valid(form)

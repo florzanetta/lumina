@@ -1062,6 +1062,8 @@ class PreviewSize(models.Model):
 
     class Meta:
         unique_together = ("max_size", "studio")
+        verbose_name = "tamaño de previsualización"
+        verbose_name_plural = "tipos de sesión"
         ordering = ["max_size"]
 
     def __str__(self):
