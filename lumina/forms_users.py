@@ -53,11 +53,15 @@ class _GenericUserCreateUpdateForm(forms_utils.GenericCreateUpdateModelForm):
         return self.cleaned_data
 
 
+# ===============================================================================
+# For CUSTOMERs
+# ===============================================================================
+
 class CustomerUserCreateForm(_GenericUserCreateUpdateForm):
 
     # ----- <GenericCreateUpdateModelForm> -----
 
-    FORM_TITLE = 'Crear usuario'
+    FORM_TITLE = 'Crear usuario para cliente'
     SUBMIT_LABEL = 'Crear'
     FIELDS = [
         'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
@@ -87,7 +91,7 @@ class CustomerUserUpdateForm(_GenericUserCreateUpdateForm):
 
     # ----- <GenericCreateUpdateModelForm> -----
 
-    FORM_TITLE = 'Actualizar usuario'
+    FORM_TITLE = 'Actualizar usuario de cliente'
     SUBMIT_LABEL = 'Guardar'
     FIELDS = [
         'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
@@ -107,4 +111,29 @@ class CustomerUserUpdateForm(_GenericUserCreateUpdateForm):
         fields = (
             'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
             'phone', 'cellphone', 'alternative_email', 'notes'
+        )
+
+
+# ===============================================================================
+# For STUDIOs (photographers)
+# ===============================================================================
+
+class SetudioUserCreateForm(_GenericUserCreateUpdateForm):
+
+    # ----- <GenericCreateUpdateModelForm> -----
+    FORM_TITLE = 'Crear usuario para fotógrafo'
+    SUBMIT_LABEL = 'Crear'
+    CANCEL_URL = reverse_lazy('studio_user_list')
+    FIELDS = [
+        'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
+    ]
+
+    # ----- </GenericCreateUpdateModelForm> -----
+
+    PASSWORD_REQUIRED = True
+
+    class Meta:
+        model = LuminaUser
+        fields = (
+            'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
         )

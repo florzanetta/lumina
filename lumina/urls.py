@@ -279,6 +279,16 @@ urlpatterns = patterns(
             login_required(views_user_studio.StudioUserListView.as_view())),
         name='studio_user_list'),
 
+    url(r'^studio/user/create/$',
+        cache_control(private=True)(
+            login_required(views_user_studio.StudioUserCreateView.as_view())),
+        name='studio_user_create'),
+
+    # url(r'^studio/user/update/(?P<photographer_user_id>\d+)/$',
+    #     cache_control(private=True)(
+    #         login_required(views_user_customer.CustomerUserUpdateView.as_view())),
+    #     name='customer_user_update'),
+
     # ===========================================================================
     # Session Types
     # ===========================================================================
