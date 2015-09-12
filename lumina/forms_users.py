@@ -137,3 +137,25 @@ class SetudioUserCreateForm(_GenericUserCreateUpdateForm):
         fields = (
             'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
         )
+
+
+class StudioUserUpdateForm(_GenericUserCreateUpdateForm):
+
+    # ----- <GenericCreateUpdateModelForm> -----
+    FORM_TITLE = 'Actualizar usuario de fotógrafo'
+    SUBMIT_LABEL = 'Guardar'
+    CANCEL_URL = reverse_lazy('studio_user_list')
+    FIELDS = [
+        'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
+    ]
+
+    # ----- </GenericCreateUpdateModelForm> -----
+
+    PASSWORD_REQUIRED = False
+    HELP_TEXT_FOR_PASSWORD = "Ingrese la nueva contraseña (sólo si desea cambiarla)"
+
+    class Meta:
+        model = LuminaUser
+        fields = (
+            'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
+        )

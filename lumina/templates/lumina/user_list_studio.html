@@ -35,7 +35,7 @@
         {% for an_user in object_list %}
             <tr>
                 <td>
-                    <a href="{ % url 'studio_user_update' an_user.id % }">{{ an_user.username }}</a>
+                    <a href="{% url 'studio_user_update' an_user.id %}">{{ an_user.username }}</a>
                 </td>
                 <td>
                     {{ an_user.get_full_name }}

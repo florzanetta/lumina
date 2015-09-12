@@ -38,3 +38,27 @@ class StudioUserCreateView(generic.CreateView):
 
         messages.success(self.request, 'El usuario fue creado correctamente')
         return ret
+
+
+class StudioUserUpdateView(generic.UpdateView):
+    model = models.LuminaUser
+    form_class = forms_users.StudioUserUpdateForm
+    pk_url_kwarg = 'photographer_user_id'
+    template_name = 'lumina/base_create_update_crispy_form.html'
+    success_url = reverse_lazy('studio_user_list')
+
+    def get_queryset(self):
+        return self.request.user.get_all_photographers()
+
+    def form_valid(self, form):
+        ret = super().form_valid(form)
+
+        # Set the password
+        if form['password1'].value():
+            updated_user = models.LuminaUser.objects.get(pk=form.instance.id)
+            logger.warn("Changing password of user '%s'", updated_user.username)
+            updated_user.set_password(form['password1'].value())
+            updated_user.save()
+
+        messages.success(self.request, 'El usuario fue actualizado correctamente')
+        return ret
