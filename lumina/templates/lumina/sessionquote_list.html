@@ -61,8 +61,23 @@
                 {% endifchanged %}
 
                 <tr>
-                    <td class="text-nowrap">
-                        <a href="{% url 'quote_detail' a_quote.id %}">{{ a_quote.name }}</a>
+                    <td>
+                        <div class="text-nowrap">
+                            <i class="fa fa-money"></i>
+                            <a href="{% url 'quote_detail' a_quote.id %}">
+                                {{ a_quote.name }}</a>
+                        </div>
+
+                        {% if user.is_photographer and a_quote.session %}
+                            <div style="padding-left: 2em;">
+                                <small>
+                                    <i class="fa fa-picture-o"></i>
+                                    Sesión asociada:
+                                    <a href="{% url 'session_detail' a_quote.session.id %}">{{ a_quote.session.name }}</a>
+                                </small>
+                            </div>
+                        {% endif %}
+
                     </td>
                     <th class="text-right">
                         {{ a_quote.image_quantity }}
@@ -91,6 +106,12 @@
             {% endfor %}
 
         </table>
+
+        <p class="text-muted small">
+            <i class="fa fa-money"></i> Presupuesto
+            ·
+            <i class="fa fa-picture-o"></i> Sesión fotográfica
+        </p>
 
         {% if is_search %} <!-- pagination -->
             <nav>
