@@ -24,19 +24,6 @@ from lumina import models
 logger = logging.getLogger(__name__)
 
 
-__all__ = [
-    'SessionListView',
-    'SessionSearchView',
-    'SessionDetailView',
-    'SetImageAsAlbumIconView',
-    'AlbumIconView',
-    'SessionCreateView',
-    'SessionUpdateView',
-    'SessionUploadPreviewsView',
-    'session_upload_previews_upload',
-]
-
-
 # ===============================================================================
 # Session
 # ===============================================================================

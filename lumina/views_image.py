@@ -11,13 +11,6 @@ from lumina.models import Image
 from lumina.forms import ImageCreateForm, ImageUpdateForm, ImageSearchForm
 
 
-__all__ = [
-    'ImageListView',
-    'ImageCreateView',
-    'ImageUpdateView',
-]
-
-
 # ===============================================================================
 # Image
 # ===============================================================================

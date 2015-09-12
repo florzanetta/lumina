@@ -19,16 +19,6 @@ from lumina.mail import send_email_for_session_quote
 from lumina import forms
 import lumina.views_utils
 
-__all__ = [
-    'SessionQuoteCreateView',
-    'SessionQuoteUpdateView',
-    'SessionQuoteListView',
-    'SessionQuotePendigForCustomerListView',
-    'SessionQuoteSearchView',
-    'SessionQuoteDetailView',
-    'SessionQuoteAlternativeSelectView',
-    'SessionQuoteAlternativeCreateView',
-]
 
 logger = logging.getLogger(__name__)
 

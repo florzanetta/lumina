@@ -10,12 +10,6 @@ from lumina.models import LuminaUser
 from lumina.forms import UserCreateForm, UserUpdateForm
 from lumina.views_user import logger
 
-__all__ = [
-    'UserListView',
-    'UserCreateView',
-    'UserUpdateView',
-]
-
 logger = logging.getLogger(__name__)
 
 

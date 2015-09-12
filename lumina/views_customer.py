@@ -4,7 +4,6 @@ import logging
 
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
-from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 
@@ -12,12 +11,6 @@ from lumina.models import Customer
 from lumina.forms import CustomerCreateForm, CustomerUpdateForm
 
 logger = logging.getLogger(__name__)
-
-__all__ = [
-    'CustomerListView',
-    'CustomerCreateView',
-    'CustomerUpdateView',
-]
 
 
 # ===============================================================================

@@ -14,13 +14,6 @@ from lumina.forms import SharedSessionByEmailCreateForm
 from lumina.mail import send_email
 from lumina.views_utils import generate_thumbnail_of_image, download_image, download_image
 
-__all__ = [
-    'SharedSessionByEmailAnonymousView',
-    'shared_session_by_email_image_thumb_64x64',
-    'shared_session_by_email_image_download',
-    'SharedSessionByEmailCreateView',
-]
-
 
 # ===============================================================================
 # SharedSessionByEmail (ex: SharedAlbum)
