@@ -126,6 +126,7 @@ class SetudioUserCreateForm(_GenericUserCreateUpdateForm):
     CANCEL_URL = reverse_lazy('studio_user_list')
     FIELDS = [
         'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
+        'phone', 'cellphone',
     ]
 
     # ----- </GenericCreateUpdateModelForm> -----
@@ -136,6 +137,7 @@ class SetudioUserCreateForm(_GenericUserCreateUpdateForm):
         model = LuminaUser
         fields = (
             'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
+            'phone', 'cellphone',
         )
 
 
@@ -147,6 +149,7 @@ class StudioUserUpdateForm(_GenericUserCreateUpdateForm):
     CANCEL_URL = reverse_lazy('studio_user_list')
     FIELDS = [
         'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
+        'phone', 'cellphone',
     ]
 
     # ----- </GenericCreateUpdateModelForm> -----
@@ -158,4 +161,5 @@ class StudioUserUpdateForm(_GenericUserCreateUpdateForm):
         model = LuminaUser
         fields = (
             'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
+            'phone', 'cellphone',
         )

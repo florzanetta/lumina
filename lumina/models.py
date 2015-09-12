@@ -74,8 +74,11 @@ class LuminaUser(AbstractUser):
     user_for_customer = models.ForeignKey(
         'Customer', null=True, blank=True, related_name='users', verbose_name="Cliente")
 
+    # `phone` is used in both, customers & photographers
     phone = models.CharField(max_length=20, null=True, blank=True, verbose_name="Teléfono")
+    # `cellphone` is used in both, customers & photographers
     cellphone = models.CharField(max_length=20, null=True, blank=True, verbose_name="Celular")
+
     alternative_email = models.EmailField(null=True, blank=True, verbose_name="Email alternativo")
     notes = models.TextField(blank=True, null=True, verbose_name="Notas")
 

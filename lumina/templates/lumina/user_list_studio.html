@@ -15,7 +15,7 @@
     <table class="table">
 
         <tr>
-            <th width="10%">
+            <th width="10%" colspan="2">
                 Usuario
             </th>
             <th width="40%">
@@ -33,7 +33,20 @@
         </tr>
 
         {% for an_user in object_list %}
-            <tr>
+
+            <tr
+                {% if not an_user.is_active %}
+                    class="text-muted bg-danger"
+                {% endif %}
+                    >
+
+                <td>
+                    {% if an_user.is_active %}
+                        <i class="fa fa-check-square-o"></i>
+                    {% else %}
+                        <i class="fa fa-square-o"></i>
+                    {% endif %}
+                </td>
                 <td>
                     <a href="{% url 'studio_user_update' an_user.id %}">{{ an_user.username }}</a>
                 </td>
@@ -59,8 +72,13 @@
             <tr><td colspan="5">No se ha registrado fotógrafo para el estudio</td></tr>
         {% endfor %}
 
-
     </table>
+
+    <p class="text-muted small">
+        <i class="fa fa-check-square-o"></i> Usuarios activos (pueden ingresar al sistemas)
+        ·
+        <i class="fa fa-square-o"></i> Usuarios inactivos (no pueden ingresar al sistema)
+    </p>
 
     <a href="{% url 'studio_user_create' %}" class="btn btn-primary">Nuevo fotógrafo</a>
 

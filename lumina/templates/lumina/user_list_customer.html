@@ -10,15 +10,12 @@
 
 {% block content %}
 
-
-
-
 	<h3>Usuarios para cliente «{{ customer.name }}»</h3>
 
     <table class="table">
 
         <tr>
-            <th width="10%">
+            <th width="10%" colspan="2">
                 Usuario
             </th>
             <th width="40%">
@@ -36,7 +33,20 @@
         </tr>
 
         {% for an_user in object_list %}
-            <tr>
+
+            <tr
+                {% if not an_user.is_active %}
+                    class="text-muted bg-danger"
+                {% endif %}
+                >
+
+                <td>
+                    {% if an_user.is_active %}
+                        <i class="fa fa-check-square-o"></i>
+                    {% else %}
+                        <i class="fa fa-square-o"></i>
+                    {% endif %}
+                </td>
                 <td>
                     <a href="{% url 'customer_user_update' an_user.id %}">{{ an_user.username }}</a>
                 </td>
@@ -47,8 +57,8 @@
                     <span class="text-nowrap"><a href="mailto:{{ an_user.email }}">{{ an_user.email }}</a></span>
                 </td>
                 <td>
-                    {{ an_user.phone }}
-                    {{ an_user.cellphone }}
+                    {{ an_user.phone|default:'' }}
+                    {{ an_user.cellphone|default:'' }}
                 </td>
                 <td class="text-right">
                     {% if an_user.last_login %}
@@ -62,8 +72,13 @@
             <tr><td colspan="5">No se ha registrado usuario para el cliente</td></tr>
         {% endfor %}
 
-
     </table>
+
+    <p class="text-muted small">
+        <i class="fa fa-check-square-o"></i> Usuarios activos (pueden ingresar al sistemas)
+        ·
+        <i class="fa fa-square-o"></i> Usuarios inactivos (no pueden ingresar al sistema)
+    </p>
 
     <a href="{% url 'customer_user_create' customer.id %}" class="btn btn-primary">Nuevo usuario</a>
 
