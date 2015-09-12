@@ -324,6 +324,12 @@ class _GenericSessionTypeForm(forms_utils.GenericCreateUpdateModelForm):
         model = models.SessionType
         fields = ('name',)
 
+    def _get_validation_exclusions(self):
+        # HACK to force ModelForm validate uniqueness.
+        # Works in `SessionTypeCreateForm` because we manually put `instance` kwarg
+        validation_exclusions = super()._get_validation_exclusions()
+        return [_ for _ in validation_exclusions if _ != 'studio']
+
 
 class SessionTypeCreateForm(_GenericSessionTypeForm):
     FORM_TITLE = 'Crear nuevo tipo de sesión fotográfica'

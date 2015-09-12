@@ -1023,15 +1023,16 @@ class SessionTypeManager(models.Manager):
 
 
 class SessionType(models.Model):
-    name = models.CharField(max_length=100, verbose_name="tipo de sesión")
+    name = models.CharField(max_length=100, verbose_name="nombre")
     studio = models.ForeignKey('Studio', related_name='session_types', verbose_name="estudio")
     archived = models.BooleanField(default=False, verbose_name="Archivado")
 
     objects = SessionTypeManager()
 
-    # FIXME: use unique `(studio, name)`
-    # class Meta:
-    #     unique_together = ("studio", "name")
+    class Meta:
+        unique_together = ("studio", "name")
+        verbose_name = "tipo de sesión"
+        verbose_name_plural = "tipos de sesión"
 
     def __str__(self):
         return self.name
