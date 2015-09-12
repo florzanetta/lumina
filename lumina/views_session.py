@@ -198,7 +198,7 @@ class AlbumIconView(DetailView):
             return HttpResponseRedirect('/static/lumina/img/album-64.png')
 
 
-class SessionCreateUpdateMixin():
+class SessionCreateUpdateMixin:
     def _setup_form(self, form):
         qs_customers = self.request.user.all_my_customers()
         form.fields['customer'].queryset = qs_customers
@@ -209,10 +209,10 @@ class SessionCreateUpdateMixin():
 class SessionCreateView(CreateView, SessionCreateUpdateMixin):
     model = models.Session
     form_class = forms.SessionCreateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/base_create_update_crispy_form.html'
 
     def get_form(self, form_class):
-        form = super(SessionCreateView, self).get_form(form_class)
+        form = super().get_form(form_class)
         self._setup_form(form)
         return form
 
@@ -233,10 +233,10 @@ class SessionUpdateView(UpdateView, SessionCreateUpdateMixin):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = models.Session
     form_class = forms.SessionUpdateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/base_create_update_crispy_form.html'
 
     def get_form(self, form_class):
-        form = super(SessionUpdateView, self).get_form(form_class)
+        form = super().get_form(form_class)
         self._setup_form(form)
         return form
 

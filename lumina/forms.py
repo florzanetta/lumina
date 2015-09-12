@@ -127,21 +127,24 @@ class ImageSelectionAutoCreateForm(forms.ModelForm):
 # Session
 # ===============================================================================
 
-class SessionCreateForm(forms.ModelForm):
+class _GenericSessionForm(GenericCreateUpdateModelForm):
+
+    CANCEL_URL = reverse_lazy('session_list')
+    FIELDS = ['name', 'session_type', 'photographer', 'customer', 'worked_hours']
 
     class Meta:
-        model = Session
-        fields = ('name', 'session_type', 'photographer', 'customer', )  # 'shared_with',
+        model = models.Session
+        fields = ('name', 'session_type', 'photographer', 'customer', 'worked_hours')
 
 
-class SessionUpdateForm(forms.ModelForm):
+class SessionCreateForm(_GenericSessionForm):
+    FORM_TITLE = 'Crear nueva sesión fotográfica'
+    SUBMIT_LABEL = 'Crear'
 
-    class Meta:
-        model = Session
-        fields = ('name', 'session_type', 'photographer', 'customer', 'worked_hours', )  # 'shared_with',
-        # widgets = {
-        #    'shared_with': CheckboxSelectMultiple(),
-        # }
+
+class SessionUpdateForm(_GenericSessionForm):
+    FORM_TITLE = 'Actualizar sesión fotográfica'
+    SUBMIT_LABEL = 'Guardar'
 
 
 class SessionSearchForm(forms.Form):
