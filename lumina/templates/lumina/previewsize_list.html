@@ -11,9 +11,9 @@
             <tr>
                 <td width="10%" class="text-right">
                     {% if preview_size.archived %}
-                        <span class="label label-warning">Archivado</span>
+                        <span class="label label-danger">Archivado</span>
                     {% else %}
-                        <span class="label label-info">Activo</span>
+                        <span class="label label-success">Disponible</span>
                     {% endif %}
                 </td>
                 <td width="80%">
@@ -23,7 +23,7 @@
                 </td>
                 <td width="10%">
                     {% if preview_size.archived %}
-                        <a href="{% url 'preview_size_unarchive' preview_size.id %}" class="btn btn-primary btn-xs">Recuperar</a>
+                        <a href="{% url 'preview_size_unarchive' preview_size.id %}" class="btn btn-primary btn-xs">Desarchivar</a>
                     {% else %}
                         <a href="{% url 'preview_size_archive' preview_size.id %}" class="btn btn-primary btn-xs">Archivar</a>
                     {% endif %}

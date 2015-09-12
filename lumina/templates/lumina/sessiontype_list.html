@@ -11,9 +11,9 @@
             <tr>
                 <td width="10%" class="text-right">
                     {% if session_type.archived %}
-                        <span class="label label-warning">Archivada</span>
+                        <span class="label label-danger">Archivada</span>
                     {% else %}
-                        <span class="label label-info">Activa</span>
+                        <span class="label label-success">Disponible</span>
                     {% endif %}
                 </td>
                 <td width="80%">
@@ -23,7 +23,7 @@
                 </td>
                 <td width="10%">
                     {% if session_type.archived %}
-                        <a href="{% url 'session_type_unarchive' session_type.id %}" class="btn btn-primary btn-xs">Recuperar</a>
+                        <a href="{% url 'session_type_unarchive' session_type.id %}" class="btn btn-primary btn-xs">Desarchivar</a>
                     {% else %}
                         <a href="{% url 'session_type_archive' session_type.id %}" class="btn btn-primary btn-xs">Archivar</a>
                     {% endif %}
