@@ -309,10 +309,16 @@ class SessionQuoteDetailView(DetailView):
         #     return HttpResponseRedirect(reverse('home'))
 
         elif 'button_archive_quote' in request.POST:
-            # FIXME: implement this!
-            messages.error(self.request, "El archivado "
-                                         "de presupuestos todavia no esta implementado.")
-            return HttpResponseRedirect(reverse('home'))
+            quote.archived = True
+            quote.save()
+            messages.success(self.request, "El presupuesto fue archivado exitosamente")
+            return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
+
+        elif 'button_unarchive_quote' in request.POST:
+            quote.archived = False
+            quote.save()
+            messages.success(self.request, "El presupuesto fue recuperado exitosamente")
+            return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
 
         elif 'button_update_quote_alternatives' in request.POST:
             return HttpResponseRedirect(reverse('quote_update', args=[quote.id]))
@@ -363,8 +369,12 @@ class SessionQuoteDetailView(DetailView):
             if self.request.user.is_for_customer():
                 pass
             else:
-                buttons.append({'name': 'button_archive_quote',
-                                'submit_label': "Archivar", })
+                if self.object.archived:
+                    buttons.append({'name': 'button_unarchive_quote',
+                                    'submit_label': "Desarchivar", })
+                else:
+                    buttons.append({'name': 'button_archive_quote',
+                                    'submit_label': "Archivar", })
 
         elif self.object.status == SessionQuote.STATUS_ACCEPTED:
             if self.request.user.is_for_customer():
@@ -380,8 +390,12 @@ class SessionQuoteDetailView(DetailView):
                 #                 'confirm': True, })
                 buttons.append({'name': 'button_update_quote_alternatives',
                                 'submit_label': "Editar presup. alternativos", })
-                buttons.append({'name': 'button_archive_quote',
-                                'submit_label': "Archivar", })
+                if self.object.archived:
+                    buttons.append({'name': 'button_unarchive_quote',
+                                    'submit_label': "Desarchivar", })
+                else:
+                    buttons.append({'name': 'button_archive_quote',
+                                    'submit_label': "Archivar", })
                 if self.object.session is None:
                     buttons.append({'name': 'button_create_session',
                                     'submit_label': "Crear sesión desde presupuesto", })
@@ -391,8 +405,12 @@ class SessionQuoteDetailView(DetailView):
             if self.request.user.is_for_customer():
                 pass
             else:
-                buttons.append({'name': 'button_archive_quote',
-                                'submit_label': "Archivar", })
+                if self.object.archived:
+                    buttons.append({'name': 'button_unarchive_quote',
+                                    'submit_label': "Desarchivar", })
+                else:
+                    buttons.append({'name': 'button_archive_quote',
+                                    'submit_label': "Archivar", })
 
         else:
             raise Exception("Invalid 'status': {}".format(self.object.status))
