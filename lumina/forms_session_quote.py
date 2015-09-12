@@ -36,6 +36,17 @@ class SessionQuoteCreateForm(forms_utils.GenericCreateUpdateModelForm):
             'terms'
         )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        cost = cleaned_data.get("cost")
+        stipulated_down_payment = cleaned_data.get("stipulated_down_payment")
+
+        if cost is not None and stipulated_down_payment is not None:
+            if cost < stipulated_down_payment:
+                msg = "La 'entrega inicial pactada' debe ser menor o igual al 'costo'"
+                self.add_error('cost', msg)
+                self.add_error('stipulated_down_payment', msg)
+
 
 class SessionQuoteUpdateForm(forms.ModelForm):
 
