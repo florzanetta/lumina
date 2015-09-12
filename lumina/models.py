@@ -977,7 +977,7 @@ class CustomerTypeManager(models.Manager):
     def for_photographer_ordered(self, photographer, exclude_archived=False):
         """Return CustomerType visible for photographer"""
         assert photographer.is_photographer()
-        qs = CustomerType.objects.filter(studio=photographer.studio)
+        qs = self.filter(studio=photographer.studio)
         if exclude_archived:
             qs = qs.filter(archived=False)
         return qs.order_by(Lower('name'))
@@ -1002,8 +1002,13 @@ class CustomerType(models.Model):
 
 class SessionTypeManager(models.Manager):
 
-    def session_type_of(self, photographer):
-        return self.filter(studio=photographer.studio)
+    def for_photographer_ordered(self, photographer, exclude_archived=False):
+        """Return SessionType visible for photographer"""
+        assert photographer.is_photographer()
+        qs = self.filter(studio=photographer.studio)
+        # if exclude_archived:
+        #     qs = qs.filter(archived=False)
+        return qs.order_by(Lower('name'))
 
 
 class SessionType(models.Model):

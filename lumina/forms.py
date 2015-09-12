@@ -204,7 +204,7 @@ class SessionSearchForm(forms.Form):
         assert isinstance(photographer, LuminaUser)
         assert photographer.is_photographer()
         self.fields['customer'].queryset = Customer.objects.customers_of(photographer)
-        self.fields['session_type'].queryset = SessionType.objects.session_type_of(photographer)
+        self.fields['session_type'].queryset = SessionType.objects.for_photographer_ordered(photographer)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -278,7 +278,7 @@ class ImageSearchForm(forms.Form):
             ),
         )
         self.fields['customer'].queryset = Customer.objects.customers_of(user)
-        self.fields['session_type'].queryset = SessionType.objects.session_type_of(user)
+        self.fields['session_type'].queryset = SessionType.objects.for_photographer_ordered(user)
 
     def clean(self):
         cleaned_data = super().clean()
