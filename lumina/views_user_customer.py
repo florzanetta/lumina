@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic import ListView, CreateView, UpdateView
 
 from lumina.models import LuminaUser
-from lumina.forms import UserCreateForm, UserUpdateForm
+from lumina.forms import CustomerUserCreateForm, CustomerUserUpdateForm
 from lumina.views_user import logger
 
 logger = logging.getLogger(__name__)
@@ -30,7 +30,7 @@ class CustomerUserListView(ListView):
 
 class CustomerUserCreateView(CreateView):
     model = LuminaUser
-    form_class = UserCreateForm
+    form_class = CustomerUserCreateForm
     template_name = 'lumina/base_create_update_form.html'
 
     def get_success_url(self):
@@ -60,7 +60,7 @@ class CustomerUserCreateView(CreateView):
 class CustomerUserUpdateView(UpdateView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = LuminaUser
-    form_class = UserUpdateForm
+    form_class = CustomerUserUpdateForm
     template_name = 'lumina/base_create_update_form.html'
 
     def get_success_url(self):

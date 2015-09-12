@@ -469,7 +469,7 @@ class UserPreferencesUpdateForm(forms.ModelForm):
 # User
 # ===============================================================================
 
-class UserCreateForm(forms.ModelForm):
+class CustomerUserCreateForm(forms.ModelForm):
     password1 = forms.CharField(max_length=20, required=True,
                                 widget=forms.PasswordInput(),
                                 label='Contrasena')
@@ -485,7 +485,7 @@ class UserCreateForm(forms.ModelForm):
         )
 
     def clean(self):
-        super(UserCreateForm, self).clean()
+        super().clean()
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
         if password1 != password2:
@@ -493,7 +493,7 @@ class UserCreateForm(forms.ModelForm):
         return self.cleaned_data
 
 
-class UserUpdateForm(forms.ModelForm):
+class CustomerUserUpdateForm(forms.ModelForm):
     password1 = forms.CharField(
         max_length=20, required=False, widget=forms.PasswordInput(), label='Contrasena',
         help_text="Ingrese la nueva contraseña (si desea cambiarla)")
@@ -510,7 +510,7 @@ class UserUpdateForm(forms.ModelForm):
         )
 
     def clean(self):
-        super(UserUpdateForm, self).clean()
+        super().clean()
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
         if password1 != password2:
