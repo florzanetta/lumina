@@ -331,8 +331,7 @@ class Session(models.Model):
     photographer = models.ForeignKey(LuminaUser, verbose_name="fotógrafo")
 
     # REFACTOR: `customer` is a new attribute
-    # FIXME: why optional? Shouldn't be required? See: https://lumina.atlassian.net/browse/LUM-182
-    customer = models.ForeignKey(Customer, null=True, blank=True, verbose_name="cliente")
+    customer = models.ForeignKey(Customer, null=False, blank=False, verbose_name="cliente")
 
     session_type = models.ForeignKey(
         'SessionType', null=True, related_name='+', verbose_name="tipo de sesión")
