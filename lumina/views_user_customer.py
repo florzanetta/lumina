@@ -55,12 +55,6 @@ class CustomerUserCreateView(CreateView):
         messages.success(self.request, 'El usuario fue creado correctamente')
         return ret
 
-    def get_context_data(self, **kwargs):
-        context = super(CustomerUserCreateView, self).get_context_data(**kwargs)
-        context['title'] = "Crear usuario"
-        context['submit_label'] = "Crear"
-        return context
-
 
 class CustomerUserUpdateView(UpdateView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
@@ -87,9 +81,3 @@ class CustomerUserUpdateView(UpdateView):
 
         messages.success(self.request, 'El usuario fue actualizado correctamente')
         return ret
-
-    def get_context_data(self, **kwargs):
-        context = super(CustomerUserUpdateView, self).get_context_data(**kwargs)
-        context['title'] = "Actualizar usuario"
-        context['submit_label'] = "Actualizar"
-        return context
