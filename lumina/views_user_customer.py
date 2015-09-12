@@ -47,7 +47,7 @@ class CustomerUserCreateView(CreateView):
         new_user.set_password(form['password1'].value())
         new_user.save()
 
-        messages.success(self.request, 'El cliente fue creado correctamente')
+        messages.success(self.request, 'El usuario fue creado correctamente')
         return ret
 
     def get_context_data(self, **kwargs):
@@ -68,7 +68,7 @@ class CustomerUserUpdateView(UpdateView):
         return reverse('customer_user_list', kwargs={'customer_id': customer.id})
 
     def get_queryset(self):
-        return self.request.user.get_all_users()
+        return self.request.user.get_all_users_of_customers()
 
     def form_valid(self, form):
         ret = super(CustomerUserUpdateView, self).form_valid(form)
@@ -80,7 +80,7 @@ class CustomerUserUpdateView(UpdateView):
             updated_user.set_password(form['password1'].value())
             updated_user.save()
 
-        messages.success(self.request, 'El cliente fue actualizado correctamente')
+        messages.success(self.request, 'El usuario fue actualizado correctamente')
         return ret
 
     def get_context_data(self, **kwargs):

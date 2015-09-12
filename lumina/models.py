@@ -110,7 +110,7 @@ class LuminaUser(AbstractUser):
                                          user_for_customer=customer_id,
                                          user_for_customer__studio=self.studio)
 
-    def get_all_users(self):
+    def get_all_users_of_customers(self):
         """
         Returns all the users of a Studio. This'll return all the user of all the customers
         """
