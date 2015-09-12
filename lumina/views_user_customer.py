@@ -31,7 +31,12 @@ class CustomerUserListView(ListView):
 class CustomerUserCreateView(CreateView):
     model = LuminaUser
     form_class = CustomerUserCreateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/base_create_update_crispy_form.html'
+
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        form_kwargs['customer_id'] = self.kwargs['customer_id']
+        return form_kwargs
 
     def get_success_url(self):
         return reverse('customer_user_list', kwargs={'customer_id': self.kwargs['customer_id']})
@@ -61,7 +66,7 @@ class CustomerUserUpdateView(UpdateView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = LuminaUser
     form_class = CustomerUserUpdateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/base_create_update_crispy_form.html'
 
     def get_success_url(self):
         customer = self.get_object().user_for_customer

@@ -28,10 +28,13 @@ class GenericCreateUpdateModelForm(forms.ModelForm):
     CANCEL_URL = None
     FIELDS = []
 
+    def get_cancel_url(self):
+        assert self.CANCEL_URL is not None, "form.CANCEL_URL must be set or `get_cancel_url()` overwritten"
+        return self.CANCEL_URL
+
     def __init__(self, *args, **kwargs):
         assert self.FORM_TITLE is not None
         assert self.SUBMIT_LABEL is not None
-        assert self.CANCEL_URL is not None
         assert self.FIELDS
 
         super().__init__(*args, **kwargs)
@@ -47,7 +50,7 @@ class GenericCreateUpdateModelForm(forms.ModelForm):
             ),
             bootstrap.FormActions(
                 layout.Submit('submit_button', self.SUBMIT_LABEL, css_id='form-submit-button'),
-                layout.HTML("<a class='btn btn-primary' href='{}'>Cancelar</a>".format(self.CANCEL_URL)),
+                layout.HTML("<a class='btn btn-primary' href='{}'>Cancelar</a>".format(self.get_cancel_url())),
             ),
         )
 
@@ -469,7 +472,7 @@ class UserPreferencesUpdateForm(forms.ModelForm):
 # User
 # ===============================================================================
 
-class _GenericUserCreateUpdateForm(forms.ModelForm):
+class _GenericUserCreateUpdateForm(GenericCreateUpdateModelForm):
 
     PASSWORD_REQUIRED = None  # `True` or `False` (fails if not overwritting)
     HELP_TEXT_FOR_PASSWORD = None  # `str`, or 'None'
@@ -512,7 +515,26 @@ class _GenericUserCreateUpdateForm(forms.ModelForm):
 
 
 class CustomerUserCreateForm(_GenericUserCreateUpdateForm):
+
+    # ----- <GenericCreateUpdateModelForm> -----
+
+    FORM_TITLE = 'Crear usuario'
+    SUBMIT_LABEL = 'Crear'
+    FIELDS = [
+        'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
+        'phone', 'cellphone', 'alternative_email', 'notes'
+    ]
+
+    def get_cancel_url(self):
+        return reverse_lazy('customer_user_list', args=[self.customer_id])
+
+    # ----- </GenericCreateUpdateModelForm> -----
+
     PASSWORD_REQUIRED = True
+
+    def __init__(self, *args, **kwargs):
+        self.customer_id = kwargs.pop('customer_id')
+        super().__init__(*args, **kwargs)
 
     class Meta:
         model = LuminaUser
@@ -523,6 +545,21 @@ class CustomerUserCreateForm(_GenericUserCreateUpdateForm):
 
 
 class CustomerUserUpdateForm(_GenericUserCreateUpdateForm):
+
+    # ----- <GenericCreateUpdateModelForm> -----
+
+    FORM_TITLE = 'Actualizar usuario'
+    SUBMIT_LABEL = 'Guardar'
+    FIELDS = [
+        'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
+        'phone', 'cellphone', 'alternative_email', 'notes'
+    ]
+
+    def get_cancel_url(self):
+        return reverse_lazy('customer_user_list', args=[self.instance.user_for_customer.id])
+
+    # ----- </GenericCreateUpdateModelForm> -----
+
     PASSWORD_REQUIRED = False
     HELP_TEXT_FOR_PASSWORD = "Ingrese la nueva contraseña (sólo si desea cambiarla)"
 
