@@ -293,7 +293,7 @@ class ImageSearchForm(forms.Form):
 # Customer
 # ===============================================================================
 
-class GenericCustomerForm(GenericCreateUpdateModelForm):
+class _GenericCustomerForm(GenericCreateUpdateModelForm):
 
     CANCEL_URL = reverse_lazy('customer_list')
     FIELDS = [
@@ -312,12 +312,12 @@ class GenericCustomerForm(GenericCreateUpdateModelForm):
         )
 
 
-class CustomerCreateForm(GenericCustomerForm):
+class CustomerCreateForm(_GenericCustomerForm):
     FORM_TITLE = 'Crear nuevo cliente'
     SUBMIT_LABEL = 'Crear'
 
 
-class CustomerUpdateForm(GenericCustomerForm):
+class CustomerUpdateForm(_GenericCustomerForm):
     FORM_TITLE = 'Actualizar cliente'
     SUBMIT_LABEL = 'Guardar'
 
@@ -326,7 +326,7 @@ class CustomerUpdateForm(GenericCustomerForm):
 # CustomerType
 # ===============================================================================
 
-class GenericCustomerTypeForm(GenericCreateUpdateModelForm):
+class _GenericCustomerTypeForm(GenericCreateUpdateModelForm):
 
     CANCEL_URL = reverse_lazy('customer_type_list')
     FIELDS = ['name']
@@ -336,25 +336,12 @@ class GenericCustomerTypeForm(GenericCreateUpdateModelForm):
         fields = ('name',)
 
 
-class CustomerTypeCreateForm(GenericCustomerTypeForm):
+class CustomerTypeCreateForm(_GenericCustomerTypeForm):
     FORM_TITLE = 'Crear nuevo tipo de cliente'
     SUBMIT_LABEL = 'Crear'
 
-    def __init__(self, studio=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.studio = studio
 
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        instance.studio = self.studio
-
-        if commit:
-            instance.save()
-
-        return instance
-
-
-class CustomerTypeUpdateForm(GenericCustomerTypeForm):
+class CustomerTypeUpdateForm(_GenericCustomerTypeForm):
     FORM_TITLE = 'Actualizar tipo de cliente'
     SUBMIT_LABEL = 'Guardar'
 

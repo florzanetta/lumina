@@ -31,10 +31,10 @@ class CustomerTypeCreateView(SuccessMessageMixin,
     success_url = reverse_lazy('customer_type_list')
     success_message = 'Un nuevo tipo de cliente ha sido creado exitosamente'
 
-    def get_form_kwargs(self):
-        form_kwargs = super().get_form_kwargs()
-        form_kwargs['studio'] = self.request.user.studio
-        return form_kwargs
+    def form_valid(self, form):
+        form.instance.studio = self.request.user.studio
+        ret = super().form_valid(form)
+        return ret
 
 
 class CustomerTypeUpdateView(SuccessMessageMixin,
