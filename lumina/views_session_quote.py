@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 # SessionQuote
 # ===============================================================================
 
-class SessionQuoteCreateUpdateMixin():
+class SessionQuoteCreateUpdateMixin:
     def _setup_form(self, form):
         qs_customers = self.request.user.all_my_customers()
         form.fields['customer'].queryset = qs_customers

@@ -1,21 +1,40 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.core.urlresolvers import reverse_lazy
+
 from crispy_forms import bootstrap
 from crispy_forms import helper
 from crispy_forms import layout
 
+from lumina import forms_utils
 from lumina import models
 
 
-class SessionQuoteCreateForm(forms.ModelForm):
+class SessionQuoteCreateForm(forms_utils.GenericCreateUpdateModelForm):
+
+    def get_crispy_form_field_for_cost(self):
+        return bootstrap.PrependedText('cost', '$')
+
+    def get_crispy_form_field_for_stipulated_down_payment(self):
+        return bootstrap.PrependedText('stipulated_down_payment', '$')
+
+    FORM_TITLE = 'Crear nuevo presupuesto'
+    SUBMIT_LABEL = 'Crear'
+    CANCEL_URL = reverse_lazy('quote_list')
+    FIELDS = [
+        'name', 'customer', 'image_quantity', 'stipulated_date', 'cost',
+        'stipulated_down_payment', 'give_full_quality_images',
+        'terms'
+    ]
 
     class Meta:
         model = models.SessionQuote
         fields = (
             'name', 'customer', 'image_quantity', 'stipulated_date', 'cost',
             'stipulated_down_payment', 'give_full_quality_images',
-            'terms')
+            'terms'
+        )
 
 
 class SessionQuoteUpdateForm(forms.ModelForm):

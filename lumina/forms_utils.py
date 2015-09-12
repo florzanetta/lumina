@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
+import logging
+
 from django import forms
 
 from crispy_forms import bootstrap
 from crispy_forms import helper
 from crispy_forms import layout
+
+
+logger = logging.getLogger(__name__)
 
 
 class GenericCreateUpdateModelForm(forms.ModelForm):
@@ -29,10 +34,24 @@ class GenericCreateUpdateModelForm(forms.ModelForm):
         self.helper.label_class = 'col-lg-2'
         self.helper.field_class = 'col-lg-8'
 
+        # get_crispy_form_field_for_cost
+        fields = []
+        for field_name in self.FIELDS:
+            method_name = "get_crispy_form_field_for_{}".format(field_name)
+            method_obj = getattr(self, method_name, None)
+            if method_obj:
+                try:
+                    fields.append(method_obj())
+                except:
+                    logger.exception("Error detected when trying to call '%s()'", method_name)
+                    raise
+            else:
+                fields.append(field_name)
+
         self.helper.layout = helper.Layout(
             layout.Fieldset(
                 self.FORM_TITLE,
-                *self.FIELDS
+                *fields
             ),
             bootstrap.FormActions(
                 layout.Submit('submit_button', self.SUBMIT_LABEL, css_id='form-submit-button'),
