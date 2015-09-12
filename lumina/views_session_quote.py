@@ -12,13 +12,11 @@ from django.core.exceptions import SuspiciousOperation
 from django.core import paginator as django_paginator
 from django.conf import settings
 
-from lumina.models import SessionQuote, SessionQuoteAlternative
-from lumina.forms import SessionQuoteCreateForm, SessionQuoteUpdateForm, \
-    SessionQuoteAlternativeCreateForm, SessionQuoteUpdate2Form
-from lumina.mail import send_email_for_session_quote
-from lumina import forms
-import lumina.views_utils
+from lumina import forms_session_quote
+from lumina import views_utils
 
+from lumina.models import SessionQuote, SessionQuoteAlternative
+from lumina.mail import send_email_for_session_quote
 
 logger = logging.getLogger(__name__)
 
@@ -35,11 +33,11 @@ class SessionQuoteCreateUpdateMixin():
 
 class SessionQuoteCreateView(CreateView, SessionQuoteCreateUpdateMixin):
     model = SessionQuote
-    form_class = SessionQuoteCreateForm
+    form_class = forms_session_quote.SessionQuoteCreateForm
     template_name = 'lumina/sessionquote_create.html'
 
     def get_form(self, form_class):
-        form = super(SessionQuoteCreateView, self).get_form(form_class)
+        form = super().get_form(form_class)
         self._setup_form(form)
         form.fields['terms'].initial = self.request.user.studio.default_terms or ''
         return form
@@ -76,13 +74,13 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
     def get_form_class(self):
         if self.object.status == SessionQuote.STATUS_QUOTING:
             # modificable
-            return SessionQuoteUpdateForm
+            return forms_session_quote.SessionQuoteUpdateForm
         elif self.object.status == SessionQuote.STATUS_ACCEPTED:
             # ro
-            return SessionQuoteUpdate2Form
+            return forms_session_quote.SessionQuoteUpdate2Form
         elif self.object.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE:
             # ro
-            return SessionQuoteUpdate2Form
+            return forms_session_quote.SessionQuoteUpdate2Form
         else:
             raise SuspiciousOperation()
 
@@ -134,7 +132,7 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
         buttons.append({'link_url': reverse('quote_detail', args=[self.object.id]),
                         'link_label': "Volver", })
         context['extra_buttons'] = buttons
-        lumina.views_utils._put_session_statuses_in_context(context)
+        views_utils._put_session_statuses_in_context(context)
         return context
 
     def get_success_url(self):
@@ -187,13 +185,13 @@ class SessionQuoteSearchView(ListView, FormMixin):
         return kwargs
 
     def get(self, request, *args, **kwargs):
-        self.form = self.get_form(form_class=forms.SessionQuoteSearchForm)
+        self.form = self.get_form(form_class=forms_session_quote.SessionQuoteSearchForm)
         self.search_result_qs = None
 
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        self.form = self.get_form(form_class=forms.SessionQuoteSearchForm)
+        self.form = self.get_form(form_class=forms_session_quote.SessionQuoteSearchForm)
         self.search_result_qs = self._do_search(request, self.form)
 
         return super().get(request, *args, **kwargs)
@@ -241,11 +239,15 @@ class SessionQuoteSearchView(ListView, FormMixin):
 
     def _do_search_for_photographer(self, request, form, qs):
         """Returns QuerySet"""
-        if form.cleaned_data['archived_status'] == forms.SessionQuoteSearchForm.ARCHIVED_STATUS_ALL:
+        ARCHIVED_STATUS_ALL = forms_session_quote.SessionQuoteSearchForm.ARCHIVED_STATUS_ALL
+        ARCHIVED_STATUS_ARCHIVED = forms_session_quote.SessionQuoteSearchForm.ARCHIVED_STATUS_ARCHIVED
+        ARCHIVED_STATUS_ACTIVE = forms_session_quote.SessionQuoteSearchForm.ARCHIVED_STATUS_ACTIVE
+
+        if form.cleaned_data['archived_status'] == ARCHIVED_STATUS_ALL:
             pass
-        elif form.cleaned_data['archived_status'] == forms.SessionQuoteSearchForm.ARCHIVED_STATUS_ARCHIVED:
+        elif form.cleaned_data['archived_status'] == ARCHIVED_STATUS_ARCHIVED:
             qs = qs.filter(archived=True)
-        elif form.cleaned_data['archived_status'] == forms.SessionQuoteSearchForm.ARCHIVED_STATUS_ACTIVE:
+        elif form.cleaned_data['archived_status'] == ARCHIVED_STATUS_ACTIVE:
             qs = qs.exclude(archived=True)
         else:
             logger.warn("Invalid value for self.form['archived_status']: %s", form['archived_status'])
@@ -417,7 +419,7 @@ class SessionQuoteDetailView(DetailView):
 
         context['selected_quote'] = self.object.get_selected_quote()
         context['extra_buttons'] = buttons
-        lumina.views_utils._put_session_statuses_in_context(context)
+        views_utils._put_session_statuses_in_context(context)
 
         return context
 
@@ -491,7 +493,7 @@ class SessionQuoteAlternativeSelectView(DetailView):
         else:
             raise Exception("Invalid 'status': {}".format(self.object.status))
 
-        lumina.views_utils._put_session_statuses_in_context(context)
+        views_utils._put_session_statuses_in_context(context)
 
         return context
 
@@ -500,7 +502,7 @@ class SessionQuoteAlternativeSelectView(DetailView):
 
 class SessionQuoteAlternativeCreateView(CreateView):
     model = SessionQuoteAlternative
-    form_class = SessionQuoteAlternativeCreateForm
+    form_class = forms_session_quote.SessionQuoteAlternativeCreateForm
     template_name = 'lumina/sessionquote_alternative_create_update.html'
 
     def get_initial(self):
