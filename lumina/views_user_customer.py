@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 class CustomerUserListView(ListView):
     model = LuminaUser
-    template_name = 'lumina/user_list.html'
+    template_name = 'lumina/customer_user_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(CustomerUserListView, self).get_context_data(**kwargs)
