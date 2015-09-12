@@ -120,7 +120,7 @@ class LuminaUser(AbstractUser):
 
     def all_my_customer_types(self):
         assert self.user_type == LuminaUser.PHOTOGRAPHER
-        return CustomerType.objects.filter(studio=self.studio).order_by(Lower('name'))
+        return CustomerType.objects.all_ordered().filter(studio=self.studio)
 
     def _check(self):
         if self.is_photographer():
@@ -968,9 +968,23 @@ class SessionQuoteAlternative(models.Model):
 # CustomerType
 # ===============================================================================
 
+class CustomerTypeManager(models.Manager):
+
+    def all_ordered(self):
+        return CustomerType.objects.order_by(Lower('name'))
+
+    def non_archived_ordered(self):
+        return CustomerType.objects.filter(archived=False).order_by(Lower('name'))
+
+
 class CustomerType(models.Model):
     name = models.CharField(max_length=100, verbose_name="tipo de cliente")
     studio = models.ForeignKey('Studio', related_name='customer_types', verbose_name="estudio")
+    archived = models.BooleanField(default=False, verbose_name="Archivado")
+
+    objects = CustomerTypeManager()
+
+    # FIXME: use unique `(studio, name)`
 
     def __str__(self):
         return self.name

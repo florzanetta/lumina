@@ -6,9 +6,17 @@
 	<h3>Tipos de clientes disponibles</h3>
 
     <table class="table">
+
         {% for customer_type in object_list %}
             <tr>
-                <td>
+                <td width="10%" class="text-right">
+                    {% if customer_type.archived %}
+                        <span class="label label-warning">Archivada</span>
+                    {% else %}
+                        <span class="label label-info">Activa</span>
+                    {% endif %}
+                </td>
+                <td width="90%">
                     <a href="{% url 'customer_type_update' customer_type.id %}">
                         {{customer_type.name}}
                     </a>
@@ -17,6 +25,8 @@
         {% empty %}
             <tr><td>No se ha definido ningun tipo de cliente</td></tr>
         {% endfor %}
+
+
     </table>
 
     <a href="{% url 'customer_type_create' %}" class="btn btn-primary">Nuevo tipo de cliente</a>

@@ -299,6 +299,7 @@ class GenericCustomerTypeForm(forms.ModelForm):
             ),
             bootstrap.FormActions(
                 layout.Submit('submit_button', self.SUBMIT_LABEL, css_id='form-submit-button'),
+                layout.HTML("<a class='btn btn-primary' href='{% url 'customer_type_list' %}'>Cancelar</a>"),
             ),
         )
 
@@ -327,7 +328,7 @@ class CustomerTypeCreateForm(GenericCustomerTypeForm):
 
 class CustomerTypeUpdateForm(GenericCustomerTypeForm):
     FORM_TITLE = 'Actualizar tipo de cliente'
-    SUBMIT_LABEL = 'Actualizar'
+    SUBMIT_LABEL = 'Guardar'
 
 
 # ===============================================================================

@@ -45,24 +45,3 @@ class CustomerTypeUpdateView(SuccessMessageMixin,
 
     def get_queryset(self):
         return self.request.user.all_my_customer_types()
-
-# class CustomerUpdateView(UpdateView):
-#     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
-#     model = Customer
-#     form_class = CustomerUpdateForm
-#     template_name = 'lumina/base_create_update_form.html'
-#     success_url = reverse_lazy('customer_list')
-#
-#     def get_queryset(self):
-#         return self.request.user.all_my_customers()
-#
-#     def form_valid(self, form):
-#         ret = super(CustomerUpdateView, self).form_valid(form)
-#         messages.success(self.request, 'El cliente fue actualizado correctamente')
-#         return ret
-#
-#     def get_context_data(self, **kwargs):
-#         context = super(CustomerUpdateView, self).get_context_data(**kwargs)
-#         context['title'] = "Actualizar cliente"
-#         context['submit_label'] = "Actualizar"
-#         return context
