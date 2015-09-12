@@ -30,55 +30,120 @@
 
     {% if not hide_search_result %}
 
-        {% for a_quote in object_list %}
+        <table class="table">
 
-            {% ifchanged a_quote.customer.id %}
-                <h4>{{ a_quote.customer.name }}</h4>
-            {% endifchanged %}
+            <tr>
+                <th width="65%">
+                    Nombre
+                </th>
+                <th width="10%" class="text-nowrap text-right">
+                    Cant. imágenes
+                </th>
+                <th width="10%" class="text-right">
+                    Estado
+                </th>
+                <th width="5%" class="text-nowrap text-right">
+                    Última actualización
+                </th>
+            </tr>
 
-            <div class="media">
-                <a class="pull-left" href="javascript:void(0);">
-                    <img class="media-object" src="/static/lumina/img/quote-64.png">
-                </a>
-                <div class="media-body">
-                    <div class="media-heading"><a
-                           href="{% url 'quote_detail' a_quote.id %}">{{ a_quote.name }}</a>
-                    </div>
-                    <div>
-                            <small>
-                                <span class="badge badge-info">{{ a_quote.image_quantity }}</span>
-                                imagen{{ a_quote.image_quantity|pluralize:",es" }}
-                            </small>
-                          -
+            {% for a_quote in object_list %}
+
+                {% ifchanged a_quote.customer.id %}
+                    <tr>
+                        <td colspan="4">
+                            <h4><small>Cliente:</small> {{ a_quote.customer.name }}</h4>
+                        </td>
+                    </tr>
+                {% endifchanged %}
+
+                <tr>
+                    <td>
+                        <a href="{% url 'quote_detail' a_quote.id %}">{{ a_quote.name }}</a>
+                    </td>
+                    <th class="text-right">
+                        {{ a_quote.image_quantity }}
+                    </td>
+                    <td class="text-right">
                         {% session_quote_status a_quote %}
-                        -
-                        <i class="icon-calendar"></i> <span title="Creación: {{a_quote.created|date}} - Última actualización: {{a_quote.last_modified|date}}">
-                            <small><em>Última actualización:</em> hace <strong>{{ a_quote.last_modified|timesince }}</strong></small></span>
+                    </td>
+                    <td class="text-right">
+                        {{ a_quote.last_modified|timesince }}
+                    </td>
+                </tr>
 
-                    </div>
-                    {% if user.is_photographer and a_quote.session %}
-                        <div style="padding-top: 5px;">
-                            <small>
-                                <em>Sesión:</em>
-                                <a href="{% url 'session_detail' a_quote.session.id %}">{{ a_quote.session.name }}</a>
-                            </small>
-                        </div>
-                    {% endif %}
+            {% empty %}
+                <tr>
+                    <td colspan="4">
+                        {% if is_search %}
+                            No se encontraron presupuestos que concuerden con los parámetros de búsqueda
+                        {% else %}
+                            No hay presupuestos para mostrar
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
 
-                </div>
-            </div>
-            <hr>
-        {% empty %}
-            <h4>
-                {% if is_search %}
-                    No se encontraron presupuestos que concuerden con los parámetros de búsqueda
-                {% else %}
-                    No hay presupuestos para mostrar
-                {% endif %}
-            </h4>
-            <hr>
+        </table>
 
-        {% endfor %}
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+        <!--<hr>-->
+        <!--<hr>-->
+        <!--<hr>-->
+
+
+        <!--{ % for a_quote in object_list % }-->
+
+            <!--{ % ifchanged a_quote.customer.id % }-->
+                <!--<h4>{ { a_quote.customer.name } }</h4>-->
+            <!--{ % endifchanged % }-->
+
+            <!--<div class="media">-->
+                <!--<a class="pull-left" href="javascript:void(0);">-->
+                    <!--<img class="media-object" src="/static/lumina/img/quote-64.png">-->
+                <!--</a>-->
+                <!--<div class="media-body">-->
+                    <!--<div class="media-heading"><a-->
+                           <!--href="{ % url 'quote_detail' a_quote.id % }">{ { a_quote.name } }</a>-->
+                    <!--</div>-->
+                    <!--<div>-->
+                            <!--<small>-->
+                                <!--<span class="badge badge-info">{ { a_quote.image_quantity } }</span>-->
+                                <!--imagen{ { a_quote.image_quantity|pluralize:",es" } }-->
+                            <!--</small>-->
+                          <!-&#45;&#45;-->
+                        <!--{ % session_quote_status a_quote % }-->
+                        <!-&#45;&#45;-->
+                        <!--<i class="icon-calendar"></i> <span title="Creación: { {a_quote.created|date} } - Última actualización: { {a_quote.last_modified|date} }">-->
+                            <!--<small><em>Última actualización:</em> hace <strong>{ { a_quote.last_modified|timesince } }</strong></small></span>-->
+
+                    <!--</div>-->
+                    <!--{ % if user.is_photographer and a_quote.session % }-->
+                        <!--<div style="padding-top: 5px;">-->
+                            <!--<small>-->
+                                <!--<em>Sesión:</em>-->
+                                <!--<a href="{ % url 'session_detail' a_quote.session.id % }">{ { a_quote.session.name } }</a>-->
+                            <!--</small>-->
+                        <!--</div>-->
+                    <!--{ % endif % }-->
+
+                <!--</div>-->
+            <!--</div>-->
+            <!--<hr>-->
+        <!--{ % empty % }-->
+            <!--<h4>-->
+                <!--{ % if is_search % }-->
+                    <!--No se encontraron presupuestos que concuerden con los parámetros de búsqueda-->
+                <!--{ % else % }-->
+                    <!--No hay presupuestos para mostrar-->
+                <!--{ % endif % }-->
+            <!--</h4>-->
+            <!--<hr>-->
+
+        <!--{ % endfor % }-->
 
         {% if is_search %} <!-- pagination -->
             <nav>
@@ -123,7 +188,7 @@
     {% if show_add_session_button %}
         {% if user.is_photographer %}
         <p>
-            <a href="{% url 'quote_create' %}" class="btn btn-primary">Agregar presupuesto</a>
+            <a href="{% url 'quote_create' %}" class="btn btn-primary">Nuevo presupuesto</a>
         </p>
         {% endif %}
     {% endif %}
