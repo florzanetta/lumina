@@ -469,13 +469,50 @@ class UserPreferencesUpdateForm(forms.ModelForm):
 # User
 # ===============================================================================
 
-class CustomerUserCreateForm(forms.ModelForm):
-    password1 = forms.CharField(max_length=20, required=True,
+class _GenericUserCreateUpdateForm(forms.ModelForm):
+
+    PASSWORD_REQUIRED = None  # `True` or `False` (fails if not overwritting)
+    HELP_TEXT_FOR_PASSWORD = None  # `str`, or 'None'
+
+    #
+    # `required` and `help_text` are overwritting in __init__(), since the value of
+    # PASSWORD_REQUIRED & HELP_TEXT_FOR_PASSWORD when the property is defined is
+    # the value in THIS class, NOT the child class
+    #
+
+    password1 = forms.CharField(max_length=20,
+                                required='',  # will be overwritten by __init__()
+                                help_text='',  # will be overwritten by __init__()
                                 widget=forms.PasswordInput(),
                                 label='Contrasena')
-    password2 = forms.CharField(max_length=20, required=True,
+
+    password2 = forms.CharField(max_length=20,
+                                required='',  # will be overwritten by __init__()
+                                help_text='',  # will be overwritten by __init__()
                                 widget=forms.PasswordInput(),
                                 label='Contrasena (otra vez)')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        assert self.PASSWORD_REQUIRED is True or self.PASSWORD_REQUIRED is False
+        self.fields['password1'].required = self.PASSWORD_REQUIRED
+        self.fields['password2'].required = self.PASSWORD_REQUIRED
+
+        if self.HELP_TEXT_FOR_PASSWORD:
+            self.fields['password1'].help_text = self.HELP_TEXT_FOR_PASSWORD
+            self.fields['password2'].help_text = self.HELP_TEXT_FOR_PASSWORD
+
+    def clean(self):
+        super().clean()
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        if password1 != password2:
+            raise forms.ValidationError('Los passwords no concuerdan')
+        return self.cleaned_data
+
+
+class CustomerUserCreateForm(_GenericUserCreateUpdateForm):
+    PASSWORD_REQUIRED = True
 
     class Meta:
         model = LuminaUser
@@ -484,23 +521,10 @@ class CustomerUserCreateForm(forms.ModelForm):
             'phone', 'cellphone', 'alternative_email', 'notes'
         )
 
-    def clean(self):
-        super().clean()
-        password1 = self.cleaned_data.get('password1')
-        password2 = self.cleaned_data.get('password2')
-        if password1 != password2:
-            raise forms.ValidationError('Los passwords no concuerdan')
-        return self.cleaned_data
 
-
-class CustomerUserUpdateForm(forms.ModelForm):
-    password1 = forms.CharField(
-        max_length=20, required=False, widget=forms.PasswordInput(), label='Contrasena',
-        help_text="Ingrese la nueva contraseña (si desea cambiarla)")
-    password2 = forms.CharField(
-        max_length=20, required=False, widget=forms.PasswordInput(),
-        label='Contrasena (otra vez)',
-        help_text="Repita la nueva contraseña (si desea cambiarla)")
+class CustomerUserUpdateForm(_GenericUserCreateUpdateForm):
+    PASSWORD_REQUIRED = False
+    HELP_TEXT_FOR_PASSWORD = "Ingrese la nueva contraseña (sólo si desea cambiarla)"
 
     class Meta:
         model = LuminaUser
@@ -508,14 +532,6 @@ class CustomerUserUpdateForm(forms.ModelForm):
             'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
             'phone', 'cellphone', 'alternative_email', 'notes'
         )
-
-    def clean(self):
-        super().clean()
-        password1 = self.cleaned_data.get('password1')
-        password2 = self.cleaned_data.get('password2')
-        if password1 != password2:
-            raise forms.ValidationError('Los passwords no concuerdan')
-        return self.cleaned_data
 
 
 # ===============================================================================
