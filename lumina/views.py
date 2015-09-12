@@ -15,17 +15,8 @@ from lumina.views_utils import generate_thumbnail_of_image, download_image
 
 
 #
-# FIXME: create preference instance when creating a user
 # FIXME: update password in UserPreferenceUpdateView
 # FIXME: use selecte PreviewSize when generating previews
-#
-
-#
-# List of generic CBV:
-# - https://docs.djangoproject.com/en/1.5/ref/class-based-views/
-#
-# Cache:
-#  - https://docs.djangoproject.com/en/1.5/topics/cache/#controlling-cache-using-other-headers
 #
 
 logger = logging.getLogger(__name__)
