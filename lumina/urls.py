@@ -15,9 +15,9 @@ from lumina import views_session_type
 from lumina import views_preview_size
 
 from lumina.views_user import (
-    UserListView,  UserCreateView, UserUpdateView,
-    UserPreferenceUpdateView
+    UserListView,  UserCreateView, UserUpdateView
 )
+from lumina.views_user_preferences import UserPreferenceUpdateView
 
 from lumina.views_customer import *
 from lumina.views_image import *
