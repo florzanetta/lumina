@@ -16,6 +16,7 @@ from lumina import views_session_type
 from lumina import views_preview_size
 from lumina import views_user_customer
 from lumina import views_user_preferences
+from lumina import views_user_studio
 from lumina import views_session
 from lumina import views_image
 from lumina import views_shared_session
@@ -268,6 +269,15 @@ urlpatterns = patterns(
         cache_control(private=True)(
             login_required(views_user_customer.CustomerUserUpdateView.as_view())),
         name='customer_user_update'),
+
+    # ===========================================================================
+    # Studio's Users
+    # ===========================================================================
+
+    url(r'^studio/user/list/$',
+        cache_control(private=True)(
+            login_required(views_user_studio.StudioUserListView.as_view())),
+        name='studio_user_list'),
 
     # ===========================================================================
     # Session Types

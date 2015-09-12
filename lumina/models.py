@@ -112,11 +112,19 @@ class LuminaUser(AbstractUser):
 
     def get_all_users_of_customers(self):
         """
-        Returns all the users of a Studio. This'll return all the user of all the customers
+        Returns all the CUSTOMERS users of the Studio of the user
         """
         assert self.user_type == LuminaUser.PHOTOGRAPHER
         return LuminaUser.objects.filter(user_type=LuminaUser.CUSTOMER,
                                          user_for_customer__studio=self.studio)
+
+    def get_all_photographers(self):
+        """
+        Returns all the PHOTOGRAPHERS users of the Studio of the user
+        """
+        assert self.user_type == LuminaUser.PHOTOGRAPHER
+        return LuminaUser.objects.filter(user_type=LuminaUser.PHOTOGRAPHER,
+                                         studio=self.studio)
 
     def get_customer_types(self, **kwargs):
         """Filter using CustomerType.objects.for_photographer_ordered()
