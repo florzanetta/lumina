@@ -13,12 +13,12 @@ from lumina.views_user import logger
 logger = logging.getLogger(__name__)
 
 
-class UserListView(ListView):
+class CustomerUserListView(ListView):
     model = LuminaUser
     template_name = 'lumina/user_list.html'
 
     def get_context_data(self, **kwargs):
-        context = super(UserListView, self).get_context_data(**kwargs)
+        context = super(CustomerUserListView, self).get_context_data(**kwargs)
         customer_id = int(self.kwargs['customer_id'])
         context['customer'] = self.request.user.all_my_customers().get(pk=customer_id)
         return context
@@ -28,7 +28,7 @@ class UserListView(ListView):
         return self.request.user.get_users_of_customer(customer_id)
 
 
-class UserCreateView(CreateView):
+class CustomerUserCreateView(CreateView):
     model = LuminaUser
     form_class = UserCreateForm
     template_name = 'lumina/base_create_update_form.html'
@@ -40,7 +40,7 @@ class UserCreateView(CreateView):
         customer = self.request.user.all_my_customers().get(pk=self.kwargs['customer_id'])
         form.instance.user_for_customer = customer
         form.instance.user_type = LuminaUser.CUSTOMER
-        ret = super(UserCreateView, self).form_valid(form)
+        ret = super(CustomerUserCreateView, self).form_valid(form)
 
         # Set the password
         new_user = LuminaUser.objects.get(pk=form.instance.id)
@@ -51,13 +51,13 @@ class UserCreateView(CreateView):
         return ret
 
     def get_context_data(self, **kwargs):
-        context = super(UserCreateView, self).get_context_data(**kwargs)
+        context = super(CustomerUserCreateView, self).get_context_data(**kwargs)
         context['title'] = "Crear usuario"
         context['submit_label'] = "Crear"
         return context
 
 
-class UserUpdateView(UpdateView):
+class CustomerUserUpdateView(UpdateView):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = LuminaUser
     form_class = UserUpdateForm
@@ -71,7 +71,7 @@ class UserUpdateView(UpdateView):
         return self.request.user.get_all_users()
 
     def form_valid(self, form):
-        ret = super(UserUpdateView, self).form_valid(form)
+        ret = super(CustomerUserUpdateView, self).form_valid(form)
 
         # Set the password
         if form['password1'].value():
@@ -84,7 +84,7 @@ class UserUpdateView(UpdateView):
         return ret
 
     def get_context_data(self, **kwargs):
-        context = super(UserUpdateView, self).get_context_data(**kwargs)
+        context = super(CustomerUserUpdateView, self).get_context_data(**kwargs)
         context['title'] = "Actualizar usuario"
         context['submit_label'] = "Actualizar"
         return context

@@ -256,17 +256,17 @@ urlpatterns = patterns(
 
     url(r'^customer/user/list/(?P<customer_id>\d+)/$',
         cache_control(private=True)(
-            login_required(views_user_customer.UserListView.as_view())),
+            login_required(views_user_customer.CustomerUserListView.as_view())),
         name='customer_user_list'),
 
     url(r'^customer/user/create/(?P<customer_id>\d+)/$',
         cache_control(private=True)(
-            login_required(views_user_customer.UserCreateView.as_view())),
+            login_required(views_user_customer.CustomerUserCreateView.as_view())),
         name='customer_user_create'),
 
     url(r'^customer/user/update/(?P<pk>\d+)/$',
         cache_control(private=True)(
-            login_required(views_user_customer.UserUpdateView.as_view())),
+            login_required(views_user_customer.CustomerUserUpdateView.as_view())),
         name='customer_user_update'),
 
     # ===========================================================================
