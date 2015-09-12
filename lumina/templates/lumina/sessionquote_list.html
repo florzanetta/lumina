@@ -33,7 +33,7 @@
         <table class="table">
 
             <tr>
-                <th width="65%">
+                <th width="60%">
                     Nombre
                 </th>
                 <th width="10%" class="text-nowrap text-right">
@@ -41,6 +41,9 @@
                 </th>
                 <th width="10%" class="text-right">
                     Estado
+                </th>
+                <th width="5%" class="text-nowrap text-right">
+                    Fecha de entrega
                 </th>
                 <th width="5%" class="text-nowrap text-right">
                     Última actualización
@@ -51,30 +54,33 @@
 
                 {% ifchanged a_quote.customer.id %}
                     <tr>
-                        <td colspan="4">
+                        <td colspan="5">
                             <h4><small>Cliente:</small> {{ a_quote.customer.name }}</h4>
                         </td>
                     </tr>
                 {% endifchanged %}
 
                 <tr>
-                    <td>
+                    <td class="text-nowrap">
                         <a href="{% url 'quote_detail' a_quote.id %}">{{ a_quote.name }}</a>
                     </td>
                     <th class="text-right">
                         {{ a_quote.image_quantity }}
                     </td>
-                    <td class="text-right">
+                    <td class="text-right text-nowrap">
                         {% session_quote_status a_quote %}
                     </td>
-                    <td class="text-right">
+                    <td class="text-right text-nowrap">
+                        {{ a_quote.stipulated_date }}
+                    </td>
+                    <td class="text-right text-nowrap">
                         {{ a_quote.last_modified|timesince }}
                     </td>
                 </tr>
 
             {% empty %}
                 <tr>
-                    <td colspan="4">
+                    <td colspan="5">
                         {% if is_search %}
                             No se encontraron presupuestos que concuerden con los parámetros de búsqueda
                         {% else %}
