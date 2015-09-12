@@ -241,6 +241,16 @@ urlpatterns = patterns(
             login_required(views_customer_type.CustomerTypeUpdateView.as_view())),
         name='customer_type_update'),
 
+    url(r'^customer-type/(?P<customer_type_id>\d+)/archive/$',
+        cache_control(private=True)(
+            login_required(views_customer_type.CustomerTypeArchiveView.as_view(archive=True))),
+        name='customer_type_archive'),
+
+    url(r'^customer-type/(?P<customer_type_id>\d+)/unarchive/$',
+        cache_control(private=True)(
+            login_required(views_customer_type.CustomerTypeArchiveView.as_view(archive=False))),
+        name='customer_type_unarchive'),
+
     # ===========================================================================
     # Users
     # ===========================================================================

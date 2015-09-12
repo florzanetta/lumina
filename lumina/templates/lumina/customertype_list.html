@@ -16,10 +16,17 @@
                         <span class="label label-info">Activa</span>
                     {% endif %}
                 </td>
-                <td width="90%">
+                <td width="80%">
                     <a href="{% url 'customer_type_update' customer_type.id %}">
                         {{customer_type.name}}
                     </a>
+                </td>
+                <td width="10%">
+                    {% if customer_type.archived %}
+                        <a href="{% url 'customer_type_unarchive' customer_type.id %}" class="btn btn-primary btn-xs">Recuperar</a>
+                    {% else %}
+                        <a href="{% url 'customer_type_archive' customer_type.id %}" class="btn btn-primary btn-xs">Archivar</a>
+                    {% endif %}
                 </td>
             </tr>
         {% empty %}
