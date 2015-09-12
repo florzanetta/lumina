@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic import ListView, CreateView, UpdateView
 
 from lumina.models import LuminaUser
-from lumina.forms import CustomerUserCreateForm, CustomerUserUpdateForm
+from lumina.forms_users import CustomerUserCreateForm, CustomerUserUpdateForm
 from lumina.views_user import logger
 
 logger = logging.getLogger(__name__)
