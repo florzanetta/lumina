@@ -1006,14 +1006,15 @@ class SessionTypeManager(models.Manager):
         """Return SessionType visible for photographer"""
         assert photographer.is_photographer()
         qs = self.filter(studio=photographer.studio)
-        # if exclude_archived:
-        #     qs = qs.filter(archived=False)
+        if exclude_archived:
+            qs = qs.filter(archived=False)
         return qs.order_by(Lower('name'))
 
 
 class SessionType(models.Model):
     name = models.CharField(max_length=100, verbose_name="tipo de sesión")
     studio = models.ForeignKey('Studio', related_name='session_types', verbose_name="estudio")
+    archived = models.BooleanField(default=False, verbose_name="Archivado")
 
     objects = SessionTypeManager()
 
