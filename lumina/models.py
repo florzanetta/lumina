@@ -998,6 +998,8 @@ class CustomerType(models.Model):
     objects = CustomerTypeManager()
 
     # FIXME: use unique `(studio, name)`
+    # class Meta:
+    #     unique_together = ("studio", "name")
 
     def __str__(self):
         return self.name
@@ -1025,6 +1027,10 @@ class SessionType(models.Model):
 
     objects = SessionTypeManager()
 
+    # FIXME: use unique `(studio, name)`
+    # class Meta:
+    #     unique_together = ("studio", "name")
+
     def __str__(self):
         return self.name
 
@@ -1033,9 +1039,21 @@ class SessionType(models.Model):
 # PreviewSize
 # ===============================================================================
 
+class PreviewSizeManager(models.Manager):
+
+    def for_photographer_ordered(self, photographer, exclude_archived=False):
+        """Return SessionType visible for photographer"""
+        assert photographer.is_photographer()
+        qs = self.filter(studio=photographer.studio)
+        if exclude_archived:
+            qs = qs.filter(archived=False)
+        return qs.order_by('max_size')
+
+
 class PreviewSize(models.Model):
-    max_size = models.PositiveIntegerField(verbose_name="Tamaño máximo", null=True, blank=True)
+    max_size = models.PositiveIntegerField(verbose_name="Tamaño máximo")
     studio = models.ForeignKey('Studio', related_name='preview_sizes', verbose_name="estudio")
+    archived = models.BooleanField(default=False, verbose_name="Archivado")
 
     class Meta:
         unique_together = ("max_size", "studio")
