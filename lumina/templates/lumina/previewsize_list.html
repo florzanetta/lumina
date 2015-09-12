@@ -1,0 +1,41 @@
+{% extends "lumina/base.html" %}
+{% load lumina_extras %}
+
+{% block content %}
+
+	<h3>Tamaños de previsualización disponibles</h3>
+
+    <table class="table">
+
+        {% for preview_size in object_list %}
+            <tr>
+                <td width="10%" class="text-right">
+                    {% if preview_size.archived %}
+                        <span class="label label-warning">Archivado</span>
+                    {% else %}
+                        <span class="label label-info">Activo</span>
+                    {% endif %}
+                </td>
+                <td width="80%">
+                    <a href="{% url 'preview_size_update' preview_size.id %}">
+                        {{preview_size}}
+                    </a>
+                </td>
+                <td width="10%">
+                    {% if preview_size.archived %}
+                        <a href="{% url 'preview_size_unarchive' preview_size.id %}" class="btn btn-primary btn-xs">Recuperar</a>
+                    {% else %}
+                        <a href="{% url 'preview_size_archive' preview_size.id %}" class="btn btn-primary btn-xs">Archivar</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td>No se ha definido ningun tamaño de previsualización</td></tr>
+        {% endfor %}
+
+
+    </table>
+
+    <a href="{% url 'preview_size_create' %}" class="btn btn-primary">Nuevo tamaños de previsualización</a>
+
+{% endblock content %}

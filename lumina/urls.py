@@ -12,6 +12,7 @@ from lumina import views_image_selection
 from lumina import views_reports
 from lumina import views_customer_type
 from lumina import views_session_type
+from lumina import views_preview_size
 
 from lumina.views_user import (
     UserListView,  UserCreateView, UserUpdateView,
@@ -282,6 +283,39 @@ urlpatterns = patterns(
 
 
     # ===========================================================================
+    # Preview Size
+    # ===========================================================================
+
+    # # FIXME: implement this view
+    # url(r'^studio/preview_sizes/$', 'lumina.views.home', name='studio_preview_sizes'),
+
+    url(r'^preview-size/list/$',
+        cache_control(private=True)(
+            login_required(views_preview_size.PreviewSizeListView.as_view())),
+        name='preview_size_list'),
+
+    url(r'^preview-size/create/$',
+        cache_control(private=True)(
+            login_required(views_preview_size.PreviewSizeCreateView.as_view())),
+        name='preview_size_create'),
+
+    url(r'^preview-size/(?P<preview_size_id>\d+)/update/$',
+        cache_control(private=True)(
+            login_required(views_preview_size.PreviewSizeUpdateView.as_view())),
+        name='preview_size_update'),
+
+    url(r'^preview-size/(?P<preview_size_id>\d+)/archive/$',
+        cache_control(private=True)(
+            login_required(views_preview_size.PreviewSizeArchiveView.as_view(archive=True))),
+        name='preview_size_archive'),
+
+    url(r'^preview-size/(?P<preview_size_id>\d+)/unarchive/$',
+        cache_control(private=True)(
+            login_required(views_preview_size.PreviewSizeArchiveView.as_view(archive=False))),
+        name='preview_size_unarchive'),
+
+
+    # ===========================================================================
     # Users
     # ===========================================================================
     url(r'^customer/user/list/(?P<customer_id>\d+)/$',
@@ -376,14 +410,6 @@ urlpatterns = patterns(
     url(r'^report/income_by_customer_type/$',
         views_reports.view_income_by_customer_type,
         name='report_income_by_customer_type'),
-
-
-    # ===========================================================================
-    # Studio preferences
-    # ===========================================================================
-
-    # FIXME: implement this view
-    url(r'^studio/preview_sizes/$', 'lumina.views.home', name='studio_preview_sizes'),
 
     #
     # Other

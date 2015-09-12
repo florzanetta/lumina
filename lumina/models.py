@@ -132,6 +132,13 @@ class LuminaUser(AbstractUser):
         """
         return SessionType.objects.for_photographer_ordered(self, **kwargs)
 
+    def get_preview_sizes(self, **kwargs):
+        """Filter using PreviewSize.objects.for_photographer_ordered()
+
+        Pass the **kwargs
+        """
+        return PreviewSize.objects.for_photographer_ordered(self, **kwargs)
+
     def _check(self):
         if self.is_photographer():
             assert self.studio is not None, "Photographer does NOT have a studio"
@@ -1054,6 +1061,8 @@ class PreviewSize(models.Model):
     max_size = models.PositiveIntegerField(verbose_name="Tamaño máximo")
     studio = models.ForeignKey('Studio', related_name='preview_sizes', verbose_name="estudio")
     archived = models.BooleanField(default=False, verbose_name="Archivado")
+
+    objects = PreviewSizeManager()
 
     class Meta:
         unique_together = ("max_size", "studio")

@@ -374,6 +374,30 @@ class SessionTypeUpdateForm(_GenericSessionTypeForm):
 
 
 # ===============================================================================
+# CustomerType
+# ===============================================================================
+
+class _GenericPreviewSizeForm(GenericCreateUpdateModelForm):
+
+    CANCEL_URL = reverse_lazy('preview_size_list')
+    FIELDS = ['max_size']
+
+    class Meta:
+        model = models.PreviewSize
+        fields = ('max_size',)
+
+
+class PreviewSizeCreateForm(_GenericPreviewSizeForm):
+    FORM_TITLE = 'Crear nuevo tamaño de previsualizaciones'
+    SUBMIT_LABEL = 'Crear'
+
+
+class PreviewSizeUpdateForm(_GenericPreviewSizeForm):
+    FORM_TITLE = 'Actualizar tamaño de previsualizacion'
+    SUBMIT_LABEL = 'Guardar'
+
+
+# ===============================================================================
 # UserPreferences
 # ===============================================================================
 
