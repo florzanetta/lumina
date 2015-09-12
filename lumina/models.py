@@ -125,6 +125,13 @@ class LuminaUser(AbstractUser):
         """
         return CustomerType.objects.for_photographer_ordered(self, **kwargs)
 
+    def get_session_types(self, **kwargs):
+        """Filter using SessionType.objects.for_photographer_ordered()
+
+        Pass the **kwargs
+        """
+        return SessionType.objects.for_photographer_ordered(self, **kwargs)
+
     def _check(self):
         if self.is_photographer():
             assert self.studio is not None, "Photographer does NOT have a studio"

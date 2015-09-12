@@ -147,7 +147,7 @@
                                 <li><a href="{% url 'user_preferences_update' %}">Preferencias de usuario</a></li>
                                 {% if user.is_photographer %}
                                     <li><a href="{% url 'customer_type_list' %}">Tipos de clientes</a></li>
-                                    <li><a href="{% url 'admin:lumina_sessiontype_changelist' %}" target="_blank">Tipos de sessiones</a></li>
+                                    <li><a href="{% url 'session_type_list' %}">Tipos de sessiones</a></li>
                                     <li><a href="{% url 'admin:lumina_previewsize_changelist' %}" target="_blank">Tamaños de previsualizacion</a></li>
                                     <li class="divider"></li>
                                     <li><a href="#" target="_blank">Listar fotógrafos</a></li>

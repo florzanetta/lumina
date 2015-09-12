@@ -350,6 +350,30 @@ class CustomerTypeUpdateForm(_GenericCustomerTypeForm):
 
 
 # ===============================================================================
+# CustomerType
+# ===============================================================================
+
+class _GenericSessionTypeForm(GenericCreateUpdateModelForm):
+
+    CANCEL_URL = reverse_lazy('session_type_list')
+    FIELDS = ['name']
+
+    class Meta:
+        model = models.SessionType
+        fields = ('name',)
+
+
+class SessionTypeCreateForm(_GenericSessionTypeForm):
+    FORM_TITLE = 'Crear nuevo tipo de sesión fotográfica'
+    SUBMIT_LABEL = 'Crear'
+
+
+class SessionTypeUpdateForm(_GenericSessionTypeForm):
+    FORM_TITLE = 'Actualizar tipo de sesión fotográfica'
+    SUBMIT_LABEL = 'Guardar'
+
+
+# ===============================================================================
 # UserPreferences
 # ===============================================================================
 

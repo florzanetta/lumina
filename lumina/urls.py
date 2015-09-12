@@ -11,6 +11,7 @@ from lumina import views_image_selection_upload
 from lumina import views_image_selection
 from lumina import views_reports
 from lumina import views_customer_type
+from lumina import views_session_type
 
 from lumina.views_user import (
     UserListView,  UserCreateView, UserUpdateView,
@@ -250,6 +251,35 @@ urlpatterns = patterns(
         cache_control(private=True)(
             login_required(views_customer_type.CustomerTypeArchiveView.as_view(archive=False))),
         name='customer_type_unarchive'),
+
+    # ===========================================================================
+    # Session Types
+    # ===========================================================================
+    url(r'^session-type/list/$',
+        cache_control(private=True)(
+            login_required(views_session_type.SessionTypeListView.as_view())),
+        name='session_type_list'),
+
+    url(r'^session-type/create/$',
+        cache_control(private=True)(
+            login_required(views_session_type.SessionTypeCreateView.as_view())),
+        name='session_type_create'),
+
+    url(r'^session-type/(?P<session_type_id>\d+)/update/$',
+        cache_control(private=True)(
+            login_required(views_session_type.SessionTypeUpdateView.as_view())),
+        name='session_type_update'),
+
+    url(r'^session-type/(?P<session_type_id>\d+)/archive/$',
+        cache_control(private=True)(
+            login_required(views_session_type.SessionTypeArchiveView.as_view(archive=True))),
+        name='session_type_archive'),
+
+    url(r'^session-type/(?P<session_type_id>\d+)/unarchive/$',
+        cache_control(private=True)(
+            login_required(views_session_type.SessionTypeArchiveView.as_view(archive=False))),
+        name='session_type_unarchive'),
+
 
     # ===========================================================================
     # Users
