@@ -300,6 +300,12 @@ class _GenericCustomerTypeForm(forms_utils.GenericCreateUpdateModelForm):
         model = models.CustomerType
         fields = ('name',)
 
+    def _get_validation_exclusions(self):
+        # HACK to force ModelForm validate uniqueness.
+        # Works in `PreviewSizeCreateForm` because we manually put `instance` kwarg
+        validation_exclusions = super()._get_validation_exclusions()
+        return [_ for _ in validation_exclusions if _ != 'studio']
+
 
 class CustomerTypeCreateForm(_GenericCustomerTypeForm):
     FORM_TITLE = 'Crear nuevo tipo de cliente'

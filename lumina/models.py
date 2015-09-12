@@ -993,15 +993,16 @@ class CustomerTypeManager(models.Manager):
 
 
 class CustomerType(models.Model):
-    name = models.CharField(max_length=100, verbose_name="tipo de cliente")
+    name = models.CharField(max_length=100, verbose_name="nombre")
     studio = models.ForeignKey('Studio', related_name='customer_types', verbose_name="estudio")
     archived = models.BooleanField(default=False, verbose_name="Archivado")
 
     objects = CustomerTypeManager()
 
-    # FIXME: use unique `(studio, name)`
-    # class Meta:
-    #     unique_together = ("studio", "name")
+    class Meta:
+        unique_together = ("studio", "name")
+        verbose_name = "tipo de cliente"
+        verbose_name_plural = "tipos de cliente"
 
     def __str__(self):
         return self.name
@@ -1063,7 +1064,7 @@ class PreviewSize(models.Model):
     class Meta:
         unique_together = ("max_size", "studio")
         verbose_name = "tamaño de previsualización"
-        verbose_name_plural = "tipos de sesión"
+        verbose_name_plural = "tamaños de previsualización"
         ordering = ["max_size"]
 
     def __str__(self):
