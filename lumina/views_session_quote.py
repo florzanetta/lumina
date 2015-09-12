@@ -1,31 +1,24 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import decimal
 
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, FormMixin
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.http.response import HttpResponseRedirect
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.core.exceptions import SuspiciousOperation
+from django.core import paginator as django_paginator
+from django.conf import settings
 
 from lumina.models import SessionQuote, SessionQuoteAlternative
 from lumina.forms import SessionQuoteCreateForm, SessionQuoteUpdateForm, \
     SessionQuoteAlternativeCreateForm, SessionQuoteUpdate2Form
 from lumina.mail import send_email_for_session_quote
-from lumina import views
+from lumina import forms
 import lumina.views_utils
 
-__all__ = [
-    'SessionQuoteCreateView',
-    'SessionQuoteUpdateView',
-    'SessionQuoteListView',
-    'SessionQuoteDetailView',
-    'SessionQuoteAlternativeSelectView',
-    'SessionQuoteAlternativeCreateView',
-]
 
 logger = logging.getLogger(__name__)
 
@@ -149,16 +142,127 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
 
 
 class SessionQuoteListView(ListView):
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-    #    #django.views.generic.list.ListView
+    """
+    List all the NON-archived quotes (only usefull for photographers)
+    """
     model = SessionQuote
-    filter = ''
+
+    def get_queryset(self):
+        assert self.request.user.is_photographer()
+        qs = SessionQuote.objects.visible_sessionquote(self.request.user)
+        qs = qs.filter(archived=False)
+        return qs.order_by('customer__name', 'id')
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(
+            show_add_session_button=True,
+            **kwargs)
+
+
+class SessionQuotePendigForCustomerListView(SessionQuoteListView):
 
     def get_queryset(self):
         qs = SessionQuote.objects.visible_sessionquote(self.request.user)
-        if self.filter == 'pending_for_customer':
-            qs = qs.filter(status=SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
+        qs = qs.filter(status=SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE)
         return qs.order_by('customer__name', 'id')
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(
+            custom_title="Listado de presupuestos pendientes de aceptar",
+            **kwargs)
+
+
+class SessionQuoteSearchView(ListView, FormMixin):
+    model = SessionQuote
+    template_name = ''
+
+    PAGE_RESULT_SIZE = settings.LUMINA_DEFAULT_PAGINATION_SIZE
+
+    def get_queryset(self):
+        return SessionQuote.objects.none()
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get(self, request, *args, **kwargs):
+        self.form = self.get_form(form_class=forms.SessionQuoteSearchForm)
+        self.search_result_qs = None
+
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.form = self.get_form(form_class=forms.SessionQuoteSearchForm)
+        self.search_result_qs = self._do_search(request, self.form)
+
+        return super().get(request, *args, **kwargs)
+
+    def _do_search(self, request, form):
+        """Returns QuerySet"""
+        # Validate form
+        if not form.is_valid():
+            messages.error(request,
+                           "Los parámetros de la búsqueda son inválidos")
+            return SessionQuote.objects.none()
+
+        # -- Common filters
+        qs = SessionQuote.objects.visible_sessionquote(request.user)
+        qs = qs.order_by('customer__name', 'name')
+
+        if form.cleaned_data['fecha_creacion_desde']:
+            qs = qs.filter(created__gte=form.cleaned_data['fecha_creacion_desde'])
+
+        if form.cleaned_data['fecha_creacion_hasta']:
+            qs = qs.filter(created__lte=form.cleaned_data['fecha_creacion_hasta'])
+
+        # -- Specific filter for photographer/customer
+        if self.request.user.is_photographer():
+            qs = self._do_search_for_photographer(request, form, qs)
+        else:
+            qs = self._do_search_for_customer(request, form, qs)
+
+        # ----- <Paginate> -----
+        result_paginator = django_paginator.Paginator(qs, self.PAGE_RESULT_SIZE)
+        try:
+            qs = result_paginator.page(self.form.cleaned_data['page'])
+        except django_paginator.PageNotAnInteger:  # If page is not an integer, deliver first page.
+            qs = result_paginator.page(1)
+        except django_paginator.EmptyPage:  # If page is out of range (e.g. 9999), deliver last page of results.
+            qs = result_paginator.page(result_paginator.num_pages)
+        # ----- </Paginate> -----
+
+        return qs
+
+    def _do_search_for_customer(self, request, form, qs):
+        """Returns QuerySet"""
+        qs = qs.filter(customer=request.user.user_for_customer)
+        return qs
+
+    def _do_search_for_photographer(self, request, form, qs):
+        """Returns QuerySet"""
+        if form.cleaned_data['archived_status'] == forms.SessionQuoteSearchForm.ARCHIVED_STATUS_ALL:
+            pass
+        elif form.cleaned_data['archived_status'] == forms.SessionQuoteSearchForm.ARCHIVED_STATUS_ARCHIVED:
+            qs = qs.filter(archived=True)
+        elif form.cleaned_data['archived_status'] == forms.SessionQuoteSearchForm.ARCHIVED_STATUS_ACTIVE:
+            qs = qs.exclude(archived=True)
+        else:
+            logger.warn("Invalid value for self.form['archived_status']: %s", form['archived_status'])
+
+        if form.cleaned_data['customer']:
+            qs = qs.filter(customer=form.cleaned_data['customer'])
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_search'] = True
+        context['form'] = self.form
+        # overwrites 'object_list' from `get_queryset()`
+        context['object_list'] = self.search_result_qs
+        context['hide_search_result'] = self.search_result_qs is None
+        return context
 
 
 class SessionQuoteDetailView(DetailView):
@@ -205,10 +309,16 @@ class SessionQuoteDetailView(DetailView):
         #     return HttpResponseRedirect(reverse('home'))
 
         elif 'button_archive_quote' in request.POST:
-            # FIXME: implement this!
-            messages.error(self.request, "El archivado "
-                                         "de presupuestos todavia no esta implementado.")
-            return HttpResponseRedirect(reverse('home'))
+            quote.archived = True
+            quote.save()
+            messages.success(self.request, "El presupuesto fue archivado exitosamente")
+            return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
+
+        elif 'button_unarchive_quote' in request.POST:
+            quote.archived = False
+            quote.save()
+            messages.success(self.request, "El presupuesto fue recuperado exitosamente")
+            return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
 
         elif 'button_update_quote_alternatives' in request.POST:
             return HttpResponseRedirect(reverse('quote_update', args=[quote.id]))
@@ -259,8 +369,12 @@ class SessionQuoteDetailView(DetailView):
             if self.request.user.is_for_customer():
                 pass
             else:
-                buttons.append({'name': 'button_archive_quote',
-                                'submit_label': "Archivar", })
+                if self.object.archived:
+                    buttons.append({'name': 'button_unarchive_quote',
+                                    'submit_label': "Desarchivar", })
+                else:
+                    buttons.append({'name': 'button_archive_quote',
+                                    'submit_label': "Archivar", })
 
         elif self.object.status == SessionQuote.STATUS_ACCEPTED:
             if self.request.user.is_for_customer():
@@ -276,8 +390,12 @@ class SessionQuoteDetailView(DetailView):
                 #                 'confirm': True, })
                 buttons.append({'name': 'button_update_quote_alternatives',
                                 'submit_label': "Editar presup. alternativos", })
-                buttons.append({'name': 'button_archive_quote',
-                                'submit_label': "Archivar", })
+                if self.object.archived:
+                    buttons.append({'name': 'button_unarchive_quote',
+                                    'submit_label': "Desarchivar", })
+                else:
+                    buttons.append({'name': 'button_archive_quote',
+                                    'submit_label': "Archivar", })
                 if self.object.session is None:
                     buttons.append({'name': 'button_create_session',
                                     'submit_label': "Crear sesión desde presupuesto", })
@@ -287,8 +405,12 @@ class SessionQuoteDetailView(DetailView):
             if self.request.user.is_for_customer():
                 pass
             else:
-                buttons.append({'name': 'button_archive_quote',
-                                'submit_label': "Archivar", })
+                if self.object.archived:
+                    buttons.append({'name': 'button_unarchive_quote',
+                                    'submit_label': "Desarchivar", })
+                else:
+                    buttons.append({'name': 'button_archive_quote',
+                                    'submit_label': "Archivar", })
 
         else:
             raise Exception("Invalid 'status': {}".format(self.object.status))
@@ -321,7 +443,7 @@ class SessionQuoteAlternativeSelectView(DetailView):
                 return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
             selected_alternative = request.POST['selected_quote']
 
-            if selected_alternative != '0':
+            if selected_alternative == '0':
                 alternative_id = None
             else:
                 alternative_id = int(selected_alternative)

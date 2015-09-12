@@ -99,27 +99,11 @@ def full_name_with_username(user):
 # Session quote status
 # ===============================================================================
 
-class SessionQuoteStatusNode(template.Node):
-    def __init__(self, session_quote):
-        self.session_quote = template.Variable(session_quote)
-
-    def render(self, context):
-        t = template.loader.get_template('lumina/templatetags/session_quote_status.html')
-        return t.render(Context({
-            'object': self.session_quote.resolve(context),
-        }))
-
-
-@register.tag
-def session_quote_status(parser, token):
-    try:
-        # split_contents() knows not to split quoted strings.
-        split_contents = token.split_contents()
-        session_quote = split_contents[1]
-    except ValueError:
-        raise template.TemplateSyntaxError("{0} tag requires a single argument".format(
-            token.contents.split()[0]))
-    return SessionQuoteStatusNode(session_quote)
+@register.inclusion_tag('lumina/templatetags/session_quote_status.html')
+def session_quote_status(session_quote):
+    return {
+        'object': session_quote,
+    }
 
 
 # ===============================================================================
@@ -179,7 +163,7 @@ def image_selection_item(context, image_selection, image):
 
 
 @register.inclusion_tag('lumina/templatetags/image_item.html', takes_context=True)
-def image_item(context, image):
+def image_item(context, image, show_set_as_album_icon_button=False):
     """
     Generate an item in a list of images (as part of search result or images of a session).
 
@@ -208,4 +192,5 @@ def image_item(context, image):
         'image_filename': image_filename,
         'thumbnail_url': thumbnail_url,
         'full_quality': full_quality,
+        'show_set_as_album_icon_button': show_set_as_album_icon_button and user.is_photographer(),
     }

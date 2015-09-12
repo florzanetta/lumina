@@ -4,50 +4,60 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>{% block title %}Lumina - Usuarios{% endblock %}</title>
+<title>{% block title %}Lumina - Lista de clientes{% endblock %}</title>
 </head>
 <body>
 
 {% block content %}
 
-	<h3>Clientes de '{{ user.get_full_name }}'</h3>
 
-    {% for customer in object_list %}
-		<div class="media">
-		    <a class="pull-left" href="javascript:void(0);">
-		        <img class="media-object" src="/static/lumina/img/customer-64.png">
-		    </a>
-		    <div class="media-body">
-		        <div class="media-heading"><a
-		               href="{% url 'customer_update' customer.id %}">{{ customer.name }}</a>
-		        </div>
-		        <div>
-                    <small>
-                        <span class="badge badge-info">{{ customer.users.count }}</span>
-                        usuario{{ customer.users.count|pluralize }}
-                    </small>
-                    -
-                      <small><i class="icon-tag"></i> <em>Tipo:</em> <strong>{{ customer.customer_type }}</strong></small>
-                      -
-		              <small>
-                          <i class="icon-headphones"></i> <em>Tel:</em> <strong>{{ customer.phone }}</strong>
-		              </small>
-                      
-		        </div>
-		        <div style="padding-top: 5px;">
-                  <i class="icon-user"></i> <small><a href="{% url 'customer_user_list' customer.id %}" class="">Listar Usuarios</a></small>
-		        </div>
-		    </div>
-		</div>
-		<hr>
-    {% empty %}
-       <p>No hay clientes registrados...</p>
-        <hr>
-    {% endfor %}
+	<h3>Clientes</h3>
 
-    <p>
-        <a href="{% url 'customer_create' %}" class="btn btn-primary">Agregar cliente</a>
-    </p>
+    <table class="table">
+
+        <tr>
+            <th width="65%">
+                Nombre
+            </th>
+            <th width="20%">
+                Tipo
+            </th>
+            <th width="10%">
+                Teléfono
+            </th>
+            <th width="5%">
+                Usuarios
+            </th>
+        </tr>
+
+        {% for customer in object_list %}
+            <tr>
+                <td>
+                    <a href="{% url 'customer_update' customer.id %}">{{ customer.name }}</a>
+                </td>
+                <td>
+                    <span class="text-nowrap">{{ customer.customer_type.name }}</span>
+                </td>
+                <td>
+                    <span class="text-nowrap">{{ customer.phone }}</span>
+                </td>
+                <td>
+                    <div class="text-nowrap">
+                        {{ customer.users.count }}
+                        ·
+                        <a href="{% url 'customer_user_list' customer.id %}">Listar</a>
+                    </div>
+
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="4">No se ha registrado ningún cliente</td></tr>
+        {% endfor %}
+
+
+    </table>
+
+    <a href="{% url 'customer_create' %}" class="btn btn-primary">Nuevo cliente</a>
 
     {% dump_objects user object_list %}
 

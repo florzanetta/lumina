@@ -1,5 +1,5 @@
 {% extends "lumina/base.html" %}
-{% load lumina_extras %}
+{% load lumina_extras %}{% load crispy_forms_tags %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,80 +10,179 @@
 
 {% block content %}
 
-	<h3>Presupuestos del estudio</h3>
-
-    {% for a_quote in object_list %}
-
-        {% ifchanged a_quote.customer.id %} 
-            <h4>{{ a_quote.customer.name }}</h4>
-        {% endifchanged %}
-
-		<div class="media">
-		    <a class="pull-left" href="javascript:void(0);">
-		        <img class="media-object" src="/static/lumina/img/quote-64.png">
-		    </a>
-		    <div class="media-body">
-		        <div class="media-heading"><a
-		               href="{% url 'quote_detail' a_quote.id %}">{{ a_quote.name }}</a>
-		        </div>
-		        <div>
-                        <small>
-                            <span class="badge badge-info">{{ a_quote.image_quantity }}</span>
-                            imagen{{ a_quote.image_quantity|pluralize:",es" }}
-                        </small>
-                      -
-                    {% session_quote_status a_quote %}
-                    -
-                    <i class="icon-calendar"></i> <span title="Creación: {{a_quote.created|date}} - Última actualización: {{a_quote.last_modified|date}}">
-                        <small><em>Última actualización:</em> hace <strong>{{ a_quote.last_modified|timesince }}</strong></small></span>
-
-		        </div>
-                {% if user.is_photographer and a_quote.session %}
-                    <div style="padding-top: 5px;">
-                        <small>
-                            <em>Sesión:</em>
-                            <a href="{% url 'session_detail' a_quote.session.id %}">{{ a_quote.session.name }}</a>
-                        </small>
-                    </div>
-                {% endif %}
-                
-		    </div>
-		</div>
-		<hr>
-    {% empty %}
-       <p>No hay presupuestos...</p>
+    {% if is_search %}
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h4>Búsqueda de presupuestos</h4>
+            </div>
+            <div class="panel-body">
+                {% crispy form form.helper %}
+            </div>
+        </div>
         <hr>
-    {% endfor %}
+    {% else %}
+        {% if custom_title %}
+            <h3>{{ custom_title }}</h3>
+        {% else %}
+            <h3>Listado de presupuestos</h3>
+        {% endif %}
+    {% endif %}
 
-    <nav>
-      <ul class="pagination">
-        <li>
-          <a href="#" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        <li><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
-        <li>
-          <a href="#" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
+    {% if not hide_search_result %}
 
-    {% if user.is_photographer %}
-    <p>
-        <a href="{% url 'quote_create' %}" class="btn btn-primary">Agregar presupuesto</a>
-    </p>
+        <table class="table">
+
+            <tr>
+                <th width="60%">
+                    Nombre
+                </th>
+                <th width="10%" class="text-nowrap text-right">
+                    Cant. imágenes
+                </th>
+                <th width="10%" class="text-right">
+                    Estado
+                </th>
+                <th width="5%" class="text-nowrap text-right">
+                    Fecha de entrega
+                </th>
+                <th width="5%" class="text-nowrap text-right">
+                    Última actualización
+                </th>
+            </tr>
+
+            {% for a_quote in object_list %}
+
+                {% ifchanged a_quote.customer.id %}
+                    <tr>
+                        <td colspan="5">
+                            <h4><small>Cliente:</small> {{ a_quote.customer.name }}</h4>
+                        </td>
+                    </tr>
+                {% endifchanged %}
+
+                <tr>
+                    <td>
+                        <div class="text-nowrap">
+                            <i class="fa fa-money"></i>
+                            <a href="{% url 'quote_detail' a_quote.id %}">
+                                {{ a_quote.name }}</a>
+                        </div>
+
+                        {% if user.is_photographer and a_quote.session %}
+                            <div style="padding-left: 2em;">
+                                <small>
+                                    <i class="fa fa-picture-o"></i>
+                                    Sesión asociada:
+                                    <a href="{% url 'session_detail' a_quote.session.id %}">{{ a_quote.session.name }}</a>
+                                </small>
+                            </div>
+                        {% endif %}
+
+                    </td>
+                    <th class="text-right">
+                        {{ a_quote.image_quantity }}
+                    </td>
+                    <td class="text-right text-nowrap">
+                        {% session_quote_status a_quote %}
+                    </td>
+                    <td class="text-right text-nowrap">
+                        {{ a_quote.stipulated_date }}
+                    </td>
+                    <td class="text-right text-nowrap">
+                        {{ a_quote.last_modified|timesince }}
+                    </td>
+                </tr>
+
+            {% empty %}
+                <tr>
+                    <td colspan="5">
+                        {% if is_search %}
+                            No se encontraron presupuestos que concuerden con los parámetros de búsqueda
+                        {% else %}
+                            No hay presupuestos para mostrar
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </table>
+
+        <p class="text-muted small">
+            <i class="fa fa-money"></i> Presupuesto
+            ·
+            <i class="fa fa-picture-o"></i> Sesión fotográfica
+        </p>
+
+        {% if is_search %} <!-- pagination -->
+            <nav>
+              <ul class="pagination pagination-lg">
+
+                <li class="{% if not object_list.has_previous %} disabled {% endif %}">
+                    {% if object_list.has_previous %}
+                      <a href="javascript:goToPage('{{ object_list.previous_page_number }}');">
+                        &laquo;
+                      </a>
+                    {% else %}
+                      <a href="javascript:void(0);">
+                        &laquo;
+                      </a>
+                    {% endif %}
+                </li>
+
+                  <li>
+                      <a href="javascript:void(0);">
+                        Página {{ object_list.number }} de {{ object_list.paginator.num_pages }}
+                      </a>
+                  </li>
+
+                <li class="{% if not object_list.has_next %} disabled {% endif %}">
+                    {% if object_list.has_next %}
+                      <a href="javascript:goToPage('{{ object_list.next_page_number }}');">
+                        &raquo;
+                      </a>
+                    {% else %}
+                      <a href="javascript:void(0);">
+                        &raquo;
+                      </a>
+                    {% endif %}
+                </li>
+
+              </ul>
+            </nav>
+        {% endif %}
+
+    {% endif %} <!-- hide_search_result -->
+
+    {% if show_add_session_button %}
+        {% if user.is_photographer %}
+        <p>
+            <a href="{% url 'quote_create' %}" class="btn btn-primary">Nuevo presupuesto</a>
+        </p>
+        {% endif %}
     {% endif %}
 
     {% dump_objects user object_list %}
 
 {% endblock content %}
+
+{% block javascript_bottom %}
+
+<script type="application/javascript">
+
+function goToPage(pageNum) {
+    $('#id_page').val(pageNum);
+    $('#form-session-quote-search')[0].reset();
+    $('#form-session-quote-search').submit();
+}
+
+$(document).ready(function() {
+    $('#form-submit-button').click(function() {
+        $('#id_page').val('1');
+    });
+});
+</script>
+
+{% endblock %}
 
 </body>
 </html>

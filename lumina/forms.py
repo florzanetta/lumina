@@ -1,20 +1,16 @@
 # -*- coding: utf-8 -*-
 
-"""
-Created on Jun 1, 2013
-
-@author: Horacio G. de Oro
-"""
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
-
+from django.core.urlresolvers import reverse_lazy
 from crispy_forms import bootstrap
 from crispy_forms import helper
 from crispy_forms import layout
-
 from localflavor.ar.forms import ARCUITField
 
-from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail, \
+from lumina import models
+from lumina import forms_utils
+from lumina.models import LuminaUser, Customer, SharedSessionByEmail, \
     Image, ImageSelection, SessionQuote, SessionQuoteAlternative,\
     UserPreferences, SessionType
 
@@ -94,21 +90,24 @@ class ImageSelectionAutoCreateForm(forms.ModelForm):
 # Session
 # ===============================================================================
 
-class SessionCreateForm(forms.ModelForm):
+class _GenericSessionForm(forms_utils.GenericCreateUpdateModelForm):
+
+    CANCEL_URL = reverse_lazy('session_list')
+    FIELDS = ['name', 'session_type', 'photographer', 'customer', 'worked_hours']
 
     class Meta:
-        model = Session
-        fields = ('name', 'session_type', 'photographer', 'customer', )  # 'shared_with',
+        model = models.Session
+        fields = ('name', 'session_type', 'photographer', 'customer', 'worked_hours')
 
 
-class SessionUpdateForm(forms.ModelForm):
+class SessionCreateForm(_GenericSessionForm):
+    FORM_TITLE = 'Crear nueva sesión fotográfica'
+    SUBMIT_LABEL = 'Crear'
 
-    class Meta:
-        model = Session
-        fields = ('name', 'session_type', 'photographer', 'customer', 'worked_hours', )  # 'shared_with',
-        # widgets = {
-        #    'shared_with': CheckboxSelectMultiple(),
-        # }
+
+class SessionUpdateForm(_GenericSessionForm):
+    FORM_TITLE = 'Actualizar sesión fotográfica'
+    SUBMIT_LABEL = 'Guardar'
 
 
 class SessionSearchForm(forms.Form):
@@ -133,7 +132,7 @@ class SessionSearchForm(forms.Form):
     fecha_creacion_hasta = forms.DateField(required=False,
                                            label='Fecha de creación',
                                            help_text="Fecha de creacion (hasta)")
-    customer = forms.ModelChoiceField(Session.objects.none(),
+    customer = forms.ModelChoiceField(Customer.objects.none(),
                                       empty_label='Todos los clientes',
                                       label='Cliente',
                                       required=False)
@@ -168,7 +167,7 @@ class SessionSearchForm(forms.Form):
         assert isinstance(photographer, LuminaUser)
         assert photographer.is_photographer()
         self.fields['customer'].queryset = Customer.objects.customers_of(photographer)
-        self.fields['session_type'].queryset = SessionType.objects.session_type_of(photographer)
+        self.fields['session_type'].queryset = SessionType.objects.for_photographer_ordered(photographer)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -200,23 +199,165 @@ class ImageUpdateForm(forms.ModelForm):
         fields = ('session',)
 
 
+class ImageSearchForm(forms.Form):
+
+    fecha_creacion_desde = forms.DateField(required=False,
+                                           label='Fecha de creación',
+                                           help_text="Fecha de creacion (desde)")
+    fecha_creacion_hasta = forms.DateField(required=False,
+                                           label='Fecha de creación',
+                                           help_text="Fecha de creacion (hasta)")
+    customer = forms.ModelChoiceField(Customer.objects.none(),
+                                      empty_label='Todos los clientes',
+                                      label='Cliente',
+                                      required=False)
+    session_type = forms.ModelChoiceField(SessionType.objects.none(),
+                                          empty_label='Todos los tipos de sesiones',
+                                          label='Tipo de sesión',
+                                          required=False)
+    page = forms.CharField(max_length=5, required=False, widget=forms.HiddenInput)
+
+    def __init__(self, user=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = helper.FormHelper()
+        self.helper.form_action = 'image_list'
+        self.helper.form_id = 'form-image-search'
+
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
+
+        assert isinstance(user, LuminaUser)
+        assert user.is_photographer()
+
+        self.helper.layout = helper.Layout(
+            'fecha_creacion_desde',
+            'fecha_creacion_hasta',
+            'customer',
+            'session_type',
+            'page',
+            bootstrap.FormActions(
+                layout.Submit('submit_button', 'Buscar', css_id='form-submit-button'),
+            ),
+        )
+        self.fields['customer'].queryset = Customer.objects.customers_of(user)
+        self.fields['session_type'].queryset = SessionType.objects.for_photographer_ordered(user)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha_creacion_desde = cleaned_data.get("fecha_creacion_desde")
+        fecha_creacion_hasta = cleaned_data.get("fecha_creacion_hasta")
+
+        if fecha_creacion_desde and fecha_creacion_hasta:
+            if fecha_creacion_desde > fecha_creacion_hasta:
+                msg = "'Fecha de creacion (desde)' debe ser anterior a 'Fecha de creacion (hasta)'"
+                self.add_error('fecha_creacion_desde', msg)
+                self.add_error('fecha_creacion_hasta', msg)
+
+
 # ===============================================================================
 # Customer
 # ===============================================================================
 
-class CustomerCreateForm(forms.ModelForm):
+class _GenericCustomerForm(forms_utils.GenericCreateUpdateModelForm):
+
+    CANCEL_URL = reverse_lazy('customer_list')
+    FIELDS = [
+        'name', 'customer_type', 'address', 'phone', 'city', 'iva', 'cuit',
+        'ingresos_brutos', 'notes'
+    ]
 
     cuit = ARCUITField(max_length=13, min_length=0, required=False,
                        help_text="Formato: XX-XXXXXXXX-X")
 
     class Meta:
-        model = Customer
+        model = models.Customer
         fields = (
             'name', 'customer_type', 'address', 'phone', 'city', 'iva', 'cuit',
             'ingresos_brutos', 'notes'
         )
 
-CustomerUpdateForm = CustomerCreateForm
+
+class CustomerCreateForm(_GenericCustomerForm):
+    FORM_TITLE = 'Crear nuevo cliente'
+    SUBMIT_LABEL = 'Crear'
+
+
+class CustomerUpdateForm(_GenericCustomerForm):
+    FORM_TITLE = 'Actualizar cliente'
+    SUBMIT_LABEL = 'Guardar'
+
+
+# ===============================================================================
+# CustomerType
+# ===============================================================================
+
+class _GenericCustomerTypeForm(forms_utils.GenericCreateUpdateModelForm):
+
+    CANCEL_URL = reverse_lazy('customer_type_list')
+    FIELDS = ['name']
+
+    class Meta:
+        model = models.CustomerType
+        fields = ('name',)
+
+
+class CustomerTypeCreateForm(_GenericCustomerTypeForm):
+    FORM_TITLE = 'Crear nuevo tipo de cliente'
+    SUBMIT_LABEL = 'Crear'
+
+
+class CustomerTypeUpdateForm(_GenericCustomerTypeForm):
+    FORM_TITLE = 'Actualizar tipo de cliente'
+    SUBMIT_LABEL = 'Guardar'
+
+
+# ===============================================================================
+# CustomerType
+# ===============================================================================
+
+class _GenericSessionTypeForm(forms_utils.GenericCreateUpdateModelForm):
+
+    CANCEL_URL = reverse_lazy('session_type_list')
+    FIELDS = ['name']
+
+    class Meta:
+        model = models.SessionType
+        fields = ('name',)
+
+
+class SessionTypeCreateForm(_GenericSessionTypeForm):
+    FORM_TITLE = 'Crear nuevo tipo de sesión fotográfica'
+    SUBMIT_LABEL = 'Crear'
+
+
+class SessionTypeUpdateForm(_GenericSessionTypeForm):
+    FORM_TITLE = 'Actualizar tipo de sesión fotográfica'
+    SUBMIT_LABEL = 'Guardar'
+
+
+# ===============================================================================
+# CustomerType
+# ===============================================================================
+
+class _GenericPreviewSizeForm(forms_utils.GenericCreateUpdateModelForm):
+
+    CANCEL_URL = reverse_lazy('preview_size_list')
+    FIELDS = ['max_size']
+
+    class Meta:
+        model = models.PreviewSize
+        fields = ('max_size',)
+
+
+class PreviewSizeCreateForm(_GenericPreviewSizeForm):
+    FORM_TITLE = 'Crear nuevo tamaño de previsualizaciones'
+    SUBMIT_LABEL = 'Crear'
+
+
+class PreviewSizeUpdateForm(_GenericPreviewSizeForm):
+    FORM_TITLE = 'Actualizar tamaño de previsualizacion'
+    SUBMIT_LABEL = 'Guardar'
 
 
 # ===============================================================================
@@ -224,6 +365,25 @@ CustomerUpdateForm = CustomerCreateForm
 # ===============================================================================
 
 class UserPreferencesUpdateForm(forms.ModelForm):
+
+    # first_name = models.CharField(_('first name'), max_length=30, blank=True)
+    first_name = forms.CharField(
+        max_length=30, required=True,
+        label='Nombre')
+    # last_name = models.CharField(_('last name'), max_length=30, blank=True)
+    last_name = forms.CharField(
+        max_length=30, required=True,
+        label='Apellido')
+    # email = models.EmailField(_('email address'), blank=True)
+    email = forms.EmailField(
+        required=True,
+        label='Correo electrónico')
+
+    # cellphone = models.CharField(max_length=20, null=True, blank=True, verbose_name="Celular")
+    cellphone = forms.CharField(
+        max_length=20, required=False,
+        label='Celular')
+
     password1 = forms.CharField(
         max_length=20, required=False, widget=forms.PasswordInput(), label='Contrasena',
         help_text="Ingrese la nueva contraseña (si desea cambiarla)")
@@ -231,6 +391,29 @@ class UserPreferencesUpdateForm(forms.ModelForm):
         max_length=20, required=False, widget=forms.PasswordInput(),
         label='Contrasena (otra vez)',
         help_text="Repita la nueva contraseña (si desea cambiarla)")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = helper.FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
+
+        self.helper.layout = helper.Layout(
+            layout.Fieldset(
+                'Actualizar preferencias de usuario',
+                'first_name',
+                'last_name',
+                'email',
+                'cellphone',
+                'password1',
+                'password2',
+                'send_emails',
+            ),
+            bootstrap.FormActions(
+                layout.Submit('submit_button', 'Guardar', css_id='form-submit-button'),
+            ),
+        )
 
     def clean(self):
         super(UserPreferencesUpdateForm, self).clean()
@@ -242,60 +425,7 @@ class UserPreferencesUpdateForm(forms.ModelForm):
 
     class Meta:
         model = UserPreferences
-        fields = ('send_emails', 'password1', 'password2',)
-
-
-# ===============================================================================
-# User
-# ===============================================================================
-
-class UserCreateForm(forms.ModelForm):
-    password1 = forms.CharField(max_length=20, required=True,
-                                widget=forms.PasswordInput(),
-                                label='Contrasena')
-    password2 = forms.CharField(max_length=20, required=True,
-                                widget=forms.PasswordInput(),
-                                label='Contrasena (otra vez)')
-
-    class Meta:
-        model = LuminaUser
-        fields = (
-            'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
-            'phone', 'cellphone', 'alternative_email', 'notes'
-        )
-
-    def clean(self):
-        super(UserCreateForm, self).clean()
-        password1 = self.cleaned_data.get('password1')
-        password2 = self.cleaned_data.get('password2')
-        if password1 != password2:
-            raise forms.ValidationError('Los passwords no concuerdan')
-        return self.cleaned_data
-
-
-class UserUpdateForm(forms.ModelForm):
-    password1 = forms.CharField(
-        max_length=20, required=False, widget=forms.PasswordInput(), label='Contrasena',
-        help_text="Ingrese la nueva contraseña (si desea cambiarla)")
-    password2 = forms.CharField(
-        max_length=20, required=False, widget=forms.PasswordInput(),
-        label='Contrasena (otra vez)',
-        help_text="Repita la nueva contraseña (si desea cambiarla)")
-
-    class Meta:
-        model = LuminaUser
-        fields = (
-            'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
-            'phone', 'cellphone', 'alternative_email', 'notes'
-        )
-
-    def clean(self):
-        super(UserUpdateForm, self).clean()
-        password1 = self.cleaned_data.get('password1')
-        password2 = self.cleaned_data.get('password2')
-        if password1 != password2:
-            raise forms.ValidationError('Los passwords no concuerdan')
-        return self.cleaned_data
+        fields = ('send_emails',)
 
 
 # ===============================================================================
@@ -325,6 +455,80 @@ class SessionQuoteUpdate2Form(forms.ModelForm):
     class Meta:
         model = SessionQuote
         fields = []
+
+
+class SessionQuoteSearchForm(forms.Form):
+
+    ARCHIVED_STATUS_ALL = 'ALL'
+    ARCHIVED_STATUS_ARCHIVED = 'ARCHIVED'
+    ARCHIVED_STATUS_ACTIVE = 'ACTIVE'
+
+    ARCHIVED_STATUS_CHOICES = (
+        (ARCHIVED_STATUS_ALL, 'Todas'),
+        (ARCHIVED_STATUS_ARCHIVED, 'Archivadas'),
+        (ARCHIVED_STATUS_ACTIVE, 'Activas'),
+    )
+    archived_status = forms.ChoiceField(choices=ARCHIVED_STATUS_CHOICES,
+                                        widget=forms.RadioSelect,
+                                        initial=ARCHIVED_STATUS_ALL,
+                                        label='Archivados',
+                                        required=False)
+
+    fecha_creacion_desde = forms.DateField(required=False,
+                                           label='Fecha de creación',
+                                           help_text="Fecha de creacion (desde)")
+    fecha_creacion_hasta = forms.DateField(required=False,
+                                           label='Fecha de creación',
+                                           help_text="Fecha de creacion (hasta)")
+    customer = forms.ModelChoiceField(Customer.objects.none(),
+                                      empty_label='Todos los clientes',
+                                      label='Cliente',
+                                      required=False)
+    page = forms.CharField(max_length=5, required=False, widget=forms.HiddenInput)
+
+    def __init__(self, user=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = helper.FormHelper()
+        self.helper.form_action = 'quote_search'
+        self.helper.form_id = 'form-session-quote-search'
+
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
+
+        assert isinstance(user, LuminaUser)
+        if user.is_photographer():
+            self.helper.layout = helper.Layout(
+                bootstrap.InlineRadios('archived_status'),
+                'fecha_creacion_desde',
+                'fecha_creacion_hasta',
+                'customer',
+                'page',
+                bootstrap.FormActions(
+                    layout.Submit('submit_button', 'Buscar', css_id='form-submit-button'),
+                ),
+            )
+            self.fields['customer'].queryset = Customer.objects.customers_of(user)
+        else:
+            self.helper.layout = helper.Layout(
+                'fecha_creacion_desde',
+                'fecha_creacion_hasta',
+                'page',
+                bootstrap.FormActions(
+                    layout.Submit('submit_button', 'Buscar', css_id='form-submit-button'),
+                ),
+            )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        fecha_creacion_desde = cleaned_data.get("fecha_creacion_desde")
+        fecha_creacion_hasta = cleaned_data.get("fecha_creacion_hasta")
+
+        if fecha_creacion_desde and fecha_creacion_hasta:
+            if fecha_creacion_desde > fecha_creacion_hasta:
+                msg = "'Fecha de creacion (desde)' debe ser anterior a 'Fecha de creacion (hasta)'"
+                self.add_error('fecha_creacion_desde', msg)
+                self.add_error('fecha_creacion_hasta', msg)
 
 
 # ===============================================================================

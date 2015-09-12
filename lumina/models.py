@@ -8,7 +8,7 @@ from django.core.exceptions import PermissionDenied, ValidationError, \
     SuspiciousOperation
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils import timezone
-
+from django.db.models.functions import Lower
 
 # py3
 NoneType = type(None)
@@ -74,8 +74,11 @@ class LuminaUser(AbstractUser):
     user_for_customer = models.ForeignKey(
         'Customer', null=True, blank=True, related_name='users', verbose_name="Cliente")
 
+    # `phone` is used in both, customers & photographers
     phone = models.CharField(max_length=20, null=True, blank=True, verbose_name="Teléfono")
+    # `cellphone` is used in both, customers & photographers
     cellphone = models.CharField(max_length=20, null=True, blank=True, verbose_name="Celular")
+
     alternative_email = models.EmailField(null=True, blank=True, verbose_name="Email alternativo")
     notes = models.TextField(blank=True, null=True, verbose_name="Notas")
 
@@ -110,13 +113,42 @@ class LuminaUser(AbstractUser):
                                          user_for_customer=customer_id,
                                          user_for_customer__studio=self.studio)
 
-    def get_all_users(self):
+    def get_all_users_of_customers(self):
         """
-        Returns all the users of a Studio. This'll return all the user of all the customers
+        Returns all the CUSTOMERS users of the Studio of the user
         """
         assert self.user_type == LuminaUser.PHOTOGRAPHER
         return LuminaUser.objects.filter(user_type=LuminaUser.CUSTOMER,
                                          user_for_customer__studio=self.studio)
+
+    def get_all_photographers(self):
+        """
+        Returns all the PHOTOGRAPHERS users of the Studio of the user
+        """
+        assert self.user_type == LuminaUser.PHOTOGRAPHER
+        return LuminaUser.objects.filter(user_type=LuminaUser.PHOTOGRAPHER,
+                                         studio=self.studio)
+
+    def get_customer_types(self, **kwargs):
+        """Filter using CustomerType.objects.for_photographer_ordered()
+
+        Pass the **kwargs
+        """
+        return CustomerType.objects.for_photographer_ordered(self, **kwargs)
+
+    def get_session_types(self, **kwargs):
+        """Filter using SessionType.objects.for_photographer_ordered()
+
+        Pass the **kwargs
+        """
+        return SessionType.objects.for_photographer_ordered(self, **kwargs)
+
+    def get_preview_sizes(self, **kwargs):
+        """Filter using PreviewSize.objects.for_photographer_ordered()
+
+        Pass the **kwargs
+        """
+        return PreviewSize.objects.for_photographer_ordered(self, **kwargs)
 
     def _check(self):
         if self.is_photographer():
@@ -299,6 +331,7 @@ class Session(models.Model):
     photographer = models.ForeignKey(LuminaUser, verbose_name="fotógrafo")
 
     # REFACTOR: `customer` is a new attribute
+    # FIXME: why optional? Shouldn't be required? See: https://lumina.atlassian.net/browse/LUM-182
     customer = models.ForeignKey(Customer, null=True, blank=True, verbose_name="cliente")
 
     session_type = models.ForeignKey(
@@ -315,6 +348,8 @@ class Session(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     archived = models.BooleanField(default=False, verbose_name="Archivada")
+
+    album_icon = models.ForeignKey('Image', blank=True, null=True, related_name='+')
 
     objects = SessionManager()
 
@@ -350,6 +385,11 @@ class Session(models.Model):
         """
         # FIXME: this works, but is pure evil... like Newman!
         return self.quotes.get()
+
+    def set_image_as_album_icon(self, image):
+        assert isinstance(image, Image)
+        self.album_icon = image
+        self.save()
 
 
 # ===============================================================================
@@ -632,7 +672,10 @@ class Image(models.Model):
     objects = ImageManager()
 
     def __str__(self):
-        return "Image {0}".format(self.original_filename)
+        if self.image:
+            return "Image {0}".format(self.image)
+        else:
+            return "Image {0} (thumb-only)".format(self.thumbnail_image)
 
     def get_absolute_url(self):
         return reverse('image_update', kwargs={'pk': self.pk})
@@ -954,9 +997,27 @@ class SessionQuoteAlternative(models.Model):
 # CustomerType
 # ===============================================================================
 
+class CustomerTypeManager(models.Manager):
+
+    def for_photographer_ordered(self, photographer, exclude_archived=False):
+        """Return CustomerType visible for photographer"""
+        assert photographer.is_photographer()
+        qs = self.filter(studio=photographer.studio)
+        if exclude_archived:
+            qs = qs.filter(archived=False)
+        return qs.order_by(Lower('name'))
+
+
 class CustomerType(models.Model):
     name = models.CharField(max_length=100, verbose_name="tipo de cliente")
     studio = models.ForeignKey('Studio', related_name='customer_types', verbose_name="estudio")
+    archived = models.BooleanField(default=False, verbose_name="Archivado")
+
+    objects = CustomerTypeManager()
+
+    # FIXME: use unique `(studio, name)`
+    # class Meta:
+    #     unique_together = ("studio", "name")
 
     def __str__(self):
         return self.name
@@ -968,15 +1029,25 @@ class CustomerType(models.Model):
 
 class SessionTypeManager(models.Manager):
 
-    def session_type_of(self, photographer):
-        return self.filter(studio=photographer.studio)
+    def for_photographer_ordered(self, photographer, exclude_archived=False):
+        """Return SessionType visible for photographer"""
+        assert photographer.is_photographer()
+        qs = self.filter(studio=photographer.studio)
+        if exclude_archived:
+            qs = qs.filter(archived=False)
+        return qs.order_by(Lower('name'))
 
 
 class SessionType(models.Model):
     name = models.CharField(max_length=100, verbose_name="tipo de sesión")
     studio = models.ForeignKey('Studio', related_name='session_types', verbose_name="estudio")
+    archived = models.BooleanField(default=False, verbose_name="Archivado")
 
     objects = SessionTypeManager()
+
+    # FIXME: use unique `(studio, name)`
+    # class Meta:
+    #     unique_together = ("studio", "name")
 
     def __str__(self):
         return self.name
@@ -986,9 +1057,23 @@ class SessionType(models.Model):
 # PreviewSize
 # ===============================================================================
 
+class PreviewSizeManager(models.Manager):
+
+    def for_photographer_ordered(self, photographer, exclude_archived=False):
+        """Return SessionType visible for photographer"""
+        assert photographer.is_photographer()
+        qs = self.filter(studio=photographer.studio)
+        if exclude_archived:
+            qs = qs.filter(archived=False)
+        return qs.order_by('max_size')
+
+
 class PreviewSize(models.Model):
-    max_size = models.PositiveIntegerField(verbose_name="Tamaño máximo", null=True, blank=True)
+    max_size = models.PositiveIntegerField(verbose_name="Tamaño máximo")
     studio = models.ForeignKey('Studio', related_name='preview_sizes', verbose_name="estudio")
+    archived = models.BooleanField(default=False, verbose_name="Archivado")
+
+    objects = PreviewSizeManager()
 
     class Meta:
         unique_together = ("max_size", "studio")

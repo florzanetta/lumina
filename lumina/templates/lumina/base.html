@@ -49,12 +49,6 @@
     <script src="/static/lumina/js/jquery-1.11.3.min.js"></script>
     <script src="/static/lumina/bootstrap/js/bootstrap.min.js"></script>
     {% include 'autocomplete_light/static.html' %}
-    <script type="application/javascript">
-
-        function toggleUserNotifications() {
-            $('#luminaUserNotifications').toggle();
-        }
-    </script>
 
 	{% block extra_headers %}
 	{% endblock extra_headers %}
@@ -90,7 +84,7 @@
                                     <li><a href="{% url 'session_search' %}">Buscar</a></li>
                                     <li><a href="{% url 'session_create' %}">Agregar sesión</a></li>
                                     <li><a href="{% url 'shared_session_by_email_create' %}">Compartir sesión</a></li>
-                                    <li><a href="{% url 'imageselection_with_pending_uploads_list' %}">Solicitudes esperando uploads</a></li>
+                                    <li><a href="{% url 'imageselection_with_pending_uploads_list' %}">Solicitudes esperando subida de fotos</a></li>
 
                             {% else %} <!-- user is client -->
                                     <li><a href="{% url 'imageselection_list' %}"
@@ -106,15 +100,16 @@
 
                             {% if user.is_photographer %} <!-- user is photographer -->
                                     <li><a href="{% url 'quote_create' %}">Crear presupuesto</a></li>
+                                    <li><a href="{% url 'quote_list' %}">Lista de presupuestos</a></li>
                             {% else %} <!-- user is client -->
                             {% endif %}
-
-                            <li><a href="{% url 'quote_list' %}">Lista de presupuestos</a></li>
 
                             {% if user.is_photographer %} <!-- user is photographer -->
                             {% else %} <!-- user is client -->
                                 <li><a href="{% url 'quote_list_pending_for_customer' %}">Lista de presupuestos pendientes de aceptar</a></li>
                             {% endif %}
+
+                            <li><a href="{% url 'quote_search' %}">Buscar presupuestos</a></li>
 
                         </ul>
                     </li>
@@ -149,14 +144,14 @@
                             <ul class="dropdown-menu" role="menu">
 
                                 <!-- Items de drop-down  -->
-                                <li><a href="{ % url 'customer_user_preferences_update' user.preferences.id % }">Preferencias</a></li>
+                                <li><a href="{% url 'user_preferences_update' %}">Preferencias de usuario</a></li>
                                 {% if user.is_photographer %}
-                                    <li><a href="{% url 'admin:lumina_customertype_changelist' %}" target="_blank">Tipos de clientes</a></li>
-                                    <li><a href="{% url 'admin:lumina_sessiontype_changelist' %}" target="_blank">Tipos de sessiones</a></li>
-                                    <li><a href="{% url 'admin:lumina_previewsize_changelist' %}" target="_blank">Tamaños de previsualizacion</a></li>
+                                    <li><a href="{% url 'customer_type_list' %}">Tipos de clientes</a></li>
+                                    <li><a href="{% url 'session_type_list' %}">Tipos de sessiones</a></li>
+                                    <li><a href="{% url 'preview_size_list' %}">Tamaños de previsualizacion</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="#" target="_blank">Listar fotógrafos</a></li>
-                                    <li><a href="#" target="_blank">Agregar fotógrafo</a></li>
+                                    <li><a href="{% url 'studio_user_list' %}">Listar fotógrafos</a></li>
+                                    <li><a href="{% url 'studio_user_create' %}">Agregar fotógrafo</a></li>
 
                                 {% endif %}
                             </ul>
@@ -168,10 +163,10 @@
                                 <ul class="dropdown-menu" role="menu">
 
                                     <!-- Items de drop-down  -->
-                                    <li><a href="{% url 'view_report' 1 %}">Costo (hs) vs Monto cobtrado ($)</a></li>
-                                    <li><a href="{% url 'view_report' 2 %}">Presupuestos expandidos (en el tiempo)</a></li>
-                                    <li><a href="{% url 'view_report' 3 %}">Presupuestos expandidos (por cliente)</a></li>
-                                    <li><a href="{% url 'view_report' 4 %}">Ingresos ($) por tipo de cliente</a></li>
+                                    <li><a href="{% url 'report_cost_vs_charged_by_customer_type' %}">Costo (hs) vs Monto cobtrado ($)</a></li>
+                                    <li><a href="{% url 'report_extended_quotes_through_time' %}">Presupuestos expandidos (en el tiempo)</a></li>
+                                    <li><a href="{% url 'report_extended_quotes_by_customer' %}">Presupuestos expandidos (por cliente)</a></li>
+                                    <li><a href="{% url 'report_income_by_customer_type' %}">Ingresos ($) por tipo de cliente</a></li>
 
                                 </ul>
                             </li>
@@ -204,12 +199,25 @@
 
       <ul class="nav navbar-nav navbar-right">
 
-            <li>
-                <a href="javascript:void(0);" onclick="toggleUserNotifications();">
-                    <i class="fa fa-bullhorn {% if user_notifications %}text-danger{% endif %}"></i>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                   role="button" aria-expanded="false"><i
+                        class="fa fa-bullhorn {% if user_notifications %}text-danger{% endif %}"></i>
                     <span class="badge {% if user_notifications %}alert-danger{% endif %}">{{ user_notifications|length }}</span>
                 </a>
+
+                <ul class="dropdown-menu" role="menu">
+                    <!-- Items de drop-down  -->
+                    {% if user_notifications %}
+                        {% for notification in user_notifications %}
+                            <li><a href="{{notification.link}}">{{notification.message}}</a></li>
+                        {% endfor %}
+                    {% else %}
+                        <li><a href="#"><em class="text-muted">No hay notificaciones</em></a></li>
+                    {% endif %}
+                </ul>
             </li>
+
 
             {% if user.is_authenticated %}
 
@@ -252,25 +260,6 @@
 
 
 <div class="container">
-
-    {% if user_notifications %}
-    <div id="luminaUserNotifications" style="display: none;">
-        {% for notification in user_notifications %}
-            <div class="row">
-                <div class="col-xs-offset-6 col-xs-6">
-                    <div class="alert alert-info" role="alert">
-                        <i class="fa fa-bullhorn"></i>
-                        {{ notification.message }}
-                        {% if notification.link %}
-                            · <a class="alert-link" href="{{notification.link}}">
-                                <i class="fa fa-link"></i> Link</a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-    {% endif %}
 
     {% for message in messages %}
 
@@ -332,6 +321,9 @@
 
 <footer>
     <div class="container">
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <hr>
         <p class="text-muted text-center"><small>
             Icons made by
             <a href="http://www.freepik.com" title="Freepik">Freepik</a>

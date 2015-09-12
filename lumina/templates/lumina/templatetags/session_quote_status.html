@@ -1,26 +1,26 @@
 {% if object.status == 'A' %}
     {# STATUS_ACCEPTED #}
-    <span class="label label-success"><i class="icon-ok icon-white"></i>
+    <span class="label label-success"><i class="fa fa-thumbs-o-up"></i> ·
         {{ object.get_status_display }}</span>
 
 {% elif object.status == 'R' %}
     {# STATUS_REJECTED #}
-    <span class="label label-important"><i class="icon-remove icon-white"></i>
+    <span class="label label-danger"><i class="fa fa-thumbs-o-down"></i> ·
         {{ object.get_status_display }}</span>
 
 {% elif object.status == 'S' %}
     {# STATUS_WAITING_CUSTOMER_RESPONSE #}
-    <span class="label label-warning"><i class="icon-time icon-white"></i>
+    <span class="label label-warning"><i class="fa fa-clock-o"></i> ·
         {{ object.get_status_display }}</span>
 
 {% elif object.status == 'Q' %}
     {# STATUS_QUOTING #}
-    <span class="label label-default"><i class="icon-pencil icon-white"></i>
+    <span class="label label-default"><i class="fa fa-pencil"></i> ·
         {{ object.get_status_display }}</span>
 
 {% elif object.status == 'E' %}
     {# STATUS_CANCELED #}
-    <span class="label label-inverse"><i class="icon-remove icon-white"></i>
+    <span class="label label-danger"><i class="fa fa-close"></i> ·
         {{ object.get_status_display }}</span>
 
 {% else %}

@@ -9,17 +9,18 @@ from lumina import views
 from lumina import views_image_selection_creation
 from lumina import views_image_selection_upload
 from lumina import views_image_selection
-
-from lumina.views_user import (
-    UserListView,  UserCreateView, UserUpdateView,
-    UserPreferenceUpdateView
-)
-
-from lumina.views_customer import *
-from lumina.views_image import *
-from lumina.views_shared_session import *
-from lumina.views_session import *
-from lumina.views_session_quote import *
+from lumina import views_reports
+from lumina import views_customer
+from lumina import views_customer_type
+from lumina import views_session_type
+from lumina import views_preview_size
+from lumina import views_user_customer
+from lumina import views_user_preferences
+from lumina import views_user_studio
+from lumina import views_session
+from lumina import views_image
+from lumina import views_shared_session
+from lumina import views_session_quote
 
 autocomplete_light.autodiscover()  # BEFORE admin.autodiscover()
 admin.autodiscover()
@@ -40,36 +41,48 @@ urlpatterns = patterns(
     url(r'^session/list/$',
         cache_control(private=True)(
             login_required(
-                SessionListView.as_view())),
+                views_session.SessionListView.as_view())),
         name='session_list'),
 
     url(r'^session/search/$',
         cache_control(private=True)(
             login_required(
-                SessionSearchView.as_view())),
+                views_session.SessionSearchView.as_view())),
         name='session_search'),
 
     url(r'^session/detail/(?P<pk>\d+)/$',
         cache_control(private=True)(
-            login_required(SessionDetailView.as_view())),
+            login_required(views_session.SessionDetailView.as_view())),
         name='session_detail'),
+
+    url(r'^session/(?P<pk>\d+)/set-image-as-album-icon/(?P<image_id>\d+)/$',
+        cache_control(private=True)(
+            login_required(views_session.SetImageAsAlbumIconView.as_view())),
+        name='set_image_as_album_icon'),
+
+    url(r'^session/(?P<pk>\d+)/album-icon/$',
+        cache_control(private=True)(
+            login_required(views_session.AlbumIconView.as_view())),
+        name='session_album_icon'),
 
     url(r'^session/create/$',
         cache_control(private=True)(
-            login_required(SessionCreateView.as_view())),
+            login_required(views_session.SessionCreateView.as_view())),
         name='session_create'),
 
     url(r'^session/update/(?P<pk>\d+)/$',
         cache_control(private=True)(
-            login_required(SessionUpdateView.as_view())),
+            login_required(views_session.SessionUpdateView.as_view())),
         name='session_update'),
 
+    # UPLOADS
+
     url(r'^session/upload-previews/(?P<pk>\d+)/$',
-        cache_control(private=True)(login_required(SessionUploadPreviewsView.as_view())),
+        cache_control(private=True)(login_required(views_session.SessionUploadPreviewsView.as_view())),
         name='session_upload_previews'),
 
     url(r'^session/upload-previews/(?P<session_id>\d+)/upload/',
-        session_upload_previews_upload,
+        views_session.session_upload_previews_upload,
         name='session_upload_previews_upload'),
 
 
@@ -79,23 +92,23 @@ urlpatterns = patterns(
     url(r'^session/shared-by-email/create/$',
         cache_control(private=True)(
             login_required(
-                SharedSessionByEmailCreateView.as_view())),
+                views_shared_session.SharedSessionByEmailCreateView.as_view())),
         name='shared_session_by_email_create'),
 
     url(r'^session/shared-by-email/anonymous/view/'
         '(?P<random_hash>[a-f0-9-]{36})/$',
         cache_control(private=True)(
-            SharedSessionByEmailAnonymousView.as_view()),
+            views_shared_session.SharedSessionByEmailAnonymousView.as_view()),
         name='shared_session_by_email_view'),
 
     url(r'^session/shared-by-email/anonymous/view/'
         '(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
-        shared_session_by_email_image_thumb_64x64,
+        views_shared_session.shared_session_by_email_image_thumb_64x64,
         name='shared_session_by_email_image_thumb_64x64'),
 
     url(r'^session/shared-by-email/anonymous/download/'
         '(?P<random_hash>[a-f0-9-]{36})/(?P<image_id>\d+)/$',
-        shared_session_by_email_image_download,
+        views_shared_session.shared_session_by_email_image_download,
         name='shared_session_by_email_image_download'),
 
     # ===========================================================================
@@ -158,17 +171,17 @@ urlpatterns = patterns(
     # ===========================================================================
     url(r'^image/list/$',
         cache_control(private=True)(
-            login_required(ImageListView.as_view())),
+            login_required(views_image.ImageListView.as_view())),
         name='image_list'),
 
     url(r'^image/create/$',
         cache_control(private=True)(
-            login_required(ImageCreateView.as_view())),
+            login_required(views_image.ImageCreateView.as_view())),
         name='image_create'),
 
     url(r'^image/update/(?P<pk>\d+)/$',
         cache_control(private=True)(
-            login_required(ImageUpdateView.as_view())),
+            login_required(views_image.ImageUpdateView.as_view())),
         name='image_update'),
 
     url(r'^image/(\d+)/thumb/$',
@@ -192,45 +205,157 @@ urlpatterns = patterns(
         name='image_selection_thumbnail'),
 
     # ===========================================================================
+    # Customer Types
+    # ===========================================================================
+    url(r'^customer-type/list/$',
+        cache_control(private=True)(
+            login_required(views_customer_type.CustomerTypeListView.as_view())),
+        name='customer_type_list'),
+
+    url(r'^customer-type/create/$',
+        cache_control(private=True)(
+            login_required(views_customer_type.CustomerTypeCreateView.as_view())),
+        name='customer_type_create'),
+
+    url(r'^customer-type/(?P<customer_type_id>\d+)/update/$',
+        cache_control(private=True)(
+            login_required(views_customer_type.CustomerTypeUpdateView.as_view())),
+        name='customer_type_update'),
+
+    url(r'^customer-type/(?P<customer_type_id>\d+)/archive/$',
+        cache_control(private=True)(
+            login_required(views_customer_type.CustomerTypeArchiveView.as_view(archive=True))),
+        name='customer_type_archive'),
+
+    url(r'^customer-type/(?P<customer_type_id>\d+)/unarchive/$',
+        cache_control(private=True)(
+            login_required(views_customer_type.CustomerTypeArchiveView.as_view(archive=False))),
+        name='customer_type_unarchive'),
+
+    # ===========================================================================
     # Customer
     # ===========================================================================
+
     url(r'^customer/list/$',
         cache_control(private=True)(
-            login_required(CustomerListView.as_view())),
+            login_required(views_customer.CustomerListView.as_view())),
         name='customer_list'),
 
     url(r'^customer/create/$',
         cache_control(private=True)(
-            login_required(CustomerCreateView.as_view())),
+            login_required(views_customer.CustomerCreateView.as_view())),
         name='customer_create'),
 
     url(r'^customer/update/(?P<pk>\d+)/$',
         cache_control(private=True)(
-            login_required(CustomerUpdateView.as_view())),
+            login_required(views_customer.CustomerUpdateView.as_view())),
         name='customer_update'),
 
     # ===========================================================================
-    # Users
+    # Customer's Users
     # ===========================================================================
+
     url(r'^customer/user/list/(?P<customer_id>\d+)/$',
         cache_control(private=True)(
-            login_required(UserListView.as_view())),
+            login_required(views_user_customer.CustomerUserListView.as_view())),
         name='customer_user_list'),
 
     url(r'^customer/user/create/(?P<customer_id>\d+)/$',
         cache_control(private=True)(
-            login_required(UserCreateView.as_view())),
+            login_required(views_user_customer.CustomerUserCreateView.as_view())),
         name='customer_user_create'),
 
     url(r'^customer/user/update/(?P<pk>\d+)/$',
         cache_control(private=True)(
-            login_required(UserUpdateView.as_view())),
+            login_required(views_user_customer.CustomerUserUpdateView.as_view())),
         name='customer_user_update'),
 
-    url(r'^user/preferences/(?P<pk>\d+)/$',
+    # ===========================================================================
+    # Studio's Users
+    # ===========================================================================
+
+    url(r'^studio/user/list/$',
         cache_control(private=True)(
-            login_required(UserPreferenceUpdateView.as_view())),
-        name='customer_user_preferences_update'),
+            login_required(views_user_studio.StudioUserListView.as_view())),
+        name='studio_user_list'),
+
+    url(r'^studio/user/create/$',
+        cache_control(private=True)(
+            login_required(views_user_studio.StudioUserCreateView.as_view())),
+        name='studio_user_create'),
+
+    url(r'^studio/user/update/(?P<photographer_user_id>\d+)/$',
+        cache_control(private=True)(
+            login_required(views_user_studio.StudioUserUpdateView.as_view())),
+        name='studio_user_update'),
+
+    # ===========================================================================
+    # Session Types
+    # ===========================================================================
+
+    url(r'^session-type/list/$',
+        cache_control(private=True)(
+            login_required(views_session_type.SessionTypeListView.as_view())),
+        name='session_type_list'),
+
+    url(r'^session-type/create/$',
+        cache_control(private=True)(
+            login_required(views_session_type.SessionTypeCreateView.as_view())),
+        name='session_type_create'),
+
+    url(r'^session-type/(?P<session_type_id>\d+)/update/$',
+        cache_control(private=True)(
+            login_required(views_session_type.SessionTypeUpdateView.as_view())),
+        name='session_type_update'),
+
+    url(r'^session-type/(?P<session_type_id>\d+)/archive/$',
+        cache_control(private=True)(
+            login_required(views_session_type.SessionTypeArchiveView.as_view(archive=True))),
+        name='session_type_archive'),
+
+    url(r'^session-type/(?P<session_type_id>\d+)/unarchive/$',
+        cache_control(private=True)(
+            login_required(views_session_type.SessionTypeArchiveView.as_view(archive=False))),
+        name='session_type_unarchive'),
+
+
+    # ===========================================================================
+    # Preview Size
+    # ===========================================================================
+
+    url(r'^preview-size/list/$',
+        cache_control(private=True)(
+            login_required(views_preview_size.PreviewSizeListView.as_view())),
+        name='preview_size_list'),
+
+    url(r'^preview-size/create/$',
+        cache_control(private=True)(
+            login_required(views_preview_size.PreviewSizeCreateView.as_view())),
+        name='preview_size_create'),
+
+    url(r'^preview-size/(?P<preview_size_id>\d+)/update/$',
+        cache_control(private=True)(
+            login_required(views_preview_size.PreviewSizeUpdateView.as_view())),
+        name='preview_size_update'),
+
+    url(r'^preview-size/(?P<preview_size_id>\d+)/archive/$',
+        cache_control(private=True)(
+            login_required(views_preview_size.PreviewSizeArchiveView.as_view(archive=True))),
+        name='preview_size_archive'),
+
+    url(r'^preview-size/(?P<preview_size_id>\d+)/unarchive/$',
+        cache_control(private=True)(
+            login_required(views_preview_size.PreviewSizeArchiveView.as_view(archive=False))),
+        name='preview_size_unarchive'),
+
+    # ===========================================================================
+    # User Preferences
+    # ===========================================================================
+
+    url(r'^user/preferences/$',
+        cache_control(private=True)(
+            login_required(views_user_preferences.UserPreferenceUpdateView.as_view())),
+        name='user_preferences_update'),
 
     # ===========================================================================
     # SessionQuote
@@ -238,29 +363,35 @@ urlpatterns = patterns(
 
     url(r'^quote/create/$',
         cache_control(private=True)(
-            login_required(SessionQuoteCreateView.as_view())),
+            login_required(views_session_quote.SessionQuoteCreateView.as_view())),
         name='quote_create'),
 
     url(r'^quote/list/$',
         cache_control(private=True)(
             login_required(
-                SessionQuoteListView.as_view(filter=''))),
+                views_session_quote.SessionQuoteListView.as_view())),
         name='quote_list'),
 
     url(r'^quote/list/pending_for_cusomter/$',
         cache_control(private=True)(
             login_required(
-                SessionQuoteListView.as_view(filter='pending_for_customer'))),
+                views_session_quote.SessionQuotePendigForCustomerListView.as_view())),
         name='quote_list_pending_for_customer'),
+
+    url(r'^quote/search/$',
+        cache_control(private=True)(
+            login_required(
+                views_session_quote.SessionQuoteSearchView.as_view())),
+        name='quote_search'),
 
     url(r'^quote/detail/(?P<pk>\d+)/$',
         cache_control(private=True)(
-            login_required(SessionQuoteDetailView.as_view())),
+            login_required(views_session_quote.SessionQuoteDetailView.as_view())),
         name='quote_detail'),
 
     url(r'^quote/update/(?P<pk>\d+)/$',
         cache_control(private=True)(
-            login_required(SessionQuoteUpdateView.as_view())),
+            login_required(views_session_quote.SessionQuoteUpdateView.as_view())),
         name='quote_update'),
 
 
@@ -270,12 +401,12 @@ urlpatterns = patterns(
 
     url(r'^quote/alternatives/choose/(?P<pk>\d+)/$',  # for customer
         cache_control(private=True)(
-            login_required(SessionQuoteAlternativeSelectView.as_view())),
+            login_required(views_session_quote.SessionQuoteAlternativeSelectView.as_view())),
         name='quote_choose_alternative'),
 
     url(r'^quote/alternatives/create/(?P<session_quote_id>\d+)/$',
         cache_control(private=True)(
-            login_required(SessionQuoteAlternativeCreateView.as_view())),
+            login_required(views_session_quote.SessionQuoteAlternativeCreateView.as_view())),
         name='quote_alternatives_create'),
 
 
@@ -283,14 +414,21 @@ urlpatterns = patterns(
     # Reports
     # ===========================================================================
 
-    url(r'^report/(\d+)/$', 'lumina.views_reports.view_report', name='view_report'),
+    url(r'^report/cost_vs_charged_by_customer_type/$',
+        views_reports.view_report_cost_vs_charged_by_customer_type,
+        name='report_cost_vs_charged_by_customer_type'),
 
-    # ===========================================================================
-    # Studio preferences
-    # ===========================================================================
+    url(r'^report/extended_quotes_through_time/$',
+        views_reports.view_extended_quotes_through_time,
+        name='report_extended_quotes_through_time'),
 
-    # FIXME: implement this view
-    url(r'^studio/preview_sizes/$', 'lumina.views.home', name='studio_preview_sizes'),
+    url(r'^report/extended_quotes_by_customer/$',
+        views_reports.view_extended_quotes_by_customer,
+        name='report_extended_quotes_by_customer'),
+
+    url(r'^report/income_by_customer_type/$',
+        views_reports.view_income_by_customer_type,
+        name='report_income_by_customer_type'),
 
     #
     # Other

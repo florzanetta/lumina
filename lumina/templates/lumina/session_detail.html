@@ -75,7 +75,7 @@
 
     <h5>Imágenes del album:</h5>
     {% for image in object.image_set.all %}
-        {% image_item image %}
+        {% image_item image show_set_as_album_icon_button=True %}
         <hr>
     {% empty %}
         <p>No hay imagenes...</p>
@@ -215,6 +215,18 @@
 	    </p>
 	    </form>
 	{% endif %} {% endblock content %}
+
+
+{% block javascript_bottom %}
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+    });
+
+
+</script>
+{% endblock javascript_bottom %}
 
 </body>
 </html>

@@ -1,32 +1,93 @@
 # -*- coding: utf-8 -*-
 
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, FormMixin
 from django.views.generic.list import ListView
 from django.contrib import messages
+from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.core import paginator as django_paginator
 
 from lumina.models import Image
-from lumina.forms import ImageCreateForm, ImageUpdateForm
-
-
-__all__ = [
-    'ImageListView',
-    'ImageCreateView',
-    'ImageUpdateView',
-]
+from lumina.forms import ImageCreateForm, ImageUpdateForm, ImageSearchForm
 
 
 # ===============================================================================
 # Image
 # ===============================================================================
 
-class ImageListView(ListView):
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-    #    #django.views.generic.list.ListView
+class ImageListView(ListView, FormMixin):
     model = Image
+    PAGE_RESULT_SIZE = settings.LUMINA_DEFAULT_PAGINATION_SIZE
 
     def get_queryset(self):
-        return Image.objects.visible_images(self.request.user)
+        return Image.objects.none()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_search'] = True
+        context['form'] = self.form
+        # overwrites 'object_list' from `get_queryset()`
+        context['object_list'] = self.search_result_qs
+        context['hide_search_result'] = self.search_result_qs is None
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get(self, request, *args, **kwargs):
+        self.form = self.get_form(form_class=ImageSearchForm)
+        self.search_result_qs = None
+
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.form = self.get_form(form_class=ImageSearchForm)
+        self.search_result_qs = self._do_search(request, self.form)
+
+        return super().get(request, *args, **kwargs)
+
+    def _do_search(self, request, form):
+        # Validate form
+        if not form.is_valid():
+            messages.error(request,
+                           "Los parámetros de la búsqueda son inválidos")
+            return Image.objects.none()
+
+        # Do the search
+        qs = Image.objects.visible_images(self.request.user)
+        if form.cleaned_data['customer']:
+            qs = qs.filter(session__customer=form.cleaned_data['customer'])
+
+        if form.cleaned_data['session_type']:
+            qs = qs.filter(session__session_type=form.cleaned_data['session_type'])
+
+        if form.cleaned_data['fecha_creacion_desde']:
+            qs = qs.filter(created__gte=form.cleaned_data['fecha_creacion_desde'])
+
+        if form.cleaned_data['fecha_creacion_hasta']:
+            qs = qs.filter(created__lte=form.cleaned_data['fecha_creacion_hasta'])
+
+        # ----- <OrderBy> -----
+        qs = qs.order_by('session__customer__name',
+                         'session__customer__id',
+                         'session__name',
+                         'session__id',
+                         'created')
+        # ----- </OrderBy> -----
+
+        # ----- <Paginate> -----
+        result_paginator = django_paginator.Paginator(qs, self.PAGE_RESULT_SIZE)
+        try:
+            qs = result_paginator.page(self.form.cleaned_data['page'])
+        except django_paginator.PageNotAnInteger:  # If page is not an integer, deliver first page.
+            qs = result_paginator.page(1)
+        except django_paginator.EmptyPage:  # If page is out of range (e.g. 9999), deliver last page of results.
+            qs = result_paginator.page(result_paginator.num_pages)
+        # ----- </Paginate> -----
+
+        return qs
 
 
 class ImageCreateView(CreateView):

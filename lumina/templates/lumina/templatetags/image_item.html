@@ -31,6 +31,11 @@
                     <i class="fa fa-exclamation-circle"></i> Sólo vista previa.
                 </small>
             {% endif %}
+            {% if show_set_as_album_icon_button %}
+                &nbsp; · &nbsp;
+                <a href="{% url 'set_image_as_album_icon' image.session.id image.id %}"
+                   class="btn btn-primary btn-xs">Usar como ícono del album</a>
+            {% endif %}
         </p>
 
     </div>

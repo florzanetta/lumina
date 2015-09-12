@@ -10,7 +10,7 @@
 
 {% block content %}
 
-    {% if show_search_form %}
+    {% if is_search %}
         <div class="panel panel-info">
             <div class="panel-heading">
                 <h4>Búsqueda de sesiones</h4>
@@ -33,7 +33,7 @@
 
             <div class="media">
                 <a class="pull-left" href="javascript:void(0);">
-                    <img class="media-object" src="/static/lumina/img/album-64.png">
+                    <img class="media-object" src="{% url 'session_album_icon' a_session.id %}">
                 </a>
                 <div class="media-body">
                     <div class="media-heading"><a
@@ -67,12 +67,19 @@
             <hr>
 
         {% empty %}
-            <h4>No se encontraron sessiones fotográficas</h4>
+
+            <h4>
+                {% if is_search %}
+                    No se encontraron sesiones fotográficas que concuerden con los parámetros de búsqueda
+                {% else %}
+                    No hay sesiones fotográficas para mostrar
+                {% endif %}
+            </h4>
             <hr>
 
         {% endfor %}
 
-        {% if show_search_form %}
+        {% if is_search %} <!-- pagination -->
             <nav>
               <ul class="pagination pagination-lg">
 
@@ -110,7 +117,7 @@
             </nav>
         {% endif %}
 
-    {% endif %}
+    {% endif %} <!-- hide_search_result -->
 
     {% if show_add_session_button %}
         {% if user.is_photographer %}

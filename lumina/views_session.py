@@ -5,7 +5,7 @@ import json
 import logging
 import uuid
 
-from django.views.generic.edit import CreateView, UpdateView, FormView, FormMixin
+from django.views.generic.edit import CreateView, UpdateView, FormMixin
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.http.response import HttpResponse, HttpResponseRedirect
@@ -14,24 +14,14 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import SuspiciousOperation
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
-from django.core import paginator
+from django.core import paginator as django_paginator
+from django.conf import settings
 
 from lumina import forms
 from lumina import models
 
 
 logger = logging.getLogger(__name__)
-
-
-__all__ = [
-    'SessionListView',
-    'SessionSearchView',
-    'SessionDetailView',
-    'SessionCreateView',
-    'SessionUpdateView',
-    'SessionUploadPreviewsView',
-    'session_upload_previews_upload',
-]
 
 
 # ===============================================================================
@@ -55,7 +45,19 @@ class SessionListView(ListView):
 class SessionSearchView(ListView, FormMixin):
     model = models.Session
 
-    PAGE_RESULT_SIZE = 2
+    PAGE_RESULT_SIZE = settings.LUMINA_DEFAULT_PAGINATION_SIZE
+
+    def get_queryset(self):
+        return models.Session.objects.none()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_search'] = True
+        context['form'] = self.form
+        # overwrites 'object_list' from `get_queryset()`
+        context['object_list'] = self.search_result_qs
+        context['hide_search_result'] = self.search_result_qs is None
+        return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -107,28 +109,16 @@ class SessionSearchView(ListView, FormMixin):
         qs = qs.order_by('customer__name', 'name')
 
         # ----- <Paginate> -----
-        result_paginator = paginator.Paginator(qs, self.PAGE_RESULT_SIZE)
+        result_paginator = django_paginator.Paginator(qs, self.PAGE_RESULT_SIZE)
         try:
             qs = result_paginator.page(self.form.cleaned_data['page'])
-        except paginator.PageNotAnInteger:  # If page is not an integer, deliver first page.
+        except django_paginator.PageNotAnInteger:  # If page is not an integer, deliver first page.
             qs = result_paginator.page(1)
-        except paginator.EmptyPage:  # If page is out of range (e.g. 9999), deliver last page of results.
+        except django_paginator.EmptyPage:  # If page is out of range (e.g. 9999), deliver last page of results.
             qs = result_paginator.page(result_paginator.num_pages)
         # ----- </Paginate> -----
 
         return qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['show_search_form'] = True
-        context['form'] = self.form
-        # overwrites 'object_list' from `get_queryset()`
-        context['object_list'] = self.search_result_qs
-        context['hide_search_result'] = self.search_result_qs is None
-        return context
-
-    def get_queryset(self):
-        return models.Session.objects.none()
 
 
 class SessionDetailView(DetailView):
@@ -157,7 +147,45 @@ class SessionDetailView(DetailView):
         return models.Session.objects.visible_sessions(self.request.user)
 
 
-class SessionCreateUpdateMixin():
+class SetImageAsAlbumIconView(DetailView):
+    model = models.Session
+
+    def get_queryset(self):
+        return models.Session.objects.visible_sessions(self.request.user)
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+
+        if not request.user.is_photographer():
+            raise SuspiciousOperation("User is not a photographer")
+
+        session = self.get_object()
+        image = session.image_set.all().get(pk=kwargs['image_id'])
+
+        session.set_image_as_album_icon(image)
+
+        messages.success(self.request, 'La imagen fue seteada como el icono del album')
+        return HttpResponseRedirect(reverse('session_detail', args=[session.id]))
+
+
+class AlbumIconView(DetailView):
+    model = models.Session
+
+    def get_queryset(self):
+        return models.Session.objects.visible_sessions(self.request.user)
+
+    def get(self, request, *args, **kwargs):
+        session = self.get_object()
+        if session.album_icon:
+            thumbnail_url = reverse('image_thumb_64x64', args=[session.album_icon.id])
+            return HttpResponseRedirect(thumbnail_url)
+        else:
+            return HttpResponseRedirect('/static/lumina/img/album-64.png')
+
+
+class SessionCreateUpdateMixin:
     def _setup_form(self, form):
         qs_customers = self.request.user.all_my_customers()
         form.fields['customer'].queryset = qs_customers
@@ -168,10 +196,10 @@ class SessionCreateUpdateMixin():
 class SessionCreateView(CreateView, SessionCreateUpdateMixin):
     model = models.Session
     form_class = forms.SessionCreateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/base_create_update_crispy_form.html'
 
     def get_form(self, form_class):
-        form = super(SessionCreateView, self).get_form(form_class)
+        form = super().get_form(form_class)
         self._setup_form(form)
         return form
 
@@ -192,10 +220,10 @@ class SessionUpdateView(UpdateView, SessionCreateUpdateMixin):
     # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = models.Session
     form_class = forms.SessionUpdateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/base_create_update_crispy_form.html'
 
     def get_form(self, form_class):
-        form = super(SessionUpdateView, self).get_form(form_class)
+        form = super().get_form(form_class)
         self._setup_form(form)
         return form
 

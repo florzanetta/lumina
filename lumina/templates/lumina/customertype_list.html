@@ -1,0 +1,41 @@
+{% extends "lumina/base.html" %}
+{% load lumina_extras %}
+
+{% block content %}
+
+	<h3>Tipos de clientes disponibles</h3>
+
+    <table class="table">
+
+        {% for customer_type in object_list %}
+            <tr>
+                <td width="10%" class="text-right">
+                    {% if customer_type.archived %}
+                        <span class="label label-danger">Archivada</span>
+                    {% else %}
+                        <span class="label label-success">Disponible</span>
+                    {% endif %}
+                </td>
+                <td width="80%">
+                    <a href="{% url 'customer_type_update' customer_type.id %}">
+                        {{customer_type.name}}
+                    </a>
+                </td>
+                <td width="10%">
+                    {% if customer_type.archived %}
+                        <a href="{% url 'customer_type_unarchive' customer_type.id %}" class="btn btn-primary btn-xs">Desarchivar</a>
+                    {% else %}
+                        <a href="{% url 'customer_type_archive' customer_type.id %}" class="btn btn-primary btn-xs">Archivar</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td>No se ha definido ningun tipo de cliente</td></tr>
+        {% endfor %}
+
+
+    </table>
+
+    <a href="{% url 'customer_type_create' %}" class="btn btn-primary">Nuevo tipo de cliente</a>
+
+{% endblock content %}
