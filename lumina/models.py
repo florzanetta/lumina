@@ -69,8 +69,6 @@ class LuminaUser(AbstractUser):
 
     This should be None (NULL) for `user_type == PHOTOGRAPHER`.
     """
-    # REFACTOR: used to be an attribute `customer_of` and point to `LuminaUser`
-    # REFACTOR: `user_for_customer` is a new attribute
     user_for_customer = models.ForeignKey(
         'Customer', null=True, blank=True, related_name='users', verbose_name="Cliente")
 
@@ -325,18 +323,15 @@ class Session(models.Model):
     """
     name = models.CharField(max_length=300, verbose_name="Nombre")
 
-    # REFACTOR: `studio` used to be named `user` and point to `LuminaUser`
     studio = models.ForeignKey(Studio, verbose_name="estudio")
 
     photographer = models.ForeignKey(LuminaUser, verbose_name="fotógrafo")
 
-    # REFACTOR: `customer` is a new attribute
     customer = models.ForeignKey(Customer, null=False, blank=False, verbose_name="cliente")
 
     session_type = models.ForeignKey(
         'SessionType', null=True, related_name='+', verbose_name="tipo de sesión")
 
-    # REFACTOR: `shared_with` used to point to `LuminaUser`
     shared_with = models.ManyToManyField(
         Customer, blank=True, related_name='sessions_shared_with_me',
         verbose_name="Compartida con")
@@ -418,13 +413,11 @@ class SharedSessionByEmail(models.Model):
     shared_with = models.EmailField(max_length=254, verbose_name="compartida con")
     # https://docs.djangoproject.com/en/1.5/ref/models/fields/#emailfield
 
-    # REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
     studio = models.ForeignKey(Studio, verbose_name="estudio")
 
-    # REFACTOR: `session` used to be named `album` and refer to `Album`
     session = models.ForeignKey(Session, related_name='shares_via_email', verbose_name="sesión")
 
-    # FIXME: REFACTOR: add `shared_by`, to know who shared the album
+    # TODO: IDEA: add `shared_by`, to know who shared the album
     # shared_by = models.ForeignKey(LuminaUser)
 
     random_hash = models.CharField(max_length=36, unique=True)  # len(uuid4) = 36
@@ -516,13 +509,10 @@ class ImageSelection(models.Model):
         (STATUS_IMAGES_SELECTED, 'Seleccion realizada'),
     )
 
-    # REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
     studio = models.ForeignKey(Studio, related_name='+', verbose_name="estudio")
 
-    # REFACTOR: `session` used to be named `album` and refer to `Album`
     session = models.ForeignKey(Session, verbose_name="sesión")
 
-    # REFACTOR: `customer` used to refer to `LuminaUser`
     customer = models.ForeignKey(Customer, related_name='+', verbose_name="cliente")
 
     image_quantity = models.PositiveIntegerField(verbose_name="cantidad de imágenes")
@@ -530,6 +520,7 @@ class ImageSelection(models.Model):
         max_length=1, choices=STATUS, default=STATUS_WAITING, verbose_name="estado")
     selected_images = models.ManyToManyField(
         'Image', blank=True, verbose_name="imágenes seleccionadas")
+
     # TODO: `preview_size` maybe should be non-null
     preview_size = models.ForeignKey(
         'PreviewSize', null=True, blank=True, verbose_name="tamaño de previsualización")
@@ -659,10 +650,8 @@ class Image(models.Model):
                                               verbose_name="checksum de archivo original",
                                               null=True, blank=True)
 
-    # REFACTOR: `studio` used to be named `user` and refer to `LuminaUser`
     studio = models.ForeignKey(Studio, verbose_name="estudio")
 
-    # REFACTOR: `session` used to be named `album` and refer to `Album`
     session = models.ForeignKey(Session, null=True, verbose_name="sesión")
 
     created = models.DateTimeField(auto_now_add=True)
@@ -778,7 +767,7 @@ class SessionQuote(models.Model):
                                                    verbose_name="presupuesto alternativo")
 
     stipulated_date = models.DateTimeField(verbose_name="fecha de entrega pactada")
-    # FIXME: check stipulated_down_payment <= cost
+
     stipulated_down_payment = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name="entrega inicial pactada")
     #    actual_down_payment = models.DecimalField(max_digits=10, decimal_places=2,
@@ -874,8 +863,6 @@ class SessionQuote(models.Model):
                                           cost=alt_cost)
         self.accepted_quote_alternative = sqa
         # done!
-
-        # TODO: save history
 
         # change state after checks
         self.accepted_rejected_by = user
@@ -975,8 +962,6 @@ class SessionQuote(models.Model):
 
 
 class SessionQuoteAlternative(models.Model):
-    """
-    """
     session_quote = models.ForeignKey(
         SessionQuote, related_name='quote_alternatives', verbose_name="presupuesto")
     image_quantity = models.PositiveIntegerField(verbose_name="cantidad de imágenes")
