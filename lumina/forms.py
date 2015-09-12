@@ -7,6 +7,7 @@ Created on Jun 1, 2013
 """
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.urlresolvers import reverse_lazy
 
 from crispy_forms import bootstrap
 from crispy_forms import helper
@@ -280,12 +281,19 @@ CustomerUpdateForm = CustomerCreateForm
 # CustomerType
 # ===============================================================================
 
-class GenericCustomerTypeForm(forms.ModelForm):
+class GenericCreateUpdateModelForm(forms.ModelForm):
 
-    FORM_TITLE = ''
-    SUBMIT_LABEL = ''
+    FORM_TITLE = None
+    SUBMIT_LABEL = None
+    CANCEL_URL = None
+    FIELDS = []
 
     def __init__(self, *args, **kwargs):
+        assert self.FORM_TITLE is not None
+        assert self.SUBMIT_LABEL is not None
+        assert self.CANCEL_URL is not None
+        assert self.FIELDS
+
         super().__init__(*args, **kwargs)
         self.helper = helper.FormHelper()
         self.helper.form_class = 'form-horizontal'
@@ -295,13 +303,19 @@ class GenericCustomerTypeForm(forms.ModelForm):
         self.helper.layout = helper.Layout(
             layout.Fieldset(
                 self.FORM_TITLE,
-                'name',
+                *self.FIELDS
             ),
             bootstrap.FormActions(
                 layout.Submit('submit_button', self.SUBMIT_LABEL, css_id='form-submit-button'),
-                layout.HTML("<a class='btn btn-primary' href='{% url 'customer_type_list' %}'>Cancelar</a>"),
+                layout.HTML("<a class='btn btn-primary' href='{}'>Cancelar</a>".format(self.CANCEL_URL)),
             ),
         )
+
+
+class GenericCustomerTypeForm(GenericCreateUpdateModelForm):
+
+    CANCEL_URL = reverse_lazy('customer_type_list')
+    FIELDS = ['name']
 
     class Meta:
         model = models.CustomerType
