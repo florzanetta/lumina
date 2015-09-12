@@ -20,7 +20,7 @@ class CustomerTypeListView(ListView):
     model = models.CustomerType
 
     def get_queryset(self):
-        return self.request.user.all_my_customer_types()
+        return self.request.user.get_customer_types()
 
 
 class CustomerTypeCreateView(SuccessMessageMixin,
@@ -47,7 +47,7 @@ class CustomerTypeUpdateView(SuccessMessageMixin,
     success_message = 'El tipo de cliente ha sido actualizado exitosamente'
 
     def get_queryset(self):
-        return self.request.user.all_my_customer_types()
+        return self.request.user.get_customer_types()
 
 
 class CustomerTypeArchiveView(detail.DetailView):
@@ -58,7 +58,7 @@ class CustomerTypeArchiveView(detail.DetailView):
     archive = None
 
     def get_queryset(self):
-        return self.request.user.all_my_customer_types()
+        return self.request.user.get_customer_types()
 
     def get(self, request, *args, **kwargs):
         # FIXME: REFACTOR THIS, SHOULDN'T USE GET FOR THIS

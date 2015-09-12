@@ -118,9 +118,12 @@ class LuminaUser(AbstractUser):
         return LuminaUser.objects.filter(user_type=LuminaUser.CUSTOMER,
                                          user_for_customer__studio=self.studio)
 
-    def all_my_customer_types(self):
-        assert self.user_type == LuminaUser.PHOTOGRAPHER
-        return CustomerType.objects.all_ordered().filter(studio=self.studio)
+    def get_customer_types(self, **kwargs):
+        """Filter using CustomerType.objects.for_photographer_ordered()
+
+        Pass the **kwargs
+        """
+        return CustomerType.objects.for_photographer_ordered(self, **kwargs)
 
     def _check(self):
         if self.is_photographer():
@@ -970,11 +973,13 @@ class SessionQuoteAlternative(models.Model):
 
 class CustomerTypeManager(models.Manager):
 
-    def all_ordered(self):
-        return CustomerType.objects.order_by(Lower('name'))
-
-    def non_archived_ordered(self):
-        return CustomerType.objects.filter(archived=False).order_by(Lower('name'))
+    def for_photographer_ordered(self, photographer, exclude_archived=False):
+        """Return CustomerType visible for photographer"""
+        assert photographer.is_photographer()
+        qs = CustomerType.objects.filter(studio=photographer.studio)
+        if exclude_archived:
+            qs = qs.filter(archived=False)
+        return qs.order_by(Lower('name'))
 
 
 class CustomerType(models.Model):
