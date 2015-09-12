@@ -21,6 +21,37 @@ from lumina.models import Session, LuminaUser, Customer, SharedSessionByEmail, \
     UserPreferences, SessionType
 
 
+class GenericCreateUpdateModelForm(forms.ModelForm):
+
+    FORM_TITLE = None
+    SUBMIT_LABEL = None
+    CANCEL_URL = None
+    FIELDS = []
+
+    def __init__(self, *args, **kwargs):
+        assert self.FORM_TITLE is not None
+        assert self.SUBMIT_LABEL is not None
+        assert self.CANCEL_URL is not None
+        assert self.FIELDS
+
+        super().__init__(*args, **kwargs)
+        self.helper = helper.FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
+
+        self.helper.layout = helper.Layout(
+            layout.Fieldset(
+                self.FORM_TITLE,
+                *self.FIELDS
+            ),
+            bootstrap.FormActions(
+                layout.Submit('submit_button', self.SUBMIT_LABEL, css_id='form-submit-button'),
+                layout.HTML("<a class='btn btn-primary' href='{}'>Cancelar</a>".format(self.CANCEL_URL)),
+            ),
+        )
+
+
 # ===============================================================================
 # CustomAuthenticationForm
 # ===============================================================================
@@ -262,55 +293,38 @@ class ImageSearchForm(forms.Form):
 # Customer
 # ===============================================================================
 
-class CustomerCreateForm(forms.ModelForm):
+class GenericCustomerForm(GenericCreateUpdateModelForm):
+
+    CANCEL_URL = reverse_lazy('customer_list')
+    FIELDS = [
+        'name', 'customer_type', 'address', 'phone', 'city', 'iva', 'cuit',
+        'ingresos_brutos', 'notes'
+    ]
 
     cuit = ARCUITField(max_length=13, min_length=0, required=False,
                        help_text="Formato: XX-XXXXXXXX-X")
 
     class Meta:
-        model = Customer
+        model = models.Customer
         fields = (
             'name', 'customer_type', 'address', 'phone', 'city', 'iva', 'cuit',
             'ingresos_brutos', 'notes'
         )
 
-CustomerUpdateForm = CustomerCreateForm
+
+class CustomerCreateForm(GenericCustomerForm):
+    FORM_TITLE = 'Crear nuevo cliente'
+    SUBMIT_LABEL = 'Crear'
+
+
+class CustomerUpdateForm(GenericCustomerForm):
+    FORM_TITLE = 'Actualizar cliente'
+    SUBMIT_LABEL = 'Guardar'
 
 
 # ===============================================================================
 # CustomerType
 # ===============================================================================
-
-class GenericCreateUpdateModelForm(forms.ModelForm):
-
-    FORM_TITLE = None
-    SUBMIT_LABEL = None
-    CANCEL_URL = None
-    FIELDS = []
-
-    def __init__(self, *args, **kwargs):
-        assert self.FORM_TITLE is not None
-        assert self.SUBMIT_LABEL is not None
-        assert self.CANCEL_URL is not None
-        assert self.FIELDS
-
-        super().__init__(*args, **kwargs)
-        self.helper = helper.FormHelper()
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-lg-2'
-        self.helper.field_class = 'col-lg-8'
-
-        self.helper.layout = helper.Layout(
-            layout.Fieldset(
-                self.FORM_TITLE,
-                *self.FIELDS
-            ),
-            bootstrap.FormActions(
-                layout.Submit('submit_button', self.SUBMIT_LABEL, css_id='form-submit-button'),
-                layout.HTML("<a class='btn btn-primary' href='{}'>Cancelar</a>".format(self.CANCEL_URL)),
-            ),
-        )
-
 
 class GenericCustomerTypeForm(GenericCreateUpdateModelForm):
 
