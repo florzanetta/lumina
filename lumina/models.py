@@ -324,9 +324,7 @@ class Session(models.Model):
     name = models.CharField(max_length=300, verbose_name="Nombre")
 
     studio = models.ForeignKey(Studio, verbose_name="estudio")
-
     photographer = models.ForeignKey(LuminaUser, verbose_name="fotógrafo")
-
     customer = models.ForeignKey(Customer, null=False, blank=False, verbose_name="cliente")
 
     session_type = models.ForeignKey(
@@ -939,23 +937,6 @@ class SessionQuote(models.Model):
             return self.quote_alternatives.filter(image_quantity__gt=current_quantity) \
                 .order_by('image_quantity')
         raise Exception("Invalid state: {}".format(self.status))
-
-    def create_session(self, user):
-        assert user.is_photographer()
-        assert user.studio == self.studio
-        assert self.status == SessionQuote.STATUS_ACCEPTED
-
-        new_session = Session()
-        new_session.name = self.name
-        new_session.studio = self.studio
-        new_session.photographer = user
-        new_session.customer = self.customer
-        new_session.save()
-
-        self.session = new_session
-        self.save()
-
-        return new_session
 
     def __str__(self):
         return "Quote for {}".format(self.customer)

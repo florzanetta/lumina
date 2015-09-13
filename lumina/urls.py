@@ -75,6 +75,11 @@ urlpatterns = patterns(
             login_required(views_session.SessionUpdateView.as_view())),
         name='session_update'),
 
+    url(r'^session/create-from-quote/(?P<session_quote_id>\d+)/$',
+        cache_control(private=True)(
+            login_required(views_session.SessionCreateFromQuoteView.as_view())),
+        name='session_create_from_quote'),
+
     # UPLOADS
 
     url(r'^session/upload-previews/(?P<pk>\d+)/$',

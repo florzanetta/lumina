@@ -209,11 +209,43 @@ class SessionCreateView(CreateView, SessionCreateUpdateMixin):
         messages.success(self.request, 'La sesión fue creado correctamente')
         return ret
 
+
+class SessionCreateFromQuoteView(CreateView):
+    """Create from an existing QUOTE"""
+    model = models.Session
+    form_class = forms.SessionCreateFromQuoteForm
+    template_name = 'lumina/session_create_from_quote.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.session_quote = models.SessionQuote.objects.modificable_sessionquote(
+            request.user).get(pk=kwargs['session_quote_id'])
+        assert self.session_quote.session is None
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
-        context = super(SessionCreateView, self).get_context_data(**kwargs)
-        context['title'] = "Crear sesión"
-        context['submit_label'] = "Crear"
-        return context
+        return super().get_context_data(
+            session_quote=self.session_quote,
+            **kwargs
+        )
+
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        form_kwargs['instance'] = models.Session(
+            studio=self.request.user.studio,
+            name=self.session_quote.name,
+            customer=self.session_quote.customer,
+        )
+        form_kwargs['quote'] = self.session_quote
+        form_kwargs['user'] = self.request.user
+        return form_kwargs
+
+    def form_valid(self, form):
+        form.instance.studio = self.request.user.studio
+        ret = super().form_valid(form)
+        self.session_quote.session = self.object  # form_valid() -> self.object
+        self.session_quote.save()
+        messages.success(self.request, 'La sesión fue creado correctamente')
+        return ret
 
 
 class SessionUpdateView(UpdateView, SessionCreateUpdateMixin):
@@ -234,12 +266,6 @@ class SessionUpdateView(UpdateView, SessionCreateUpdateMixin):
         ret = super(SessionUpdateView, self).form_valid(form)
         messages.success(self.request, 'La sesión fue actualizado correctamente')
         return ret
-
-    def get_context_data(self, **kwargs):
-        context = super(SessionUpdateView, self).get_context_data(**kwargs)
-        context['title'] = "Actualizar sesión"
-        context['submit_label'] = "Actualizar"
-        return context
 
 
 class SessionUploadPreviewsView(DetailView):

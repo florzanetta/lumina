@@ -1,0 +1,16 @@
+{% extends "lumina/base_create_update_crispy_form.html" %}
+
+{% block content %}
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">Información del presupuesto</div>
+      <div class="panel-body">
+        La sesión fotográfica se creará asociada a un presupuesto.
+          <h4><small>Presupuesto:</small> {{ session_quote.name }}</h4>
+          <h4><small>Cliente:</small> {{ session_quote.customer.name }}</h4>
+      </div>
+    </div>
+
+    {{ block.super }}
+
+{% endblock content %}

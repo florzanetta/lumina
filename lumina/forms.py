@@ -109,6 +109,31 @@ class SessionUpdateForm(_GenericSessionForm):
     SUBMIT_LABEL = 'Guardar'
 
 
+class SessionCreateFromQuoteForm(forms_utils.GenericCreateUpdateModelForm):
+    """When creating a sessoin from a QUOTE, some field should not be shown"""
+
+    FIELDS = ['name', 'session_type', 'photographer', 'worked_hours']
+
+    FORM_TITLE = 'Crear nueva sesión fotográfica'
+    SUBMIT_LABEL = 'Crear'
+
+    def __init__(self, *args, **kwargs):
+        self.quote = kwargs.pop('quote')
+        self.user = kwargs.pop('user')
+        assert isinstance(self.quote, models.SessionQuote)
+        assert isinstance(self.user, models.LuminaUser)
+        super().__init__(*args, **kwargs)
+        self.fields['session_type'].queryset = self.user.get_session_types()
+        self.fields['photographer'].queryset = self.user.get_all_photographers()
+
+    def get_cancel_url(self):
+        return reverse_lazy('quote_detail', args=[self.quote.id])
+
+    class Meta:
+        model = models.Session
+        fields = ('name', 'session_type', 'photographer', 'worked_hours')
+
+
 class SessionSearchForm(forms.Form):
 
     ARCHIVED_STATUS_ALL = 'ALL'

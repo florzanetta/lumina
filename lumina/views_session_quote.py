@@ -326,11 +326,7 @@ class SessionQuoteDetailView(DetailView):
             return HttpResponseRedirect(reverse('quote_update', args=[quote.id]))
 
         elif 'button_create_session' in request.POST:
-            new_session = quote.create_session(request.user)
-            messages.success(self.request,
-                             "Se ha creado una nueva sesión fotográfica asociada al presupuesto. "
-                             "Ahora puede realizar las modificaciones que desee.")
-            return HttpResponseRedirect(reverse('session_update', args=[new_session.id]))
+            return HttpResponseRedirect(reverse('session_create_from_quote', args=[quote.id]))
 
         else:
             raise SuspiciousOperation()
