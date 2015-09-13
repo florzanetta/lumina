@@ -15,7 +15,7 @@ from django.core.exceptions import SuspiciousOperation
 
 from lumina.models import Session, ImageSelection
 from lumina.forms import ImageSelectionCreateForm, ImageSelectionAutoCreateForm
-from lumina.mail import send_email
+from lumina.mail import send_emails_to_users
 
 logger = logging.getLogger(__name__)
 
@@ -104,9 +104,8 @@ class ImageSelectionCreateView(CreateView):
             reverse('session_detail', args=[form.instance.session.id]))
         message = "Tiene una nueva solicitud para seleccionar fotografías.\n" + \
                   "Para verlo ingrese a {}".format(link)
-        for customer_user in form.instance.customer.users.all():
-            to_email = customer_user.email
-            send_email(subject, to_email, message)
+
+        send_emails_to_users(subject, form.instance.customer.users.all(), message)
 
         messages.success(
             self.request, 'La solicitud de seleccion de imagenes '

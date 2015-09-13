@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import SuspiciousOperation
 
 from lumina.models import ImageSelection
-from lumina.mail import send_email
+from lumina.mail import send_emails_to_users
 from lumina import views_utils
 from lumina.views_utils import download_images_as_zip
 
@@ -117,14 +117,14 @@ class ImageSelectionForCustomerView(DetailView):
         image_selection.status = ImageSelection.STATUS_IMAGES_SELECTED
         image_selection.save()
 
+        # --- <mail> ---
         subject = "El cliente ha realizado su selección"
-        for photographer in image_selection.studio.photographers.all():
-            to_email = photographer.email
-            link = self.request.build_absolute_uri(
-                reverse('imageselection_detail', args=[image_selection.id]))
-            body = "El cliente ha seleccionado las imagenes de la sesion.\n" + \
-                   "Para verlo ingrese a {}".format(link)
-            send_email(subject, to_email, body)
+        link = self.request.build_absolute_uri(
+            reverse('imageselection_detail', args=[image_selection.id]))
+        body = "El cliente ha seleccionado las imagenes de la sesion.\n" + \
+               "Para verlo ingrese a {}".format(link)
+        send_emails_to_users(subject, image_selection.studio.photographers.all(), body)
+        # --- </mail> ---
 
         messages.success(self.request, 'La seleccion fue guardada correctamente')
         return HttpResponseRedirect(reverse('imageselection_detail',

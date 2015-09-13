@@ -11,8 +11,8 @@ from django.core.urlresolvers import reverse
 
 from lumina.models import SharedSessionByEmail
 from lumina.forms import SharedSessionByEmailCreateForm
-from lumina.mail import send_email
-from lumina.views_utils import generate_thumbnail_of_image, download_image, download_image
+from lumina.mail import send_emails
+from lumina.views_utils import generate_thumbnail_of_image, download_image
 
 
 # ===============================================================================
@@ -58,7 +58,7 @@ class SharedSessionByEmailCreateView(CreateView):
         link = self.request.build_absolute_uri(
             reverse('shared_session_by_email_view', args=[form.instance.random_hash]))
         body = "Tiene un nuevo album compartido.\nPara verlo ingrese a {}".format(link)
-        send_email(subject, to_email, body)
+        send_emails(subject, [to_email], body)
 
         messages.success(self.request, 'El album fue compartido correctamente')
         return ret
