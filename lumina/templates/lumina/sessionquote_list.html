@@ -71,8 +71,8 @@
                         {% if user.is_photographer and a_quote.session %}
                             <div style="padding-left: 2em;">
                                 <small>
-                                    <i class="fa fa-picture-o"></i>
                                     Sesión asociada:
+                                    <i class="fa fa-picture-o"></i>
                                     <a href="{% url 'session_detail' a_quote.session.id %}">{{ a_quote.session.name }}</a>
                                 </small>
                             </div>
