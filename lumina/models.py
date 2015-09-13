@@ -327,8 +327,7 @@ class Session(models.Model):
     photographer = models.ForeignKey(LuminaUser, verbose_name="fotógrafo")
     customer = models.ForeignKey(Customer, null=False, blank=False, verbose_name="cliente")
 
-    session_type = models.ForeignKey(
-        'SessionType', null=True, related_name='+', verbose_name="tipo de sesión")
+    session_type = models.ForeignKey('SessionType', related_name='+', verbose_name="tipo de sesión")
 
     shared_with = models.ManyToManyField(
         Customer, blank=True, related_name='sessions_shared_with_me',
