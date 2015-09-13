@@ -51,8 +51,9 @@ def imageselection_redirect(request, pk):
                                                 args=[imageselection_id]))
 
 
-class ImageSelectionListView(ListView):
+class ImageSelectionAwaitingCustomerSelectionListView(ListView):
     model = ImageSelection
+    template_name = 'lumina/imageselection_awaiting_customer_selection_list.html'
 
     def get_queryset(self):
         return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user)

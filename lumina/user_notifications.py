@@ -56,10 +56,10 @@ def get_customer_notifications(user):
     if image_selection_pending_count == 1:
         notifications.append(Notification(
             "Hay 1 petición de selección de imágenes pendiente",
-            link=reverse('imageselection_list')))
+            link=reverse('imageselection_awaiting_customer_selection_list')))
     elif image_selection_pending_count > 1:
         notifications.append(Notification(
             "Hay {} peticiones de selección de imágenes pendientes".format(image_selection_pending_count),
-            link=reverse('imageselection_list')))
+            link=reverse('imageselection_awaiting_customer_selection_list')))
 
     return notifications

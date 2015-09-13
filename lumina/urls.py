@@ -130,11 +130,11 @@ urlpatterns = patterns(
         views_image_selection_creation.image_selection_create_from_quote,
         name='image_selection_create_from_quote'),
 
-    url(r'^session/image-selection/list/$',
+    url(r'^session/image-selection/awaiting-customer-selection/list/$',
         cache_control(private=True)(
             login_required(
-                views_image_selection.ImageSelectionListView.as_view())),
-        name='imageselection_list'),
+                views_image_selection.ImageSelectionAwaitingCustomerSelectionListView.as_view())),
+        name='imageselection_awaiting_customer_selection_list'),
 
     url(r'^session/image-selection/with-pending-uploads/list/$',
         cache_control(private=True)(

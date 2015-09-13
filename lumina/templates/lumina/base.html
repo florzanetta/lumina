@@ -87,7 +87,7 @@
                                     <li><a href="{% url 'imageselection_with_pending_uploads_list' %}">Solicitudes esperando subida de fotos</a></li>
 
                             {% else %} <!-- user is client -->
-                                    <li><a href="{% url 'imageselection_list' %}"
+                                    <li><a href="{% url 'imageselection_awaiting_customer_selection_list' %}"
                                         title="Lista de peticiones de seleccion de imagenes">Lista de peticiones</a>
                                     </li>
                             {% endif %}

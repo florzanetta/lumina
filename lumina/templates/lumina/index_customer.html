@@ -20,7 +20,7 @@
             {{ image_selection_pending_count|pluralize:"petición,peticiones" }}
             de selección de imagenes.
             {% if image_selection_pending_count %}
-                <a href="{% url 'imageselection_list' %}">Haga clic aqui</a> para verlas...
+                <a href="{% url 'imageselection_awaiting_customer_selection_list' %}">Haga clic aqui</a> para verlas...
             {% endif %}
     </p>
     <hr>
