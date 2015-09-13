@@ -84,11 +84,16 @@
                                     <li><a href="{% url 'session_search' %}">Buscar</a></li>
                                     <li><a href="{% url 'session_create' %}">Agregar sesión</a></li>
                                     <li><a href="{% url 'shared_session_by_email_create' %}">Compartir sesión</a></li>
-                                    <li><a href="{% url 'imageselection_with_pending_uploads_list' %}">Solicitudes esperando subida de fotos</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{% url 'imageselection_awaiting_customer_selection_list' %}">
+                                        Selecciones de imágenes esperando selección de cliente</a>
+                                    </li>
+                                    <li><a href="{% url 'imageselection_with_pending_uploads_list' %}">
+                                        Selecciones de imágenes esperando subida de fotos en calidad total</a></li>
 
                             {% else %} <!-- user is client -->
-                                    <li><a href="{% url 'imageselection_awaiting_customer_selection_list' %}"
-                                        title="Lista de peticiones de seleccion de imagenes">Lista de peticiones</a>
+                                    <li><a href="{% url 'imageselection_awaiting_customer_selection_list' %}">
+                                        Selecciones de imágenes esperando selección de cliente</a>
                                     </li>
                             {% endif %}
                         </ul>

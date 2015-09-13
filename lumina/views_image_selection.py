@@ -56,7 +56,7 @@ class ImageSelectionAwaitingCustomerSelectionListView(ListView):
     template_name = 'lumina/imageselection_awaiting_customer_selection_list.html'
 
     def get_queryset(self):
-        return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user)
+        return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user, just_pending=True)
 
 
 class ImageSelectionWithPendingUploadsListView(ListView):
