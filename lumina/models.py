@@ -472,16 +472,21 @@ class ImageSelectionManager(models.Manager):
         assert user.is_for_customer()
         return self.filter(customer=user.user_for_customer, status=ImageSelection.STATUS_WAITING)
 
-    def all_my_imageselections_as_customer(self, user, just_pending=False):
+    def all_my_imageselections_awaiting_selection_as_customer(self, user):
         """
-        Returns a queryset filtering the ImageSelections for the specified user.
-        If just_pending=True, returns only the ImageSelections waiting for the actual selection.
+        Returns a queryset filtering the ImageSelections awaiting for the customer to select the images.
         """
         assert user.is_for_customer()
-        qs = self.filter(customer=user.user_for_customer)
-        if just_pending:
-            qs = qs.filter(status=ImageSelection.STATUS_WAITING)
-        return qs
+        return self.filter(customer=user.user_for_customer,
+                           status=ImageSelection.STATUS_WAITING)
+
+    def all_my_imageselections_awaiting_selection_as_photographer(self, user):
+        """
+        Returns a queryset filtering the ImageSelections awaiting for the customer to select the images.
+        """
+        assert user.is_photographer()
+        return self.filter(studio=user.studio,
+                           status=ImageSelection.STATUS_WAITING)
 
     def full_quality_pending_uploads(self, user):
         """

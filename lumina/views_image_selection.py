@@ -56,7 +56,11 @@ class ImageSelectionAwaitingCustomerSelectionListView(ListView):
     template_name = 'lumina/imageselection_awaiting_customer_selection_list.html'
 
     def get_queryset(self):
-        return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user, just_pending=True)
+        if self.request.user.is_for_customer():
+            return ImageSelection.objects.all_my_imageselections_awaiting_selection_as_customer(self.request.user)
+        else:
+            assert self.request.user.is_photographer()
+            return ImageSelection.objects.all_my_imageselections_awaiting_selection_as_photographer(self.request.user)
 
 
 class ImageSelectionWithPendingUploadsListView(ListView):
@@ -83,8 +87,7 @@ class ImageSelectionForCustomerView(DetailView):
     template_name = 'lumina/imageselection_update_for_customer_form.html'
 
     def get_queryset(self):
-        return ImageSelection.objects.all_my_imageselections_as_customer(self.request.user,
-                                                                         just_pending=True)
+        return ImageSelection.objects.all_my_imageselections_awaiting_selection_as_customer(self.request.user)
 
     def post(self, request, *args, **kwargs):
         image_selection = self.get_object()
