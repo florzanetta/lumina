@@ -52,8 +52,6 @@ def imageselection_redirect(request, pk):
 
 
 class ImageSelectionListView(ListView):
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-    #    #django.views.generic.list.ListView
     model = ImageSelection
 
     def get_queryset(self):
@@ -61,8 +59,6 @@ class ImageSelectionListView(ListView):
 
 
 class ImageSelectionWithPendingUploadsListView(ListView):
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-    #    #django.views.generic.list.ListView
     model = ImageSelection
 
     def get_queryset(self):
@@ -82,8 +78,6 @@ class ImageSelectionForCustomerView(DetailView):
     # Here we use DetailView instead of UpdateView because we
     # can't use a form to set the MtoM, so it's easier to use
     # the model instance + request values
-    #
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = ImageSelection
     template_name = 'lumina/imageselection_update_for_customer_form.html'
 
@@ -138,8 +132,6 @@ class ImageSelectionDetailView(DetailView):
     This should be used for album's owner, and the customer (only
     after he/she has selected the images).
     """
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-    #    #django.views.generic.detail.DetailView
     model = ImageSelection
 
     def get_queryset(self):
