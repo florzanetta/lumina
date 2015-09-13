@@ -32,37 +32,61 @@
 
         <table class="table">
 
-            <tr>
-                <th width="60%">
-                    Nombre
-                </th>
-                <th width="10%" class="text-nowrap text-right">
-                    Cant. imágenes
-                </th>
-                <th width="10%" class="text-right">
-                    Estado
-                </th>
-                <th width="5%" class="text-nowrap text-right">
-                    Fecha de entrega
-                </th>
-                <th width="5%" class="text-nowrap text-right">
-                    Última actualización
-                </th>
-            </tr>
+            {% if hide_customer %}
+                <tr>
+                    <th width="60%">
+                        Nombre
+                    </th>
+                    <th width="10%" class="text-nowrap text-right">
+                        Cant. imágenes
+                    </th>
+                    <th width="10%" class="text-right">
+                        Estado
+                    </th>
+                    <th width="5%" class="text-nowrap text-right">
+                        Fecha de entrega
+                    </th>
+                    <!--<th width="5%" class="text-nowrap text-right">-->
+                        <!--Última actualización-->
+                    <!--</th>-->
+                </tr>
+            {% endif %}
 
             {% for a_quote in object_list %}
 
                 {% if not hide_customer %}
                     {% ifchanged a_quote.customer.id %}
                         <tr>
-                            <td colspan="5">
+                            <td colspan="4" class="active">
                                 <h4><small>Cliente:</small> {{ a_quote.customer.name }}</h4>
                             </td>
                         </tr>
+
+                        <tr>
+                            <th width="10%" class="text-center">
+                                Estado
+                            </th>
+                            <th width="60%">
+                                Nombre
+                            </th>
+                            <th width="10%" class="text-nowrap text-right">
+                                Cant. imágenes
+                            </th>
+                            <th width="5%" class="text-nowrap text-right">
+                                Fecha de entrega
+                            </th>
+                            <!--<th width="5%" class="text-nowrap text-right">-->
+                                <!--Última actualización-->
+                            <!--</th>-->
+                        </tr>
+
                     {% endifchanged %}
                 {% endif %}
 
                 <tr>
+                    <td class="text-nowrap text-center">
+                        {% session_quote_status a_quote %}
+                    </td>
                     <td>
                         <div class="text-nowrap">
                             <i class="fa fa-money"></i>
@@ -70,12 +94,16 @@
                                 {{ a_quote.name }}</a>
                         </div>
 
-                        {% if user.is_photographer and a_quote.session %}
-                            <div style="padding-left: 2em;">
+                        {% if user.is_photographer %}
+                            <div style="padding-left: 0em;" {% if not a_quote.session %}class="text-muted"{% endif %}>
                                 <small>
                                     Sesión asociada:
                                     <i class="fa fa-picture-o"></i>
-                                    <a href="{% url 'session_detail' a_quote.session.id %}">{{ a_quote.session.name }}</a>
+                                    {% if a_quote.session %}
+                                        <a href="{% url 'session_detail' a_quote.session.id %}">{{ a_quote.session.name }}</a>
+                                    {% else %}
+                                        no hay sesión asociada al presupuesto
+                                    {% endif %}
                                 </small>
                             </div>
                         {% endif %}
@@ -85,19 +113,16 @@
                         {{ a_quote.image_quantity }}
                     </td>
                     <td class="text-right text-nowrap">
-                        {% session_quote_status a_quote %}
-                    </td>
-                    <td class="text-right text-nowrap">
                         {{ a_quote.stipulated_date }}
                     </td>
-                    <td class="text-right text-nowrap">
-                        {{ a_quote.last_modified|timesince }}
-                    </td>
+                    <!--<td class="text-right text-nowrap">-->
+                        <!--{ { a_quote.last_modified|timesince } }-->
+                    <!--</td>-->
                 </tr>
 
             {% empty %}
                 <tr>
-                    <td colspan="5">
+                    <td colspan="4">
                         {% if is_search %}
                             No se encontraron presupuestos que concuerden con los parámetros de búsqueda
                         {% else %}
@@ -108,6 +133,8 @@
             {% endfor %}
 
         </table>
+
+        <hr>
 
         <p class="text-muted small">
             <i class="fa fa-money"></i> Presupuesto
