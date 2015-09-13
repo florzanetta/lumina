@@ -65,15 +65,13 @@ class ImageSelectionAwaitingCustomerSelectionListView(ListView):
 
 class ImageSelectionWithPendingUploadsListView(ListView):
     model = ImageSelection
+    template_name = 'lumina/imageselection_awaiting_full_quality_uploads_list.html'
 
     def get_queryset(self):
-        return ImageSelection.objects.full_quality_pending_uploads(
-            self.request.user)
+        return ImageSelection.objects.full_quality_pending_uploads(self.request.user)
 
     def get_context_data(self, **kwargs):
-        context = super(ImageSelectionWithPendingUploadsListView, self).get_context_data(**kwargs)
-        context['for_pending_uploads'] = True
-        return context
+        return super().get_context_data(for_pending_uploads=True, **kwargs)
 
 
 class ImageSelectionForCustomerView(DetailView):
