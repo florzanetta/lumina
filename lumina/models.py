@@ -776,7 +776,7 @@ class SessionQuote(models.Model):
     give_full_quality_images = models.BooleanField(default=True, verbose_name="Entrega JPGs de máxima calidad")
 
     session = models.ForeignKey(
-        Session, related_name='quotes', null=True, blank=True, verbose_name="Sesión")
+        Session, related_name='quotes', null=True, blank=True, verbose_name="Sesión", on_delete=models.SET_NULL)
 
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
