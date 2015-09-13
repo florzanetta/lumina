@@ -15,7 +15,16 @@ FONT = os.path.join(os.path.normpath(os.path.abspath(os.path.dirname(__file__)))
 assert os.path.exists(FONT), "Font file not found"
 
 
+def _get_font(font_size):
+    """Returns the font for the specified size.
+
+    This method may fail if PIL / Pillow isn't setup correctly
+    """
+    return ImageFont.truetype(FONT, font_size)
+
+
 def _get_font_for_image(pil_img, text, max_thumb_size):
+    """Return the font with the required size so the text fits the image"""
     initial_font_size = 10
     font_size_increment = 2
 
@@ -23,11 +32,11 @@ def _get_font_for_image(pil_img, text, max_thumb_size):
     max_text_size = min(image_width, max_thumb_size)
 
     font_size = initial_font_size
-    watermark_font = ImageFont.truetype(FONT, font_size)
+    watermark_font = _get_font(font_size)
     watermark_text_width, watermark_text_height = watermark_font.getsize(text)
     while watermark_text_width < (max_text_size * 0.8):
         font_size += font_size_increment
-        watermark_font = ImageFont.truetype(FONT, font_size)
+        watermark_font = _get_font(font_size)
         watermark_text_width, watermark_text_height = watermark_font.getsize(text)
 
     return watermark_font, watermark_text_width, watermark_text_height

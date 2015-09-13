@@ -4,11 +4,12 @@ import decimal
 
 from django.db import models
 from django.core.urlresolvers import reverse
-from django.core.exceptions import PermissionDenied, ValidationError, \
-    SuspiciousOperation
+from django.core.exceptions import PermissionDenied, ValidationError, SuspiciousOperation
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils import timezone
 from django.db.models.functions import Lower
+
+from lumina import checks  # load checks
 
 # py3
 NoneType = type(None)
