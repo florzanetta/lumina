@@ -48,6 +48,7 @@ class UploadPendingManualView(DetailView):
             splitted_key = just_uploaded_key.split('_')
             assert len(splitted_key) == 3
             image_pk = splitted_key[2]
+
             image = Image.objects.get(pk=image_pk)
             assert image.session == image_selection.session
             assert image.image in (None, ''), "No es none: {}".format(image.image)
@@ -57,8 +58,8 @@ class UploadPendingManualView(DetailView):
             image.set_content_type(a_file.content_type)
             image.save()
 
-        messages.success(self.request, 'Se subieron correctamente {} imágenes'.format(
-            len(request.FILES)))
+        messages.success(self.request, 'Se subieron correctamente {} imágenes'.format(len(request.FILES)))
+
         # Don't use get_queryset(), won't work without pending uploads
         cnt = ImageSelection.objects.get(pk=pk).get_selected_images_without_full_quality().count()
         if cnt == 0:
@@ -66,11 +67,9 @@ class UploadPendingManualView(DetailView):
                              'Se finalizó la carga. Todas las imagenes seleccionadas por el cliente '
                              'poseen la versión en calidad total.')
             # TODO: send email to customer telling the files are ready to be downloaded
-            return HttpResponseRedirect(reverse('imageselection_redirect',
-                                                args=[pk]))
+            return HttpResponseRedirect(reverse('imageselection_redirect', args=[pk]))
         else:
-            return HttpResponseRedirect(reverse('imageselection_upload_pending_manual',
-                                                args=[pk]))
+            return HttpResponseRedirect(reverse('imageselection_upload_pending_manual', args=[pk]))
 
 
 class UploadPendingAutomaticView(DetailView):
@@ -136,6 +135,7 @@ class UploadPendingAutomaticView(DetailView):
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
         image.image.save(str(uuid.uuid4()), ContentFile(binary_data))
+        image.size = len(binary_data)
         image.save()
 
         response_data = {
