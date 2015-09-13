@@ -52,13 +52,15 @@
 
             {% for a_quote in object_list %}
 
-                {% ifchanged a_quote.customer.id %}
-                    <tr>
-                        <td colspan="5">
-                            <h4><small>Cliente:</small> {{ a_quote.customer.name }}</h4>
-                        </td>
-                    </tr>
-                {% endifchanged %}
+                {% if not hide_customer %}
+                    {% ifchanged a_quote.customer.id %}
+                        <tr>
+                            <td colspan="5">
+                                <h4><small>Cliente:</small> {{ a_quote.customer.name }}</h4>
+                            </td>
+                        </tr>
+                    {% endifchanged %}
+                {% endif %}
 
                 <tr>
                     <td>

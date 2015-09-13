@@ -167,6 +167,7 @@ class SessionQuotePendigForCustomerListView(SessionQuoteListView):
     def get_context_data(self, **kwargs):
         return super().get_context_data(
             custom_title="Listado de presupuestos pendientes de aceptar",
+            hide_customer=True,
             **kwargs)
 
 
