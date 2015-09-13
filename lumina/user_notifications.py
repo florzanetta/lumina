@@ -36,4 +36,30 @@ def get_photographer_notifications(user):
 
 def get_customer_notifications(user):
     assert user.is_for_customer()
-    return []
+    notifications = []
+
+    # ----- Presupuestos por aprobar -----
+
+    quotes_pending_count = models.SessionQuote.objects.get_waiting_for_customer_response(user).count()
+    if quotes_pending_count == 1:
+        notifications.append(Notification(
+            "Hay 1 presupuesto pendiente de aprobación",
+            link=reverse('quote_list_pending_for_customer')))
+    elif quotes_pending_count > 1:
+        notifications.append(Notification(
+            "Hay {} presupuestos pendientes de aprobación".format(quotes_pending_count),
+            link=reverse('quote_list_pending_for_customer')))
+
+    # ----- Peticiones de selección de fotos pendientes -----
+
+    image_selection_pending_count = models.ImageSelection.objects.pending_image_selections(user).count()
+    if image_selection_pending_count == 1:
+        notifications.append(Notification(
+            "Hay 1 petición de selección de imágenes pendiente",
+            link=reverse('imageselection_list')))
+    elif image_selection_pending_count > 1:
+        notifications.append(Notification(
+            "Hay {} peticiones de selección de imágenes pendientes".format(image_selection_pending_count),
+            link=reverse('imageselection_list')))
+
+    return notifications

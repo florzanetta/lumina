@@ -47,7 +47,6 @@ def _photographer_home(request):
 def _customer_home(request):
     ctx = {
         'quotes_pending_count': SessionQuote.objects.get_waiting_for_customer_response(request.user).count(),
-        'session_count': Session.objects.visible_sessions(request.user).count(),
         'image_selection_pending_count': ImageSelection.objects.pending_image_selections(request.user).count(),
     }
     return render_to_response(
