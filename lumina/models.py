@@ -148,6 +148,13 @@ class LuminaUser(AbstractUser):
         """
         return PreviewSize.objects.for_photographer_ordered(self, **kwargs)
 
+    def get_or_create_user_preferences(self):
+        try:
+            return self.preferences
+        except UserPreferences.DoesNotExist:
+            UserPreferences.objects.create(user=self)
+            return self.preferences
+
     def _check(self):
         if self.is_photographer():
             assert self.studio is not None, "Photographer does NOT have a studio"

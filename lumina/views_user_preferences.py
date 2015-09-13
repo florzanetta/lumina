@@ -19,11 +19,7 @@ class UserPreferenceUpdateView(UpdateView):
     template_name = 'lumina/base_create_update_crispy_form.html'
 
     def get_object(self, queryset=None):
-        try:
-            return self.request.user.preferences
-        except UserPreferences.DoesNotExist:
-            UserPreferences.objects.create(user=self.request.user)
-            return self.request.user.preferences
+        return self.request.user.get_or_create_user_preferences()
 
     def get_initial(self):
         initial = super().get_initial()
