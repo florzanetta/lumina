@@ -178,8 +178,8 @@ class SessionSearchForm(forms.Form):
 
         self.helper.layout = helper.Layout(
             bootstrap.InlineRadios('archived_status'),
-            'fecha_creacion_desde',
-            'fecha_creacion_hasta',
+            forms_utils.DatePickerField('fecha_creacion_desde'),
+            forms_utils.DatePickerField('fecha_creacion_hasta'),
             'customer',
             'session_type',
             'page',
@@ -255,8 +255,8 @@ class ImageSearchForm(forms.Form):
         assert user.is_photographer()
 
         self.helper.layout = helper.Layout(
-            'fecha_creacion_desde',
-            'fecha_creacion_hasta',
+            forms_utils.DatePickerField('fecha_creacion_desde'),
+            forms_utils.DatePickerField('fecha_creacion_hasta'),
             'customer',
             'session_type',
             'page',

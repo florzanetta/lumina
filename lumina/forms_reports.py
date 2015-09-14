@@ -13,7 +13,8 @@ logger = logging.getLogger(__name__)
 class _GenericDateRangeReportForm(forms_utils.GenericForm):
     SUBMIT_LABEL = 'Actualizar reporte'
     FIELDS = [
-        'date_from', 'date_to',
+        forms_utils.DatePickerField('date_from'),
+        forms_utils.DatePickerField('date_to'),
     ]
     FORM_ACTION = None
 

@@ -23,7 +23,11 @@ class SessionQuoteCreateForm(forms_utils.GenericCreateUpdateModelForm):
     SUBMIT_LABEL = 'Crear'
     CANCEL_URL = reverse_lazy('quote_list')
     FIELDS = [
-        'name', 'customer', 'image_quantity', 'stipulated_date', 'cost',
+        'name',
+        'customer',
+        'image_quantity',
+        forms_utils.DatePickerField('stipulated_date'),
+        'cost',
         'stipulated_down_payment',
         'terms'
     ]
@@ -106,8 +110,8 @@ class SessionQuoteSearchForm(forms.Form):
         if user.is_photographer():
             self.helper.layout = helper.Layout(
                 bootstrap.InlineRadios('archived_status'),
-                'fecha_creacion_desde',
-                'fecha_creacion_hasta',
+                forms_utils.DatePickerField('fecha_creacion_desde'),
+                forms_utils.DatePickerField('fecha_creacion_hasta'),
                 'customer',
                 'page',
                 bootstrap.FormActions(
@@ -117,8 +121,8 @@ class SessionQuoteSearchForm(forms.Form):
             self.fields['customer'].queryset = models.Customer.objects.customers_of(user)
         else:
             self.helper.layout = helper.Layout(
-                'fecha_creacion_desde',
-                'fecha_creacion_hasta',
+                forms_utils.DatePickerField('fecha_creacion_desde'),
+                forms_utils.DatePickerField('fecha_creacion_hasta'),
                 'page',
                 bootstrap.FormActions(
                     layout.Submit('submit_button', 'Buscar', css_id='form-submit-button'),
