@@ -1,8 +1,18 @@
 {% extends "lumina/base.html" %}
+{% load lumina_extras %}{% load crispy_forms_tags %}
 
 {% block content %}
 
     <h3>{{ report_title }}</h3>
+
+    {% if form and form.helper %}
+
+        {% crispy form form.helper %}
+
+        <hr>
+        <hr>
+
+    {% endif %}
 
     {% block report_form %}
     {% endblock report_form %}

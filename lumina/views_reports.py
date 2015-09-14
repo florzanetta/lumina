@@ -12,6 +12,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from django.db import connection
 
+from lumina import forms_reports
+
 logger = logging.getLogger(__name__)
 
 # FIXME: for all SQLs, check that works on PostgreSql!
@@ -22,7 +24,12 @@ logger = logging.getLogger(__name__)
 def view_report_cost_vs_charged_by_customer_type(request):
     assert request.user.is_photographer()
 
-    ctx = dict({})
+    if request.method == 'GET':
+        form = forms_reports.CostVsChargedByCustomerReportForm()
+    else:
+        form = forms_reports.CostVsChargedByCustomerReportForm(request.POST)
+
+    ctx = dict(form=form)
 
     ctx['report_title'] = 'Costo (hs) vs Monto cobrado ($) por tipo de cliente'
     chart = pygal.XY(  # @UndefinedVariable
