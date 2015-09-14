@@ -776,7 +776,7 @@ class SessionQuote(models.Model):
                                                    null=True, blank=True,
                                                    verbose_name="presupuesto alternativo")
 
-    stipulated_date = models.DateTimeField(verbose_name="fecha de entrega pactada")
+    stipulated_date = models.DateField(verbose_name="fecha de entrega pactada")
 
     stipulated_down_payment = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name="entrega inicial pactada")
