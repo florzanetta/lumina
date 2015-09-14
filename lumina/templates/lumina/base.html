@@ -177,27 +177,6 @@
                             </li>
                         {% endif %}
 
-                        {% if user.is_staff or user.is_superuser %}
-
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Admin <span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu">
-
-                                    <!-- Items de drop-down  -->
-                                    <li><a href="{% url 'admin:lumina_luminauser_changelist' %}" target="_blank">LuminaUser</a></li>
-                                    <li><a href="{% url 'admin:lumina_studio_changelist' %}" target="_blank">Studio</a></li>
-                                    <li><a href="{% url 'admin:lumina_customer_changelist' %}" target="_blank">Customer</a></li>
-                                    <li><a href="{% url 'admin:lumina_image_changelist' %}" target="_blank">Image</a></li>
-                                    <li><a href="{% url 'admin:lumina_session_changelist' %}" target="_blank">Session</a></li>
-                                    <li><a href="{% url 'admin:lumina_sessionquote_changelist' %}" target="_blank">Session Quote</a></li>
-                                    <li><a href="{% url 'admin:lumina_sessionquotealternative_changelist' %}" target="_blank">Session Quote Alternative</a></li>
-                                    <li><a href="{% url 'admin:lumina_sharedsessionbyemail_changelist' %}" target="_blank">Shared Session by Email</a></li>
-                                    <li><a href="{% url 'admin:lumina_imageselection_changelist' %}" target="_blank">Image Selection</a></li>
-
-                                </ul></li>
-
-                        {% endif %}
-
                 {% endif %}
 
       </ul>
