@@ -10,30 +10,41 @@
 
 {% block content %}
 
-
 	<h3>Clientes</h3>
 
     <table class="table">
 
         <tr>
-            <th width="65%">
+            <th width="50%">
                 Nombre
             </th>
-            <th width="20%">
+            <th width="10%">
                 Tipo
             </th>
             <th width="10%">
                 Teléfono
             </th>
-            <th width="5%">
-                Usuarios
+            <th width="30%">
+                Dirección
             </th>
         </tr>
 
         {% for customer in object_list %}
             <tr>
                 <td>
-                    <a href="{% url 'customer_update' customer.id %}">{{ customer.name }}</a>
+                    <div>
+                        <a href="{% url 'customer_update' customer.id %}">{{ customer.name }}</a>
+                    </div>
+
+                    <div>
+                        <small>
+                            Usuarios del cliente:
+                            <span class="badge">{{ customer.users.count }}</span>
+                            ·
+                            <a href="{% url 'customer_user_list' customer.id %}">Listar usuarios</a>
+                        </small>
+                    </div>
+
                 </td>
                 <td>
                     <span class="text-nowrap">{{ customer.customer_type.name }}</span>
@@ -42,20 +53,16 @@
                     <span class="text-nowrap">{{ customer.phone }}</span>
                 </td>
                 <td>
-                    <div class="text-nowrap">
-                        {{ customer.users.count }}
-                        ·
-                        <a href="{% url 'customer_user_list' customer.id %}">Listar</a>
-                    </div>
-
+                    {{ customer.address }}
                 </td>
             </tr>
         {% empty %}
             <tr><td colspan="4">No se ha registrado ningún cliente</td></tr>
         {% endfor %}
 
-
     </table>
+
+    <hr>
 
     <a href="{% url 'customer_create' %}" class="btn btn-primary">Nuevo cliente</a>
 
