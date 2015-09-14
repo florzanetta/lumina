@@ -231,7 +231,14 @@ def view_extended_quotes_by_customer(request):
 @login_required
 @cache_control(private=True)
 def view_income_by_customer_type(request):
-    ctx = dict({})
+    assert request.user.is_photographer()
+
+    if request.method == 'GET':
+        form = forms_reports.IncomeByCustomerTypeReportForm()
+    else:
+        form = forms_reports.IncomeByCustomerTypeReportForm(request.POST)
+
+    ctx = dict(form=form)
 
     ctx['report_title'] = 'Ingresos ($) por tipo de cliente'
     chart = pygal.Pie(legend_at_bottom=True)  # @UndefinedVariable
