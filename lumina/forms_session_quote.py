@@ -13,12 +13,6 @@ from lumina import models
 
 class SessionQuoteCreateForm(forms_utils.GenericCreateUpdateModelForm):
 
-    def get_crispy_form_field_for_cost(self):
-        return bootstrap.PrependedText('cost', '$')
-
-    def get_crispy_form_field_for_stipulated_down_payment(self):
-        return bootstrap.PrependedText('stipulated_down_payment', '$')
-
     FORM_TITLE = 'Crear nuevo presupuesto'
     SUBMIT_LABEL = 'Crear'
     CANCEL_URL = reverse_lazy('quote_list')
@@ -27,8 +21,8 @@ class SessionQuoteCreateForm(forms_utils.GenericCreateUpdateModelForm):
         'customer',
         'image_quantity',
         forms_utils.DatePickerField('stipulated_date'),
-        'cost',
-        'stipulated_down_payment',
+        bootstrap.PrependedText('cost', '$'),
+        bootstrap.PrependedText('stipulated_down_payment', '$'),
         'terms'
     ]
 
