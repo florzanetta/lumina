@@ -12,25 +12,16 @@ from crispy_forms import layout
 logger = logging.getLogger(__name__)
 
 
-class GenericCreateUpdateModelForm(forms.ModelForm):
+class _DynamicCrispyFormFields:
 
-    FORM_TITLE = None
-    SUBMIT_LABEL = None
-    CANCEL_URL = None
-    FIELDS = []
-
-    def get_cancel_url(self):
-        assert self.CANCEL_URL is not None, "form.CANCEL_URL must be set or `get_cancel_url()` overwritten"
-        return self.CANCEL_URL
-
-    def _get_crispy_form_field(self, field_name):
+    def _get_crispy_form_field(self, field):
         """Returns an item for a Crispy Form field (str or instance).
         If the method `get_crispy_form_field_for_XXX()` is found, it's used,
         and it MUST RETURN A FIELD INSTANCE (not a str).
 
         This exist to allow customizing a field, for example:
 
-            class SessionQuoteCreateForm(GenericCreateUpdateModelForm):
+            class SessionQuoteCreateForm(Xxxx):
 
                 def get_crispy_form_field_for_cost(self):
                     return bootstrap.PrependedText('cost', '$')
@@ -40,7 +31,13 @@ class GenericCreateUpdateModelForm(forms.ModelForm):
                 ]
 
         """
-        method_name = "get_crispy_form_field_for_{}".format(field_name)
+
+        if isinstance(field, layout.LayoutObject):
+            return field
+
+        assert isinstance(field, str)
+
+        method_name = "get_crispy_form_field_for_{}".format(field)
         method_obj = getattr(self, method_name, None)
         if method_obj:
             try:
@@ -52,7 +49,20 @@ class GenericCreateUpdateModelForm(forms.ModelForm):
                 logger.exception("Error detected when trying to call '%s()'", method_name)
                 raise
         else:
-            return field_name
+            return field
+
+
+class GenericCreateUpdateModelForm(forms.ModelForm,
+                                   _DynamicCrispyFormFields):
+
+    FORM_TITLE = None
+    SUBMIT_LABEL = None
+    CANCEL_URL = None
+    FIELDS = []
+
+    def get_cancel_url(self):
+        assert self.CANCEL_URL is not None, "form.CANCEL_URL must be set or `get_cancel_url()` overwritten"
+        return self.CANCEL_URL
 
     def __init__(self, *args, **kwargs):
         assert self.FORM_TITLE is not None
@@ -80,7 +90,7 @@ class GenericCreateUpdateModelForm(forms.ModelForm):
         )
 
 
-class GenericForm(forms.Form):
+class GenericForm(forms.Form, _DynamicCrispyFormFields):
     """
     Similar to `GenericCreateUpdateModelForm`, without 'cancel' button,
     and plain Form (NOT ModelForm)
@@ -91,37 +101,6 @@ class GenericForm(forms.Form):
     FORM_TITLE = None
     SUBMIT_LABEL = None
     FIELDS = []
-
-    def _get_crispy_form_field(self, field_name):
-        """Returns an item for a Crispy Form field (str or instance).
-        If the method `get_crispy_form_field_for_XXX()` is found, it's used,
-        and it MUST RETURN A FIELD INSTANCE (not a str).
-
-        This exist to allow customizing a field, for example:
-
-            class SessionQuoteCreateForm(GenericCreateUpdateModelForm):
-
-                def get_crispy_form_field_for_cost(self):
-                    return bootstrap.PrependedText('cost', '$')
-
-                FIELDS = [
-                    ···, 'cost', ···
-                ]
-
-        """
-        method_name = "get_crispy_form_field_for_{}".format(field_name)
-        method_obj = getattr(self, method_name, None)
-        if method_obj:
-            try:
-                crispy_field = method_obj()
-                # TODO: is `layout.LayoutObject` the base class?
-                assert isinstance(crispy_field, layout.LayoutObject)
-                return crispy_field
-            except:
-                logger.exception("Error detected when trying to call '%s()'", method_name)
-                raise
-        else:
-            return field_name
 
     def __init__(self, *args, **kwargs):
         assert self.FORM_TITLE is not None
