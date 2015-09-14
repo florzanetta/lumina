@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class CostVsChargedByCustomerReportForm(forms_utils.GenericForm):
-    FORM_TITLE = 'Parámetros del reporte'
+    FORM_TITLE = 'Costo (hs) vs Monto cobrado ($) por tipo de cliente'
     SUBMIT_LABEL = 'Actualizar reporte'
     FIELDS = [
         'fecha_desde', 'fecha_hasta',
@@ -25,7 +25,7 @@ class CostVsChargedByCustomerReportForm(forms_utils.GenericForm):
 
 
 class ExtendedQuotesThroughTimeReportForm(forms_utils.GenericForm):
-    FORM_TITLE = 'Parámetros del reporte'
+    FORM_TITLE = 'Presupuestos expandidos (en el tiempo)'
     SUBMIT_LABEL = 'Actualizar reporte'
     FIELDS = [
         'fecha_desde', 'fecha_hasta',
@@ -42,7 +42,7 @@ class ExtendedQuotesThroughTimeReportForm(forms_utils.GenericForm):
 
 
 class ExtendedQuotesByCustomerReportForm(forms_utils.GenericForm):
-    FORM_TITLE = 'Parámetros del reporte'
+    FORM_TITLE = 'Presupuestos expandidos (por cliente)'
     SUBMIT_LABEL = 'Actualizar reporte'
     FIELDS = [
         'fecha_desde', 'fecha_hasta', 'session_type'

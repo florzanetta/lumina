@@ -79,7 +79,7 @@ def view_report_cost_vs_charged_by_customer_type(request):
     ctx['show_form_1'] = True
 
     return render_to_response(
-        'lumina/reports/report_cost_vs_charged_by_customer_type.html', ctx,
+        'lumina/reports/report_generic.html', ctx,
         context_instance=RequestContext(request))
 
 
@@ -224,7 +224,7 @@ def view_extended_quotes_by_customer(request):
     ctx['show_form_3'] = True
 
     return render_to_response(
-        'lumina/reports/report_extended_quotes_by_customer.html', ctx,
+        'lumina/reports/report_generic.html', ctx,
         context_instance=RequestContext(request))
 
 
