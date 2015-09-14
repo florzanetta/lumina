@@ -27,18 +27,14 @@
             <th width="15%">
                 Teléfono
             </th>
-            <th width="15%" class="text-right">
-                Último acceso hace
-            </th>
+            <!--<th width="15%" class="text-right">-->
+                <!--Último acceso hace-->
+            <!--</th>-->
         </tr>
 
         {% for an_user in object_list %}
 
-            <tr
-                {% if not an_user.is_active %}
-                    class="text-muted bg-danger"
-                {% endif %}
-                    >
+            <tr>
 
                 <td>
                     {% if an_user.is_active %}
@@ -60,19 +56,21 @@
                     {{ an_user.phone|default:'' }}
                     {{ an_user.cellphone|default:'' }}
                 </td>
-                <td class="text-right">
-                    {% if an_user.last_login %}
-                        {{ an_user.last_login|timesince }}
-                    {% else %}
-                        <small class="text-muted">(nunca)</small>
-                    {% endif %}
-                </td>
+                <!--<td class="text-right">-->
+                    <!--{ % if an_user.last_login % }-->
+                        <!--{ { an_user.last_login|timesince } }-->
+                    <!--{ % else % }-->
+                        <!--<small class="text-muted">(nunca)</small>-->
+                    <!--{ % endif % }-->
+                <!--</td>-->
             </tr>
         {% empty %}
-            <tr><td colspan="5">No se ha registrado fotógrafo para el estudio</td></tr>
+            <tr><td colspan="4">No se ha registrado fotógrafo para el estudio</td></tr>
         {% endfor %}
 
     </table>
+
+    <hr>
 
     <p class="text-muted small">
         <i class="fa fa-check-square-o"></i> Usuarios activos (pueden ingresar al sistemas)
