@@ -25,9 +25,10 @@ def view_report_cost_vs_charged_by_customer_type(request):
     assert request.user.is_photographer()
 
     if request.method == 'GET':
-        form = forms_reports.CostVsChargedByCustomerReportForm()
+        form = forms_reports.CostVsChargedByCustomerReportForm(user=request.user)
     else:
-        form = forms_reports.CostVsChargedByCustomerReportForm(request.POST)
+        form = forms_reports.CostVsChargedByCustomerReportForm(request.POST,
+                                                               user=request.user)
 
     ctx = dict(form=form)
 
@@ -89,9 +90,10 @@ def view_extended_quotes_through_time(request):
     assert request.user.is_photographer()
 
     if request.method == 'GET':
-        form = forms_reports.ExtendedQuotesThroughTimeReportForm()
+        form = forms_reports.ExtendedQuotesThroughTimeReportForm(user=request.user)
     else:
-        form = forms_reports.ExtendedQuotesThroughTimeReportForm(request.POST)
+        form = forms_reports.ExtendedQuotesThroughTimeReportForm(request.POST,
+                                                                 user=request.user)
 
     ctx = dict(form=form)
 
@@ -163,9 +165,10 @@ def view_extended_quotes_by_customer(request):
     assert request.user.is_photographer()
 
     if request.method == 'GET':
-        form = forms_reports.ExtendedQuotesByCustomerReportForm()
+        form = forms_reports.ExtendedQuotesByCustomerReportForm(user=request.user)
     else:
-        form = forms_reports.ExtendedQuotesByCustomerReportForm(request.POST)
+        form = forms_reports.ExtendedQuotesByCustomerReportForm(request.POST,
+                                                                user=request.user)
 
     ctx = dict(form=form)
 
@@ -234,9 +237,10 @@ def view_income_by_customer_type(request):
     assert request.user.is_photographer()
 
     if request.method == 'GET':
-        form = forms_reports.IncomeByCustomerTypeReportForm()
+        form = forms_reports.IncomeByCustomerTypeReportForm(user=request.user)
     else:
-        form = forms_reports.IncomeByCustomerTypeReportForm(request.POST)
+        form = forms_reports.IncomeByCustomerTypeReportForm(request.POST,
+                                                            user=request.user)
 
     ctx = dict(form=form)
 
