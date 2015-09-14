@@ -205,9 +205,9 @@ class Studio(models.Model):
     A `studio` instance has many `customers`. Customers are organizations
     who pays to the `studio`.
     """
-    name = models.CharField(max_length=100, verbose_name="Nombre")
-    default_terms = models.TextField(null=True, blank=True)
-    watermark_text = models.CharField(max_length=40, default='')
+    name = models.CharField(max_length=100, verbose_name="Nombre del estudio")
+    default_terms = models.TextField(verbose_name="Términos y condiciones por default")
+    watermark_text = models.CharField(max_length=40, default='', verbose_name="Marca de agua")
 
     objects = StudioManager()
 
