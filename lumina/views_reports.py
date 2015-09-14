@@ -86,7 +86,14 @@ def view_report_cost_vs_charged_by_customer_type(request):
 @login_required
 @cache_control(private=True)
 def view_extended_quotes_through_time(request):
-    ctx = dict({})
+    assert request.user.is_photographer()
+
+    if request.method == 'GET':
+        form = forms_reports.ExtendedQuotesThroughTimeReportForm()
+    else:
+        form = forms_reports.ExtendedQuotesThroughTimeReportForm(request.POST)
+
+    ctx = dict(form=form)
 
     ctx['report_title'] = 'Presupuestos expandidos (en el tiempo)'
     chart = pygal.StackedBar(legend_at_bottom=True, y_title="$", x_label_rotation=20)  # @UndefinedVariable
