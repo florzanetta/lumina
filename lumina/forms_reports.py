@@ -34,10 +34,27 @@ class ExtendedQuotesThroughTimeReportForm(forms_utils.GenericForm):
     fecha_desde = forms.DateField(required=False, label='Fecha desde')
     fecha_hasta = forms.DateField(required=False, label='Fecha hasta')
 
+    # FIXME: add other required parameters
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper.form_action = 'report_extended_quotes_through_time'
 
-# report_extended_quotes_by_customer
+
+class ExtendedQuotesByCustomerReportForm(forms_utils.GenericForm):
+    FORM_TITLE = 'Parámetros del reporte'
+    SUBMIT_LABEL = 'Actualizar reporte'
+    FIELDS = [
+        'fecha_desde', 'fecha_hasta', 'session_type'
+    ]
+
+    fecha_desde = forms.DateField(required=False, label='Fecha desde')
+    fecha_hasta = forms.DateField(required=False, label='Fecha hasta')
+
+    session_type = forms.ChoiceField(required=False, label='Tipo de sesión')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper.form_action = 'report_extended_quotes_by_customer'
 
 # report_income_by_customer_type

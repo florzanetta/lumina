@@ -160,7 +160,14 @@ def view_extended_quotes_through_time(request):
 @login_required
 @cache_control(private=True)
 def view_extended_quotes_by_customer(request):
-    ctx = dict({})
+    assert request.user.is_photographer()
+
+    if request.method == 'GET':
+        form = forms_reports.ExtendedQuotesByCustomerReportForm()
+    else:
+        form = forms_reports.ExtendedQuotesByCustomerReportForm(request.POST)
+
+    ctx = dict(form=form)
 
     ctx['report_title'] = 'Presupuestos expandidos (por cliente)'
     chart = pygal.StackedBar(legend_at_bottom=True, y_title="$")  # @UndefinedVariable
