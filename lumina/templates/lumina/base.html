@@ -13,6 +13,9 @@
 	<link href="/static/lumina/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
 	<link href="/static/lumina/font-awesome-4.4.0/css/font-awesome.min.css" rel="stylesheet">
 
+    <!-- jquery UI -->
+    <link rel="stylesheet" href="/static/lumina/jquery-ui-1.11.4/jquery-ui.min.css">
+
 	<style type="text/css">
 		ul.errorlist li {
 			color: #e00;
@@ -40,6 +43,10 @@
             font-family: 'Roboto', sans-serif;
         }
 
+        .ui-datepicker{
+            z-index: 9999 !important;
+        }
+
 		{% block css %}
 		{% endblock %}
 	</style>
@@ -49,6 +56,10 @@
     <script src="/static/lumina/js/jquery-1.11.3.min.js"></script>
     <script src="/static/lumina/bootstrap/js/bootstrap.min.js"></script>
     {% include 'autocomplete_light/static.html' %}
+
+    <!-- jquery UI -->
+    <script src="/static/lumina/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+    <script src="/static/lumina/jquery-ui-1.11.4-datepicker-es.js"></script>
 
 	{% block extra_headers %}
 	{% endblock extra_headers %}
@@ -320,6 +331,15 @@
         </small></p>
     </div>
 </footer>
+
+<script type="application/javascript">
+
+    $(document).ready(function() {
+        $.datepicker.setDefaults($.datepicker.regional["es"]);
+        $(".force-datepicker").datepicker();
+    });
+
+</script>
 
 {% block javascript_bottom %}
 {% endblock %}
