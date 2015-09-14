@@ -33,8 +33,7 @@ class ExtendedQuotesThroughTimeReportForm(forms_utils.GenericForm):
 
     fecha_desde = forms.DateField(required=False, label='Fecha desde')
     fecha_hasta = forms.DateField(required=False, label='Fecha hasta')
-
-    # FIXME: add other required parameters
+    session_type = forms.ChoiceField(required=False, label='Tipo de sesión')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

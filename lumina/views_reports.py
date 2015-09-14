@@ -153,7 +153,7 @@ def view_extended_quotes_through_time(request):
     ctx['show_form_2'] = True
 
     return render_to_response(
-        'lumina/reports/report_extended_quotes_through_time.html', ctx,
+        'lumina/reports/report_generic.html', ctx,
         context_instance=RequestContext(request))
 
 
