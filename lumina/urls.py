@@ -21,6 +21,7 @@ from lumina import views_session
 from lumina import views_image
 from lumina import views_shared_session
 from lumina import views_session_quote
+from lumina import views_studio
 
 autocomplete_light.autodiscover()  # BEFORE admin.autodiscover()
 admin.autodiscover()
@@ -434,6 +435,17 @@ urlpatterns = patterns(
     url(r'^report/income_by_customer_type/$',
         views_reports.view_income_by_customer_type,
         name='report_income_by_customer_type'),
+
+
+    # ===========================================================================
+    # Studio
+    # ===========================================================================
+
+    url(r'^studio/update/(?P<pk>\d+)/$',
+        cache_control(private=True)(
+            login_required(
+                views_studio.StudioUpdateView.as_view())),
+        name='studio_update'),
 
     #
     # Other
