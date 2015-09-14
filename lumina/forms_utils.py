@@ -12,9 +12,14 @@ from crispy_forms import layout
 logger = logging.getLogger(__name__)
 
 
-def DatePickerField(*args, **kwargs):
+def DatePickerField(field_name, *args, **kwargs):
     assert 'css_class' not in kwargs
-    return layout.Field(css_class='force-datepicker', *args, **kwargs)
+    return bootstrap.PrependedText(field_name,
+                                   '<i class="fa fa-calendar"></i>',
+                                   css_class='force-datepicker',
+                                   *args,
+                                   **kwargs)
+    # return layout.Field(css_class='force-datepicker', *args, **kwargs)
 
 
 class _DynamicCrispyFormFields:
