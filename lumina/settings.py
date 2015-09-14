@@ -23,8 +23,6 @@ AUTH_USER_MODEL = 'lumina.LuminaUser'
 
 DEBUG = False
 
-DATETIME_FORMAT = 'd/m/Y - H:i'
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 # DATABASES = (...)
@@ -35,14 +33,22 @@ DATETIME_FORMAT = 'd/m/Y - H:i'
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
 LANGUAGE_CODE = 'es-AR'
-
 TIME_ZONE = 'America/Argentina/Cordoba'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
+DATETIME_FORMAT = 'd/m/Y - H:i'
+DATE_FORMAT = 'd/m/Y'
+DATE_INPUT_FORMATS = (
+    '%d/%m/%y,'
+    '%d/%m/%Y,'
+    '%j/%m/%y,'
+    '%j/%m/%Y,'
+    '%d/%n/%y,'
+    '%d/%n/%Y,'
+    '%j/%n/%y,'
+    '%j/%n/%Y,'
+)
 
 SITE_ID = 1
 
