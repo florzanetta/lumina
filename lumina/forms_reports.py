@@ -5,6 +5,7 @@ import logging
 from django import forms
 
 from lumina import forms_utils
+from lumina import models
 
 logger = logging.getLogger(__name__)
 
@@ -37,43 +38,43 @@ class _GenericDateRangeReportForm(forms_utils.GenericForm):
                 self.add_error('date_to', msg)
 
 
+class FormWithSessionTypeMixin(forms_utils.GenericForm):
+
+    session_type = forms.ModelChoiceField(queryset=models.SessionType.objects.none(),
+                                          required=False,
+                                          label='Tipo de sesión',
+                                          empty_label='TODOS LOS TIPOS DE SESIONES')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['session_type'].queryset = self.user.get_session_types()
+
+
+# --------------------------------------------------------------------------------
+
+
 class CostVsChargedByCustomerReportForm(_GenericDateRangeReportForm):
     FORM_TITLE = 'Costo (hs) vs Monto cobrado ($) por tipo de cliente'
     FIELDS = _GenericDateRangeReportForm.FIELDS + []
     FORM_ACTION = 'report_cost_vs_charged_by_customer_type'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
-
-class ExtendedQuotesThroughTimeReportForm(_GenericDateRangeReportForm):
+class ExtendedQuotesThroughTimeReportForm(_GenericDateRangeReportForm,
+                                          FormWithSessionTypeMixin):
     FORM_TITLE = 'Presupuestos expandidos (en el tiempo)'
     FIELDS = _GenericDateRangeReportForm.FIELDS + ['session_type']
     FORM_ACTION = 'report_extended_quotes_through_time'
 
-    session_type = forms.ChoiceField(required=False, label='Tipo de sesión')
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-class ExtendedQuotesByCustomerReportForm(_GenericDateRangeReportForm):
+class ExtendedQuotesByCustomerReportForm(_GenericDateRangeReportForm,
+                                         FormWithSessionTypeMixin):
     FORM_TITLE = 'Presupuestos expandidos (por cliente)'
     FIELDS = _GenericDateRangeReportForm.FIELDS + ['session_type']
     FORM_ACTION = 'report_extended_quotes_by_customer'
 
-    session_type = forms.ChoiceField(required=False, label='Tipo de sesión')
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-
-class IncomeByCustomerTypeReportForm(_GenericDateRangeReportForm):
+class IncomeByCustomerTypeReportForm(_GenericDateRangeReportForm,
+                                     FormWithSessionTypeMixin):
     FORM_TITLE = 'Ingresos ($) por tipo de cliente'
     FIELDS = _GenericDateRangeReportForm.FIELDS + ['session_type']
     FORM_ACTION = 'report_income_by_customer_type'
-
-    session_type = forms.ChoiceField(required=False, label='Tipo de sesión')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
