@@ -46,9 +46,6 @@
                     <th width="5%" class="text-nowrap text-right">
                         Fecha de entrega
                     </th>
-                    <!--<th width="5%" class="text-nowrap text-right">-->
-                        <!--Última actualización-->
-                    <!--</th>-->
                 </tr>
             {% endif %}
 
@@ -75,9 +72,6 @@
                             <th width="5%" class="text-nowrap text-right">
                                 Fecha de entrega
                             </th>
-                            <!--<th width="5%" class="text-nowrap text-right">-->
-                                <!--Última actualización-->
-                            <!--</th>-->
                         </tr>
 
                     {% endifchanged %}
@@ -89,16 +83,14 @@
                     </td>
                     <td>
                         <div class="text-nowrap">
-                            <i class="fa fa-money"></i>
                             <a href="{% url 'quote_detail' a_quote.id %}">
                                 {{ a_quote.name }}</a>
                         </div>
 
                         {% if user.is_photographer %}
-                            <div style="padding-left: 0em;" {% if not a_quote.session %}class="text-muted"{% endif %}>
+                            <div {% if not a_quote.session %}class="text-muted"{% endif %}>
                                 <small>
                                     Sesión asociada:
-                                    <i class="fa fa-picture-o"></i>
                                     {% if a_quote.session %}
                                         <a href="{% url 'session_detail' a_quote.session.id %}">{{ a_quote.session.name }}</a>
                                     {% else %}
