@@ -23,43 +23,54 @@ def DatePickerField(field_name, *args, **kwargs):
 
 
 class _DynamicCrispyFormFields:
-
     def _get_crispy_form_field(self, field):
-        """Returns an item for a Crispy Form field (str or instance).
-        If the method `get_crispy_form_field_for_XXX()` is found, it's used,
-        and it MUST RETURN A FIELD INSTANCE (not a str).
-
-        This exist to allow customizing a field, for example:
-
-            class SessionQuoteCreateForm(Xxxx):
-
-                def get_crispy_form_field_for_cost(self):
-                    return bootstrap.PrependedText('cost', '$')
-
-                FIELDS = [
-                    ···, 'cost', ···
-                ]
-
         """
-
+        Since we no longer see uses for `get_crispy_form_field_for_X()`, the
+        implementation was commented. This is a dummy implementation
+        """
         if isinstance(field, layout.LayoutObject):
             return field
-
         assert isinstance(field, str)
+        method_obj = getattr(self, "get_crispy_form_field_for_{}".format(field), None)
+        assert method_obj is None
+        return field
 
-        method_name = "get_crispy_form_field_for_{}".format(field)
-        method_obj = getattr(self, method_name, None)
-        if method_obj:
-            try:
-                crispy_field = method_obj()
-                # TODO: is `layout.LayoutObject` the base class?
-                assert isinstance(crispy_field, layout.LayoutObject)
-                return crispy_field
-            except:
-                logger.exception("Error detected when trying to call '%s()'", method_name)
-                raise
-        else:
-            return field
+#     def _get_crispy_form_field(self, field):
+#         """Returns an item for a Crispy Form field (str or instance).
+#         If the method `get_crispy_form_field_for_XXX()` is found, it's used,
+#         and it MUST RETURN A FIELD INSTANCE (not a str).
+#
+#         This exist to allow customizing a field, for example:
+#
+#             class SessionQuoteCreateForm(Xxxx):
+#
+#                 def get_crispy_form_field_for_cost(self):
+#                     return bootstrap.PrependedText('cost', '$')
+#
+#                 FIELDS = [
+#                     ···, 'cost', ···
+#                 ]
+#
+#         """
+#
+#         if isinstance(field, layout.LayoutObject):
+#             return field
+#
+#         assert isinstance(field, str)
+#
+#         method_name = "get_crispy_form_field_for_{}".format(field)
+#         method_obj = getattr(self, method_name, None)
+#         if method_obj:
+#             try:
+#                 crispy_field = method_obj()
+#                 # TODO: is `layout.LayoutObject` the base class?
+#                 assert isinstance(crispy_field, layout.LayoutObject)
+#                 return crispy_field
+#             except:
+#                 logger.exception("Error detected when trying to call '%s()'", method_name)
+#                 raise
+#         else:
+#             return field
 
 
 class GenericCreateUpdateModelForm(forms.ModelForm,
