@@ -18,8 +18,8 @@ class StudioUpdateView(generic.UpdateView):
     template_name = 'lumina/base_create_update_crispy_form.html'
     success_url = reverse_lazy('home')
 
-    # def get_object(self, queryset=None):
-    #     return self.request.user.studio
+    def get_object(self, queryset=None):
+        return self.request.user.studio
 
     # def form_valid(self, form):
     #     ret = super().form_valid(form)

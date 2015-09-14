@@ -441,7 +441,7 @@ urlpatterns = patterns(
     # Studio
     # ===========================================================================
 
-    url(r'^studio/update/(?P<pk>\d+)/$',
+    url(r'^studio/update/$',
         cache_control(private=True)(
             login_required(
                 views_studio.StudioUpdateView.as_view())),
