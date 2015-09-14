@@ -3,14 +3,13 @@
 
 {% block content %}
 
-    <h3>{{ report_title }}</h3>
-
     {% if form and form.helper %}
 
         {% crispy form form.helper %}
 
-        <hr>
-        <hr>
+    {% else %}
+
+        <h3>{{ report_title }}</h3>
 
     {% endif %}
 

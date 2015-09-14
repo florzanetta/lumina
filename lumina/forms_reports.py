@@ -58,7 +58,7 @@ class ExtendedQuotesByCustomerReportForm(forms_utils.GenericForm):
 
 
 class IncomeByCustomerTypeReportForm(forms_utils.GenericForm):
-    FORM_TITLE = 'Parámetros del reporte'
+    FORM_TITLE = 'Ingresos ($) por tipo de cliente'
     SUBMIT_LABEL = 'Actualizar reporte'
     FIELDS = [
         'fecha_desde', 'fecha_hasta', 'session_type'

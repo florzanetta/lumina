@@ -242,7 +242,7 @@ def view_income_by_customer_type(request):
 
     ctx['report_title'] = 'Ingresos ($) por tipo de cliente'
     chart = pygal.Pie(legend_at_bottom=True)  # @UndefinedVariable
-    chart.title = ctx['report_title']
+    chart.title = 'Ingresos ($) por tipo de cliente'
 
     cursor = connection.cursor()
     # FIXME: use only accepted quotes! (not canceled, or rejected by customer)
@@ -295,5 +295,5 @@ def view_income_by_customer_type(request):
     ctx['show_form_4'] = True
 
     return render_to_response(
-        'lumina/reports/report_income_by_customer_type.html', ctx,
+        'lumina/reports/report_generic.html', ctx,
         context_instance=RequestContext(request))
