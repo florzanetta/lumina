@@ -24,7 +24,7 @@ class SessionQuoteCreateForm(forms_utils.GenericCreateUpdateModelForm):
     CANCEL_URL = reverse_lazy('quote_list')
     FIELDS = [
         'name', 'customer', 'image_quantity', 'stipulated_date', 'cost',
-        'stipulated_down_payment', 'give_full_quality_images',
+        'stipulated_down_payment',
         'terms'
     ]
 
@@ -32,7 +32,7 @@ class SessionQuoteCreateForm(forms_utils.GenericCreateUpdateModelForm):
         model = models.SessionQuote
         fields = (
             'name', 'customer', 'image_quantity', 'stipulated_date', 'cost',
-            'stipulated_down_payment', 'give_full_quality_images',
+            'stipulated_down_payment',
             'terms'
         )
 
@@ -53,7 +53,7 @@ class SessionQuoteUpdateForm(forms.ModelForm):
     class Meta:
         model = models.SessionQuote
         fields = ('name', 'customer', 'image_quantity', 'cost',
-                  'give_full_quality_images', 'terms')
+                  'terms')
 
 
 class SessionQuoteUpdate2Form(forms.ModelForm):

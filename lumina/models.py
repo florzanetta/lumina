@@ -783,8 +783,6 @@ class SessionQuote(models.Model):
     #    actual_down_payment = models.DecimalField(max_digits=10, decimal_places=2,
     #        verbose_name="entrega inicial realizada")
 
-    give_full_quality_images = models.BooleanField(default=True, verbose_name="Entrega JPGs de máxima calidad")
-
     session = models.ForeignKey(
         Session, related_name='quotes', null=True, blank=True, verbose_name="Sesión", on_delete=models.SET_NULL)
 
