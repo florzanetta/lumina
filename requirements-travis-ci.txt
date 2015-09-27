@@ -13,7 +13,7 @@ selenium==2.45.0
 pep8==1.6.2
 
 # uwsgi
-uWSGI==2.0.10
+uWSGI==2.0.11.1
 
 # pygal
 pygal==1.7.0
@@ -42,3 +42,6 @@ django-crispy-forms==1.4.0
 #flake8==2.4.0
 #mccabe==0.3
 #pyflakes==0.8.1
+
+# django-mobile
+django-mobile==0.5.1
