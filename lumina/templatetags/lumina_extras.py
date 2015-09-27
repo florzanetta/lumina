@@ -194,3 +194,23 @@ def image_item(context, image, show_set_as_album_icon_button=False):
         'full_quality': full_quality,
         'show_set_as_album_icon_button': show_set_as_album_icon_button and user.is_photographer(),
     }
+
+
+@register.inclusion_tag('lumina/templatetags/gallery_image_item.js', takes_context=True)
+def gallery_image_item(context, image):
+    assert isinstance(image, models.Image)
+
+    user = context['user']
+    assert isinstance(user, models.LuminaUser)
+    assert user.is_photographer()
+
+    if image.image:
+        full_quality = True
+    else:
+        full_quality = False
+
+    return {
+        'image_url': reverse('image_thumb_64x64', args=[image.id]),
+        'image_w': '64',
+        'image_h': '64',
+    }

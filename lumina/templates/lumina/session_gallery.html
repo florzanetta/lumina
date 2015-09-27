@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% load lumina_extras %}<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -95,16 +95,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     var pswpElement = document.querySelectorAll('.pswp')[0];
 
-
     // build items array
     var items = [
 
         {% for image in object.image_set.all %}
-            {
-                src: "{% url 'image_thumb_64x64' image.id %}",
-                w: 64,
-                h: 64
-            } {% if not forloop.last %} , {% endif %}
+            {% gallery_image_item image %} {% if not forloop.last %} , {% endif %}
         {% endfor %}
     ];
 
