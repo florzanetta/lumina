@@ -3,15 +3,17 @@
 import logging
 
 from django.conf import settings
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import login as django_login
 from django.views.decorators.cache import cache_control
+from django.core.urlresolvers import reverse
 
 from lumina.models import Session, Image, ImageSelection, SessionQuote
 from lumina.forms import CustomAuthenticationForm
-from lumina.views_utils import generate_thumbnail_of_image, download_image
+from lumina.views_utils import generate_thumbnail_of_image, download_image, is_mobile
 
 
 #
@@ -27,6 +29,10 @@ def login(request):
 
 
 def _photographer_home(request):
+
+    if is_mobile(request):
+        return HttpResponseRedirect(reverse('session_list'))
+
     image_selection_with_pending_uploads = \
         ImageSelection.objects.full_quality_pending_uploads(
             request.user)
