@@ -82,7 +82,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
-        'APP_DIRS': True,
+        # 'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 # ----- Django 1.8 defaults
@@ -100,6 +100,11 @@ TEMPLATES = [
                 # ----- Lumina
                 "lumina.context_processors.user_notifications",
             ],
+            'loaders': [
+                'django_mobile.loader.Loader',
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            ]
         },
     },
 ]
