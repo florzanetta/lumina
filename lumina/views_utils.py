@@ -11,11 +11,17 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
+import django_mobile
+
 from lumina.models import SessionQuote
 from lumina.pil_utils import generate_thumbnail
 
 
 logger = logging.getLogger(__name__)
+
+
+def is_mobile(request):
+    return django_mobile.get_flavour(request) == "mobile"
 
 
 def _put_session_statuses_in_context(context):
