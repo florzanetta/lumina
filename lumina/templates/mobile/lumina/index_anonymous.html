@@ -12,8 +12,12 @@
 
     <h2>Bienvenido!</h2>
     <p>
-        Debes <a href="{% url 'login' %}?next=/">iniciar sesión</a>
+        Debes iniciar sesión
         para poder utilizar el sistema...
+    </p>
+
+    <p>
+        <a href="{% url 'login' %}?next=/" class="btn btn-primary">Iniciar sesión</a>
     </p>
 
 {% endblock content %}
