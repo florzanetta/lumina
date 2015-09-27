@@ -150,6 +150,18 @@ To avoid breaking the builds, you could add a pre-commit hook that run the pep8 
     $ ln -s ../../.pre-commit-git-hook pre-commit
 
 
+Documentation
+-------------
+
+The documentation was built on Ubuntu 15.04. The following packages are requiered:
+
+ * texlive-fonts-recommended
+ * linuxdoc-tools-latex
+ * texlive-lang-spanish
+ * texlive-lang-english
+ * texlive-latex-extra
+
+
 Icons: attribution
 ------------------
 
