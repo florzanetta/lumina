@@ -196,27 +196,26 @@
 
       <ul class="nav navbar-nav navbar-right">
 
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                   role="button" aria-expanded="false"><i
-                        class="fa fa-bullhorn {% if user_notifications %}text-danger{% endif %}"></i>
-                    <span class="badge {% if user_notifications %}alert-danger{% endif %}">{{ user_notifications|length }}</span>
-                </a>
-
-                <ul class="dropdown-menu" role="menu">
-                    <!-- Items de drop-down  -->
-                    {% if user_notifications %}
-                        {% for notification in user_notifications %}
-                            <li><a href="{{notification.link}}">{{notification.message}}</a></li>
-                        {% endfor %}
-                    {% else %}
-                        <li><a href="#"><em class="text-muted">No hay notificaciones</em></a></li>
-                    {% endif %}
-                </ul>
-            </li>
-
-
             {% if user.is_authenticated %}
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                       role="button" aria-expanded="false"><i
+                            class="fa fa-bullhorn {% if user_notifications %}text-danger{% endif %}"></i>
+                        <span class="badge {% if user_notifications %}alert-danger{% endif %}">{{ user_notifications|length }}</span>
+                    </a>
+
+                    <ul class="dropdown-menu" role="menu">
+                        <!-- Items de drop-down  -->
+                        {% if user_notifications %}
+                            {% for notification in user_notifications %}
+                                <li><a href="{{notification.link}}">{{notification.message}}</a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li><a href="#"><em class="text-muted">No hay notificaciones</em></a></li>
+                        {% endif %}
+                    </ul>
+                </li>
 
                 <!-- Items de drop-down  -->
                 {% if user.is_photographer %} <!-- user is photographer -->
