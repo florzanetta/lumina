@@ -91,6 +91,13 @@ urlpatterns = patterns(
         views_session.session_upload_previews_upload,
         name='session_upload_previews_upload'),
 
+    # Mobile Gallery
+
+    url(r'^session/gallery/(?P<pk>\d+)/$',
+        cache_control(private=True)(
+            login_required(views_session.SessionGalleryDetailView.as_view())),
+        name='session_gallery'),
+
 
     # ===========================================================================
     # SharedSessionByEmail

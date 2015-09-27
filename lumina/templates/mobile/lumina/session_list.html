@@ -16,7 +16,7 @@
                 <img class="media-object" src="{% url 'session_album_icon' a_session.id %}">
             </a>
             <div class="media-body">
-                <div class="media-heading"><a href="{% url 'session_detail' a_session.pk %}">
+                <div class="media-heading"><a href="{% url 'session_gallery' a_session.pk %}">
                     <span class="badge badge-info">{{ a_session.image_set.count }}</span>
                     {{ a_session.name }}</a>
                 </div>

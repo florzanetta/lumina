@@ -147,6 +147,14 @@ class SessionDetailView(DetailView):
         return models.Session.objects.visible_sessions(self.request.user)
 
 
+class SessionGalleryDetailView(DetailView):
+    model = models.Session
+    template_name = 'lumina/session_gallery.html'
+
+    def get_queryset(self):
+        return models.Session.objects.visible_sessions(self.request.user)
+
+
 class SetImageAsAlbumIconView(DetailView):
     model = models.Session
 
