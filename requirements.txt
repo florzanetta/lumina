@@ -42,3 +42,6 @@ django-crispy-forms==1.4.0
 #flake8==2.4.0
 #mccabe==0.3
 #pyflakes==0.8.1
+
+# django-mobile
+django-mobile==0.5.1

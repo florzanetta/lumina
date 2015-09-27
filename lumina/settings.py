@@ -69,6 +69,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django_mobile.middleware.MobileDetectionMiddleware',
+    'django_mobile.middleware.SetFlavourMiddleware',
     # 'lumina.middleware.LoggingMiddleware',
 )
 
@@ -93,6 +95,8 @@ TEMPLATES = [
                 "django.core.context_processors.media",
                 "django.core.context_processors.static",
                 "django.core.context_processors.tz",
+                # ----- django-mobile
+                "django_mobile.context_processors.flavour",
                 # ----- Lumina
                 "lumina.context_processors.user_notifications",
             ],
@@ -114,6 +118,7 @@ INSTALLED_APPS = (
     # 'cities_light',
     'autocomplete_light',
     'crispy_forms',
+    'django_mobile',
     'lumina',
 )
 
