@@ -209,6 +209,10 @@ urlpatterns = patterns(
         views.image_download,
         name='image_download'),
 
+    url(r'^image/(\d+)/get_image_or_thumb/$',
+        views.get_image_or_thumb,
+        name='get_image_or_thumb'),
+
     url(r'^image/image_selection/(\d+)/download_all/$',
         views_image_selection.image_selection_download_selected_as_zip,
         name='image_selection_download_selected_as_zip'),

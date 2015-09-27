@@ -14,6 +14,7 @@ from django.template.context import Context
 from django.conf import settings
 
 from lumina import models
+from lumina.pil_utils import get_image_size
 
 logger = logging.getLogger(__name__)
 
@@ -204,13 +205,11 @@ def gallery_image_item(context, image):
     assert isinstance(user, models.LuminaUser)
     assert user.is_photographer()
 
-    if image.image:
-        full_quality = True
-    else:
-        full_quality = False
+    image_file = image.get_image_or_thumbnail_file()
+    image_width, image_height = get_image_size(image_file)
 
     return {
-        'image_url': reverse('image_thumb_64x64', args=[image.id]),
-        'image_w': '64',
-        'image_h': '64',
+        'image_url': reverse('get_image_or_thumb', args=[image.id]),
+        'image_w': str(image_width),
+        'image_h': str(image_height),
     }

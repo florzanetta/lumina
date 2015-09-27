@@ -669,6 +669,12 @@ class Image(models.Model):
 
     objects = ImageManager()
 
+    def get_image_or_thumbnail_file(self):
+        if self.image:
+            return self.image
+        else:
+            return self.thumbnail_image
+
     def __str__(self):
         if self.image:
             return "Image {0}".format(self.image)

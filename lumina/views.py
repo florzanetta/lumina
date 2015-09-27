@@ -13,7 +13,7 @@ from django.core.urlresolvers import reverse
 
 from lumina.models import Session, Image, ImageSelection, SessionQuote
 from lumina.forms import CustomAuthenticationForm
-from lumina.views_utils import generate_thumbnail_of_image, download_image, is_mobile
+from lumina.views_utils import generate_thumbnail_of_image, download_image, is_mobile, serve_image_or_thumb
 
 
 #
@@ -97,3 +97,10 @@ def image_thumb(request, image_id):
 def image_download(request, image_id):
     image = Image.objects.get_for_download(request.user, int(image_id))
     return download_image(request, image)
+
+
+@login_required
+@cache_control(private=True)
+def get_image_or_thumb(request, image_id):
+    image = Image.objects.get_for_download(request.user, int(image_id))
+    return serve_image_or_thumb(request, image)

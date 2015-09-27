@@ -13,6 +13,7 @@ from django.views.decorators.cache import cache_control
 
 import django_mobile
 
+from lumina import models
 from lumina.models import SessionQuote
 from lumina.pil_utils import generate_thumbnail
 
@@ -46,6 +47,31 @@ def generate_thumbnail_of_image(request, image, *args, **kwargs):
     except IOError:
         logger.exception("Couldn't generate thumbnail for image %s", image.id)
         return HttpResponseRedirect('/static/lumina/img/unknown-icon-64x64.png')
+
+
+def serve_image_or_thumb(request, image):
+    assert isinstance(image, models.Image)
+
+    file_obj = image.get_image_or_thumbnail_file()
+    full_filename = default_storage.path(file_obj.path)
+    filesize = os.path.getsize(full_filename)
+    content_type = image.content_type
+
+    # TODO: send in chunks to avoid loading the file in memory
+    # from django.core.servers.basehttp import FileWrapper
+    #    with open(full_filename) as f:
+    #        fw = FileWrapper(f)
+    #        response = HttpResponse(fw, content_type=content_type)
+    #        response['Content-Length'] = filesize
+    #        response['Content-Disposition'] = 'attachment; filename="{0}"'.format(
+    #            filename_to_user)
+    #        return response
+
+    with open(full_filename, mode='r+b') as f:
+        file_contents = f.read()
+    response = HttpResponse(file_contents, content_type=content_type)
+    response['Content-Length'] = filesize
+    return response
 
 
 def download_image(request, image):

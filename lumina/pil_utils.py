@@ -88,3 +88,20 @@ def generate_thumbnail(image, max_size=None, add_watermark=False):
 
     del img  # no need to close it
     return output_file.getvalue()
+
+
+def get_image_size(image_file_object):
+    """
+    Returns size (image_width, image_height) of the image.
+
+    `image_file_object` is a Django File object, NOT a lumina.models.Image.
+
+    :param image_file_object:
+    :return:
+    """
+    assert image_file_object is not None
+    assert image_file_object.path
+
+    img = PilImage.open(default_storage.path(image_file_object.path))
+    image_width, image_height = img.size
+    return image_width, image_height
