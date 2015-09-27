@@ -6,8 +6,6 @@
 Bienvenido a la documentación de Lumina
 =======================================
 
-Contenidos:
-
 .. toctree::
    :maxdepth: 2
 
