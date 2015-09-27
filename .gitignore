@@ -55,3 +55,4 @@ nosetests.xml
 /presentacion-*
 /twistd.pid
 /lumina.sqlite*
+/doc/_build
