@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+
 from django import forms
 from django.core.urlresolvers import reverse_lazy
 
@@ -44,6 +46,11 @@ class SessionQuoteCreateForm(forms_utils.GenericCreateUpdateModelForm):
                 msg = "La 'entrega inicial pactada' debe ser menor o igual al 'costo'"
                 self.add_error('cost', msg)
                 self.add_error('stipulated_down_payment', msg)
+
+        stipulated_date = cleaned_data.get("stipulated_date")
+        if stipulated_date is not None:
+            if stipulated_date < datetime.date.today():
+                self.add_error('stipulated_date', "La fecha de entrega no puede ser del pasado")
 
 
 class SessionQuoteUpdateForm(forms.ModelForm):
