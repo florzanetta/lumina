@@ -1,5 +1,10 @@
 #!/bin/bash
 
+
+python3.4 -m smtpd --nosetuid --class DebuggingServer
+
+exit 0
+
 BASEDIR=$( cd $(dirname $0) ; pwd)/../..
 BASEDIR=$(realpath $BASEDIR)
 
