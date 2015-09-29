@@ -22,7 +22,7 @@ class StudioUserListView(generic.ListView):
 
 class StudioUserCreateView(generic.CreateView):
     model = models.LuminaUser
-    form_class = forms_users.SetudioUserCreateForm
+    form_class = forms_users.StudioUserCreateForm
     template_name = 'lumina/base_create_update_crispy_form.html'
     success_url = reverse_lazy('studio_user_list')
 

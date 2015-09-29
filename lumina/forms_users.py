@@ -118,7 +118,7 @@ class CustomerUserUpdateForm(_GenericUserCreateUpdateForm):
 # For STUDIOs (photographers)
 # ===============================================================================
 
-class SetudioUserCreateForm(_GenericUserCreateUpdateForm):
+class StudioUserCreateForm(_GenericUserCreateUpdateForm):
 
     # ----- <GenericCreateUpdateModelForm> -----
     FORM_TITLE = 'Crear usuario para fotógrafo'
