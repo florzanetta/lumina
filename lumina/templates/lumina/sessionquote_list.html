@@ -33,20 +33,20 @@
         <table class="table">
 
             {% if hide_customer %}
-                <tr>
-                    <th width="60%">
-                        Nombre
-                    </th>
-                    <th width="10%" class="text-nowrap text-right">
-                        Cant. imágenes
-                    </th>
-                    <th width="10%" class="text-right">
-                        Estado
-                    </th>
-                    <th width="5%" class="text-nowrap text-right">
-                        Fecha de entrega
-                    </th>
-                </tr>
+                        <tr>
+                            <th width="10%" class="text-center">
+                                Estado
+                            </th>
+                            <th width="60%">
+                                Nombre
+                            </th>
+                            <th width="10%" class="text-nowrap text-right">
+                                Cant. imágenes
+                            </th>
+                            <th width="5%" class="text-nowrap text-right">
+                                Fecha de entrega
+                            </th>
+                        </tr>
             {% endif %}
 
             {% for a_quote in object_list %}
