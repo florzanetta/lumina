@@ -23,7 +23,7 @@ uwsgi \
 	--master \
 	--processes=5 \
 	--home=${VIRTUAL_ENV} \
-	--http=127.0.0.1:$HTTP_PORT \
+	--http=0.0.0.0:$HTTP_PORT \
 	--python-path=${BASEDIR} \
 	--static-map /static=${BASEDIR}/deploy/dev/static \
 	--master-fifo /tmp/.lumina-uwsgi \
