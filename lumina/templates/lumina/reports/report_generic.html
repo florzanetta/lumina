@@ -1,6 +1,10 @@
 {% extends "lumina/base.html" %}
 {% load lumina_extras %}{% load crispy_forms_tags %}
 
+{% block extra_headers %}
+<script src="/static/lumina/pygal-tooltips.min.js"></script>
+{% endblock extra_headers %}
+
 {% block content %}
 
     {% if form and form.helper %}
