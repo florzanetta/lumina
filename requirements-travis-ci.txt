@@ -16,7 +16,7 @@ pep8==1.6.2
 uWSGI==2.0.11.1
 
 # pygal
-pygal==1.7.0
+pygal==2.0.7
 
 # django-localflavor
 django-localflavor==1.1
