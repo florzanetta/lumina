@@ -119,6 +119,10 @@ class CustomerUserUpdateForm(_GenericUserCreateUpdateForm):
 # ===============================================================================
 
 class StudioUserCreateForm(_GenericUserCreateUpdateForm):
+    """Form used to create additional photographers for an existing studio
+
+    See: StudioUserCreateForRegisteringNewStudioForm
+    """
 
     # ----- <GenericCreateUpdateModelForm> -----
     FORM_TITLE = 'Crear usuario para fotógrafo'
@@ -162,4 +166,29 @@ class StudioUserUpdateForm(_GenericUserCreateUpdateForm):
         fields = (
             'username', 'first_name', 'last_name', 'email', 'is_active', 'password1', 'password2',
             'phone', 'cellphone',
+        )
+
+
+class StudioUserCreateForRegisteringNewStudioForm(_GenericUserCreateUpdateForm):
+    """Form used to create an account on the system
+
+    See: StudioUserCreateForm
+    """
+
+    # ----- <GenericCreateUpdateModelForm> -----
+    FORM_TITLE = 'Regístrate en el sistema'
+    SUBMIT_LABEL = 'Registrarme'
+    CANCEL_URL = reverse_lazy('home')
+    FIELDS = [
+        'username', 'first_name', 'last_name', 'email', 'password1', 'password2',
+    ]
+
+    # ----- </GenericCreateUpdateModelForm> -----
+
+    PASSWORD_REQUIRED = True
+
+    class Meta:
+        model = LuminaUser
+        fields = (
+            'username', 'first_name', 'last_name', 'email', 'password1', 'password2',
         )

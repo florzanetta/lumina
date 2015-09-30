@@ -457,7 +457,7 @@ urlpatterns = patterns(
             views_studio.StudioCreateView.as_view()),
         name='studio_create'),
 
-    url(r'^studio/create/$',
+    url(r'^studio/update/$',
         cache_control(private=True)(
             login_required(
                 views_studio.StudioUpdateView.as_view())),
