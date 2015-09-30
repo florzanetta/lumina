@@ -291,7 +291,8 @@ def view_income_by_customer_type(request):
         (ct.id, ct.name) for ct in models.CustomerType.objects.filter(studio=request.user.studio)
     ])
 
-    chart = pygal.Pie(legend_at_bottom=True)  # @UndefinedVariable
+    chart = pygal.Pie(no_data_text="Sin datos",
+                      legend_at_bottom=True)  # @UndefinedVariable
     chart.title = 'Ingresos ($) por tipo de cliente'
     chart.print_values = True
 
