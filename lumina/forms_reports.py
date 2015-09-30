@@ -74,8 +74,6 @@ class ExtendedQuotesByCustomerReportForm(_GenericDateRangeReportForm,
     FORM_ACTION = 'report_extended_quotes_by_customer'
 
 
-class IncomeByCustomerTypeReportForm(_GenericDateRangeReportForm,
-                                     FormWithSessionTypeMixin):
+class IncomeByCustomerTypeReportForm(_GenericDateRangeReportForm):
     FORM_TITLE = 'Ingresos ($) por tipo de cliente'
-    FIELDS = _GenericDateRangeReportForm.FIELDS + ['session_type']
     FORM_ACTION = 'report_income_by_customer_type'

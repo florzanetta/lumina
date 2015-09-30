@@ -250,23 +250,26 @@ def view_income_by_customer_type(request):
 
     cursor = connection.cursor()
     # FIXME: use only accepted quotes! (not canceled, or rejected by customer)
-    cursor.execute(
-        "SELECT "
-        " lsq.created AS \"date_for_report\","
-        " lsq.cost AS \"orig_cost\","
-        " lsqa.cost AS \"selected_quote_alternative_cost\","
-        " ct.name AS \"customer_type\""
-        " FROM lumina_session AS ls"
-        " JOIN lumina_sessionquote AS lsq ON lsq.session_id = ls.id"
-        " JOIN lumina_customer AS c ON ls.customer_id = c.id"
-        " JOIN lumina_customertype AS ct ON c.customer_type_id = ct.id"
-        " LEFT OUTER JOIN lumina_sessionquotealternative AS lsqa"
-        "    ON lsq.accepted_quote_alternative_id = lsqa.id"
-        " WHERE ls.studio_id = %s", [request.user.studio.id])
+    cursor.execute("""
+    SELECT
+        quot.created    AS "date_for_report",
+        quot.cost       AS "orig_cost",
+        quot_alt.cost   AS "selected_quote_alternative_cost",
+        cust_type.name         AS "customer_type"
+        FROM lumina_sessionquote    AS quot
+        JOIN lumina_customer        AS cust ON quot.customer_id = cust.id
+        JOIN lumina_customertype    AS cust_type ON cust.customer_type_id = cust_type.id
+        LEFT OUTER JOIN lumina_sessionquotealternative AS quot_alt ON quot.accepted_quote_alternative_id = quot_alt.id
+        WHERE quot.studio_id = %s
+        """, [request.user.studio.id])
+
+    all_the_rows = cursor.fetchall()
+    # logger.info("all_the_rows: %s", all_the_rows)
+
     desc = cursor.description
     values_as_dict = [
         dict(list(zip([col[0] for col in desc], row)))
-        for row in cursor.fetchall()
+        for row in all_the_rows
     ]
 
     group_by_customer_type = defaultdict(list)
