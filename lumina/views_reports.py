@@ -13,6 +13,7 @@ from django.views.decorators.cache import cache_control
 from django.db import connection
 
 from lumina import forms_reports
+from lumina import models
 
 logger = logging.getLogger(__name__)
 
@@ -243,72 +244,61 @@ def view_income_by_customer_type(request):
     if request.method == 'GET':
         form = forms_reports.IncomeByCustomerTypeReportForm(user=request.user)
         ctx['form'] = form
-    else:
-        form = forms_reports.IncomeByCustomerTypeReportForm(request.POST, user=request.user)
-        ctx['form'] = form
 
-    if request.method == 'GET' or not form.is_valid():
         return render_to_response(
             'lumina/reports/report_generic.html', ctx,
             context_instance=RequestContext(request))
 
-    date_from = form.cleaned_data['date_from']
-    date_to = form.cleaned_data['date_to']
+    else:
+        form = forms_reports.IncomeByCustomerTypeReportForm(request.POST, user=request.user)
+        ctx['form'] = form
+
+        if not form.is_valid():
+            return render_to_response(
+                'lumina/reports/report_generic.html', ctx,
+                context_instance=RequestContext(request))
 
     cursor = connection.cursor()
-    # FIXME: use only accepted quotes! (not canceled, or rejected by customer)
     cursor.execute("""
     SELECT
+        cust.customer_type_id   AS "customer_type",
         quot.created    AS "date_for_report",
         quot.cost       AS "orig_cost",
-        quot_alt.cost   AS "selected_quote_alternative_cost",
-        cust_type.name         AS "customer_type"
+        quot_alt.cost   AS "selected_quote_alternative_cost"
         FROM lumina_sessionquote    AS quot
         JOIN lumina_customer        AS cust ON quot.customer_id = cust.id
-        JOIN lumina_customertype    AS cust_type ON cust.customer_type_id = cust_type.id
         LEFT OUTER JOIN lumina_sessionquotealternative AS quot_alt ON quot.accepted_quote_alternative_id = quot_alt.id
         WHERE
+            quot.status = %s    AND
             quot.studio_id = %s AND
-            quot.created >= %s AND
+            quot.created >= %s  AND
             quot.created <= %s
-        """, [request.user.studio.id, date_from, date_to])
+        """, [models.SessionQuote.STATUS_ACCEPTED,
+              request.user.studio.id,
+              form.cleaned_data['date_from'],
+              form.cleaned_data['date_to']])
 
-    all_the_rows = cursor.fetchall()
-    # logger.info("all_the_rows: %s", all_the_rows)
+    # Calculate values
+    total_by_customer = defaultdict(lambda: 0.0)
+    for customer_type, date_for_report, orig_cost, selected_quote_alternative_cost in cursor.fetchall():
+        if selected_quote_alternative_cost:
+            total_by_customer[customer_type] += float(selected_quote_alternative_cost)
+        else:
+            total_by_customer[customer_type] += float(orig_cost)
 
-    desc = cursor.description
-    values_as_dict = [
-        dict(list(zip([col[0] for col in desc], row)))
-        for row in all_the_rows
-    ]
-
-    group_by_customer_type = defaultdict(list)
-    for item in values_as_dict:
-        group_by_customer_type[item['customer_type']].append(item)
-    customer_types = list(group_by_customer_type.keys())
-    customer_types.sort()
-
-    logger.info("group_by_customer: %s", pprint.pformat(group_by_customer_type))
+    # Generate chart series
+    customer_type_names = dict([
+        (ct.id, ct.name) for ct in models.CustomerType.objects.filter(studio=request.user.studio)
+    ])
 
     chart = pygal.Pie(legend_at_bottom=True)  # @UndefinedVariable
     chart.title = 'Ingresos ($) por tipo de cliente'
-
-    serie_cost = []
-    serie_alt_quote = []
-
-    for customer in customer_types:
-        acum_cost = 0.0
-        acum_alt_quote = 0.0
-        for item in group_by_customer_type[customer]:
-            acum_cost += float(item['orig_cost'])
-            if item['selected_quote_alternative_cost']:
-                acum_alt_quote += float(item['selected_quote_alternative_cost'])
-        serie_cost.append(acum_cost)
-        serie_alt_quote.append(acum_alt_quote)
-
-        chart.add("{} ($ {})".format(customer, acum_cost + acum_alt_quote), acum_cost + acum_alt_quote)
-
     chart.print_values = True
+
+    for customer_type in total_by_customer.keys():
+        label = "{} ($ {})".format(customer_type_names[customer_type], total_by_customer[customer_type])
+        chart.add(label, total_by_customer[customer_type])
+
     ctx['svg_chart'] = chart.render()
 
     return render_to_response(
