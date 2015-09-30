@@ -4,6 +4,7 @@ import logging
 
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
+from django.http.response import HttpResponseRedirect
 from django.views import generic
 
 from lumina import models
@@ -33,3 +34,9 @@ class StudioUpdateView(generic.UpdateView):
     #
     #     messages.success(self.request, 'El usuario fue actualizado correctamente')
     #     return ret
+
+
+class StudioCreateView(generic.View):
+
+    def get(self, request):
+        return HttpResponseRedirect(reverse_lazy('home'))
