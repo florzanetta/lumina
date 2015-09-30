@@ -4,8 +4,7 @@ import decimal
 
 from django.core.management.base import BaseCommand, CommandError
 
-from lumina.models import LuminaUser, SessionQuote, SessionQuoteAlternative, \
-    SessionType
+from lumina import models
 
 
 class Command(BaseCommand):
@@ -14,27 +13,27 @@ class Command(BaseCommand):
 
     def handle(self, *the_args, **options):
         if len(the_args) != 2:
-            for ph in LuminaUser.objects.filter(user_type=LuminaUser.PHOTOGRAPHER).order_by('id'):
+            for ph in models.LuminaUser.objects.filter(user_type=models.LuminaUser.PHOTOGRAPHER).order_by('id'):
                 self.stdout.write("{} - {}".format(ph.id, str(ph.username)))
             raise CommandError("You must specify <photographer_id_or_username> and <number_of_inserts>")
 
         try:
-            photographer = LuminaUser.objects.get(pk=int(the_args[0]))
+            photographer = models.LuminaUser.objects.get(pk=int(the_args[0]))
         except ValueError:
-            photographer = LuminaUser.objects.get(username=the_args[0])
+            photographer = models.LuminaUser.objects.get(username=the_args[0])
         assert photographer.is_photographer()
 
         today = datetime.date.today()
         for _ in range(0, int(the_args[1])):
             customer = random.choice(photographer.studio.customers.all())
             cost = random.randint(500, 5000)
-            stipulated_date = datetime.datetime(today.year + 1, random.randint(1, 12),
-                                                random.randint(1, 28))
+            stipulated_date = datetime.datetime(today.year + 1, random.randint(1, 12), random.randint(1, 28))
             created = datetime.datetime(random.randint(today.year - 1, today.year),
                                         random.randint(1, 12), random.randint(1, 28))
             image_quantity = random.randint(1, 50) * 5
+            session_type = random.choice(models.SessionType.objects.filter(studio=photographer.studio))
 
-            quote = SessionQuote.objects.create(
+            quote = models.SessionQuote.objects.create(
                 studio=photographer.studio,
                 customer=customer,
                 image_quantity=image_quantity,
@@ -49,19 +48,26 @@ class Command(BaseCommand):
 
             quote.confirm(photographer)
 
-            sqa = SessionQuoteAlternative.objects.create(
+            sqa = models.SessionQuoteAlternative.objects.create(
                 session_quote=quote,
                 image_quantity=int(image_quantity * 1.5),
                 cost=decimal.Decimal(int(cost * 1.2)))
 
             if random.randint(0, 3) == 0:
-                quote.accept(customer.users.all()[0], (sqa.image_quantity, sqa.cost))
+                quote.accept(random.choice(customer.users.all()), sqa.id)
             else:
-                quote.accept(customer.users.all()[0], None)
+                quote.accept(random.choice(customer.users.all()), None)
 
-            session = quote.create_session(photographer)
+            session = models.Session.objects.create(
+                name=quote.name,
+                studio=photographer.studio,
+                photographer=photographer,
+                customer=quote.customer,
+                session_type=session_type,
+            )
+
             self.stdout.write("      - Session created: {}".format(session.id))
-            session.session_type = random.choice(SessionType.objects.filter(
+            session.session_type = random.choice(models.SessionType.objects.filter(
                 studio=photographer.studio).all())
             session.worked_hours = random.randint(20, 40)
             session.archived = True
