@@ -236,17 +236,24 @@ def view_extended_quotes_by_customer(request):
 def view_income_by_customer_type(request):
     assert request.user.is_photographer()
 
+    ctx = {
+        'report_title': 'Ingresos ($) por tipo de cliente',
+    }
+
     if request.method == 'GET':
         form = forms_reports.IncomeByCustomerTypeReportForm(user=request.user)
+        ctx['form'] = form
     else:
-        form = forms_reports.IncomeByCustomerTypeReportForm(request.POST,
-                                                            user=request.user)
+        form = forms_reports.IncomeByCustomerTypeReportForm(request.POST, user=request.user)
+        ctx['form'] = form
 
-    ctx = dict(form=form)
+    if request.method == 'GET' or not form.is_valid():
+        return render_to_response(
+            'lumina/reports/report_generic.html', ctx,
+            context_instance=RequestContext(request))
 
-    ctx['report_title'] = 'Ingresos ($) por tipo de cliente'
-    chart = pygal.Pie(legend_at_bottom=True)  # @UndefinedVariable
-    chart.title = 'Ingresos ($) por tipo de cliente'
+    date_from = form.cleaned_data['date_from']
+    date_to = form.cleaned_data['date_to']
 
     cursor = connection.cursor()
     # FIXME: use only accepted quotes! (not canceled, or rejected by customer)
@@ -260,8 +267,11 @@ def view_income_by_customer_type(request):
         JOIN lumina_customer        AS cust ON quot.customer_id = cust.id
         JOIN lumina_customertype    AS cust_type ON cust.customer_type_id = cust_type.id
         LEFT OUTER JOIN lumina_sessionquotealternative AS quot_alt ON quot.accepted_quote_alternative_id = quot_alt.id
-        WHERE quot.studio_id = %s
-        """, [request.user.studio.id])
+        WHERE
+            quot.studio_id = %s AND
+            quot.created >= %s AND
+            quot.created <= %s
+        """, [request.user.studio.id, date_from, date_to])
 
     all_the_rows = cursor.fetchall()
     # logger.info("all_the_rows: %s", all_the_rows)
@@ -279,6 +289,9 @@ def view_income_by_customer_type(request):
     customer_types.sort()
 
     logger.info("group_by_customer: %s", pprint.pformat(group_by_customer_type))
+
+    chart = pygal.Pie(legend_at_bottom=True)  # @UndefinedVariable
+    chart.title = 'Ingresos ($) por tipo de cliente'
 
     serie_cost = []
     serie_alt_quote = []
