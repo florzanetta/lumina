@@ -9,16 +9,19 @@ from lumina.models import LuminaUser, SessionQuote, SessionQuoteAlternative, \
 
 
 class Command(BaseCommand):
-    args = '<photographer_id> <number_of_inserts>'
+    args = '<photographer_id_or_username> <number_of_inserts>'
     help = 'Generates random data'
 
     def handle(self, *the_args, **options):
         if len(the_args) != 2:
             for ph in LuminaUser.objects.filter(user_type=LuminaUser.PHOTOGRAPHER).order_by('id'):
-                self.stdout.write("{} - {}".format(ph.id, str(ph)))
-            raise CommandError("You must specify <photographer_id> and <number_of_inserts>")
+                self.stdout.write("{} - {}".format(ph.id, str(ph.username)))
+            raise CommandError("You must specify <photographer_id_or_username> and <number_of_inserts>")
 
-        photographer = LuminaUser.objects.get(pk=int(the_args[0]))
+        try:
+            photographer = LuminaUser.objects.get(pk=int(the_args[0]))
+        except ValueError:
+            photographer = LuminaUser.objects.get(username=the_args[0])
         assert photographer.is_photographer()
 
         today = datetime.date.today()
