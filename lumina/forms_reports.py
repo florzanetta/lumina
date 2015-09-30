@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 import logging
 
 from django import forms
@@ -10,6 +11,14 @@ from lumina import models
 logger = logging.getLogger(__name__)
 
 
+def _get_default_date_from():
+    return datetime.date.today() - datetime.timedelta(days=365)
+
+
+def _get_default_date_to():
+    return datetime.date.today()
+
+
 class _GenericDateRangeReportForm(forms_utils.GenericForm):
     SUBMIT_LABEL = 'Actualizar reporte'
     FIELDS = [
@@ -18,8 +27,8 @@ class _GenericDateRangeReportForm(forms_utils.GenericForm):
     ]
     FORM_ACTION = None
 
-    date_from = forms.DateField(required=False, label='Fecha desde')
-    date_to = forms.DateField(required=False, label='Fecha hasta')
+    date_from = forms.DateField(required=True, label='Fecha desde', initial=_get_default_date_from)
+    date_to = forms.DateField(required=True, label='Fecha hasta', initial=_get_default_date_to)
 
     def __init__(self, *args, **kwargs):
         assert self.FORM_ACTION is not None

@@ -282,7 +282,6 @@ def view_income_by_customer_type(request):
 
     serie_cost = []
     serie_alt_quote = []
-    # labels = []
 
     for customer in customer_types:
         acum_cost = 0.0
@@ -291,7 +290,6 @@ def view_income_by_customer_type(request):
             acum_cost += float(item['orig_cost'])
             if item['selected_quote_alternative_cost']:
                 acum_alt_quote += float(item['selected_quote_alternative_cost'])
-        # labels.append(customer)
         serie_cost.append(acum_cost)
         serie_alt_quote.append(acum_alt_quote)
 
@@ -299,7 +297,6 @@ def view_income_by_customer_type(request):
 
     chart.print_values = True
     ctx['svg_chart'] = chart.render()
-    ctx['show_form_4'] = True
 
     return render_to_response(
         'lumina/reports/report_generic.html', ctx,
