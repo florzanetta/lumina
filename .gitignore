@@ -56,3 +56,4 @@ nosetests.xml
 /twistd.pid
 /lumina.sqlite*
 /doc/_build
+/.google-chrome-demo
