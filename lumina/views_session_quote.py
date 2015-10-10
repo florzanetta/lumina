@@ -35,7 +35,7 @@ class SessionQuoteCreateUpdateMixin:
 class SessionQuoteCreateView(CreateView, SessionQuoteCreateUpdateMixin):
     model = SessionQuote
     form_class = forms_session_quote.SessionQuoteCreateForm
-    template_name = 'lumina/sessionquote_create.html'
+    template_name = 'lumina/base_create_update_crispy_form.html'
 
     def get_form(self, form_class):
         form = super().get_form(form_class)
@@ -270,8 +270,6 @@ class SessionQuoteDetailView(DetailView):
 
     This is kind a 'read-only' view... The 'read-write' view is SessionQuoteAlternativeSelectView
     """
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-    #    #django.views.generic.detail.DetailView
     model = SessionQuote
 
     def get_queryset(self):
