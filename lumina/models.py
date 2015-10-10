@@ -526,14 +526,11 @@ class ImageSelection(models.Model):
     customer = models.ForeignKey(Customer, related_name='+', verbose_name="cliente")
 
     image_quantity = models.PositiveIntegerField(verbose_name="cantidad de imágenes")
-    status = models.CharField(
-        max_length=1, choices=STATUS, default=STATUS_WAITING, verbose_name="estado")
-    selected_images = models.ManyToManyField(
-        'Image', blank=True, verbose_name="imágenes seleccionadas")
+    status = models.CharField(max_length=1, choices=STATUS, default=STATUS_WAITING, verbose_name="estado")
+    selected_images = models.ManyToManyField('Image', blank=True, verbose_name="imágenes seleccionadas")
 
-    # TODO: `preview_size` maybe should be non-null
-    preview_size = models.ForeignKey(
-        'PreviewSize', null=True, blank=True, verbose_name="tamaño de previsualización")
+    # FIXME: `ImageSelection.preview_size` maybe should be non-null
+    preview_size = models.ForeignKey('PreviewSize', null=True, verbose_name="tamaño de previsualización")
 
     quote = models.ForeignKey('SessionQuote', null=True, blank=True, verbose_name="presupuesto")
 
