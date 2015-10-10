@@ -127,17 +127,10 @@ class SessionDetailView(DetailView):
     def post(self, request, *args, **kwargs):
         session = self.get_object()
 
-        #    <input class="btn btn-primary" type="submit" name="archive_session" value="Archivar">
-        #    <input class="btn btn-primary" type="submit" name="delete_session" value="Borrar">
-
         if 'archive_session' in request.POST:
             session.archive(self.request.user)
             messages.success(self.request, 'La sesión fue archivada correctamente')
             return HttpResponseRedirect(reverse('session_detail', args=[session.id]))
-
-        #    if 'delete_session' in request.POST:
-        #        session.delete(self.request.user)
-        #        return HttpResponseRedirect(reverse('quote_update', args=[session.id]))
 
         raise SuspiciousOperation()
 
