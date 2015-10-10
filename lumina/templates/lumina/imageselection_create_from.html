@@ -1,0 +1,20 @@
+{% extends "lumina/base_create_update_crispy_form.html" %}
+
+{% block pre-form %}
+<div class="alert alert-info" role="alert">
+    <p style="padding-bottom: 0.5em;">Ud. está creando una solicitud de selección de imágenes para:</p>
+    <h4>· Sesión fotográfica: <strong>{{session.name}}</strong></h4>
+    <h4>· Cliente: <strong>{{session.customer.name}}</strong></h4>
+</div>
+
+{% if session_doesn_have_images %}
+<div class="alert alert-danger" role="alert">
+    <h3>La sesión no posee fotografías</h3>
+    <p>
+        No podrá crear una solicitud de selección de fotográfias, porque la sesión
+        no posee ninguna fotografía.
+    </p>
+</div>
+{% endif %}
+
+{% endblock %}
