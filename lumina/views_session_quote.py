@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import SuspiciousOperation
 from django.core import paginator as django_paginator
 from django.conf import settings
+from django.contrib.messages.views import SuccessMessageMixin
 
 from lumina import forms_session_quote
 from lumina import views_utils
@@ -58,50 +59,50 @@ class SessionQuoteCreateView(CreateView, SessionQuoteCreateUpdateMixin):
         return reverse('quote_detail', args=[self.object.id])
 
 
-class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
+class SessionQuoteUpdateView(SuccessMessageMixin, UpdateView, SessionQuoteCreateUpdateMixin):
     """
     Allows the photographer modify a Quote.
 
     The SessionQuote instance is fully modificable ONLY if in state STATUS_QUOTING.
     If STATUS_WAITING_CUSTOMER_RESPONSE or STATUS_ACCEPTED, only the alternatives
     are modificables.
+
+    So:
+    - SessionQuote.STATUS_QUOTING => fully editable
+    - SessionQuote.STATUS_ACCEPTED => only SessionQuoteAlternative are editable
+    - SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE => only SessionQuoteAlternative are editable
     """
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
     model = SessionQuote
-    # form_class = SessionQuoteUpdateForm
     template_name = 'lumina/sessionquote_update_form.html'
+    success_message = "El presupuesto fue actualizado exitosamente"
+
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        form_kwargs['photographer'] = self.request.user
+        return form_kwargs
 
     def get_form_class(self):
-        if self.object.status == SessionQuote.STATUS_QUOTING:
-            # modificable
+        if self.object.status == SessionQuote.STATUS_QUOTING:  # fully editable
             return forms_session_quote.SessionQuoteUpdateForm
-        elif self.object.status == SessionQuote.STATUS_ACCEPTED:
-            # ro
-            return forms_session_quote.SessionQuoteUpdateReadOnlyForm
-        elif self.object.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE:
-            # ro
-            return forms_session_quote.SessionQuoteUpdateReadOnlyForm
+
+        elif self.object.status in [SessionQuote.STATUS_ACCEPTED,  # only SessionQuoteAlternative are editable
+                                    SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE]:
+            return forms_session_quote.SessionQuoteUpdateEmptyForm
+
         else:
             raise SuspiciousOperation()
-
-    def get_form(self, form_class):
-        form = super(SessionQuoteUpdateView, self).get_form(form_class)
-        if self.object.status == SessionQuote.STATUS_QUOTING:
-            self._setup_form(form)
-        return form
 
     def get_queryset(self):
         return SessionQuote.objects.modificable_sessionquote(self.request.user)
 
     def form_valid(self, form):
-        # from Django docs:
-        # > This method is called when valid form data has been POSTed.
-        # > It should return an HttpResponse.
 
+        # Update the `SessionQuote`
         if self.object.status == SessionQuote.STATUS_QUOTING:
-            if 'default_button' in self.request.POST:  # Submit for 'Update'
-                return super(SessionQuoteUpdateView, self).form_valid(form)
+            if 'submit_update_quote' in self.request.POST:  # Submit for 'Update'
+                return super().form_valid(form)
 
+        # Check if post was for alternative management
         delete_alternative = [k for k in list(self.request.POST.keys())
                               if k.startswith('delete_alternative_')]
 
@@ -115,24 +116,18 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
             # the DB will refuse this delete automatically :-D
             return HttpResponseRedirect(reverse('quote_update', args=[self.object.id]))
 
-        # FIXME: add an error messages and do a redirect instead of this
+        # TODO: add an error messages and do a redirect instead of this?
         raise SuspiciousOperation()
 
     def get_context_data(self, **kwargs):
-        context = super(SessionQuoteUpdateView, self).get_context_data(**kwargs)
-        context['title'] = "Actualizar presupuesto"
+        context = super().get_context_data(**kwargs)
 
         if self.object.status == SessionQuote.STATUS_QUOTING:
-            context['submit_label'] = "Actualizar"
             context['full_edit'] = True
         else:
             context['full_edit'] = False
 
-        buttons = context.get('extra_buttons', [])
-        buttons.append({'link_url': reverse('quote_detail', args=[self.object.id]),
-                        'link_label': "Volver", })
-        context['extra_buttons'] = buttons
-        views_utils._put_session_statuses_in_context(context)
+        views_utils.put_session_statuses_in_context(context)
         return context
 
     def get_success_url(self):
@@ -416,7 +411,7 @@ class SessionQuoteDetailView(DetailView):
 
         context['selected_quote'] = self.object.get_selected_quote()
         context['extra_buttons'] = buttons
-        views_utils._put_session_statuses_in_context(context)
+        views_utils.put_session_statuses_in_context(context)
 
         return context
 
@@ -490,7 +485,7 @@ class SessionQuoteAlternativeSelectView(DetailView):
         else:
             raise Exception("Invalid 'status': {}".format(self.object.status))
 
-        views_utils._put_session_statuses_in_context(context)
+        views_utils.put_session_statuses_in_context(context)
 
         return context
 

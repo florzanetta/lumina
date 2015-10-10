@@ -25,7 +25,7 @@ def is_mobile(request):
     return django_mobile.get_flavour(request) == "mobile"
 
 
-def _put_session_statuses_in_context(context):
+def put_session_statuses_in_context(context):
     # Status de SessionQuote (reusado más abajo)
     statuses_dict = dict(SessionQuote.STATUS)
     context['status_STATUS_QUOTING'] = statuses_dict[SessionQuote.STATUS_QUOTING]

@@ -1,40 +1,22 @@
-{% extends "lumina/base_create_update_form.html" %}
-{% load humanize %}
+{% extends "lumina/base.html" %}
+{% load lumina_extras %}{% load crispy_forms_tags %}{% load humanize %}
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>{% block title %}Lumina - {{ title }}{% endblock %}</title>
-
-<style type="text/css">
-
-    {% block css %}
-        {{ block.super }}
-        
-        #id_terms {
-           width: 40em;
-        }
-        
-    {% endblock %}
-
-</style>
-
 </head>
 <body>
 
-<table>
+{% block content %}
 
+    {% crispy form form.helper %}
 
-    {% block post_form_content %}
-        {% if not full_edit %}
+    {% if not full_edit %}
+        <table class="table">
             {% include 'lumina/include/sessionquote_details_readonly.html' with hide_alternatives=True %}
-        {% endif %}
-    {% endblock post_form_content %}
-
-    
-</table>
-
-    {% block post_table_content %}
+        </table>
+    {% endif %}
 
     <p>&nbsp;</p>
     <p>&nbsp;</p>
@@ -84,19 +66,7 @@
         {% include 'lumina/include/sessionquote_details_help.html' %}
     {% endif %}
 
-    {% endblock post_table_content %}
-
-{% block javascript_bottom %}
-
-<script type="text/javascript">
-$(document).ready(function() {
-	$('.with_tooltip').tooltip();
-    $("<span>$ </span>").insertBefore("#id_cost");
-    $("<span>$ </span>").insertBefore("#id_stipulated_down_payment");
-});
-</script>
- 
-{% endblock %}
+{% endblock content %}
 
 </body>
 </html>

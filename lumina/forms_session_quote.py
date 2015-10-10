@@ -55,13 +55,44 @@ class SessionQuoteCreateForm(forms_utils.GenericCreateUpdateModelForm):
 
 class SessionQuoteUpdateForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        photographer = kwargs.pop('photographer')
+        assert isinstance(photographer, models.LuminaUser)
+        assert photographer.is_photographer()
+
+        super().__init__(*args, **kwargs)
+        self.helper = helper.FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
+
+        self.helper.layout = helper.Layout(
+            layout.Fieldset(
+                'Actualizar presupuesto',
+                'name', 'customer', 'image_quantity', 'cost', 'terms'
+            ),
+            bootstrap.FormActions(
+                layout.Submit('submit_update_quote', 'Actualizar', css_id='form-submit-button'),
+                layout.HTML('<a href="{% url "quote_detail" object.id %}" class="btn btn-primary">Volver</a>')
+            ),
+        )
+
+        self.fields['customer'].queryset = models.Customer.objects.customers_of(photographer)
+
     class Meta:
         model = models.SessionQuote
-        fields = ('name', 'customer', 'image_quantity', 'cost',
-                  'terms')
+        fields = ('name', 'customer', 'image_quantity', 'cost', 'terms')
 
 
-class SessionQuoteUpdateReadOnlyForm(forms.ModelForm):
+class SessionQuoteUpdateEmptyForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        photographer = kwargs.pop('photographer')
+        assert isinstance(photographer, models.LuminaUser)
+        assert photographer.is_photographer()
+        # We don't really use `photographer`, but we receive it, so, we make sure it's a photographer
+        super().__init__(*args, **kwargs)
+        self.helper = helper.FormHelper()
 
     class Meta:
         model = models.SessionQuote
