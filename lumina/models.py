@@ -549,9 +549,8 @@ class ImageSelection(models.Model):
         return self.selected_images.filter(image='')
 
     def clean(self):
-        # from django.core.exceptions import ValidationError
-        if self.id is None:
-            # --- NEW INSTANCE! ---
+        if self.id is None and self.image_quantity:
+            # --- NEW INSTANCE! And user has specified `image_quantity` ---
             # Check: image_quantity can't be greater than the number of images of the session
             image_count = self.session.image_set.count()
             if self.image_quantity > image_count:
