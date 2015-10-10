@@ -3,6 +3,12 @@
 
 {% block content %}
 
+    {% block pre-form %}
+    {% endblock %}
+
     {% crispy form form.helper %}
+
+    {% block post-form %}
+    {% endblock %}
 
 {% endblock content %}
