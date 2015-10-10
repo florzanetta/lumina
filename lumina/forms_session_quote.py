@@ -69,7 +69,13 @@ class SessionQuoteUpdateForm(forms.ModelForm):
         self.helper.layout = helper.Layout(
             layout.Fieldset(
                 'Actualizar presupuesto',
-                'name', 'customer', 'image_quantity', 'cost', 'terms'
+                'name',
+                'customer',
+                'image_quantity',
+                forms_utils.DatePickerField('stipulated_date'),
+                bootstrap.PrependedText('cost', '$'),
+                bootstrap.PrependedText('stipulated_down_payment', '$'),
+                'terms'
             ),
             bootstrap.FormActions(
                 layout.Submit('submit_update_quote', 'Actualizar', css_id='form-submit-button'),
@@ -81,7 +87,7 @@ class SessionQuoteUpdateForm(forms.ModelForm):
 
     class Meta:
         model = models.SessionQuote
-        fields = ('name', 'customer', 'image_quantity', 'cost', 'terms')
+        fields = ('name', 'customer', 'image_quantity', 'stipulated_date', 'cost', 'stipulated_down_payment', 'terms')
 
 
 class SessionQuoteUpdateEmptyForm(forms.ModelForm):
