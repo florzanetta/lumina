@@ -185,7 +185,17 @@ class SessionQuoteSearchForm(forms.Form):
                 self.add_error('fecha_creacion_hasta', msg)
 
 
-class SessionQuoteAlternativeCreateForm(forms.ModelForm):
+class SessionQuoteAlternativeCreateForm(forms_utils.GenericCreateUpdateModelForm):
+
+    FORM_TITLE = 'Crear alternativa de presupuesto'
+    SUBMIT_LABEL = 'Crear'
+    FIELDS = [
+        'image_quantity',
+        bootstrap.PrependedText('cost', '$'),
+    ]
+
+    def get_cancel_url(self):
+        return reverse_lazy('quote_update', args=[self.initial['session_quote'].id])
 
     class Meta:
         model = models.SessionQuoteAlternative

@@ -493,40 +493,34 @@ class SessionQuoteAlternativeSelectView(DetailView):
 class SessionQuoteAlternativeCreateView(CreateView):
     model = SessionQuoteAlternative
     form_class = forms_session_quote.SessionQuoteAlternativeCreateForm
-    template_name = 'lumina/sessionquote_alternative_create_update.html'
+    template_name = 'lumina/base_create_update_crispy_form.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.session_quote = SessionQuote.objects.modificable_sessionquote(self.request.user).get(
+            pk=self.kwargs['session_quote_id'])
+        return super().dispatch(request, *args, **kwargs)
 
     def get_initial(self):
         initial = super(SessionQuoteAlternativeCreateView, self).get_initial()
-        session_quote_id = self.kwargs['session_quote_id']
-        initial.update({'session_quote': SessionQuote.objects.get(pk=session_quote_id)})
+        initial.update({
+            'session_quote': self.session_quote
+        })
         return initial
 
     def form_valid(self, form):
-        session_quote_id = self.kwargs['session_quote_id']
-        session_quote = SessionQuote.objects.get(pk=session_quote_id)
         # check unique
-        qs = session_quote.quote_alternatives
+        qs = self.session_quote.quote_alternatives
         if qs.filter(image_quantity=form.instance.image_quantity).count() != 0:
             messages.error(self.request,
                            'Ya existe una alternativa para la cantidad de fotos ingresada')
             return self.render_to_response(self.get_context_data(form=form))
 
-        form.instance.session_quote = session_quote
+        # FIXME: check consistency between other's alternatives `image_quantity` and `cost`
+
+        form.instance.session_quote = self.session_quote
         ret = super(SessionQuoteAlternativeCreateView, self).form_valid(form)
         messages.success(self.request, 'La alternativa fue creada correctamente')
         return ret
-
-    def get_context_data(self, **kwargs):
-        context = super(SessionQuoteAlternativeCreateView, self).get_context_data(**kwargs)
-        context['title'] = "Crear alternativa de presupuesto"
-        context['submit_label'] = "Crear"
-
-        buttons = context.get('extra_buttons', [])
-        buttons.append({'link_url': reverse('quote_update',
-                                            args=[self.kwargs['session_quote_id']]),
-                        'link_label': "Volver", })
-        context['extra_buttons'] = buttons
-        return context
 
     def get_success_url(self):
         return reverse('quote_update', args=[self.kwargs['session_quote_id']])
