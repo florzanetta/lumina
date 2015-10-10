@@ -83,7 +83,7 @@ class ImageSelectionCreateView(CreateView):
     # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
     model = ImageSelection
     form_class = ImageSelectionCreateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/base_create_update_crispy_form.html'
 
     def get_initial(self):
         initial = super(ImageSelectionCreateView, self).get_initial()
@@ -107,9 +107,7 @@ class ImageSelectionCreateView(CreateView):
 
         send_emails_to_users(subject, form.instance.customer.users.all(), message)
 
-        messages.success(
-            self.request, 'La solicitud de seleccion de imagenes '
-                          'fue creada correctamente.')
+        messages.success(self.request, 'La solicitud de seleccion de imagenes fue creada correctamente.')
         return ret
 
     def get_success_url(self):
