@@ -122,8 +122,6 @@ class SessionSearchView(ListView, FormMixin):
 
 
 class SessionDetailView(DetailView):
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-display/
-    #    #django.views.generic.detail.DetailView
     model = models.Session
 
     def post(self, request, *args, **kwargs):

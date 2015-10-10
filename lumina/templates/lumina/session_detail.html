@@ -200,11 +200,13 @@
             
             <div class="btn-group">
                 <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                    Solicitar selección de imágenes <span class="caret"></span>
+                    Selección de fotos <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
 		            <li><a href="{% url 'image_selection_create' %}?id_session={{ object.pk }}">Solicitar selección de imágenes</a></li>
-		            <li><a href="{% url 'image_selection_create_from_quote' object.pk %}">Solicitar selección de imágenes (desde presupuesto)</a></li>
+                    {% if object.get_active_quote %}
+		                <li><a href="{% url 'image_selection_create_from_quote' object.pk %}">Solicitar selección de imágenes (desde presupuesto)</a></li>
+                    {% endif %}
                 </ul>
             </div>
 
