@@ -101,43 +101,50 @@
         </tr>
 
         {% if not hide_alternatives %}
+
+
             <tr>
-                <th>Alternativa seleccionada:</th>
-                <td>
-                    <table class="table table-condensed table-hover table-bordered">
-                        <tr>
-                            <th width="40%" style="text-align: right;">&nbsp;</th>
-                            <th width="30%" style="text-align: right;">Cant. de fotografias</th>
-                            <th width="30%" style="text-align: right;">Costo</th>
-                            <th width="5%" style="text-align: center;">&nbsp;</th>
-                        </tr>
-                        <tr {% if selected_quote == 0 %}class="success"{% endif %}>
-                            <td width="40%" style="text-align: right; font-weight: bold;">Presupuesto original:</td>
-                            <td width="30%" style="text-align: right;">{{ object.image_quantity|intcomma }}</td>
-                            <td width="30%" style="text-align: right;">$ {{ object.cost|intcomma }}</td>
-                            <td width="5%" style="text-align: center;">
-                                {% if selected_quote == 0 %}
-                                    <i class="icon-ok"></i>
-                                {% else %}
-                                    &nbsp;
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% for alt in object.quote_alternatives.all %}
-                            <tr {% if selected_quote == alt.id %}class="success"{% endif %}>
-                                <td style="text-align: right; font-weight: bold;">Alternativa:</td>
-                                <td style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
-                                <td style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
-                                <td width="5%" style="text-align: center;">
-                                    {% if selected_quote == alt.id %}
-                                        <i class="icon-ok"></i>
-                                    {% else %}
-                                        &nbsp;
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
+                <td colspan="2">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h4>Alternativas</h4></div>
+                        <div class="panel-body">
+                            <table class="table table-condensed table-hover table-bordered">
+                                <tr>
+                                    <th width="40%" style="text-align: right;">&nbsp;</th>
+                                    <th width="30%" style="text-align: right;">Cant. de fotografias</th>
+                                    <th width="30%" style="text-align: right;">Costo</th>
+                                    <th width="5%" style="text-align: center;">Acciones</th>
+                                </tr>
+                                <tr {% if selected_quote == 0 %}class="success"{% endif %}>
+                                    <td width="40%" style="text-align: right; font-weight: bold;">Presupuesto original:</td>
+                                    <td width="30%" style="text-align: right;">{{ object.image_quantity|intcomma }}</td>
+                                    <td width="30%" style="text-align: right;">$ {{ object.cost|intcomma }}</td>
+                                    <td width="5%" style="text-align: center;">
+                                        {% if selected_quote == 0 %}
+                                            <i class="icon-ok"></i>
+                                        {% else %}
+                                            &nbsp;
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% for alt in object.quote_alternatives.all %}
+                                    <tr {% if selected_quote == alt.id %}class="success"{% endif %}>
+                                        <td style="text-align: right; font-weight: bold;">Alternativa:</td>
+                                        <td style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
+                                        <td style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
+                                        <td width="5%" style="text-align: center;">
+                                            {% if selected_quote == alt.id %}
+                                                <i class="icon-ok"></i>
+                                            {% else %}
+                                                &nbsp;
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
                 </td>
             </tr>
+
         {% endif %}
