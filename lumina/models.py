@@ -554,8 +554,10 @@ class ImageSelection(models.Model):
             # Check: image_quantity can't be greater than the number of images of the session
             image_count = self.session.image_set.count()
             if self.image_quantity > image_count:
-                msg = {'image_quantity': 'Debe seleccionar {} o menos imagenes'.format(
-                    image_count)}
+                if image_count == 0:
+                    msg = {'image_quantity': 'La sesión fotográfica no posee imágenes'.format(image_count)}
+                else:
+                    msg = {'image_quantity': 'Debe seleccionar {} o menos imagenes'.format(image_count)}
                 raise ValidationError(msg)
 
 
@@ -661,6 +663,7 @@ class Image(models.Model):
 
     studio = models.ForeignKey(Studio, verbose_name="estudio")
 
+    # FIXME: why Image.session could be 'null'?
     session = models.ForeignKey(Session, null=True, verbose_name="sesión")
 
     created = models.DateTimeField(auto_now_add=True)

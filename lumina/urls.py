@@ -127,7 +127,7 @@ urlpatterns = patterns(
     # ===========================================================================
     # ImageSelection
     # ===========================================================================
-    url(r'^session/image-selection/create/$',
+    url(r'^session/image-selection/create/(?P<session_id>\d+)/$',
         cache_control(private=True)(
             login_required(
                 views_image_selection_creation.ImageSelectionCreateView.as_view())),

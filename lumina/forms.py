@@ -57,6 +57,9 @@ class SharedSessionByEmailCreateForm(forms.ModelForm):
 class ImageSelectionCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
+        photographer = kwargs.pop('photographer')
+        session = kwargs.pop('session')
+
         super().__init__(*args, **kwargs)
         self.helper = helper.FormHelper()
         self.helper.form_class = 'form-horizontal'
@@ -66,12 +69,23 @@ class ImageSelectionCreateForm(forms.ModelForm):
         self.helper.layout = helper.Layout(
             layout.Fieldset(
                 'Creación de solicitud de imágenes',
-                'session', 'image_quantity', 'preview_size',
+                'image_quantity',
+                'preview_size',
             ),
             bootstrap.FormActions(
-                layout.Submit('submit_button', 'Guardar', css_id='form-submit-button'),
+                layout.Submit('submit_button', 'Crear solicitud', css_id='form-submit-button'),
             ),
         )
+
+        assert isinstance(photographer, LuminaUser)
+        assert photographer.is_photographer()
+
+        assert isinstance(session, models.Session)
+
+        self.instance.session = session
+
+        # self.fields['customer'].queryset = Customer.objects.customers_of(photographer)
+        # self.fields['session_type'].queryset = SessionType.objects.for_photographer_ordered(photographer)
 
     def clean_image_quantity(self):
         data = self.cleaned_data['image_quantity']
@@ -83,7 +97,7 @@ class ImageSelectionCreateForm(forms.ModelForm):
 
     class Meta:
         model = ImageSelection
-        fields = ('session', 'image_quantity', 'preview_size')
+        fields = ('image_quantity', 'preview_size')
 
 
 class ImageSelectionAutoCreateForm(forms.ModelForm):

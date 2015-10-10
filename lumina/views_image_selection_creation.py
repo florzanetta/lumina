@@ -79,20 +79,19 @@ class ImageSelectionCreateView(CreateView):
     With this view, the photographer creates a request
     to the customer.
     """
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
-    # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
     model = ImageSelection
     form_class = ImageSelectionCreateForm
-    template_name = 'lumina/base_create_update_crispy_form.html'
+    template_name = 'lumina/imageselection_create_from.html'
 
-    def get_initial(self):
-        initial = super(ImageSelectionCreateView, self).get_initial()
-        # FIXME: filter `PreviewSize` for user's Studio
-        if 'id_session' in self.request.GET:
-            initial.update({
-                'session': self.request.GET['id_session'],
-            })
-        return initial
+    def dispatch(self, request, *args, **kwargs):
+        self.session = self.request.user.studio.session_set.all().get(pk=kwargs['session_id'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['photographer'] = self.request.user
+        kwargs['session'] = self.session
+        return kwargs
 
     def form_valid(self, form):
         form.instance.studio = self.request.user.studio
@@ -114,9 +113,7 @@ class ImageSelectionCreateView(CreateView):
         return reverse('session_detail', args=[self.object.session.id])
 
     def get_context_data(self, **kwargs):
-        context = super(ImageSelectionCreateView, self).get_context_data(**kwargs)
-        context['form'].fields['session'].queryset = self.request.user.studio.session_set.all()
-
-        context['title'] = "Solicitud de seleccion de fotos"
-        context['submit_label'] = "Enviar solicitud"
-        return context
+        return super().get_context_data(
+            session=self.session,
+            session_doesn_have_images=bool(self.session.image_set.count() == 0),
+            **kwargs)

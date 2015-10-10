@@ -212,7 +212,7 @@
                     <!-- the logged in user from the same Studio than the Session -->
                     <form action="." method="post">
                         {% csrf_token %}
-                        <a href="{% url 'image_selection_create' %}?id_session={{ object.pk }}" class="btn btn-primary">Solicitar selección de imágenes</a>
+                        <a href="{% url 'image_selection_create' object.pk %}" class="btn btn-primary">Solicitar selección de imágenes</a>
                         {% if object.get_active_quote %}
                             <a href="{% url 'image_selection_create_from_quote' object.pk %}" class="btn btn-primary">Solicitar selección de imágenes desde presupuesto</a>
                         {% endif %}
