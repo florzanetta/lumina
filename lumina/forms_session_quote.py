@@ -61,7 +61,7 @@ class SessionQuoteUpdateForm(forms.ModelForm):
                   'terms')
 
 
-class SessionQuoteUpdate2Form(forms.ModelForm):
+class SessionQuoteUpdateReadOnlyForm(forms.ModelForm):
 
     class Meta:
         model = models.SessionQuote

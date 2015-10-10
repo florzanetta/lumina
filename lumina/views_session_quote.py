@@ -77,10 +77,10 @@ class SessionQuoteUpdateView(UpdateView, SessionQuoteCreateUpdateMixin):
             return forms_session_quote.SessionQuoteUpdateForm
         elif self.object.status == SessionQuote.STATUS_ACCEPTED:
             # ro
-            return forms_session_quote.SessionQuoteUpdate2Form
+            return forms_session_quote.SessionQuoteUpdateReadOnlyForm
         elif self.object.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE:
             # ro
-            return forms_session_quote.SessionQuoteUpdate2Form
+            return forms_session_quote.SessionQuoteUpdateReadOnlyForm
         else:
             raise SuspiciousOperation()
 
