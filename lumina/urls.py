@@ -134,7 +134,7 @@ urlpatterns = patterns(
         name='image_selection_create'),
 
     url(
-        r'^session/image-selection/create/(?P<pk>\d+)/$',
+        r'^session/image-selection/create-from-quote/(?P<pk>\d+)/$',
         views_image_selection_creation.image_selection_create_from_quote,
         name='image_selection_create_from_quote'),
 
