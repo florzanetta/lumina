@@ -84,8 +84,7 @@ class ImageSelectionCreateForm(forms.ModelForm):
 
         self.instance.session = session
 
-        # self.fields['customer'].queryset = Customer.objects.customers_of(photographer)
-        # self.fields['session_type'].queryset = SessionType.objects.for_photographer_ordered(photographer)
+        self.fields['preview_size'].queryset = models.PreviewSize.objects.for_photographer_ordered(photographer)
 
     def clean_image_quantity(self):
         data = self.cleaned_data['image_quantity']
