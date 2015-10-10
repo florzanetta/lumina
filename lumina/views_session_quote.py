@@ -299,7 +299,7 @@ class SessionQuoteDetailView(DetailView):
                                                 args=[quote.id]))
 
         # elif 'button_cancel_and_new_version' in request.POST:
-        #     # FIXME: implement this!
+        #     # TODO: implement this!
         #     messages.error(self.request, "La creacion de nuevas versiones "
         #                                  "de presupuestos todavia no esta implementada.")
         #     return HttpResponseRedirect(reverse('home'))
@@ -336,9 +336,9 @@ class SessionQuoteDetailView(DetailView):
                 raise SuspiciousOperation()
             else:
                 buttons.append({'name': 'button_update',
-                                'submit_label': "Editar", })
+                                'submit_label': "Editar presupuesto", })
                 buttons.append({'name': 'button_confirm',
-                                'submit_label': "Confirmar", 'confirm': True, })
+                                'submit_label': "Confirmar presupuesto", 'confirm': True, })
                 buttons.append({'name': 'button_cancel',
                                 'submit_label': "Cancelar presupuesto", 'confirm': True, })
 
@@ -355,7 +355,7 @@ class SessionQuoteDetailView(DetailView):
                 #                 'submit_label': "Cancelar presupuesto y crear nueva versión",
                 #                 'confirm': True, })
                 buttons.append({'name': 'button_update_quote_alternatives',
-                                'submit_label': "Editar presup. alternativos", })
+                                'submit_label': "Editar presupuestos alternativos", })
 
         elif self.object.status == SessionQuote.STATUS_REJECTED:
             if self.request.user.is_for_customer():
@@ -363,10 +363,10 @@ class SessionQuoteDetailView(DetailView):
             else:
                 if self.object.archived:
                     buttons.append({'name': 'button_unarchive_quote',
-                                    'submit_label': "Desarchivar", })
+                                    'submit_label': "Desarchivar presupuesto", })
                 else:
                     buttons.append({'name': 'button_archive_quote',
-                                    'submit_label': "Archivar", })
+                                    'submit_label': "Archivar presupuesto", })
 
         elif self.object.status == SessionQuote.STATUS_ACCEPTED:
             if self.request.user.is_for_customer():
@@ -381,13 +381,13 @@ class SessionQuoteDetailView(DetailView):
                 #                 'submit_label': "Cancelar presupuesto y crear nueva versión",
                 #                 'confirm': True, })
                 buttons.append({'name': 'button_update_quote_alternatives',
-                                'submit_label': "Editar presup. alternativos", })
+                                'submit_label': "Editar presupuestos alternativos", })
                 if self.object.archived:
                     buttons.append({'name': 'button_unarchive_quote',
-                                    'submit_label': "Desarchivar", })
+                                    'submit_label': "Desarchivar presupuesto", })
                 else:
                     buttons.append({'name': 'button_archive_quote',
-                                    'submit_label': "Archivar", })
+                                    'submit_label': "Archivar presupuesto", })
                 if self.object.session is None:
                     buttons.append({'name': 'button_create_session',
                                     'submit_label': "Crear sesión desde presupuesto", })
@@ -399,10 +399,10 @@ class SessionQuoteDetailView(DetailView):
             else:
                 if self.object.archived:
                     buttons.append({'name': 'button_unarchive_quote',
-                                    'submit_label': "Desarchivar", })
+                                    'submit_label': "Desarchivar presupuesto", })
                 else:
                     buttons.append({'name': 'button_archive_quote',
-                                    'submit_label': "Archivar", })
+                                    'submit_label': "Archivar presupuesto", })
 
         else:
             raise Exception("Invalid 'status': {}".format(self.object.status))
