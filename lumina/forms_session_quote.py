@@ -13,7 +13,27 @@ from lumina import forms_utils
 from lumina import models
 
 
-class SessionQuoteCreateForm(forms_utils.GenericCreateUpdateModelForm):
+class _SessionQuoteValidateMixin(forms.ModelForm):
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cost = cleaned_data.get("cost")
+        stipulated_down_payment = cleaned_data.get("stipulated_down_payment")
+
+        if cost is not None and stipulated_down_payment is not None:
+            if cost < stipulated_down_payment:
+                msg = "La 'entrega inicial pactada' debe ser menor o igual al 'costo'"
+                self.add_error('cost', msg)
+                self.add_error('stipulated_down_payment', msg)
+
+        stipulated_date = cleaned_data.get("stipulated_date")
+        if stipulated_date is not None:
+            if stipulated_date < datetime.date.today():
+                self.add_error('stipulated_date', "La fecha de entrega no puede ser del pasado")
+
+
+class SessionQuoteCreateForm(_SessionQuoteValidateMixin,
+                             forms_utils.GenericCreateUpdateModelForm):
 
     FORM_TITLE = 'Crear nuevo presupuesto'
     SUBMIT_LABEL = 'Crear'
@@ -36,24 +56,10 @@ class SessionQuoteCreateForm(forms_utils.GenericCreateUpdateModelForm):
             'terms'
         )
 
-    def clean(self):
-        cleaned_data = super().clean()
-        cost = cleaned_data.get("cost")
-        stipulated_down_payment = cleaned_data.get("stipulated_down_payment")
 
-        if cost is not None and stipulated_down_payment is not None:
-            if cost < stipulated_down_payment:
-                msg = "La 'entrega inicial pactada' debe ser menor o igual al 'costo'"
-                self.add_error('cost', msg)
-                self.add_error('stipulated_down_payment', msg)
-
-        stipulated_date = cleaned_data.get("stipulated_date")
-        if stipulated_date is not None:
-            if stipulated_date < datetime.date.today():
-                self.add_error('stipulated_date', "La fecha de entrega no puede ser del pasado")
-
-
-class SessionQuoteUpdateForm(forms.ModelForm):
+class SessionQuoteUpdateForm(_SessionQuoteValidateMixin,
+                             forms.ModelForm):
+    # TODO: maybe we could use GenericCreateUpdateModelForm here
 
     def __init__(self, *args, **kwargs):
         photographer = kwargs.pop('photographer')
