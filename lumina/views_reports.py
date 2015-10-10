@@ -20,6 +20,12 @@ logger = logging.getLogger(__name__)
 # FIXME: for all SQLs, check that works on PostgreSql!
 
 
+PYGAL_CONFIG = pygal.Config(
+    js=["/static/lumina/pygal-tooltips.min.js"],
+    no_data_text="Sin datos"
+)
+
+
 @login_required
 @cache_control(private=True)
 def view_report_cost_vs_charged_by_customer_type(request):
@@ -34,8 +40,11 @@ def view_report_cost_vs_charged_by_customer_type(request):
     ctx = dict(form=form)
 
     ctx['report_title'] = 'Costo (hs) vs Monto cobrado ($) por tipo de cliente'
-    chart = pygal.XY(  # @UndefinedVariable
-                       stroke=False, legend_at_bottom=True, x_title="Horas", y_title="$")
+    chart = pygal.XY(stroke=False,
+                     legend_at_bottom=True,
+                     x_title="Horas",
+                     y_title="$",
+                     config=PYGAL_CONFIG)
     chart.title = ctx['report_title']
 
     cursor = connection.cursor()
@@ -99,7 +108,10 @@ def view_extended_quotes_through_time(request):
     ctx = dict(form=form)
 
     ctx['report_title'] = 'Presupuestos expandidos (en el tiempo)'
-    chart = pygal.StackedBar(legend_at_bottom=True, y_title="$", x_label_rotation=20)  # @UndefinedVariable
+    chart = pygal.StackedBar(legend_at_bottom=True,
+                             y_title="$",
+                             x_label_rotation=20,
+                             config=PYGAL_CONFIG)
     chart.title = ctx['report_title']
 
     cursor = connection.cursor()
@@ -174,7 +186,9 @@ def view_extended_quotes_by_customer(request):
     ctx = dict(form=form)
 
     ctx['report_title'] = 'Presupuestos expandidos (por cliente)'
-    chart = pygal.StackedBar(legend_at_bottom=True, y_title="$")  # @UndefinedVariable
+    chart = pygal.StackedBar(legend_at_bottom=True,
+                             y_title="$",
+                             config=PYGAL_CONFIG)
     chart.title = ctx['report_title']
 
     cursor = connection.cursor()
@@ -288,11 +302,12 @@ def view_income_by_customer_type(request):
 
     # Generate chart series
     customer_type_names = dict([
+
         (ct.id, ct.name) for ct in models.CustomerType.objects.filter(studio=request.user.studio)
     ])
 
-    chart = pygal.Pie(no_data_text="Sin datos",
-                      legend_at_bottom=True)  # @UndefinedVariable
+    chart = pygal.Pie(legend_at_bottom=True,
+                      config=PYGAL_CONFIG)
     chart.title = 'Ingresos ($) por tipo de cliente'
     chart.print_values = True
 

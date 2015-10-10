@@ -3,6 +3,10 @@
 
 {% block extra_headers %}
 <script src="/static/lumina/pygal-tooltips.min.js"></script>
+<!--
+This URL is used in the pygal.Config, but al least in Chrome 45
+it's not loaded from the SVG tags, we need to add it explicitily.
+-->
 {% endblock extra_headers %}
 
 {% block content %}
