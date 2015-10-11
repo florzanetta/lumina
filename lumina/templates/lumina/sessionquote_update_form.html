@@ -32,7 +32,7 @@
                     <th width="10%" style="text-align: center;">Acciones</th>
                 </tr>
 
-                <tr {% if selected_quote == 0 %}class="success"{% endif %}>
+                <tr {% if object.original_quote_is_accepted %}class="success"{% endif %}>
                     <td width="40%" style="text-align: right; font-weight: bold;">Presupuesto:</td>
                     <td width="30%" style="text-align: right;">{{ object.image_quantity|intcomma }}</td>
                     <td width="30%" style="text-align: right;">$ {{ object.cost|intcomma }}</td>

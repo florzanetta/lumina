@@ -750,8 +750,6 @@ class SessionQuoteManager(models.Manager):
 
 
 class SessionQuote(models.Model):
-    """
-    """
     STATUS_QUOTING = 'Q'
     STATUS_WAITING_CUSTOMER_RESPONSE = 'S'
     STATUS_ACCEPTED = 'A'
@@ -823,14 +821,19 @@ class SessionQuote(models.Model):
         self.save()
         # FIXME: IMPLEMENT THIS
 
+    def original_quote_is_accepted(self):
+        """Returns True if the original quote was accepted (and NOT a SessionQuoteAlternative)"""
+        if self.status in [SessionQuote.STATUS_ACCEPTED,
+                           SessionQuote.STATUS_CANCELED]:
+            if self.accepted_quote_alternative is None:
+                return True
+        return False
+
     def accept(self, user, alternative_id=None):
         """
         The customer accept the quote.
 
-        `alternative_data` could be `None` or a list of two `ints`:
-         - None -> to indentify the original quote
-         - (yyy, zzz) -> to identify the alternative quote, being
-             `yyy` the quantity (int) and `zzz` the cost (decimal.Decimal).
+        If `alternative_id` is None, the original quote is accepted.
         """
         assert user.is_for_customer()
         assert user.user_for_customer == self.customer
@@ -839,8 +842,7 @@ class SessionQuote(models.Model):
 
         if alternative_id is not None:
             assert isinstance(alternative_id, int)
-            sqa = SessionQuoteAlternative.objects.get(pk=alternative_id,
-                                                      session_quote=self)
+            sqa = SessionQuoteAlternative.objects.get(pk=alternative_id, session_quote=self)
             assert self.accepted_quote_alternative is None
             self.accepted_quote_alternative = sqa
 
@@ -850,7 +852,6 @@ class SessionQuote(models.Model):
         self.accepted_rejected_at = timezone.now()
 
         self.save()
-        # FIXME: IMPLEMENT THIS
 
     def update_quote_alternative(self, user, alternative_data):
         """
@@ -860,6 +861,9 @@ class SessionQuote(models.Model):
          - (yyy, zzz) -> to identify the alternative quote, being
              `yyy` the quantity (int) and `zzz` the cost (decimal.Decimal).
         """
+
+        raise NotImplementedError("update_quote_alternative() is not implemented")
+
         assert user.is_for_customer()
         assert user.user_for_customer == self.customer
         assert user.user_for_customer.studio == self.studio
@@ -968,6 +972,12 @@ class SessionQuoteAlternative(models.Model):
     class Meta:
         unique_together = ("session_quote", "image_quantity")
         ordering = ["image_quantity"]
+
+    def is_selected(self):
+        """Returns True if 'self' represent the alternative selected by the customer"""
+        if self.session_quote.accepted_quote_alternative:
+            return self.id == self.session_quote.accepted_quote_alternative.id
+        return False
 
     def __str__(self):
         return "SessionQuoteAlternative for quote {0}".format(self.session_quote)

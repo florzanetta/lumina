@@ -115,7 +115,7 @@
                                     <th width="30%" style="text-align: right;">Costo</th>
                                     <th width="5%" style="text-align: center;">Acciones</th>
                                 </tr>
-                                <tr {% if selected_quote == 0 %}class="success"{% endif %}>
+                                <tr {% if object.original_quote_is_accepted %}class="success"{% endif %}>
                                     <td width="40%" style="text-align: right; font-weight: bold;">Presupuesto original:</td>
                                     <td width="30%" style="text-align: right;">{{ object.image_quantity|intcomma }}</td>
                                     <td width="30%" style="text-align: right;">$ {{ object.cost|intcomma }}</td>
@@ -128,7 +128,7 @@
                                     </td>
                                 </tr>
                                 {% for alt in object.quote_alternatives.all %}
-                                    <tr {% if selected_quote == alt.id %}class="success"{% endif %}>
+                                    <tr {% if alt.is_selected %}class="success"{% endif %}>
                                         <td style="text-align: right; font-weight: bold;">Alternativa:</td>
                                         <td style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
                                         <td style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
