@@ -100,8 +100,7 @@
             </td>
         </tr>
 
-        {% if not hide_alternatives %}
-
+        {% if show_alternatives %}
 
             <tr>
                 <td colspan="2">
@@ -110,35 +109,35 @@
                         <div class="panel-body">
                             <table class="table table-condensed table-hover table-bordered">
                                 <tr>
-                                    <th width="40%" style="text-align: right;">&nbsp;</th>
-                                    <th width="30%" style="text-align: right;">Cant. de fotografias</th>
-                                    <th width="30%" style="text-align: right;">Costo</th>
-                                    <th width="5%" style="text-align: center;">Acciones</th>
+                                    <th width="10%" style="text-align: center;">Seleccionado</th>
+                                    <th width="40%" style="text-align: center;">Presupuesto original o alternativa</th>
+                                    <th width="25%" style="text-align: right;">Cant. de fotografias</th>
+                                    <th width="25%" style="text-align: right;">Costo</th>
                                 </tr>
                                 <tr {% if object.original_quote_is_accepted %}class="success"{% endif %}>
-                                    <td width="40%" style="text-align: right; font-weight: bold;">Presupuesto original:</td>
-                                    <td width="30%" style="text-align: right;">{{ object.image_quantity|intcomma }}</td>
-                                    <td width="30%" style="text-align: right;">$ {{ object.cost|intcomma }}</td>
-                                    <td width="5%" style="text-align: center;">
-                                        {% if selected_quote == 0 %}
-                                            <i class="icon-ok"></i>
-                                        {% else %}
-                                            &nbsp;
+                                    <td style="text-align: center;">
+                                        {% if object.original_quote_is_accepted %}
+                                            <i class="fa fa-check"></i>
                                         {% endif %}
                                     </td>
+                                    <td style="text-align: center;">
+                                        Presupuesto original
+                                    </td>
+                                    <td style="text-align: right;">{{ object.image_quantity|intcomma }}</td>
+                                    <td style="text-align: right;">$ {{ object.cost|intcomma }}</td>
                                 </tr>
                                 {% for alt in object.quote_alternatives.all %}
                                     <tr {% if alt.is_selected %}class="success"{% endif %}>
-                                        <td style="text-align: right; font-weight: bold;">Alternativa:</td>
-                                        <td style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
-                                        <td style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
-                                        <td width="5%" style="text-align: center;">
-                                            {% if selected_quote == alt.id %}
-                                                <i class="icon-ok"></i>
-                                            {% else %}
-                                                &nbsp;
+                                        <td style="text-align: center;">
+                                            {% if alt.is_selected %}
+                                                <i class="fa fa-check"></i>
                                             {% endif %}
                                         </td>
+                                        <td style="text-align: center;">
+                                            Presupuesto alternativo
+                                        </td>
+                                        <td style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
+                                        <td style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
                                     </tr>
                                 {% endfor %}
                             </table>

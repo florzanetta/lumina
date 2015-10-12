@@ -976,7 +976,7 @@ class SessionQuoteAlternative(models.Model):
     def is_selected(self):
         """Returns True if 'self' represent the alternative selected by the customer"""
         if self.session_quote.accepted_quote_alternative:
-            return self.id == self.session_quote.accepted_quote_alternative.id
+            return bool(self.id == self.session_quote.accepted_quote_alternative.id)
         return False
 
     def __str__(self):
