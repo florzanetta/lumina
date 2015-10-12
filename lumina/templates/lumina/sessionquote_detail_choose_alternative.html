@@ -17,31 +17,25 @@
 
     <table class="table">
     
-        {% if selected_quote or selected_quote == 0 %}
-            <!-- {# already selected! show currnet alternative #} -->
-            {% include 'lumina/include/sessionquote_details_readonly.html' %}
-        {% else %}
-            <!-- {# hide alternatives #} -->
-            {% include 'lumina/include/sessionquote_details_readonly.html' with hide_alternatives=True %}
-        {% endif %}
-    
-        <tr>
-            <th>&nbsp;</th>
-            <td>
-                <label for="accept_terms"><input
-                    type="checkbox" id="accept_terms" name="accept_terms" style="vertical-align: baseline;"> Acepto las condiciones</label>
-            </td>
-        </tr>
+        {% include 'lumina/include/sessionquote_details_readonly.html' with show_alternatives=True %}
 
-        <tr>
-            <th>
-                {% if selected_quote or selected_quote == 0 %}
-                    Nueva alternativa:
-                {% else %}
-                    Alternativas:
-                {% endif %}
-            </th>
-            <td>
+    </table>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <h3>
+                        {% if object.accepted_rejected_at %}
+                            Seleccione un nuevo presupuesto alternativo
+                        {% else %}
+                            Seleccione el presupuesto
+                        {% endif %}
+                    </h3>
+                </div>
+            </div>
+            <div class="panel-body">
+
+
                 <table class="table table-condensed table-hover table-bordered">
                     <tr>
                         <td width="40%" style="text-align: right;">&nbsp;</td>
@@ -49,21 +43,23 @@
                         <th width="30%" style="text-align: right;">Costo</th>
                         <th width="5%" style="text-align: right;">&nbsp;</th>
                     </tr>
-                    {% if selected_quote or selected_quote == 0 %}
-                    {% else %}
+                    {% if not object.accepted_rejected_at %}
+                        <!--
+                            If the customer hasn't accepted the quote yet, we must allow select the original quote
+                        -->
                         <tr>
                             <td width="40%" style="text-align: right; font-weight: bold;">Presupuesto original:</td>
                             <td width="30%" style="text-align: right;">{{ object.image_quantity|intcomma }}</td>
                             <td width="30%" style="text-align: right;">$ {{ object.cost|intcomma }}</td>
                             <td width="5%" style="text-align: right;"><input
-                                type="radio" name="selected_quote" value="0"
-                                {% if available_alternatives.count == 0 %}checked=checked{% endif %}>
+                                type="radio" name="selected_quote" value="0">
+                                <!-- { % if available_alternatives.count == 0 % }checked=checked{ % endif % } -->
                             </td>
                         </tr>
                     {% endif %}
                     {% for alt in available_alternatives %}
                         <tr>
-                            <td style="text-align: right; font-weight: bold;">Alternativa:</td>
+                            <td style="text-align: right; font-weight: bold;">Presupuesto alternativo:</td>
                             <td style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
                             <td style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
                             <td width="5%" style="text-align: right;"><input
@@ -75,27 +71,39 @@
                         </tr>
                     {% endfor %}
                 </table>
-            </td>
-        </tr>
-        
-    </table>
 
-        {% if selected_quote or selected_quote == 0 %}
-        
-            <input type="submit" id="button_id_button_accept" name="button_accept"
-                value="Cambiar alternativa de presupuesto" class="btn btn-primary" onclick="return custom_confirm();">
-            
-            <a href="{% url 'quote_detail' object.id %}" class="btn btn-primary">Cancelar</a>
-            
-        {% else %}
-        
-            <input type="submit" id="button_id_button_accept" name="button_accept"
-                value="Aceptar" class="btn btn-primary" onclick="return custom_confirm();">
-    
-            <input type="submit" id="button_id_button_reject" name="button_reject"
-                value="Rechazar" class="btn btn-primary" onclick="return confirm('¿Seguro?');">
-            
-        {% endif %}
+
+            </div>
+            <div class="panel-footer">
+                <label for="accept_terms"><input
+                    type="checkbox" id="accept_terms" name="accept_terms" style="vertical-align: baseline;"> Acepto las condiciones</label>
+
+
+                <input
+                        type="submit"
+                        id="button_id_button_accept"
+                        name="button_accept"
+                        {% if object.accepted_rejected_at %}
+                            value="Cambiar alternativa de presupuesto"
+                        {% else %}
+                            value="Aceptar presupuesto"
+                        {% endif %}
+                        class="btn btn-primary"
+                        onclick="return custom_confirm();">
+
+                {% if object.accepted_rejected_at %}
+
+                {% else %}
+
+                    <input type="submit" id="button_id_button_reject" name="button_reject"
+                        value="Rechazar presupuesto" class="btn btn-primary" onclick="return confirm('¿Seguro?');">
+
+                {% endif %}
+
+                <a href="{% url 'quote_detail' object.id %}" class="btn btn-primary">Volver</a>
+
+            </div>
+        </div>
 
     </form>
 

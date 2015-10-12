@@ -407,7 +407,6 @@ class SessionQuoteDetailView(DetailView):
         else:
             raise Exception("Invalid 'status': {}".format(self.object.status))
 
-        context['selected_quote'] = self.object.get_selected_quote()
         context['extra_buttons'] = buttons
         views_utils.put_session_statuses_in_context(context)
 
@@ -418,13 +417,20 @@ class SessionQuoteAlternativeSelectView(DetailView):
     """
     This view allows the select a quote alternative to customers.
 
+    Only CUSTOMERS can enter this view...
+
     This is kind a 'read-write' view... The 'read-only' view is SessionQuoteDetailView
     """
     model = SessionQuote
     template_name = 'lumina/sessionquote_detail_choose_alternative.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_for_customer():
+            raise SuspiciousOperation("The user is not a customer! User: {}".format(self.request.user))
+        return super().dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
-        # TODO: we should not use `visible_sessionquote()`
+        # ATTENTION: this returns quotes the user CAN VIEW! Please, do further checks if user can modify when post()ing
         return SessionQuote.objects.visible_sessionquote(self.request.user)
 
     def post(self, request, *args, **kwargs):
@@ -447,41 +453,23 @@ class SessionQuoteAlternativeSelectView(DetailView):
             else:
                 raise SuspiciousOperation()
 
-            messages.success(self.request,
-                             'El presupuesto fue aceptado correctamente')
+            messages.success(self.request, 'El presupuesto fue aceptado correctamente')
             send_email_for_session_quote(quote, self.request.user, self.request)
             return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
 
         elif 'button_reject' in request.POST:
             quote.reject(request.user)
-            messages.success(self.request,
-                             'El presupuesto fue rechazado correctamente')
+            messages.success(self.request, 'El presupuesto fue rechazado correctamente')
             send_email_for_session_quote(quote, self.request.user, self.request)
-            return HttpResponseRedirect(reverse('quote_detail',
-                                                args=[quote.id]))
+            return HttpResponseRedirect(reverse('quote_detail', args=[quote.id]))
 
         else:
             raise SuspiciousOperation()
 
     def get_context_data(self, **kwargs):
-        context = super(SessionQuoteAlternativeSelectView, self).get_context_data(**kwargs)
-
-        context['available_alternatives'] = self.object.get_valid_alternatives()
-
-        if not self.request.user.is_for_customer():
-            raise Exception("The user is not a customer! User: {}".format(self.request.user))
-
-        if self.object.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE:
-            pass
-
-        elif self.object.status == SessionQuote.STATUS_ACCEPTED:
-            # Accepted or rejected -> photographer always can cancel()
-            selected_quote = self.object.get_selected_quote()
-            assert selected_quote >= 0
-            context['selected_quote'] = selected_quote
-
-        else:
-            raise Exception("Invalid 'status': {}".format(self.object.status))
+        context = super().get_context_data(
+            available_alternatives=self.object.get_valid_alternatives(),
+            **kwargs)
 
         views_utils.put_session_statuses_in_context(context)
 

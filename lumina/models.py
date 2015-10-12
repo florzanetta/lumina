@@ -806,7 +806,6 @@ class SessionQuote(models.Model):
         assert self.status == SessionQuote.STATUS_QUOTING
         self.status = SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE
         self.save()
-        # FIXME: IMPLEMENT THIS
 
     def cancel(self, user):
         """
@@ -819,7 +818,6 @@ class SessionQuote(models.Model):
                                SessionQuote.STATUS_ACCEPTED,)
         self.status = SessionQuote.STATUS_CANCELED
         self.save()
-        # FIXME: IMPLEMENT THIS
 
     def original_quote_is_accepted(self):
         """Returns True if the original quote was accepted (and NOT a SessionQuoteAlternative)"""
@@ -902,28 +900,6 @@ class SessionQuote(models.Model):
         self.save()
         # FIXME: IMPLEMENT THIS
 
-    def get_selected_quote(self):
-        """
-        Returns an `int` repesenting the selected quote, or None.
-         - returns '0' if the original quote was selected.
-         - returns the `id` of SessionQuoteAlternative if an alternative was selected
-         - otherwise returns None
-        """
-        if self.accepted_rejected_at:
-            # A selection was made by the customer (accept or reject)
-
-            # If was rejected by the user...
-            if self.status == self.STATUS_REJECTED:
-                return None
-
-            # The item was accepted. Now may be 'STATUS_ACCEPTED' or 'STATUS_CANCELED'
-            if self.accepted_quote_alternative is None:
-                return 0
-            else:
-                return self.accepted_quote_alternative.id
-        else:
-            return None
-
     def get_selected_quote_values(self):
         """
         Returns a pair of values: image quantity and cost,
@@ -940,22 +916,26 @@ class SessionQuote(models.Model):
 
     def get_valid_alternatives(self):
         """
-        Return the valid quotes alternatives.
+        Return availables alternatives that a customer can choose.
         """
+        quote_alternatives_qs = self.quote_alternatives.all().order_by('image_quantity')
         if self.status == self.STATUS_WAITING_CUSTOMER_RESPONSE:
             # The customer hasn't choosed any alternative. Show'em all
-            return self.quote_alternatives.all().order_by('image_quantity')
-        if self.status == self.STATUS_ACCEPTED:
-            current = self.get_selected_quote()
-            if current == 0:
-                # The customer has choosed the default alternative. Show'em all
-                return self.quote_alternatives.all().order_by('image_quantity')
+            return quote_alternatives_qs
+
+        elif self.status == self.STATUS_ACCEPTED:
+            if self.original_quote_is_accepted():
+                # Original quote selected. Show all the alternatives
+                return quote_alternatives_qs
+
             # The customer has choosed an alternative. Show the alternatives with
             #  more photos than the current alternative
+            assert self.accepted_quote_alternative is not None
             current_quantity = self.accepted_quote_alternative.image_quantity
-            return self.quote_alternatives.filter(image_quantity__gt=current_quantity) \
-                .order_by('image_quantity')
-        raise Exception("Invalid state: {}".format(self.status))
+            return quote_alternatives_qs.filter(image_quantity__gt=current_quantity)
+
+        else:
+            raise Exception("Invalid state: {}".format(self.status))
 
     def __str__(self):
         return "Quote for {}".format(self.customer)
