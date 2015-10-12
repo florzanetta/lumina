@@ -378,11 +378,13 @@ class Session(models.Model):
 
     def get_active_quote(self):
         """
-        Since a quotation can be canceled and replaced by a new 'version',
-        but the session should be reused, we need this method to return
-        the valid quotation.
+        This method returns the quote associated to this session.
+
+        This is kept for historical reasons, and could be removed in the future,
+        since right now, if the quote is canceled, there is NO WAY to create
+        a new version associated to the existing session.
         """
-        # FIXME: this works, but is pure evil... like Newman!
+        # return self.quotes.filter(exclude=XXXX).get()
         return self.quotes.get()
 
     def set_image_as_album_icon(self, image):
@@ -882,7 +884,6 @@ class SessionQuote(models.Model):
         self.accepted_rejected_by = user
         self.accepted_rejected_at = timezone.now()
         self.save()
-        # FIXME: IMPLEMENT THIS
 
     def get_selected_quote_values(self):
         """
