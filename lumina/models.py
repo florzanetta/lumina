@@ -902,17 +902,19 @@ class SessionQuote(models.Model):
 
     def get_selected_quote_values(self):
         """
-        Returns a pair of values: image quantity and cost,
-        from the selected quote, or (None, None,).
+        Returns a pair of values: (image quantity, cost),
+        from the selected quote.
+
+        This method should only be called for STATUS_ACCEPTED quotes!
         """
-        selected_quote = self.get_selected_quote()
-        if selected_quote is None:
-            return (None, None,)
-        if selected_quote == 0:
-            return (self.image_quantity, self.cost,)
+        assert self.status == self.STATUS_ACCEPTED
+
+        if self.accepted_quote_alternative:
+            return (self.accepted_quote_alternative.image_quantity,
+                    self.accepted_quote_alternative.cost)
         else:
-            quote_alternative = SessionQuoteAlternative.objects.get(pk=selected_quote)
-            return (quote_alternative.image_quantity, quote_alternative.cost,)
+            return (self.image_quantity,
+                    self.cost)
 
     def get_valid_alternatives(self):
         """
