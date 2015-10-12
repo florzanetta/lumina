@@ -448,7 +448,9 @@ class SessionQuoteAlternativeSelectView(DetailView):
 
             if quote.status == SessionQuote.STATUS_WAITING_CUSTOMER_RESPONSE:
                 quote.accept(request.user, alternative_id)
+
             elif quote.status == SessionQuote.STATUS_ACCEPTED:
+                assert alternative_id
                 quote.update_quote_alternative(request.user, alternative_id)
             else:
                 raise SuspiciousOperation()

@@ -851,40 +851,24 @@ class SessionQuote(models.Model):
 
         self.save()
 
-    def update_quote_alternative(self, user, alternative_data):
+    def update_quote_alternative(self, user, alternative_id):
         """
         The customer change the selected alternative quote.
-
-        `alternative_data` is a list of `ints`:
-         - (yyy, zzz) -> to identify the alternative quote, being
-             `yyy` the quantity (int) and `zzz` the cost (decimal.Decimal).
         """
-
-        raise NotImplementedError("update_quote_alternative() is not implemented")
-
         assert user.is_for_customer()
         assert user.user_for_customer == self.customer
         assert user.user_for_customer.studio == self.studio
         assert self.status == SessionQuote.STATUS_ACCEPTED
+        assert isinstance(alternative_id, int)
 
-        assert type(alternative_data) in (list, tuple)
-        assert len(alternative_data) == 2
-
-        alt_quantity, alt_cost = alternative_data
-        assert type(alt_quantity) == int
-        assert type(alt_cost) == decimal.Decimal
-
-        sqa = self.quote_alternatives.get(image_quantity=alt_quantity,
-                                          cost=alt_cost)
+        sqa = self.quote_alternatives.get(pk=alternative_id)
         self.accepted_quote_alternative = sqa
-        # done!
 
         # change state after checks
         self.accepted_rejected_by = user
         self.accepted_rejected_at = timezone.now()
 
         self.save()
-        # FIXME: IMPLEMENT THIS
 
     def reject(self, user):
         """
