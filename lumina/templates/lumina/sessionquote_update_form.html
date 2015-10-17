@@ -12,7 +12,83 @@
 
     {% crispy form form.helper %}
 
-    {% if not full_edit %}
+    {% if full_edit %}
+
+        <div>&nbsp;</div>
+
+        {% with show_remove_alt_button=True %}
+
+        <!--
+        THE FOLLOWING CODE WAS COPIED-AND-PASTED FROM sessionquote_details_readonly.html
+        -->
+
+        <div class="panel panel-default">
+            <div class="panel-heading"><h4>Alternativas</h4></div>
+            <div class="panel-body">
+                <table class="table table-condensed table-hover table-bordered">
+                    <tr>
+                        <th width="10%" style="text-align: center;">Seleccionado</th>
+                        <th width="40%" style="text-align: center;">Presupuesto original o alternativa</th>
+                        <th width="25%" style="text-align: right;">Cant. de fotografias</th>
+                        <th width="25%" style="text-align: right;">Costo</th>
+                        {% if show_remove_alt_button %}
+                            <th width="1%" style="text-align: right;">&nbsp;</th>
+                        {% endif %}
+                    </tr>
+                    <tr {% if object.original_quote_is_accepted %}class="success"{% endif %}>
+                        <td style="text-align: center;">
+                            {% if object.original_quote_is_accepted %}
+                                <i class="fa fa-check"></i>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: center;">
+                            Presupuesto original
+                        </td>
+                        <td style="text-align: right;">{{ object.image_quantity|intcomma }}</td>
+                        <td style="text-align: right;">$ {{ object.cost|intcomma }}</td>
+                        {% if show_remove_alt_button %}
+                            <td>&nbsp;</td>
+                        {% endif %}
+                    </tr>
+                    {% for alt in object.quote_alternatives.all %}
+                        <tr {% if alt.is_selected %}class="success"{% endif %}>
+                            <td style="text-align: center;">
+                                {% if alt.is_selected %}
+                                    <i class="fa fa-check"></i>
+                                {% endif %}
+                            </td>
+                            <td style="text-align: center;">
+                                Presupuesto alternativo
+                            </td>
+                            <td style="text-align: right;">{{ alt.image_quantity|intcomma }}</td>
+                            <td style="text-align: right;">$ {{ alt.cost|intcomma }}</td>
+                            {% if show_remove_alt_button %}
+                                <td style="text-align: center;">
+                                    {% if alt.is_selected %}
+                                        <a href="javascript:void(0);" class="btn btn-xs btn-danger disabled">Borrar</a>
+                                    {% else %}
+                                        <!-- `delete_alternative_{{ alt.id }}` is handled in session update -->
+                                        <input type="submit" name="delete_alternative_{{ alt.id }}"
+                                               value="Borrar" class="btn btn-xs btn-danger"
+                                               onclick="return confirm('Seguro?');">
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            <!-- `quote_alternatives_create` is used in the session update view -->
+            <div class="panel-footer">
+                <a href="{% url 'quote_alternatives_create' object.id %}"
+                    class="btn btn-primary">Crear alternativa</a>
+            </div>
+        </div>
+
+        {% endwith %}
+
+    {% else %}
         <table class="table">
             {% include 'lumina/include/sessionquote_details_readonly.html' with show_alternatives=True show_remove_alt_button=True show_create_alt_button=True  %}
             <!--
