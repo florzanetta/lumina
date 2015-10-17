@@ -947,7 +947,8 @@ class SessionQuoteAlternative(models.Model):
         return False
 
     def __str__(self):
-        return "SessionQuoteAlternative for quote {0}".format(self.session_quote)
+        return "SessionQuoteAlternative for quote {0} ({1} photos, $ {2})".format(
+            self.session_quote, self.image_quantity, self.cost)
 
 
 # ===============================================================================

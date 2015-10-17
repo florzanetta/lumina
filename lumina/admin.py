@@ -22,6 +22,10 @@ class SharedSessionByEmailAdmin(admin.ModelAdmin):
     generate_link.allow_tags = True
 
 
+class SessionQuoteAlternativeAdmin(admin.ModelAdmin):
+    list_display = ('session_quote', 'image_quantity', 'cost')
+
+
 admin.site.register(Customer)
 admin.site.register(CustomerType)
 admin.site.register(Image)
@@ -30,7 +34,7 @@ admin.site.register(LuminaUser)
 admin.site.register(PreviewSize)
 admin.site.register(Session)
 admin.site.register(SessionQuote)
-admin.site.register(SessionQuoteAlternative)
+admin.site.register(SessionQuoteAlternative, SessionQuoteAlternativeAdmin)
 admin.site.register(SessionType)
 admin.site.register(SharedSessionByEmail, SharedSessionByEmailAdmin)
 admin.site.register(Studio)
