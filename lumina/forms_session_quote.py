@@ -197,6 +197,16 @@ class SessionQuoteAlternativeCreateForm(forms_utils.GenericCreateUpdateModelForm
     def get_cancel_url(self):
         return reverse_lazy('quote_update', args=[self.initial['session_quote'].id])
 
+    def clean(self):
+        cleaned_data = super().clean()
+        image_quantity = cleaned_data.get("image_quantity")
+        cost = cleaned_data.get("cost")
+
+        if cost:
+            if cost <= self.initial['session_quote'].cost:
+                msg = "El costo del presupuesto alternativo no puede ser menor al del presupuesto original"
+                self.add_error('cost', msg)
+
     class Meta:
         model = models.SessionQuoteAlternative
         fields = ('image_quantity', 'cost')
