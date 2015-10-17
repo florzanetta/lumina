@@ -198,19 +198,51 @@ class SessionQuoteAlternativeCreateForm(forms_utils.GenericCreateUpdateModelForm
         return reverse_lazy('quote_update', args=[self.initial['session_quote'].id])
 
     def clean(self):
+        session_quote = self.initial['session_quote']
         cleaned_data = super().clean()
         image_quantity = cleaned_data.get("image_quantity")
         cost = cleaned_data.get("cost")
 
         if cost:
-            if cost <= self.initial['session_quote'].cost:
+            if cost <= session_quote.cost:
                 msg = "El costo no puede ser menor al costo del presupuesto original"
                 self.add_error('cost', msg)
 
         if image_quantity:
-            if image_quantity <= self.initial['session_quote'].image_quantity:
+            if image_quantity <= session_quote.image_quantity:
                 msg = "La cantidad de imágenes no puede ser menor a la cantidad de imágenes del presupuesto original"
                 self.add_error('image_quantity', msg)
+
+        def _format_float_hack(value):
+            return "{:,.2f}".format(value).replace(".", "@").replace(",", ".").replace("@", ",")
+
+        if cost and image_quantity:
+            alternativas = session_quote.quote_alternatives.all()
+
+            if image_quantity in [_.image_quantity for _ in alternativas]:
+                self.add_error('image_quantity', "Ya existe un presupuesto alternativo "
+                                                 "con la cantidad de imagenes especificada")
+            else:
+                alternativas = sorted(session_quote.quote_alternatives.all(),
+                                      key=lambda _: _.image_quantity)
+                prev_alt = None
+                next_alt = None
+                for alt in alternativas:
+                    if alt.image_quantity < image_quantity:
+                        prev_alt = alt
+
+                    if next_alt is None and alt.image_quantity > image_quantity:
+                        next_alt = alt
+
+                if prev_alt is not None:
+                    if prev_alt.cost >= cost:
+                        self.add_error('cost', "El costo debe ser mayor a $ {}".format(
+                            _format_float_hack(prev_alt.cost)))
+
+                if next_alt is not None:
+                    if next_alt.cost <= cost:
+                        self.add_error('cost', "El costo debe ser menor a $ {}".format(
+                            _format_float_hack(next_alt.cost)))
 
     class Meta:
         model = models.SessionQuoteAlternative
