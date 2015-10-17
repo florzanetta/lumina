@@ -150,9 +150,11 @@
                                                     <a href="javascript:void(0);" class="btn btn-xs btn-danger disabled">Borrar</a>
                                                 {% else %}
                                                     <!-- `delete_alternative_{{ alt.id }}` is handled in session update -->
-                                                    <input type="submit" name="delete_alternative_{{ alt.id }}"
-                                                           value="Borrar" class="btn btn-xs btn-danger"
-                                                           onclick="return confirm('Seguro?');">
+                                                    <form method="post">{% csrf_token %}
+                                                        <input type="submit" name="delete_alternative_{{ alt.id }}"
+                                                               value="Borrar" class="btn btn-xs btn-danger"
+                                                               onclick="return confirm('Seguro?');">
+                                                    </form>
                                                 {% endif %}
                                             </td>
                                         {% endif %}

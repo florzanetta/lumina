@@ -17,11 +17,12 @@
         <div>&nbsp;</div>
 
         {% with show_remove_alt_button=True %}
+        <form method="post">
+            {% csrf_token %}
 
         <!--
         THE FOLLOWING CODE WAS COPIED-AND-PASTED FROM sessionquote_details_readonly.html
         -->
-
         <div class="panel panel-default">
             <div class="panel-heading"><h4>Alternativas</h4></div>
             <div class="panel-body">
@@ -86,6 +87,7 @@
             </div>
         </div>
 
+        </form>
         {% endwith %}
 
     {% else %}

@@ -95,26 +95,30 @@ class SessionQuoteUpdateView(SuccessMessageMixin, UpdateView, SessionQuoteCreate
     def get_queryset(self):
         return SessionQuote.objects.modificable_sessionquote(self.request.user)
 
+    def post(self, request, *args, **kwargs):
+        # Check if post was for alternative management
+        delete_alternative = [k for k in list(request.POST.keys())
+                              if k.startswith('delete_alternative_')]
+
+        if delete_alternative:
+            assert len(delete_alternative) == 1
+            alt_to_delete = delete_alternative[0].split('_')[2]
+            to_delete = self.get_object().quote_alternatives.get(pk=int(alt_to_delete))
+            to_delete.delete()
+            # This delete is super-safe because the foreign-key is set to 'PROTECT'.
+            # If the customer changes his/her alternative to the one being deleted,
+            # the DB will refuse this delete automatically :-D
+            messages.success(request, "El presupuesto alternativo fue eliminado con éxito")
+            return HttpResponseRedirect(reverse('quote_update', args=[self.get_object().id]))
+
+        return super().post(request, *args, **kwargs)
+
     def form_valid(self, form):
 
         # Update the `SessionQuote`
         if self.object.status == SessionQuote.STATUS_QUOTING:
             if 'submit_update_quote' in self.request.POST:  # Submit for 'Update'
                 return super().form_valid(form)
-
-        # Check if post was for alternative management
-        delete_alternative = [k for k in list(self.request.POST.keys())
-                              if k.startswith('delete_alternative_')]
-
-        if delete_alternative:
-            assert len(delete_alternative) == 1
-            alt_to_delete = delete_alternative[0].split('_')[2]
-            to_delete = self.object.quote_alternatives.get(pk=int(alt_to_delete))
-            to_delete.delete()
-            # This delete is super-safe because the foreign-key is set to 'PROTECT'.
-            # If the customer changes his/her alternative to the one being deleted,
-            # the DB will refuse this delete automatically :-D
-            return HttpResponseRedirect(reverse('quote_update', args=[self.object.id]))
 
         # TODO: add an error messages and do a redirect instead of this?
         raise SuspiciousOperation()
