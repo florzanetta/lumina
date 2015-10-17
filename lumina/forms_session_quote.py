@@ -204,8 +204,13 @@ class SessionQuoteAlternativeCreateForm(forms_utils.GenericCreateUpdateModelForm
 
         if cost:
             if cost <= self.initial['session_quote'].cost:
-                msg = "El costo del presupuesto alternativo no puede ser menor al del presupuesto original"
+                msg = "El costo no puede ser menor al costo del presupuesto original"
                 self.add_error('cost', msg)
+
+        if image_quantity:
+            if image_quantity <= self.initial['session_quote'].image_quantity:
+                msg = "La cantidad de imágenes no puede ser menor a la cantidad de imágenes del presupuesto original"
+                self.add_error('image_quantity', msg)
 
     class Meta:
         model = models.SessionQuoteAlternative
