@@ -31,6 +31,8 @@ class _SessionQuoteValidateMixin(forms.ModelForm):
             if stipulated_date < datetime.date.today():
                 self.add_error('stipulated_date', "La fecha de entrega no puede ser del pasado")
 
+        return cleaned_data
+
 
 class SessionQuoteCreateForm(_SessionQuoteValidateMixin,
                              forms_utils.GenericCreateUpdateModelForm):
@@ -55,6 +57,10 @@ class SessionQuoteCreateForm(_SessionQuoteValidateMixin,
             'stipulated_down_payment',
             'terms'
         )
+
+
+def _format_float_hack(value):
+    return "{:,.2f}".format(float(value)).replace(".", "@").replace(",", ".").replace("@", ",")
 
 
 class SessionQuoteUpdateForm(_SessionQuoteValidateMixin,
@@ -90,6 +96,35 @@ class SessionQuoteUpdateForm(_SessionQuoteValidateMixin,
         )
 
         self.fields['customer'].queryset = models.Customer.objects.customers_of(photographer)
+
+    def clean(self):
+        session_quote = self.instance
+        cleaned_data = super().clean()
+        image_quantity = cleaned_data.get("image_quantity")
+        cost = cleaned_data.get("cost")
+
+        #
+        # Business logic on SessionQuoteAlternativeCreateForm() is related to this!
+        #
+
+        if cost and image_quantity:
+            alternativas = session_quote.quote_alternatives.all()
+
+            if image_quantity in [_.image_quantity for _ in alternativas]:
+                self.add_error('image_quantity', "Ya existe un presupuesto alternativo "
+                                                 "con la cantidad de imagenes especificada")
+            else:
+                alternativas = sorted(session_quote.quote_alternatives.all(),
+                                      key=lambda _: _.image_quantity)
+
+                if alternativas:
+                    first_alternative = alternativas[0]
+                    if image_quantity >= first_alternative.image_quantity:
+                        self.add_error('image_quantity', "La cantidad de imágenes debe ser menor a {}".format(
+                            first_alternative.image_quantity))
+                    if cost >= first_alternative.cost:
+                        self.add_error('cost', "El costo debe ser menor a $ {}".format(
+                            _format_float_hack(first_alternative.cost)))
 
     class Meta:
         model = models.SessionQuote
@@ -213,8 +248,9 @@ class SessionQuoteAlternativeCreateForm(forms_utils.GenericCreateUpdateModelForm
                 msg = "La cantidad de imágenes no puede ser menor a la cantidad de imágenes del presupuesto original"
                 self.add_error('image_quantity', msg)
 
-        def _format_float_hack(value):
-            return "{:,.2f}".format(value).replace(".", "@").replace(",", ".").replace("@", ",")
+        #
+        # Business logic on SessionQuoteUpdateForm() is related to this!
+        #
 
         if cost and image_quantity:
             alternativas = session_quote.quote_alternatives.all()
