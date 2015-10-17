@@ -108,10 +108,10 @@
 
                     </td>
                     <th class="text-right">
-                        {{ a_quote.image_quantity }}
+                        {{ a_quote.get_quote_values_for_display.0 }}
                     </td>
                     <th class="text-right">
-                        <span class="text-nowrap">$ {{ a_quote.cost|intcomma }}</span>
+                        <span class="text-nowrap">$ {{ a_quote.get_quote_values_for_display.1|intcomma }}</span>
                     </td>
                     <td class="text-right text-nowrap">
                         {{ a_quote.stipulated_date }}

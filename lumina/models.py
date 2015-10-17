@@ -901,6 +901,24 @@ class SessionQuote(models.Model):
             return (self.image_quantity,
                     self.cost)
 
+    def get_quote_values_for_display(self):
+        """
+        Returns a pair of values: (image quantity, cost) to be shown to the user.
+        This method is used in the UI, to display image quantity and cost associated to the quote.
+
+        In some cases, this method should return the original quote, but if an alternative was selected,
+        this method should return the values from the alternative.
+
+        This method ignores the state of the quote, since ALWAYS should return something to show.
+        """
+        # This is VERY similar to `get_selected_quote_values()`, but let's keep them separated....
+        if self.accepted_quote_alternative:
+            return (self.accepted_quote_alternative.image_quantity,
+                    self.accepted_quote_alternative.cost)
+        else:
+            return (self.image_quantity,
+                    self.cost)
+
     def get_valid_alternatives(self):
         """
         Return availables alternatives that a customer can choose.
