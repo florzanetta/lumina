@@ -12,59 +12,58 @@
 
 	{% block imageselection_page_title %}{% endblock imageselection_page_title %}
 
-    {% for pet in object_list %}
-		<div class="media">
-		    <a class="pull-left" href="javascript:void(0);">
-		        <img class="media-object" src="/static/lumina/img/peticion-seleccion-de-imagenes-64.png">
-		    </a>
-		    <div class="media-body">
-		        <div class="media-heading">
+    <table class="table">
+
+        <tr>
+            <th width="40%">Sesión fotográfica</th>
+            <th width="20%" class="text-right">Estado</th>
+            <th width="20%" class="text-right">Cant. fotos permitidas</th>
+            {% if for_pending_uploads %}
+                <th width="20%" class="text-right">Pendientes de subir</th>
+            {% endif %}
+        </tr>
+
+        {% for pet in object_list %}
+            <tr>
+                <td>
+                    {% if for_pending_uploads %}
+                        <!-- Point to pending-uploads view -->
+                        <a href="{% url 'imageselection_upload_pending_automatic' pet.id %}">
+                            <strong>Sesión</strong>:
+                                {{ pet.session.name }}</a>
+                        <br>
+                        <small><a href="{% url 'imageselection_upload_pending_manual' pet.id %}">
+                            Selección manual
+                        </a></small>
+                    {% else %}
+                        <!-- Point to image-selection view -->
+                        <a href="{% url 'imageselection_redirect' pet.id %}">
+                            <strong>Sesión</strong>:
+                                {{ pet.session.name }}</a>
+                    {% endif %}
+                </td>
+                <td class="text-right">{{ pet.get_status_display }}</td>
+                <td class="text-right">{{ pet.image_quantity }}</td>
                 {% if for_pending_uploads %}
-                    <!-- Point to pending-uploads view -->
-                    <a href="{% url 'imageselection_upload_pending_automatic' pet.id %}">
-                        <strong>Sesión</strong>:
-                            {{ pet.session.name }}</a>
-
-                    ·
-
-                    <small><a href="{% url 'imageselection_upload_pending_manual' pet.id %}">
-                        Selección manual
-                    </a></small>
-                {% else %}
-                    <!-- Point to image-selection view -->
-                    <a href="{% url 'imageselection_redirect' pet.id %}">
-                        <strong>Sesión</strong>:
-                            {{ pet.session.name }}</a>
+                    <td class="text-right">
+                        {{ pet.get_selected_images_without_full_quality|length }}
+                    </td>
                 {% endif %}
-                <br>
+            </tr>
+        {% empty %}
 
-               <small><strong>Estado</strong>: {{ pet.get_status_display }}</small> <br>
+            {% if for_pending_uploads %}
+                <tr>
+                    <td colspan="4">No hay peticiones a mostrar</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No hay peticiones a mostrar</td>
+                </tr>
+            {% endif %}
 
-				<small><strong>Cant. de imagenes permitidas:</strong>
-					{{ pet.image_quantity }}</small><br>
-
-                {% if for_pending_uploads %}
-                    {% with count=pet.get_selected_images_without_full_quality|length %}
-                        <span class="badge badge-important">{{ count }}</span>
-                        <small> {{count|pluralize:"imagen,imágenes"}} en calidad total
-                            pendientes de ser subidas</small><br>
-                    {% endwith %}
-                {% endif %}
-
-                <i class="icon-calendar"></i>
-                    <small>
-                        <em>Fecha de creación: {{pet.created|date}}
-                        - Última actualización: {{pet.last_modified|date}}
-                        </em>
-                    </small>
-
-		        </div>
-		    </div>
-		</div>
-		<hr>
-    {% empty %}
-       <p>No hay peticiones...</p>
-    {% endfor %}
+        {% endfor %}
+    </table>
 
     {% dump_objects user object_list %}
 
