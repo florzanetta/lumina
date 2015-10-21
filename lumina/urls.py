@@ -102,7 +102,7 @@ urlpatterns = patterns(
     # ===========================================================================
     # SharedSessionByEmail
     # ===========================================================================
-    url(r'^session/shared-by-email/create/$',
+    url(r'^session/shared-by-email/(?P<session_id>\d+)/create/$',
         cache_control(private=True)(
             login_required(
                 views_shared_session.SharedSessionByEmailCreateView.as_view())),

@@ -153,7 +153,7 @@
                     <!-- the logged in user from the same Studio than the Session -->
                     <form action="." method="post">
                         {% csrf_token %}
-                        <a href="{% url 'shared_session_by_email_create' %}?id_session={{ object.pk }}" class="btn btn-primary">Compartir via email</a>
+                        <a href="{% url 'shared_session_by_email_create' object.pk %}" class="btn btn-primary">Compartir via email</a>
                     </form>
                 </div>
             {% endif %}

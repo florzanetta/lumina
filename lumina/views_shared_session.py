@@ -14,6 +14,9 @@ from lumina.forms import SharedSessionByEmailCreateForm
 from lumina.mail import send_emails
 from lumina.views_utils import generate_thumbnail_of_image, download_image
 
+from lumina import models
+from lumina import forms
+
 
 # ===============================================================================
 # SharedSessionByEmail (ex: SharedAlbum)
@@ -46,12 +49,16 @@ class SharedSessionByEmailCreateView(CreateView):
     # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
     model = SharedSessionByEmail
     form_class = SharedSessionByEmailCreateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/session_share_by_email.html'
+    pk_url_kwarg = 'session_id'
+
+    def _get_queryset(self):
+        return models.Session.objects.visible_sessions(self.request.user)
 
     def form_valid(self, form):
         form.instance.studio = self.request.user.studio
         form.instance.random_hash = str(uuid.uuid4())
-        ret = super(SharedSessionByEmailCreateView, self).form_valid(form)
+        ret = super().form_valid(form)
 
         subject = "Nuevo album compartido con Ud."
         to_email = form.instance.shared_with
@@ -63,20 +70,18 @@ class SharedSessionByEmailCreateView(CreateView):
         messages.success(self.request, 'El album fue compartido correctamente')
         return ret
 
-    def get_initial(self):
-        initial = super(SharedSessionByEmailCreateView, self).get_initial()
-        if 'id_session' in self.request.GET:
-            initial.update({
-                'session': self.request.GET['id_session'],
-            })
-        return initial
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        session_id = self.kwargs[self.pk_url_kwarg]
+        form_kwargs['session'] = self._get_queryset().get(pk=session_id)
+        return form_kwargs
+
+    def get_context_data(self, **kwargs):
+        session_id = self.kwargs[self.pk_url_kwarg]
+        return super().get_context_data(
+            session=self._get_queryset().get(pk=session_id),
+            **kwargs
+        )
 
     def get_success_url(self):
         return reverse('session_detail', args=[self.object.session.pk])
-
-    def get_context_data(self, **kwargs):
-        context = super(SharedSessionByEmailCreateView, self).get_context_data(**kwargs)
-        context['form'].fields['session'].queryset = self.request.user.studio.session_set.all()
-        context['title'] = "Compartir sesión por email"
-        context['submit_label'] = "Compartir"
-        return context

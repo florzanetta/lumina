@@ -406,7 +406,7 @@ class SharedSessionByEmailManager(models.Manager):
 # FIXME: REFACTOR: change uses of `SharedAlbum` to `SharedSessionByEmail` in vies, etc.
 class SharedSessionByEmail(models.Model):
     """
-    Represents an album shared via email.
+    Represents a session shared via email.
 
     An email is sent to the receiver, with a link to view the album.
     To view the almbum, the receiver just need the link, and doens't
@@ -423,9 +423,6 @@ class SharedSessionByEmail(models.Model):
     studio = models.ForeignKey(Studio, verbose_name="estudio")
 
     session = models.ForeignKey(Session, related_name='shares_via_email', verbose_name="sesión")
-
-    # TODO: IDEA: add `shared_by`, to know who shared the album
-    # shared_by = models.ForeignKey(LuminaUser)
 
     random_hash = models.CharField(max_length=36, unique=True)  # len(uuid4) = 36
 

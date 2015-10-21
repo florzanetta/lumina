@@ -45,9 +45,31 @@ class CustomAuthenticationForm(AuthenticationForm):
 
 class SharedSessionByEmailCreateForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        session = kwargs.pop('session')
+
+        super().__init__(*args, **kwargs)
+        self.helper = helper.FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
+
+        self.helper.layout = helper.Layout(
+            layout.Fieldset(
+                'Compartir sesión por email',
+                'shared_with',
+            ),
+            bootstrap.FormActions(
+                layout.Submit('submit_button', 'Compartir', css_id='form-submit-button'),
+            ),
+        )
+
+        assert isinstance(session, models.Session)
+        self.instance.session = session
+
     class Meta:
         model = SharedSessionByEmail
-        fields = ('session', 'shared_with',)
+        fields = ('shared_with',)
 
 
 # ===============================================================================
