@@ -939,6 +939,9 @@ class SessionQuote(models.Model):
         else:
             raise Exception("Invalid state: {}".format(self.status))
 
+    def status_is_accepted(self):
+        return self.status == self.STATUS_ACCEPTED
+
     def __str__(self):
         return "Quote for {}".format(self.customer)
 

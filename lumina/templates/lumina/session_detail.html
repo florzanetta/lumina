@@ -213,7 +213,7 @@
                     <form action="." method="post">
                         {% csrf_token %}
                         <a href="{% url 'image_selection_create' object.pk %}" class="btn btn-primary">Solicitar selección de imágenes</a>
-                        {% if object.get_active_quote %}
+                        {% if object.get_active_quote and object.get_active_quote.status_is_accepted %}
                             <a href="{% url 'image_selection_create_from_quote' object.pk %}" class="btn btn-primary">Solicitar selección de imágenes desde presupuesto</a>
                         {% endif %}
                     </form>
