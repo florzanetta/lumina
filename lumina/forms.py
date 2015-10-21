@@ -262,9 +262,31 @@ class SessionSearchForm(forms.Form):
 
 class ImageCreateForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        session = kwargs.pop('session')
+
+        super().__init__(*args, **kwargs)
+        self.helper = helper.FormHelper()
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
+        self.helper.field_class = 'col-lg-8'
+
+        self.helper.layout = helper.Layout(
+            layout.Fieldset(
+                'Agregar imágenes a la sesión fotográfica',
+                'image',
+            ),
+            bootstrap.FormActions(
+                layout.Submit('submit_button', 'Agregar', css_id='form-submit-button'),
+            ),
+        )
+
+        assert isinstance(session, models.Session)
+        self.instance.session = session
+
     class Meta:
         model = Image
-        fields = ('image', 'session',)
+        fields = ('image',)
 
 
 class ImageUpdateForm(forms.ModelForm):

@@ -187,7 +187,7 @@ urlpatterns = patterns(
             login_required(views_image.ImageListView.as_view())),
         name='image_list'),
 
-    url(r'^image/create/$',
+    url(r'^image/session/(?P<session_id>\d+)/create/$',
         cache_control(private=True)(
             login_required(views_image.ImageCreateView.as_view())),
         name='image_create'),

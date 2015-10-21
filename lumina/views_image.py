@@ -9,6 +9,7 @@ from django.core import paginator as django_paginator
 
 from lumina.models import Image
 from lumina.forms import ImageCreateForm, ImageUpdateForm, ImageSearchForm
+from lumina import models
 
 
 # ===============================================================================
@@ -91,11 +92,13 @@ class ImageListView(ListView, FormMixin):
 
 
 class ImageCreateView(CreateView):
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#createview
-    # https://docs.djangoproject.com/en/1.5/topics/class-based-views/generic-editing/
     model = Image
     form_class = ImageCreateForm
-    template_name = 'lumina/base_create_update_form.html'
+    template_name = 'lumina/image_add.html'
+    pk_url_kwarg = 'session_id'
+
+    def _get_queryset(self):
+        return models.Session.objects.visible_sessions(self.request.user)
 
     def get_success_url(self):
         return reverse('session_detail', args=[self.object.session.pk])
@@ -116,13 +119,13 @@ class ImageCreateView(CreateView):
         #    77052
         form.instance.size = form.instance.image.size
 
-        # FIXME: is NOT safe to trust the content type reported by the user
+        # TODO: is NOT safe to trust the content type reported by the user
         #    *** befor super().form_valid() this works
         #    (Pdb) form.files['image'].content_type
         #    u'application/vnd.oasis.opendocument.text'
         form.instance.set_content_type(form.files['image'].content_type)
 
-        ret = super(ImageCreateView, self).form_valid(form)
+        ret = super().form_valid(form)
         messages.success(self.request, 'La imagen fue creada correctamente')
 
         #    *** after super().form_valid() `form.instance.image.name` has the
@@ -134,20 +137,25 @@ class ImageCreateView(CreateView):
         return ret
 
     def get_initial(self):
-        initial = super(ImageCreateView, self).get_initial()
-        if 'id_session' in self.request.GET:
-            initial.update({
-                'session': self.request.GET['id_session'],
-            })
+        session_id = self.kwargs[self.pk_url_kwarg]
+        initial = super().get_initial()
+        initial.update({
+            'session': self._get_queryset().get(pk=session_id),
+        })
         return initial
 
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        session_id = self.kwargs[self.pk_url_kwarg]
+        form_kwargs['session'] = self._get_queryset().get(pk=session_id)
+        return form_kwargs
+
     def get_context_data(self, **kwargs):
-        context = super(ImageCreateView, self).get_context_data(**kwargs)
-        context['form'].fields['session'].queryset = self.request.user.studio.session_set.all()
-        context['title'] = "Agregar imagen"
-        context['submit_label'] = "Agregar"
-        context['multipart'] = True
-        return context
+        session_id = self.kwargs[self.pk_url_kwarg]
+        return super().get_context_data(
+            session=self._get_queryset().get(pk=session_id),
+            **kwargs
+        )
 
 
 class ImageUpdateView(UpdateView):

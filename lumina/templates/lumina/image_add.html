@@ -1,0 +1,9 @@
+{% extends "lumina/base_create_update_crispy_form.html" %}
+
+{% block pre-form %}
+<div class="alert alert-info" role="alert">
+    <p style="padding-bottom: 0.5em;">Ud. está por agregar fotografías una sesión fotográfica.</p>
+    <h4>· Sesión fotográfica: <strong>{{session.name}}</strong></h4>
+    <h4>· Cliente: <strong>{{session.customer.name}}</strong></h4>
+</div>
+{% endblock %}
