@@ -184,23 +184,15 @@ class AlbumIconView(DetailView):
             return HttpResponseRedirect('/static/lumina/img/album-64.png')
 
 
-class SessionCreateUpdateMixin:
-    def _setup_form(self, form):
-        qs_customers = self.request.user.all_my_customers()
-        form.fields['customer'].queryset = qs_customers
-        # form.fields['shared_with'].queryset = qs_customers
-        form.fields['photographer'].queryset = self.request.user.studio.photographers.all()
-
-
-class SessionCreateView(CreateView, SessionCreateUpdateMixin):
+class SessionCreateView(CreateView):
     model = models.Session
     form_class = forms.SessionCreateForm
     template_name = 'lumina/base_create_update_crispy_form.html'
 
-    def get_form(self, form_class):
-        form = super().get_form(form_class)
-        self._setup_form(form)
-        return form
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['photographer'] = self.request.user
+        return kwargs
 
     def form_valid(self, form):
         form.instance.studio = self.request.user.studio
