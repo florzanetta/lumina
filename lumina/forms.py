@@ -145,6 +145,18 @@ class _GenericSessionForm(forms_utils.GenericCreateUpdateModelForm):
     CANCEL_URL = reverse_lazy('session_list')
     FIELDS = ['name', 'session_type', 'photographer', 'customer', 'worked_hours']
 
+    def __init__(self, *args, **kwargs):
+        photographer = kwargs.pop('photographer')
+
+        super().__init__(*args, **kwargs)
+
+        assert isinstance(photographer, LuminaUser)
+        assert photographer.is_photographer()
+
+        self.fields['session_type'].queryset = photographer.get_session_types()
+        self.fields['photographer'].queryset = photographer.get_all_photographers()
+        self.fields['customer'].queryset = Customer.objects.customers_of(photographer)
+
     class Meta:
         model = models.Session
         fields = ('name', 'session_type', 'photographer', 'customer', 'worked_hours')

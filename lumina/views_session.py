@@ -247,19 +247,18 @@ class SessionCreateFromQuoteView(CreateView):
         return ret
 
 
-class SessionUpdateView(UpdateView, SessionCreateUpdateMixin):
-    # https://docs.djangoproject.com/en/1.5/ref/class-based-views/generic-editing/#updateview
+class SessionUpdateView(UpdateView):
     model = models.Session
     form_class = forms.SessionUpdateForm
     template_name = 'lumina/base_create_update_crispy_form.html'
 
-    def get_form(self, form_class):
-        form = super().get_form(form_class)
-        self._setup_form(form)
-        return form
-
     def get_queryset(self):
         return models.Session.objects.modificable_sessions(self.request.user)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['photographer'] = self.request.user
+        return kwargs
 
     def form_valid(self, form):
         ret = super(SessionUpdateView, self).form_valid(form)
