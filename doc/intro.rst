@@ -22,3 +22,9 @@ Así se ve la página inicial del sistema:
    :scale: 80 %
    :align: center
 
+
+Tutorial
+--------
+
+Para más información, y referencia sobre cómo realizar las tareas más comunes, por favor
+acceda a la sección de **Tutorial**.

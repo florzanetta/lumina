@@ -10,4 +10,7 @@ Bienvenido a la documentación de Lumina
    :maxdepth: 2
 
    intro
-   tutorial
+   tutorial_studio_creation
+   tutorial_quote_creation
+   tutorial_session_creation
+   tutorial_quote_accept_reject
