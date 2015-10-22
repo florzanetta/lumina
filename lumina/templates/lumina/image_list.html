@@ -22,26 +22,76 @@
 
     {% if not hide_search_result %}
 
-        {% for image in object_list %}
 
-            {% ifchanged image.session.customer.id %}
-                <h4>{{ image.session.customer.name }}</h4>
-            {% endifchanged %}
+        <table class="table">
 
-            {% ifchanged image.session.id %}
-                <h5>{{ image.session.name }}</h5>
-            {% endifchanged %}
+            {% for image in object_list %}
 
-            {% image_item image %}
-            <hr>
-        {% empty %}
+                {% ifchanged image.session.customer.id %}
 
-            <h4>
-                No se encontraron imagenes que concuerden con los parámetros de búsqueda
-            </h4>
-            <hr>
+                    <tr>
+                        <td colspan="5" class="active">
+                            <h4><small>Cliente:</small> {{ image.session.customer.name }}</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="1%">
+                        </th>
+                        <th width="35%">
+                            Imagen
+                        </th>
+                        <th width="35%">
+                            Sesión
+                        </th>
+                        <th width="5%" class="text-nowrap text-right">
+                            Tamaño
+                        </th>
+                        <th width="10%" class="text-nowrap text-right">
 
-        {% endfor %}
+                        </th>
+                    </tr>
+
+                {% endifchanged %}
+
+                <tr>
+                    <td>
+                        <img class="media-object" src="{{ image.get_thumb_64x64_url }}">
+                    </td>
+                    <td>
+                        {{ image.get_original_filename_or_thumbnail_original_filename }}
+                    </td>
+                    <td class="text-nowrap">
+                        {{ image.session.name }}
+                    </td>
+                    {% if image.full_quality_available %}
+                        <td class="text-nowrap text-right">
+                            {{ image.size|filesizeformat }}
+                        </td>
+                        <td class="text-nowrap text-right">
+                            <a href="{% url 'image_download' image.pk %}">
+                                <i class="fa fa-download"></i> Bajar
+                            </a>
+                        </td>
+                    {% else %}
+                        <td colspan="2" class="text-right">
+                            <small class="text-muted">
+                                <i class="fa fa-exclamation-circle"></i> Sólo vista previa.
+                            </small>
+                        </td>
+                    {% endif %}
+                </tr>
+
+            {% empty %}
+
+                <tr>
+                    <td colspan="5">
+                        No se encontraron fotografías que concuerden con los parámetros de búsqueda
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+        </table>
 
         <!-- pagination -->
         <nav>

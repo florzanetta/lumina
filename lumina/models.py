@@ -698,6 +698,15 @@ class Image(models.Model):
         """Set original filename for thumb, truncating if it's too large"""
         self.thumbnail_original_filename = filename[0:128]
 
+    def get_original_filename_or_thumbnail_original_filename(self):
+        return self.original_filename or self.thumbnail_original_filename
+
+    def get_thumb_64x64_url(self):
+        return reverse('image_thumb_64x64', args=[self.id])
+
+    def full_quality_available(self):
+        return bool(self.image)
+
 
 # ===============================================================================
 # SessionQuote

@@ -178,21 +178,11 @@ def image_item(context, image, show_set_as_album_icon_button=False):
     assert isinstance(user, models.LuminaUser)
     assert user.is_photographer()
 
-    if image.image:
-        full_quality = True
-    else:
-        full_quality = False
-
-    image_filename = image.original_filename or image.thumbnail_original_filename
-
-    thumbnail_url = reverse('image_thumb_64x64', args=[image.id])
-    # thumbnail_url = reverse('image_selection_thumbnail', args=[image_selection.id, image.id])
-
     return {
         'image': image,
-        'image_filename': image_filename,
-        'thumbnail_url': thumbnail_url,
-        'full_quality': full_quality,
+        'image_filename': image.get_original_filename_or_thumbnail_original_filename(),
+        'thumbnail_url': image.get_thumb_64x64_url(),
+        'full_quality': image.full_quality_available(),
         'show_set_as_album_icon_button': show_set_as_album_icon_button and user.is_photographer(),
     }
 
