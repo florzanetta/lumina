@@ -18,7 +18,7 @@ Página inicial
 
 Así se ve la página inicial del sistema:
 
-.. image:: images/lumina-home.png
+.. image:: images-border/lumina-home.png
    :scale: 80 %
    :align: center
 

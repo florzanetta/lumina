@@ -1,8 +1,30 @@
 Creación del estudio fotográfico
 ================================
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Al acceder por primera vez al sistema, tendrá la opción de iniciar sesión (si ya posee un usuario),
+o crear su estudio fotográfico virtual.
 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Para crear su estudio fotográfico virtual, debe seleccionar **Regístrate**:
+
+.. image:: images-border/home-anonymous.png
+   :scale: 90%
+   :align: center
+
+El sistema le solicitará los siguientes datos:
+
+.. image:: images-border/studio-create.png
+   :scale: 90 %
+   :align: center
+
+Una vez especificados, deberá presionar **Registrarme**:
+
+.. image:: images-border/studio-create-with-data.png
+   :scale: 90 %
+   :align: center
+
+Si los datos ingresados son válidos, el sistema le informará que el estudio fotográfico virtual
+fue creado exitosamente:
+
+.. image:: images-border/studio-create-success.png
+   :scale: 90 %
+   :align: center

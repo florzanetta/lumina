@@ -5,6 +5,13 @@ set -u
 
 cd $(dirname $0)
 
+for img in $(ls -1b images/ ) ; do
+	if [ ! -e images-border/$img ] ; then
+		echo "Adding border to $img"
+		convert -border 2x2 -bordercolor "#DDDDDD" images/$img images-border/$img
+	fi
+done
+
 make html
 
 make latex
