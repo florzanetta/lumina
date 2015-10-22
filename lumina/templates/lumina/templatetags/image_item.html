@@ -7,36 +7,39 @@
 {# Only the photographer should see this items                            #}
 {# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #}
 -->
-<div class="media">
-    <a class="pull-left" href="javascript:void(0);">
-        <img class="media-object" src="{{ thumbnail_url }}">
-    </a>
-    <div class="media-body">
 
-        <p>
-            <strong><a href="{% url 'image_update' image.pk %}">{{ image_filename }}</a></strong>
-        </p>
-
-        <p>
-            {% if full_quality %}
-                <a href="{% url 'image_download' image.pk %}">
-                    <i class="fa fa-download"></i> Bajar
-                </a>
-                &nbsp;
-                <small>
-                    <span class="label label-default">{{ image.size|filesizeformat }}</span>
-                </small>
-            {% else %}
+<div class="col-xs-6 col-sm-4 col-lg-3">
+    <div style="height: 300px;">
+        <div style="height: 200px; width: 200px; display: table;">
+            <div style="display: table-cell; vertical-align: bottom;">
+                <img src="{{ thumbnail_url }}">
+            </div>
+        </div>
+        <div>
+            {% if image.full_quality_available %}
                 <small class="text-muted">
-                    <i class="fa fa-exclamation-circle"></i> Sólo vista previa.
+                    {{ image.size|filesizeformat }}
+                    ·
                 </small>
             {% endif %}
-            {% if show_set_as_album_icon_button %}
-                &nbsp; · &nbsp;
-                <a href="{% url 'set_image_as_album_icon' image.session.id image.id %}"
-                   class="btn btn-primary btn-xs">Usar como ícono del album</a>
-            {% endif %}
-        </p>
-
+            <strong><a href="{% url 'image_update' image.pk %}">{{ image_filename }}</a></strong>
+        </div>
+        {% if image.full_quality_available %}
+            <div>
+                <small class="text-muted">
+                    <a href="{% url 'image_download' image.pk %}">
+                        <i class="fa fa-download"></i> Bajar
+                    </a>
+                    ·
+                    {% if show_set_as_album_icon_button %}
+                        <a href="{% url 'set_image_as_album_icon' image.session.id image.id %}">Usar como ícono del album</a>
+                    {% endif %}
+                </small>
+            </div>
+        {% else %}
+            <small class="text-muted">
+                <i class="fa fa-exclamation-circle"></i> Sólo vista previa.
+            </small>
+        {% endif %}
     </div>
 </div>

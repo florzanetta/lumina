@@ -87,6 +87,13 @@ def image_thumb_64x64(request, image_id):
 
 @login_required
 @cache_control(private=True, max_age=settings.LUMINA_THUMBNAIL_CACHE)
+def image_thumb_200x200(request, image_id):
+    image = Image.objects.visible_images(request.user).get(pk=image_id)
+    return generate_thumbnail_of_image(request, image, 200)
+
+
+@login_required
+@cache_control(private=True, max_age=settings.LUMINA_THUMBNAIL_CACHE)
 def image_thumb(request, image_id):
     image = Image.objects.visible_images(request.user).get(pk=image_id)
     return generate_thumbnail_of_image(request, image, 64)

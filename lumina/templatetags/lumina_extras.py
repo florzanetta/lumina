@@ -181,7 +181,7 @@ def image_item(context, image, show_set_as_album_icon_button=False):
     return {
         'image': image,
         'image_filename': image.get_original_filename_or_thumbnail_original_filename(),
-        'thumbnail_url': image.get_thumb_64x64_url(),
+        'thumbnail_url': image.get_thumb_200x200_url(),
         'full_quality': image.full_quality_available(),
         'show_set_as_album_icon_button': show_set_as_album_icon_button and user.is_photographer(),
     }

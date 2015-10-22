@@ -704,6 +704,9 @@ class Image(models.Model):
     def get_thumb_64x64_url(self):
         return reverse('image_thumb_64x64', args=[self.id])
 
+    def get_thumb_200x200_url(self):
+        return reverse('image_thumb_200x200', args=[self.id])
+
     def full_quality_available(self):
         return bool(self.image)
 

@@ -205,6 +205,10 @@ urlpatterns = patterns(
         views.image_thumb_64x64,
         name='image_thumb_64x64'),
 
+    url(r'^image/(\d+)/thumb/200x200/$',
+        views.image_thumb_200x200,
+        name='image_thumb_200x200'),
+
     url(r'^image/(\d+)/download/$',
         views.image_download,
         name='image_download'),

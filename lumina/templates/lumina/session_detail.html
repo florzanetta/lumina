@@ -82,27 +82,26 @@
 
     <hr>
 
-    <div class="panel panel-default">
-        <div class="panel-heading"><h4>Imágenes del album</h4></div>
-        <div class="panel-body">
-            {% for image in object.image_set.all %}
-                {% image_item image show_set_as_album_icon_button=True %}
-            {% empty %}
-                <p>No se han agregado fotografías a la sesión fotográfica...</p>
-            {% endfor %}
-        </div>
+    <h3>Imágenes del album</h3>
 
-        {% if user.is_photographer and object.studio == user.studio %}
-            <div class="panel-footer">
-                <!-- the logged in user from the same Studio than the Session -->
-                <form action="." method="post">
-                    {% csrf_token %}
-                    <a href="{% url 'session_upload_previews' object.id %}" class="btn btn-primary">Agregar vistas previas</a>
-                    <a href="{% url 'image_create' object.pk %}" class="btn btn-primary">Agregar imagenes en calidad total</a>
-                </form>
-            </div>
-        {% endif %}
+    <div class="row">
+        {% for image in object.image_set.all %}
+            {% image_item image show_set_as_album_icon_button=True %}
+        {% empty %}
+            <p>No se han agregado fotografías a la sesión fotográfica...</p>
+        {% endfor %}
     </div>
+
+    {% if user.is_photographer and object.studio == user.studio %}
+            <!-- the logged in user from the same Studio than the Session -->
+            <form action="." method="post">
+                {% csrf_token %}
+                <a href="{% url 'session_upload_previews' object.id %}" class="btn btn-primary">Agregar vistas previas</a>
+                <a href="{% url 'image_create' object.pk %}" class="btn btn-primary">Agregar imagenes en calidad total</a>
+            </form>
+    {% endif %}
+
+    <hr>
 
     <!--
     { % if object.studio == user.studio % }
