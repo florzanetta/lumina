@@ -37,6 +37,11 @@ class CustomerCreateView(FilterUserCusomersMixin,
     success_url = reverse_lazy('customer_list')
     success_message = 'El cliente fue creado exitosamente'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['photographer'] = self.request.user
+        return kwargs
+
     def form_valid(self, form):
         form.instance.studio = self.request.user.studio
         ret = super(CustomerCreateView, self).form_valid(form)
@@ -50,3 +55,8 @@ class CustomerUpdateView(FilterUserCusomersMixin,
     template_name = 'lumina/base_create_update_crispy_form.html'
     success_url = reverse_lazy('customer_list')
     success_message = 'El cliente fue actualizado exitosamente'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['photographer'] = self.request.user
+        return kwargs

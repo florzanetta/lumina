@@ -370,6 +370,16 @@ class ImageSearchForm(forms.Form):
 
 class _GenericCustomerForm(forms_utils.GenericCreateUpdateModelForm):
 
+    def __init__(self, *args, **kwargs):
+        photographer = kwargs.pop('photographer')
+
+        super().__init__(*args, **kwargs)
+
+        assert isinstance(photographer, LuminaUser)
+        assert photographer.is_photographer()
+
+        self.fields['customer_type'].queryset = photographer.get_customer_types()
+
     CANCEL_URL = reverse_lazy('customer_list')
     FIELDS = [
         'name', 'customer_type', 'address', 'phone', 'city', 'iva', 'cuit',
