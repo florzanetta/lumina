@@ -1,6 +1,10 @@
 Creación del estudio fotográfico
 ================================
 
+.. image:: images/rol-photo.png
+   :scale: 50%
+   :align: right
+
 Al acceder por primera vez al sistema, tendrá la opción de iniciar sesión (si ya posee un usuario),
 o crear su estudio fotográfico virtual.
 
