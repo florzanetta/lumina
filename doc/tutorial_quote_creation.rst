@@ -4,8 +4,42 @@ Creación de presupuestos
 .. image:: images/rol-photo.png
    :scale: 50%
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Al acceder a la página de creación de presupuestos, el sistema mostrará el siguiente formulario:
+
+.. image:: images-border/quote-create.png
+   :scale: 90%
+   :align: center
+
+
+Para poder crear un nuevo presupuesto deberá cargar todos los datos obligatorios. Una vez que
+haya cargado los datos, podrá crear el presupuesto seleccionando **Crear**:
+
+.. image:: images-border/quote-create-with-data.png
+   :scale: 90%
+   :align: center
+
+
+El sistema creará el presupuesto, y lo mostrará junto al mensaje de éxito:
+
+.. image:: images-border/quote-create-with-data-done.png
+   :scale: 90%
+   :align: center
+
+
+Accediendo a la parte inferior de la página, se pueden ver las acciones disponibles. Una vez que el
+fotógrafo esté conforme con los términos del presupuesto, debe seleccionar **Confirmar presupuesto**:
+
+.. image:: images-border/quote-create-with-data-done-bottom.png
+   :scale: 90%
+   :align: center
+
+
+El sistema registrará el cambio en el presupuesto:
+
+.. image:: images-border/quote-create-waiting-customer-accept.png
+   :scale: 90%
+   :align: center
+
+
+Ahora el fotógrafo debe esperar a que el cliente acepte el presupuesto.
