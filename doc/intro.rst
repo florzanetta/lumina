@@ -13,6 +13,23 @@ beneficios, por ejemplo:
 * siempre disponible.
 
 
+Destinatarios
+-------------
+
+El presente manual está destinado a fotógrafos y clientes.
+
+Las secciones destinadas a fotógrafos están identificadas de la siguiente manera:
+
+.. image:: images/rol-photo.png
+   :scale: 50%
+
+
+Las secciones destinadas a los clientes están identificadas de la siguiente manera:
+
+.. image:: images/rol-customer.png
+   :scale: 50%
+
+
 Página inicial
 --------------
 
