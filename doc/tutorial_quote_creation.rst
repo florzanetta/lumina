@@ -1,5 +1,8 @@
+Presupuestación
+===============
+
 Creación de presupuestos
-========================
+------------------------
 
 .. image:: images/rol-photo.png
    :scale: 50%
@@ -43,3 +46,48 @@ El sistema registrará el cambio en el presupuesto:
 
 
 Ahora el fotógrafo debe esperar a que el cliente acepte el presupuesto.
+
+
+Aceptación del presupuesto
+--------------------------
+
+.. image:: images/rol-customer.png
+   :scale: 50%
+
+xxx.
+
+.. image:: images-border/customer-quote-notification.png
+   :scale: 90%
+   :align: center
+
+xxx.
+
+.. image:: images-border/customer-quote-pending-list.png
+   :scale: 90%
+   :align: center
+
+xxx.
+
+.. image:: images-border/customer-quote-pending-detail-top.png
+   :scale: 90%
+   :align: center
+
+xxx.
+
+.. image:: images-border/customer-quote-pending-detail-bottom.png
+   :scale: 90%
+   :align: center
+
+xxx.
+
+.. image:: images-border/customer-quote-pending-detail-accept.png
+   :scale: 90%
+   :align: center
+
+xxx.
+
+.. image:: images-border/customer-quote-pending-detail-accept-done.png
+   :scale: 90%
+   :align: center
+
+xxx.

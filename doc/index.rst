@@ -13,4 +13,3 @@ Bienvenido a la documentación de Lumina
    tutorial_studio_creation
    tutorial_quote_creation
    tutorial_session_creation
-   tutorial_quote_accept_reject
