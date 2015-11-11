@@ -1,8 +1,8 @@
 Presupuestación
 ===============
 
-Creación de presupuestos
-------------------------
+Creación de presupuestos (fotógrafo)
+------------------------------------
 
 .. image:: images/rol-photo.png
    :scale: 50%
@@ -48,8 +48,8 @@ El sistema registrará el cambio en el presupuesto:
 Ahora el fotógrafo debe esperar a que el cliente acepte el presupuesto.
 
 
-Aceptación del presupuesto
---------------------------
+Aceptación o rechazo del presupuesto (cliente)
+----------------------------------------------
 
 .. image:: images/rol-customer.png
    :scale: 50%
