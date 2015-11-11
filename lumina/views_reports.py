@@ -5,7 +5,7 @@ import pygal
 import pprint
 
 from collections import defaultdict
-
+from django.contrib import messages
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
@@ -30,6 +30,9 @@ PYGAL_CONFIG = pygal.Config(
 @cache_control(private=True)
 def view_report_cost_vs_charged_by_customer_type(request):
     assert request.user.is_photographer()
+
+    messages.warning(request, "ATENCION: este reporte es un demo. "
+                              "Su funcionamiento es parcial.")
 
     if request.method == 'GET':
         form = forms_reports.CostVsChargedByCustomerReportForm(user=request.user)
@@ -98,6 +101,9 @@ def view_report_cost_vs_charged_by_customer_type(request):
 @cache_control(private=True)
 def view_extended_quotes_by_customer(request):
     assert request.user.is_photographer()
+
+    messages.warning(request, "ATENCION: este reporte es un demo. "
+                              "Su funcionamiento es parcial.")
 
     if request.method == 'GET':
         form = forms_reports.ExtendedQuotesByCustomerReportForm(user=request.user)
