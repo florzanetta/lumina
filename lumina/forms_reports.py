@@ -72,7 +72,8 @@ class CostVsChargedByCustomerReportForm(_GenericDateRangeReportForm):
 class ExtendedQuotesThroughTimeReportForm(_GenericDateRangeReportForm,
                                           FormWithSessionTypeMixin):
     FORM_TITLE = 'Presupuestos expandidos (en el tiempo)'
-    FIELDS = _GenericDateRangeReportForm.FIELDS + ['session_type']
+    # FIELDS = _GenericDateRangeReportForm.FIELDS + ['session_type']
+    FIELDS = _GenericDateRangeReportForm.FIELDS
     FORM_ACTION = 'report_extended_quotes_through_time'
 
 

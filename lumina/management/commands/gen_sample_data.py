@@ -49,6 +49,7 @@ class Command(BaseCommand):
             image_quantity = random.randint(1, 50) * 5
             session_type = random.choice(models.SessionType.objects.filter(studio=photographer.studio))
 
+            # Create quote
             quote = models.SessionQuote.objects.create(
                 name=self.gen_name(),
                 studio=photographer.studio,
@@ -60,21 +61,23 @@ class Command(BaseCommand):
                 stipulated_down_payment=0.0)
             quote.created = created
             quote.save()
-
+            quote.confirm(photographer)
             self.stdout.write(" - Quote created: {} / {}".format(quote.id, quote.name))
 
-            quote.confirm(photographer)
-
+            # Create quote alternative
             sqa = models.SessionQuoteAlternative.objects.create(
                 session_quote=quote,
                 image_quantity=int(image_quantity * 1.5),
                 cost=decimal.Decimal(int(cost * 1.2)))
 
             if random.randint(0, 3) == 0:
+                self.stdout.write("   - Accepting extended quote")
                 quote.accept(random.choice(customer.users.all()), sqa.id)
             else:
+                self.stdout.write("   - Accepting original quote")
                 quote.accept(random.choice(customer.users.all()), None)
 
+            # Create session
             session = models.Session.objects.create(
                 name=quote.name,
                 studio=photographer.studio,
@@ -83,7 +86,7 @@ class Command(BaseCommand):
                 session_type=session_type,
             )
 
-            self.stdout.write("      - Session created: {}".format(session.id))
+            self.stdout.write("   - Session created: {}".format(session.id))
             session.session_type = random.choice(models.SessionType.objects.filter(
                 studio=photographer.studio).all())
             session.worked_hours = random.randint(20, 40)

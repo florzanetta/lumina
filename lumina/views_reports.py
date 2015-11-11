@@ -270,8 +270,7 @@ def view_extended_quotes_through_time(request):
                 'lumina/reports/report_generic.html', ctx,
                 context_instance=RequestContext(request))
 
-    cursor = connection.cursor()
-    cursor.execute("""
+    query_sql = """
     SELECT
         sess_quo.created    AS "date_for_report",
         sess_quo.cost       AS "orig_cost",
@@ -285,9 +284,20 @@ def view_extended_quotes_through_time(request):
             ON sess_quo.accepted_quote_alternative_id = sess_quo_alt.id
     WHERE
         sess_quo.status = %s AND
-        sess_quo.studio_id = %s
-    """, [models.SessionQuote.STATUS_ACCEPTED,
-          request.user.studio.id])
+        sess_quo.studio_id = %s AND
+        sess_quo.created >= %s  AND
+        sess_quo.created <= %s
+    """
+
+    query_params = [
+        models.SessionQuote.STATUS_ACCEPTED,
+        request.user.studio.id,
+        form.cleaned_data['date_from'],
+        form.cleaned_data['date_to']
+    ]
+
+    cursor = connection.cursor()
+    cursor.execute(query_sql, query_params)
 
     desc = cursor.description
     values_as_dict = [
