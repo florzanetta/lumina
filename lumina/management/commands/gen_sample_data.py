@@ -1,6 +1,7 @@
 import random
 import datetime
 import decimal
+import uuid
 
 from django.core.management.base import BaseCommand, CommandError
 
@@ -10,6 +11,21 @@ from lumina import models
 class Command(BaseCommand):
     args = '<photographer_id_or_username> <number_of_inserts>'
     help = 'Generates random data'
+
+    WORDS = None
+
+    def gen_name(self):
+        if not self.WORDS:
+            try:
+                word_file = "/usr/share/dict/spanish"
+                self.WORDS = open(word_file).read().splitlines()
+            except:
+                pass
+
+        if self.WORDS:
+            return " ".join([random.choice(self.WORDS), random.choice(self.WORDS), random.choice(self.WORDS)])
+        else:
+            return str(uuid.uuid4())
 
     def handle(self, *the_args, **options):
         if len(the_args) != 2:
@@ -34,6 +50,7 @@ class Command(BaseCommand):
             session_type = random.choice(models.SessionType.objects.filter(studio=photographer.studio))
 
             quote = models.SessionQuote.objects.create(
+                name=self.gen_name(),
                 studio=photographer.studio,
                 customer=customer,
                 image_quantity=image_quantity,
@@ -44,7 +61,7 @@ class Command(BaseCommand):
             quote.created = created
             quote.save()
 
-            self.stdout.write(" - Quote created: {}".format(quote.id))
+            self.stdout.write(" - Quote created: {} / {}".format(quote.id, quote.name))
 
             quote.confirm(photographer)
 
