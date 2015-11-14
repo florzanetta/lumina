@@ -107,8 +107,8 @@ def view_report_cost_vs_charged_by_customer_type(request):
             cost = item['selected_quote_alternative_cost'] or item['orig_cost']
             cost = float(cost)
             values.append([hours, cost])
-            logger.info(" - value: %s, %s", hours, cost)
-        logger.info(" - Adding new serie %s with %s values", a_customer_type, len(values))
+            logger.debug(" - value: %s, %s", hours, cost)
+        logger.debug(" - Adding new serie %s with %s values", a_customer_type, len(values))
         chart.add(a_customer_type, values)
 
     chart.print_values = False
