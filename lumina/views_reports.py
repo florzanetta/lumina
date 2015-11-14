@@ -102,37 +102,56 @@ def view_report_cost_vs_charged_by_customer_type(request):
 def view_extended_quotes_by_customer(request):
     assert request.user.is_photographer()
 
-    messages.warning(request, "ATENCION: este reporte es un demo. "
-                              "Su funcionamiento es parcial.")
+    ctx = {
+        'report_title': 'Ingresos ($) por tipo de cliente',
+    }
 
     if request.method == 'GET':
         form = forms_reports.ExtendedQuotesByCustomerReportForm(user=request.user)
+        ctx['form'] = form
+
+        return render_to_response(
+            'lumina/reports/report_generic.html', ctx,
+            context_instance=RequestContext(request))
+
     else:
-        form = forms_reports.ExtendedQuotesByCustomerReportForm(request.POST,
-                                                                user=request.user)
+        form = forms_reports.ExtendedQuotesByCustomerReportForm(request.POST, user=request.user)
+        ctx['form'] = form
 
-    ctx = dict(form=form)
+        if not form.is_valid():
+            return render_to_response(
+                'lumina/reports/report_generic.html', ctx,
+                context_instance=RequestContext(request))
 
-    ctx['report_title'] = 'Presupuestos expandidos (por cliente)'
-    chart = pygal.StackedBar(legend_at_bottom=True,
-                             y_title="$",
-                             config=PYGAL_CONFIG)
-    chart.title = ctx['report_title']
+    query_sql = """
+    SELECT
+        sess_quo.created    AS "date_for_report",
+        sess_quo.cost       AS "orig_cost",
+        sess_quo_alt.cost   AS "selected_quote_alternative_cost",
+        cust.name           AS "customer"
+    FROM
+        lumina_sessionquote as sess_quo
+        JOIN lumina_customer AS cust
+            ON sess_quo.customer_id = cust.id
+        LEFT OUTER JOIN lumina_sessionquotealternative AS sess_quo_alt
+            ON sess_quo.accepted_quote_alternative_id = sess_quo_alt.id
+    WHERE
+        sess_quo.status = %s AND
+        sess_quo.studio_id = %s AND
+        sess_quo.created >= %s  AND
+        sess_quo.created <= %s
+    """
+
+    query_params = [
+        models.SessionQuote.STATUS_ACCEPTED,
+        request.user.studio.id,
+        form.cleaned_data['date_from'],
+        form.cleaned_data['date_to']
+    ]
 
     cursor = connection.cursor()
-    # FIXME: use only accepted quotes! (not canceled, or rejected by customer)
-    cursor.execute(
-        "SELECT "
-        " lsq.created AS \"date_for_report\","
-        " lsq.cost AS \"orig_cost\","
-        " lsqa.cost AS \"selected_quote_alternative_cost\","
-        " c.name AS \"customer\""
-        " FROM lumina_session AS ls"
-        " JOIN lumina_sessionquote AS lsq ON lsq.session_id = ls.id"
-        " JOIN lumina_customer AS c ON ls.customer_id = c.id"
-        " LEFT OUTER JOIN lumina_sessionquotealternative AS lsqa"
-        "    ON lsq.accepted_quote_alternative_id = lsqa.id"
-        " WHERE ls.studio_id = %s", [request.user.studio.id])
+    cursor.execute(query_sql, query_params)
+
     desc = cursor.description
     values_as_dict = [
         dict(list(zip([col[0] for col in desc], row)))
@@ -162,6 +181,9 @@ def view_extended_quotes_by_customer(request):
         serie_cost.append(acum_cost)
         serie_alt_quote.append(acum_alt_quote)
 
+    chart = pygal.StackedBar(legend_at_bottom=True, y_title="$", config=PYGAL_CONFIG)
+    chart.title = ctx['report_title']
+
     chart.x_labels = labels
     chart.add('Presupuesto original', serie_cost)
     chart.add('Presupuesto expandido', serie_alt_quote)
@@ -169,9 +191,7 @@ def view_extended_quotes_by_customer(request):
     ctx['svg_chart'] = chart.render()
     ctx['show_form_3'] = True
 
-    return render_to_response(
-        'lumina/reports/report_generic.html', ctx,
-        context_instance=RequestContext(request))
+    return render_to_response('lumina/reports/report_generic.html', ctx, context_instance=RequestContext(request))
 
 
 @login_required

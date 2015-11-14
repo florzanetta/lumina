@@ -80,7 +80,7 @@ class ExtendedQuotesThroughTimeReportForm(_GenericDateRangeReportForm,
 class ExtendedQuotesByCustomerReportForm(_GenericDateRangeReportForm,
                                          FormWithSessionTypeMixin):
     FORM_TITLE = 'Presupuestos expandidos (por cliente)'
-    FIELDS = _GenericDateRangeReportForm.FIELDS + ['session_type']
+    FIELDS = _GenericDateRangeReportForm.FIELDS
     FORM_ACTION = 'report_extended_quotes_by_customer'
 
 
