@@ -42,10 +42,20 @@ class Command(BaseCommand):
             photographer = models.LuminaUser.objects.get(username=user_id_or_username)
         assert photographer.is_photographer()
 
+        customer_types = models.CustomerType.objects.for_photographer_ordered(photographer)
+        ct_worked_hours_media = dict([
+            (ct.id, (i+1) * 20) for i, ct in enumerate(customer_types)
+        ])
+        ct_cost_media = dict([
+            (ct.id, (i+1) * 2000) for i, ct in enumerate(reversed(customer_types))
+        ])
+
         today = datetime.date.today()
         for _ in range(0, int(how_many_inserts)):
             customer = random.choice(photographer.studio.customers.all())
-            cost = random.randint(500, 5000)
+            cost = random.randint(ct_cost_media[customer.customer_type.id] - 1000,
+                                  ct_cost_media[customer.customer_type.id] + 2000)
+
             stipulated_date = datetime.datetime(today.year + 1,
                                                 random.randint(1, 12),
                                                 random.randint(1, 28))
@@ -100,6 +110,7 @@ class Command(BaseCommand):
             quote.save()
 
             self.stdout.write("   - Session created: {}".format(session.id))
-            session.worked_hours = random.randint(20, 40)
+            session.worked_hours = random.randint(ct_worked_hours_media[customer.customer_type.id],
+                                                  ct_worked_hours_media[customer.customer_type.id] + 30)
             session.archived = True
             session.save()
