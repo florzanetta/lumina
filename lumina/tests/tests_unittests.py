@@ -584,3 +584,34 @@ class YearMonthIteratorTests(TestCase):
 
         with self.assertRaises(AssertionError):
             list(year_month_iterator(2001, 12, 2000, 1))
+
+    def test_return_valid_ranges(self):
+        self.assertListEqual(
+            list(year_month_iterator(2000, 1, 2000, 1)),
+            [(2000, 1)]
+        )
+
+        self.assertListEqual(
+            list(year_month_iterator(2000, 12, 2000, 12)),
+            [(2000, 12)]
+        )
+
+        self.assertListEqual(
+            list(year_month_iterator(2000, 3, 2000, 6)),
+            [(2000, 3), (2000, 4), (2000, 5), (2000, 6)]
+        )
+
+        self.assertListEqual(
+            list(year_month_iterator(2000, 9, 2001, 1)),
+            [(2000, 9), (2000, 10), (2000, 11), (2000, 12), (2001, 1)]
+        )
+
+        self.assertListEqual(
+            list(year_month_iterator(2000, 9, 2001, 2)),
+            [(2000, 9), (2000, 10), (2000, 11), (2000, 12), (2001, 1), (2001, 2)]
+        )
+
+        self.assertListEqual(
+            list(year_month_iterator(2000, 12, 2001, 2)),
+            [(2000, 12), (2001, 1), (2001, 2)]
+        )
