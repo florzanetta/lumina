@@ -53,16 +53,15 @@ def view_report_cost_vs_charged_by_customer_type(request):
 
     query_sql = """
     SELECT
-        cust.customer_type_id AS "customer_type",
         quot.cost             AS "orig_cost",
         quot_alt.cost         AS "selected_quote_alternative_cost",
         sess.worked_hours     AS "worked_hours",
-        sess_type.name        AS "session_type_name"
+        cust_type.name        AS "customer_type_name"
     FROM
         lumina_sessionquote AS quot
         JOIN lumina_customer AS cust ON quot.customer_id = cust.id
         JOIN lumina_session AS sess ON quot.session_id = sess.id
-        JOIN lumina_sessiontype AS sess_type ON sess.session_type_id = sess_type.id
+        JOIN lumina_customertype AS cust_type ON cust.customer_type_id = cust_type.id
         LEFT OUTER JOIN lumina_sessionquotealternative AS quot_alt
             ON quot.accepted_quote_alternative_id = quot_alt.id
     WHERE
@@ -88,11 +87,11 @@ def view_report_cost_vs_charged_by_customer_type(request):
         for row in cursor.fetchall()
     ]
 
-    group_by_session_type = defaultdict(list)
+    group_by_customer_type = defaultdict(list)
     for item in values_as_dict:
-        group_by_session_type[item['session_type_name']].append(item)
+        group_by_customer_type[item['customer_type_name']].append(item)
 
-    logger.info("group_by_session_type: %s", pprint.pformat(group_by_session_type))
+    logger.info("group_by_customer_type: %s", pprint.pformat(group_by_customer_type))
 
     chart = pygal.XY(stroke=False,
                      legend_at_bottom=True,
@@ -100,8 +99,8 @@ def view_report_cost_vs_charged_by_customer_type(request):
                      y_title="$",
                      config=PYGAL_CONFIG)
     chart.title = ctx['report_title']
-    for a_session_type, items in list(group_by_session_type.items()):
-        values = [[0, 0]]  # HACK! without this, charts with 1 value doesn't show up
+    for a_customer_type, items in list(group_by_customer_type.items()):
+        values = []
         for item in items:
             # (horas, costo)
             hours = float(item['worked_hours'])
@@ -109,8 +108,8 @@ def view_report_cost_vs_charged_by_customer_type(request):
             cost = float(cost)
             values.append([hours, cost])
             logger.info(" - value: %s, %s", hours, cost)
-        logger.info(" - Adding new serie %s with %s values", a_session_type, len(values))
-        chart.add(a_session_type, values)
+        logger.info(" - Adding new serie %s with %s values", a_customer_type, len(values))
+        chart.add(a_customer_type, values)
 
     chart.print_values = False
     ctx['svg_chart'] = chart.render()
