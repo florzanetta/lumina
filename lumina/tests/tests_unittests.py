@@ -17,7 +17,7 @@ from lumina.models import SessionQuote, Studio, LuminaUser, \
     SessionQuoteAlternative
 # from lumina.forms import SessionQuoteAlternativeFormSet
 # from lumina.pil_utils import generate_thumbnail
-
+from lumina.utils import year_month_iterator
 
 MEDIA_ROOT_FOR_TESTING = os.path.join(os.path.split(
     os.path.abspath(__file__))[0], 'test-images')
@@ -559,3 +559,28 @@ class SessionQuoteModelTests(TestCase):
                             "with uesr {}".format(self.photographer))
         except AssertionError:
             pass
+
+
+class YearMonthIteratorTests(TestCase):
+
+    def test_dont_fail_with_valid_combinatios(self):
+        list(year_month_iterator(2000, 1, 2000, 12))
+        list(year_month_iterator(2000, 1, 2000, 2))
+        list(year_month_iterator(2000, 1, 2000, 1))
+        list(year_month_iterator(2000, 1, 2001, 12))
+        list(year_month_iterator(2000, 1, 2001, 1))
+        list(year_month_iterator(2000, 6, 2001, 1))
+
+    def test_fail_with_valid_combinatios(self):
+
+        with self.assertRaises(AssertionError):
+            list(year_month_iterator(2000, 2, 2000, 1))
+
+        with self.assertRaises(AssertionError):
+            list(year_month_iterator(2001, 1, 2000, 12))
+
+        with self.assertRaises(AssertionError):
+            list(year_month_iterator(2001, 1, 2000, 1))
+
+        with self.assertRaises(AssertionError):
+            list(year_month_iterator(2001, 12, 2000, 1))
