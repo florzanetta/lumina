@@ -13,6 +13,7 @@ from django.db import connection
 
 from lumina import forms_reports
 from lumina import models
+from lumina.utils import year_month_iterator
 
 logger = logging.getLogger(__name__)
 
@@ -372,14 +373,14 @@ def view_extended_quotes_through_time(request):
     for item in values_as_dict:
         group_by_date[(item['date_for_report'].year,
                        item['date_for_report'].month)].append(item)
-    dates = list(group_by_date.keys())
-    dates.sort()
-
     logger.info("group_by_date: %s", pprint.pformat(group_by_date))
 
     serie_cost = []
     serie_alt_quote = []
     labels = []
+
+    dates = list(year_month_iterator(form.cleaned_data['date_from'].year, form.cleaned_data['date_from'].month,
+                                     form.cleaned_data['date_to'].year, form.cleaned_data['date_to'].month))
 
     for year, month in dates:
         acum_cost = 0.0
