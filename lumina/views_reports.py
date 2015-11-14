@@ -56,12 +56,11 @@ def view_report_cost_vs_charged_by_customer_type(request):
         quot.cost             AS "orig_cost",
         quot_alt.cost         AS "selected_quote_alternative_cost",
         sess.worked_hours     AS "worked_hours",
-        cust_type.name        AS "customer_type_name"
+        cust.customer_type_id AS "customer_type_id"
     FROM
         lumina_sessionquote AS quot
         JOIN lumina_customer AS cust ON quot.customer_id = cust.id
         JOIN lumina_session AS sess ON quot.session_id = sess.id
-        JOIN lumina_customertype AS cust_type ON cust.customer_type_id = cust_type.id
         LEFT OUTER JOIN lumina_sessionquotealternative AS quot_alt
             ON quot.accepted_quote_alternative_id = quot_alt.id
     WHERE
@@ -89,7 +88,7 @@ def view_report_cost_vs_charged_by_customer_type(request):
 
     group_by_customer_type = defaultdict(list)
     for item in values_as_dict:
-        group_by_customer_type[item['customer_type_name']].append(item)
+        group_by_customer_type[item['customer_type_id']].append(item)
 
     logger.info("group_by_customer_type: %s", pprint.pformat(group_by_customer_type))
 
@@ -99,7 +98,20 @@ def view_report_cost_vs_charged_by_customer_type(request):
                      y_title="$",
                      config=PYGAL_CONFIG)
     chart.title = ctx['report_title']
-    for a_customer_type, items in list(group_by_customer_type.items()):
+
+    # Consider reported cutomer types, and also archived customer types that are included in the results.
+    # Archived customer types NOT reported are ignored
+    active_customer_types = list([ct.id for ct in request.user.get_customer_types()])
+    reported_customer_types = list(group_by_customer_type.keys())
+    all_customer_types_id = active_customer_types + reported_customer_types
+    all_customer_types = set([
+        models.CustomerType.objects.get(pk=ct_id) for ct_id in all_customer_types_id
+    ])
+    all_customer_types = sorted(list(all_customer_types), key=lambda ct: ct.name)
+
+    # for a_customer_type_id, items in list(group_by_customer_type.items()):
+    for a_customer_type in all_customer_types:
+        items = group_by_customer_type[a_customer_type.id]
         values = []
         for item in items:
             # (horas, costo)
@@ -109,11 +121,10 @@ def view_report_cost_vs_charged_by_customer_type(request):
             values.append([hours, cost])
             logger.debug(" - value: %s, %s", hours, cost)
         logger.debug(" - Adding new serie %s with %s values", a_customer_type, len(values))
-        chart.add(a_customer_type, values)
+        chart.add(a_customer_type.name, values)
 
     chart.print_values = False
     ctx['svg_chart'] = chart.render()
-    ctx['show_form_1'] = True
 
     return render_to_response('lumina/reports/report_generic.html', ctx, context_instance=RequestContext(request))
 
