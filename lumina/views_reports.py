@@ -25,6 +25,24 @@ PYGAL_CONFIG = pygal.Config(
 )
 
 
+def __get_ct_for_report(user, reported_customer_types):
+    """
+    Consider reported cutomer types, and also archived customer types that are included in the results.
+    Archived customer types NOT reported are ignored
+
+    :param user: user that requested the report
+    :param reported_customer_types: customer types included in report result
+    :return:
+    """
+    active_customer_types = list([ct.id for ct in user.get_customer_types()])
+    all_customer_types_id = active_customer_types + reported_customer_types
+    all_customer_types = set([
+        models.CustomerType.objects.get(pk=ct_id) for ct_id in all_customer_types_id
+    ])
+    all_customer_types = sorted(list(all_customer_types), key=lambda ct: ct.name)
+    return all_customer_types
+
+
 @login_required
 @cache_control(private=True)
 def view_report_cost_vs_charged_by_customer_type(request):
@@ -99,15 +117,7 @@ def view_report_cost_vs_charged_by_customer_type(request):
                      config=PYGAL_CONFIG)
     chart.title = ctx['report_title']
 
-    # Consider reported cutomer types, and also archived customer types that are included in the results.
-    # Archived customer types NOT reported are ignored
-    active_customer_types = list([ct.id for ct in request.user.get_customer_types()])
-    reported_customer_types = list(group_by_customer_type.keys())
-    all_customer_types_id = active_customer_types + reported_customer_types
-    all_customer_types = set([
-        models.CustomerType.objects.get(pk=ct_id) for ct_id in all_customer_types_id
-    ])
-    all_customer_types = sorted(list(all_customer_types), key=lambda ct: ct.name)
+    all_customer_types = __get_ct_for_report(request.user, list(group_by_customer_type.keys()))
 
     # for a_customer_type_id, items in list(group_by_customer_type.items()):
     for a_customer_type in all_customer_types:
@@ -273,27 +283,22 @@ def view_income_by_customer_type(request):
               form.cleaned_data['date_to']])
 
     # Calculate values
-    total_by_customer = defaultdict(lambda: 0.0)
-    for customer_type, date_for_report, orig_cost, selected_quote_alternative_cost in cursor.fetchall():
+    total_by_customer_id = defaultdict(lambda: 0.0)
+    for customer_type_id, date_for_report, orig_cost, selected_quote_alternative_cost in cursor.fetchall():
         if selected_quote_alternative_cost:
-            total_by_customer[customer_type] += float(selected_quote_alternative_cost)
+            total_by_customer_id[customer_type_id] += float(selected_quote_alternative_cost)
         else:
-            total_by_customer[customer_type] += float(orig_cost)
-
-    # Generate chart series
-    customer_type_names = dict([
-
-        (ct.id, ct.name) for ct in models.CustomerType.objects.filter(studio=request.user.studio)
-    ])
+            total_by_customer_id[customer_type_id] += float(orig_cost)
 
     chart = pygal.Pie(legend_at_bottom=True,
                       config=PYGAL_CONFIG)
     chart.title = 'Ingresos ($) por tipo de cliente'
     chart.print_values = True
 
-    for customer_type in total_by_customer.keys():
-        label = "{} ($ {})".format(customer_type_names[customer_type], total_by_customer[customer_type])
-        chart.add(label, total_by_customer[customer_type])
+    all_customer_types = __get_ct_for_report(request.user, list(total_by_customer_id.keys()))
+
+    for customer_type in all_customer_types:
+        chart.add(customer_type.name, total_by_customer_id[customer_type.id])
 
     ctx['svg_chart'] = chart.render()
 
