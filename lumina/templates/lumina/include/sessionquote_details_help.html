@@ -1,12 +1,16 @@
 <!--
 {# This snippet is to facilitate the use of 'sessionquote_details_readonly.html' #}
 -->
-    <div id="helpModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true">
+
+<div class="modal fade" id="helpModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="helpModalLabel">Estados</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Estados</h4>
       </div>
       <div class="modal-body">
+
         <p>
             <ul>
                 <li><strong>{{status_STATUS_QUOTING}}</strong>: el fotografo está en proceso de carga de los términos,
@@ -30,8 +34,11 @@
                 <li><strong>{{status_STATUS_CANCELED}}</strong>: el presupuesto ha sido cancelado por el fotógrafo.</li>
             </ul>
         </p>
+
       </div>
       <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
+  </div>
+</div>
