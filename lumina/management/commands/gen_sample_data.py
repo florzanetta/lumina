@@ -4,6 +4,7 @@ import decimal
 import uuid
 
 from django.core.management.base import BaseCommand, CommandError
+from django.utils import timezone
 
 from lumina import models
 
@@ -33,19 +34,28 @@ class Command(BaseCommand):
                 self.stdout.write("{} - {}".format(ph.id, str(ph.username)))
             raise CommandError("You must specify <photographer_id_or_username> and <number_of_inserts>")
 
+        user_id_or_username, how_many_inserts = the_args
+
         try:
-            photographer = models.LuminaUser.objects.get(pk=int(the_args[0]))
+            photographer = models.LuminaUser.objects.get(pk=int(user_id_or_username))
         except ValueError:
-            photographer = models.LuminaUser.objects.get(username=the_args[0])
+            photographer = models.LuminaUser.objects.get(username=user_id_or_username)
         assert photographer.is_photographer()
 
         today = datetime.date.today()
-        for _ in range(0, int(the_args[1])):
+        for _ in range(0, int(how_many_inserts)):
             customer = random.choice(photographer.studio.customers.all())
             cost = random.randint(500, 5000)
-            stipulated_date = datetime.datetime(today.year + 1, random.randint(1, 12), random.randint(1, 28))
+            stipulated_date = datetime.datetime(today.year + 1,
+                                                random.randint(1, 12),
+                                                random.randint(1, 28))
+            stipulated_date = timezone.make_aware(stipulated_date)
+
             created = datetime.datetime(random.randint(today.year - 1, today.year),
-                                        random.randint(1, 12), random.randint(1, 28))
+                                        random.randint(1, 12),
+                                        random.randint(1, 28))
+            created = timezone.make_aware(created)
+
             image_quantity = random.randint(1, 50) * 5
             session_type = random.choice(models.SessionType.objects.filter(studio=photographer.studio))
 
@@ -86,9 +96,10 @@ class Command(BaseCommand):
                 session_type=session_type,
             )
 
+            quote.session = session
+            quote.save()
+
             self.stdout.write("   - Session created: {}".format(session.id))
-            session.session_type = random.choice(models.SessionType.objects.filter(
-                studio=photographer.studio).all())
             session.worked_hours = random.randint(20, 40)
             session.archived = True
             session.save()
