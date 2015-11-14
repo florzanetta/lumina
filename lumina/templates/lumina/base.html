@@ -91,7 +91,7 @@
                         <ul class="dropdown-menu" role="menu">
                             <!-- Items de drop-down  -->
                             {% if user.is_photographer %} <!-- user is photographer -->
-                                    <li><a href="{% url 'session_list' %}">Lista de sesiones</a></li>
+                                    <li><a href="{% url 'session_list' %}">Sesiones activas</a></li>
                                     <li><a href="{% url 'session_search' %}">Buscar</a></li>
                                     <li><a href="{% url 'session_create' %}">Agregar sesión</a></li>
                                     <li role="separator" class="divider"></li>
@@ -114,8 +114,8 @@
                         <ul class="dropdown-menu" role="menu">
 
                             {% if user.is_photographer %} <!-- user is photographer -->
+                                    <li><a href="{% url 'quote_list' %}">Presupuestos activos</a></li>
                                     <li><a href="{% url 'quote_create' %}">Crear presupuesto</a></li>
-                                    <li><a href="{% url 'quote_list' %}">Lista de presupuestos</a></li>
                             {% else %} <!-- user is client -->
                             {% endif %}
 
