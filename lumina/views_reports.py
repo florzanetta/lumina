@@ -5,7 +5,6 @@ import pygal
 import pprint
 
 from collections import defaultdict
-from django.contrib import messages
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from django.contrib.auth.decorators import login_required
@@ -31,39 +30,58 @@ PYGAL_CONFIG = pygal.Config(
 def view_report_cost_vs_charged_by_customer_type(request):
     assert request.user.is_photographer()
 
-    messages.warning(request, "ATENCION: este reporte es un demo. "
-                              "Su funcionamiento es parcial.")
+    ctx = {
+        'report_title': 'Costo (hs) vs Monto cobrado ($) por tipo de cliente',
+    }
 
     if request.method == 'GET':
         form = forms_reports.CostVsChargedByCustomerReportForm(user=request.user)
+        ctx['form'] = form
+
+        return render_to_response(
+            'lumina/reports/report_generic.html', ctx,
+            context_instance=RequestContext(request))
+
     else:
-        form = forms_reports.CostVsChargedByCustomerReportForm(request.POST,
-                                                               user=request.user)
+        form = forms_reports.CostVsChargedByCustomerReportForm(request.POST, user=request.user)
+        ctx['form'] = form
 
-    ctx = dict(form=form)
+        if not form.is_valid():
+            return render_to_response(
+                'lumina/reports/report_generic.html', ctx,
+                context_instance=RequestContext(request))
 
-    ctx['report_title'] = 'Costo (hs) vs Monto cobrado ($) por tipo de cliente'
-    chart = pygal.XY(stroke=False,
-                     legend_at_bottom=True,
-                     x_title="Horas",
-                     y_title="$",
-                     config=PYGAL_CONFIG)
-    chart.title = ctx['report_title']
+    query_sql = """
+    SELECT
+        cust.customer_type_id AS "customer_type",
+        quot.cost             AS "orig_cost",
+        quot_alt.cost         AS "selected_quote_alternative_cost",
+        sess.worked_hours     AS "worked_hours",
+        sess_type.name        AS "session_type_name"
+    FROM
+        lumina_sessionquote AS quot
+        JOIN lumina_customer AS cust ON quot.customer_id = cust.id
+        JOIN lumina_session AS sess ON quot.session_id = sess.id
+        JOIN lumina_sessiontype AS sess_type ON sess.session_type_id = sess_type.id
+        LEFT OUTER JOIN lumina_sessionquotealternative AS quot_alt
+            ON quot.accepted_quote_alternative_id = quot_alt.id
+    WHERE
+        quot.status = %s    AND
+        quot.studio_id = %s AND
+        quot.created >= %s  AND
+        quot.created <= %s
+    """
+
+    query_params = [
+        models.SessionQuote.STATUS_ACCEPTED,
+        request.user.studio.id,
+        form.cleaned_data['date_from'],
+        form.cleaned_data['date_to']
+    ]
 
     cursor = connection.cursor()
-    # FIXME: use only accepted quotes! (not canceled, or rejected by customer)
-    cursor.execute(
-        "SELECT ls.session_type_id,"
-        " lst.name AS \"session_type_name\","
-        " ls.worked_hours AS \"worked_hours\","
-        " lsq.cost AS \"orig_cost\","
-        " lsqa.cost AS \"selected_quote_alternative_cost\""
-        " FROM lumina_session AS ls "
-        " JOIN lumina_sessionquote AS lsq ON lsq.session_id = ls.id"
-        " JOIN lumina_sessiontype AS lst ON ls.session_type_id = lst.id"
-        " LEFT OUTER JOIN lumina_sessionquotealternative AS lsqa"
-        "    ON lsq.accepted_quote_alternative_id = lsqa.id"
-        " WHERE ls.worked_hours > 0 AND ls.studio_id = %s", [request.user.studio.id])
+    cursor.execute(query_sql, query_params)
+
     desc = cursor.description
     values_as_dict = [
         dict(list(zip([col[0] for col in desc], row)))
@@ -76,6 +94,12 @@ def view_report_cost_vs_charged_by_customer_type(request):
 
     logger.info("group_by_session_type: %s", pprint.pformat(group_by_session_type))
 
+    chart = pygal.XY(stroke=False,
+                     legend_at_bottom=True,
+                     x_title="Horas",
+                     y_title="$",
+                     config=PYGAL_CONFIG)
+    chart.title = ctx['report_title']
     for a_session_type, items in list(group_by_session_type.items()):
         values = [[0, 0]]  # HACK! without this, charts with 1 value doesn't show up
         for item in items:
@@ -92,9 +116,7 @@ def view_report_cost_vs_charged_by_customer_type(request):
     ctx['svg_chart'] = chart.render()
     ctx['show_form_1'] = True
 
-    return render_to_response(
-        'lumina/reports/report_generic.html', ctx,
-        context_instance=RequestContext(request))
+    return render_to_response('lumina/reports/report_generic.html', ctx, context_instance=RequestContext(request))
 
 
 @login_required
