@@ -15,3 +15,4 @@ Bienvenido a la documentación de Lumina
    tutorial_customer_creation
    tutorial_quote_creation
    tutorial_session_creation
+   tutorial_photo_upload_and_selection
