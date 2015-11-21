@@ -11,5 +11,6 @@ Bienvenido a la documentación de Lumina
 
    intro
    tutorial_studio_creation
+   tutorial_customer_creation
    tutorial_quote_creation
    tutorial_session_creation
