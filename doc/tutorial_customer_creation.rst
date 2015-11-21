@@ -56,12 +56,13 @@ Creación de usuario para cliente (fotógrafo)
 
 
 
+
 Xxxxx xxx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
 xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
 xxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx.
 
 
-.. image:: images-border/xxxxxxxxxxxxxxxxxxxxxxxxxxx
+.. image:: images-border/customer-create-user-01-list.png
    :scale: 90%
    :align: center
 
@@ -70,26 +71,7 @@ xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
 xxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx.
 
 
-.. image:: images-border/xxxxxxxxxxxxxxxxxxxxxxxxxxx
-   :scale: 90%
-   :align: center
-
-
-Xxxxx xxx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
-xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
-xxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx.
-
-
-.. image:: images-border/xxxxxxxxxxxxxxxxxxxxxxxxxxx
-   :scale: 90%
-   :align: center
-
-Xxxxx xxx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
-xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
-xxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx.
-
-
-.. image:: images-border/xxxxxxxxxxxxxxxxxxxxxxxxxxx
+.. image:: images-border/customer-create-user-02-blank.png
    :scale: 90%
    :align: center
 
@@ -99,7 +81,7 @@ xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
 xxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx.
 
 
-.. image:: images-border/xxxxxxxxxxxxxxxxxxxxxxxxxxx
+.. image:: images-border/customer-create-user-03-with-data.png
    :scale: 90%
    :align: center
 
@@ -108,6 +90,11 @@ xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
 xxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx.
 
 
-.. image:: images-border/xxxxxxxxxxxxxxxxxxxxxxxxxxx
+.. image:: images-border/customer-create-user-04-success.png
    :scale: 90%
    :align: center
+
+
+Xxxxx xxx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
+xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
+xxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx.
