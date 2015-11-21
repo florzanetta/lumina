@@ -8,6 +8,11 @@ de nuestro cliente, hace falta registrar en el sistema:
 2. los usuarios para las diferentes personas involucradas
 
 
+Son los fotógrafos del estudio virtual quienes deben crear y administrar los
+usuarios del cliente (por cuestiones de seguridad, el cliente no tiene la
+posibilidad de crear nuevos usuarios).
+
+
 Creación de cliente (fotógrafo)
 -------------------------------
 
@@ -51,44 +56,30 @@ Creación de usuario para cliente (fotógrafo)
 
 
 
-Xxxxx xxx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
-xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
-xxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx.
-
+Para crear un nuevo usuario para el cliente, deberá seleccionar el botón "Nuevo usuario":
 
 .. image:: images-border/customer-create-user-01-list.png
    :scale: 90%
    :align: center
 
-Xxxxx xxx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
-xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
-xxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx.
 
+El sistema mostrará el formulario que deberá completar:
 
 .. image:: images-border/customer-create-user-02-blank.png
    :scale: 90%
    :align: center
 
 
-Xxxxx xxx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
-xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
-xxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx.
-
+Una vez que haya completado el formulario, se debe seleccionar "Crear":
 
 .. image:: images-border/customer-create-user-03-with-data.png
    :scale: 90%
    :align: center
 
-Xxxxx xxx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
-xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
-xxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx.
-
+El sistema registrará el nuevo usuario y mostrará el mensaje de éxito:
 
 .. image:: images-border/customer-create-user-04-success.png
    :scale: 90%
    :align: center
 
-
-Xxxxx xxx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
-xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx
-xxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx xxxxxxxxxxxxxx xx xxxxxxxxxxx xxxxx xx.
+Desde este momento, el usuario ya puede ser utilizado para ingresar al sistema.
