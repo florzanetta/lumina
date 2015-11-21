@@ -1,9 +1,6 @@
 Selección y entrega de fotografías
 ==================================
 
-Introducción
-------------
-
 Subida de vistas previas
 ------------------------
 
@@ -11,83 +8,83 @@ Subida de vistas previas
    :scale: 50%
 
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+Desde la página de visualización de sesiones fotográficas se puede seleccionar
+la opción para la subida de fotografías.
+
+El proceso comienza cuando se selecciona la opción "Agregar vistas previas". Seleccionando esta opción,
+el sistema optimiza el proceso de subida de las fotografías, ya que crea las vistas previas en el
+equipo del cliente.
 
 .. image:: images-border/session-upload-photo-01-session-details.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+Ahora el sistema guiará al fotógrafo paso por paso. Lo primero que el fotógrafo debe
+hacer es seleccionar el tamaño de las previsualizaciones:
+
 
 .. image:: images-border/session-upload-photo-02-preview-size.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+Una vez que se haya elegido el tamaño de previsualización, el sistema requiere que se seleccionen
+las fotografías que se desean agregar a la sesión fotográfica:
+
 
 .. image:: images-border/session-upload-photo-03-choose-files.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+Al seleccionar "Choose files" (dicho texto depende del sistema operativo y del navegador, por
+lo que puede variar), aparecerá una ventana de diálogo, donde el fotógrafo debe seleccionar
+las fotografías a incluir a la sesión fotográfica.
+
+Luego de seleccionar las fotografías, debe aceptar la selección, presionando "Open" dicho
+texto también depende del sistema operativo y del navegador, por lo que puede variar).
+
 
 .. image:: images-border/session-upload-photo-04-choose-files-dialog.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+Automáticamente, el sistema comienza a crear las vistas previas. Para mantener al fotógrafo
+informado, el sistema mostrará el progreso de la siguiente manera:
 
 .. image:: images-border/session-upload-photo-05-uploading-progress.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+Al finalizar el proceso de generación de vistas previas, se verá la barra de progreso al 100%,
+y el fotógrafo podrá cerrar el diálogo presionando "Cerrar".
 
 
 .. image:: images-border/session-upload-photo-06-uploading-progress-done.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+Ahora el navegador cuenta con todas las vistas previas generadas. Para subirlas al servidor e
+incluirlas en la sesión fotográfica, sólo hace falta selecionar "Subir imágenes":
 
 .. image:: images-border/session-upload-photo-07-show-previews.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+Mientras las previsualizaciones de las fotografías son subidas, el fotógrafo verá
+un diálogo mostrandole el progreso.
 
 .. image:: images-border/session-upload-photo-08-uploading.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+Al finalizar, el sistema le mostrará los detalles de la sesión fotográfica, incluyendo
+todas las vistas previas de las fotografías subidas.
 
 .. image:: images-border/session-upload-photo-09-session-details-including-images.png
    :scale: 90%
    :align: center
-
-
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
 
 
 Solicitud de selección de fotos
