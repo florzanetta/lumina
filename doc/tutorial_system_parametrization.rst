@@ -51,31 +51,33 @@ Creación de tipo de cliente (fotógrafo)
    :scale: 50%
 
 
-xxxxxxxxxxxxxxxxxxx
+Desde el listado de los tipos de clientes disponibles, se puede acceder a la pantalla de
+creación de nuevos clientes, seleccionando "Nuevo tipo de cliente":
 
 .. image:: images-border/system-parametrization-02-customer-type-list.png
    :scale: 90%
    :align: center
 
 
-xxxxxxxxxxxxxxxxxxx
+El sistema mostrará el formulario, donde el único dato a cargar es el nombre que se
+le desea dar al tipo de cliente:
 
 .. image:: images-border/system-parametrization-03-customer-type-add-blank.png
    :scale: 90%
    :align: center
 
 
-xxxxxxxxxxxxxxxxxxx
+Luego de especificar el nombre, se debe seleccionar "Crear":
 
 .. image:: images-border/system-parametrization-04-customer-type-add-with-data.png
    :scale: 90%
    :align: center
 
 
-xxxxxxxxxxxxxxxxxxx
+El sistema creará el nuevo tipo de cliente, y mostrará el mensaje de éxito:
 
 .. image:: images-border/system-parametrization-05-customer-type-add-success.png
    :scale: 90%
    :align: center
 
-xxxxxxxxxxxxxxxxxxx
+Ahora, el tipo de cliente está disponible para ser utilizado.
