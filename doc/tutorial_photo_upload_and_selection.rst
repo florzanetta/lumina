@@ -97,6 +97,34 @@ xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
 
+.. image:: images-border/session-photo-selection-request-01-session-details.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-02-create-request.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-03-success.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-04-success-2.png
+   :scale: 90%
+   :align: center
+
 
 Selección de fotos
 ------------------
@@ -108,6 +136,41 @@ xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
 
+.. image:: images-border/session-photo-selection-request-05-customer-notification.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-06-customer-list-pending.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-07-customer-select-photos-top.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-08-customer-select-photos-bottom.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-09-customer-selection-done.png
+   :scale: 90%
+   :align: center
 
 Subida de fotografías en calidad total
 --------------------------------------
@@ -115,9 +178,94 @@ Subida de fotografías en calidad total
 .. image:: images/rol-photo.png
    :scale: 50%
 
+
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-10-photographer-notification.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-11-photographer-pending-list.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-12-photographer-pending-detail-top.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-13-photographer-pending-detail-bottom.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-14-photographer-pending-select-files.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-15-photographer-calculate-checksum.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-16-photographer-calculate-checksum-done.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-17-photographer-ready-to-upload.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-18-photographer-uploading.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-19-photographer-upload-done.png
+   :scale: 90%
+   :align: center
+
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
+xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-20-photographer-upload-done-success.png
+   :scale: 90%
+   :align: center
 
 
 Bajada de fotos en calidad total
@@ -129,3 +277,8 @@ Bajada de fotos en calidad total
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+
+.. image:: images-border/session-photo-selection-request-21-customer-available-photos.png
+   :scale: 90%
+   :align: center
+
