@@ -5,7 +5,7 @@ El proceso de selección y entrega de fotografías posee 5 pasos fundamentales,
 ilustrados en el siguiente gráfico, que inclue el paso en cuestión, y el tipo
 de usuario que realiza el paso (fotógrafo o cliente):
 
-.. image:: images-border/workflow-photo-selection-00-complete.png
+.. image:: images/workflow-photo-selection-00-complete.png
    :scale: 50%
    :align: center
 
@@ -13,12 +13,14 @@ de usuario que realiza el paso (fotógrafo o cliente):
 Subida de vistas previas
 ------------------------
 
-El primer paso debe realizarlo el fotógrafo, y consiste en subir las vistas previas
-de las fotografías.
+.. topic:: Vistazo general
 
-.. image:: images-border/workflow-photo-selection-01.png
-   :scale: 50%
-   :align: center
+   El primer paso debe realizarlo el fotógrafo, y consiste en subir las vistas previas
+   de las fotografías.
+
+   .. image:: images/workflow-photo-selection-01.png
+      :scale: 50%
+      :align: center
 
 Desde la página de visualización de sesiones fotográficas se puede seleccionar
 la opción para la subida de fotografías.
@@ -102,13 +104,15 @@ todas las vistas previas de las fotografías subidas.
 Solicitud de selección de fotos
 -------------------------------
 
-El segundo paso también debe realizarlo el fotógrafo, y consiste crear una solicitud, para
-que el cliente pueda seleccionar las fotos que más le gustan, desde las vistas previas
-subidas en el primer paso.
+.. topic:: Vistazo general
 
-.. image:: images-border/workflow-photo-selection-02.png
-   :scale: 50%
-   :align: center
+   El segundo paso también debe realizarlo el fotógrafo, y consiste crear una solicitud, para
+   que el cliente pueda seleccionar las fotos que más le gustan, desde las vistas previas
+   subidas en el primer paso.
+
+   .. image:: images/workflow-photo-selection-02.png
+      :scale: 50%
+      :align: center
 
 Desde la página de visualización de sesiones fotográficas se listan las solicitudes
 creadas, y también el botón para crear una nuevas solicitudes.
@@ -152,7 +156,7 @@ Selección de fotos
    y el cliente podrá seleccionar las fotografías que más le guste, teniendo
    como máximo la cantidad especificada en el presupuesto.
 
-   .. image:: images-border/workflow-photo-selection-03.png
+   .. image:: images/workflow-photo-selection-03.png
       :scale: 50%
       :align: center
 
