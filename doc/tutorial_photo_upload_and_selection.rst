@@ -1,10 +1,11 @@
 Selección y entrega de fotografías
 ==================================
 
-xxxxxxxx xxxx xxxxxxxxxxx xxx xxxxxxxx.
+El proceso de selección y entrega de fotografías posee 5 pasos fundamentales,
+ilustrados en el siguiente gráfico, que inclue el paso en cuestión, y el tipo
+de usuario que realiza el paso (fotógrafo o cliente):
 
-
-.. image:: images/workflow-photo-selection-00-complete.png
+.. image:: images-border/workflow-photo-selection-00-complete.png
    :scale: 50%
    :align: center
 
@@ -12,7 +13,10 @@ xxxxxxxx xxxx xxxxxxxxxxx xxx xxxxxxxx.
 Subida de vistas previas
 ------------------------
 
-.. image:: images/workflow-photo-selection-01.png
+El primer paso debe realizarlo el fotógrafo, y consiste en subir las vistas previas
+de las fotografías.
+
+.. image:: images-border/workflow-photo-selection-01.png
    :scale: 50%
    :align: center
 
