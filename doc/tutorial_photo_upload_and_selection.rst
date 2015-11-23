@@ -145,13 +145,20 @@ y más abajo, en la misma página, se podrá ver la solicitud recién creada:
 Selección de fotos
 ------------------
 
-.. image:: images-border/workflow-photo-selection-03.png
-   :scale: 50%
-   :align: center
+.. topic:: Vistazo general
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+   El tercer paso debe ser realizado por el cliente. En este paso, el sistema le
+   muestra al cliente las vistas previas de todas las fotografías disponibles,
+   y el cliente podrá seleccionar las fotografías que más le guste, teniendo
+   como máximo la cantidad especificada en el presupuesto.
+
+   .. image:: images-border/workflow-photo-selection-03.png
+      :scale: 50%
+      :align: center
+
+El cliente verá una notificación en la parte superior de la página (esto se verá
+en cualquier página dentro de todo el sistema). Al hacer clic en el ícono de notificaciones,
+el sistema mostrará el siguiente mensaje:
 
 .. image:: images-border/session-photo-selection-request-05-customer-notification.png
    :scale: 90%
