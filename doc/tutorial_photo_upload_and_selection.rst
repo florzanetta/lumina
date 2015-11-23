@@ -168,33 +168,30 @@ el sistema mostrará el siguiente mensaje:
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+Luego de hacer clic en el mensaje, el sistema mostrará la lista
+de solicitudes de selección de imagenes:
 
 .. image:: images-border/session-photo-selection-request-06-customer-list-pending.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+El sistema le mostrará al cliente los datos de la sesión fotográfica, y las
+previsualizaciones, con la marca de agua y en el tamaño seleccionado por el fotógrafo:
 
 .. image:: images-border/session-photo-selection-request-07-customer-select-photos-top.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+El cliente podrá seleccionar las fotografías que quiere obtener, y
+luego hacer clic en "Seleccionar":
 
 .. image:: images-border/session-photo-selection-request-08-customer-select-photos-bottom.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+El sistema registrará las fotografías que el cliente ha seleccionado, y como resultado
+mostrará el mensaje de éxito. Además, el sistema le indicará al cliente que
+todavía no podrá bajar las fotografías en calidad total.
 
 .. image:: images-border/session-photo-selection-request-09-customer-selection-done.png
    :scale: 90%
