@@ -296,15 +296,20 @@ fueron subidas exitosamente.
 Bajada de fotos en calidad total
 --------------------------------
 
-.. image:: images-border/workflow-photo-selection-05.png
-   :scale: 50%
-   :align: center
+.. topic:: Vistazo general
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+   Ahora el cliente ya tiene disponible las fotografías en calidad total
+   para ser bajadas a su equipo.
+
+   .. image:: images-border/workflow-photo-selection-05.png
+      :scale: 50%
+      :align: center
+
+Ahora que el sistema cuenta con las fotografías en su versión de calidad total, el
+cliente verá la opción "Bajar".
 
 .. image:: images-border/session-photo-selection-request-21-customer-available-photos.png
    :scale: 90%
    :align: center
 
+Utilizando esta opción, el cliente podrá bajar las fotografías en calidad total.
