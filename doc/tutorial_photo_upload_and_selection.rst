@@ -200,94 +200,93 @@ todavía no podrá bajar las fotografías en calidad total.
 Subida de fotografías en calidad total
 --------------------------------------
 
-.. image:: images-border/workflow-photo-selection-04.png
-   :scale: 50%
-   :align: center
+.. topic:: Vistazo general
+
+   El cuarto paso debe ser realizado por el fotógrafo. En este paso, el fotógrafo
+   sube al sistema las fotografías en calidad total.
+
+   .. image:: images-border/workflow-photo-selection-04.png
+      :scale: 50%
+      :align: center
 
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+El fotógrafo verá una notificación en la parte superior de la página (esto se verá
+en cualquier página dentro de todo el sistema). Al hacer clic en el ícono de notificaciones,
+el sistema mostrará el siguiente mensaje:
 
 .. image:: images-border/session-photo-selection-request-10-photographer-notification.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+Luego de hacer clic en el mensaje, el sistema mostrará la lista
+de solicitudes de selección de imagenes. Estas solicitudes corresponden a solicitudes
+que han sido completadas por el cliente, lo que implica que el cliente está
+esperando que el fotógrafo suba las fotografías en calidad total. El fotógrafo
+debe seleccionar "Sesión: Publicidad corporativa 2016" (el nombre de la sesión variará):
 
 .. image:: images-border/session-photo-selection-request-11-photographer-pending-list.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+El sistema mostrará las fotografías que el cliente ha seleccionado:
 
 .. image:: images-border/session-photo-selection-request-12-photographer-pending-detail-top.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+En la parte inferior de la página, el sistema mostrará el componente para seleccionar
+las fotografías en calidad total. Para seleccionar los archivos, hace falta
+seleccionar la opción "Choose Files":
 
 .. image:: images-border/session-photo-selection-request-13-photographer-pending-detail-bottom.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+El navegador permitirá seleccionar las fotografías. En este caso, lo recomendable es
+seleccionar todas las fotografías en calidad total (aún aquelas que no han sido seleccionadas
+por el cliente, ya que el sistema, automáticamente filtrará las fotografías que no han
+sido elegidas por el cliente):
 
 .. image:: images-border/session-photo-selection-request-14-photographer-pending-select-files.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+Luego de confirmar la selección, el sistema hará el filtrado antes mencionado. Como este
+proceso puede requerir mucho tiempo, el sistema mostrará el progreso:
 
 .. image:: images-border/session-photo-selection-request-15-photographer-calculate-checksum.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+Al finalizar, el fotógrafo podrá seleccionar la opción "Cerrar":
 
 .. image:: images-border/session-photo-selection-request-16-photographer-calculate-checksum-done.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+Ahora el fotógrafo podrá seleccionar la opción "Subir imágenes" para subir las fotografías
+en calidad total:
 
 .. image:: images-border/session-photo-selection-request-17-photographer-ready-to-upload.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+El sistema comenzará la subida de las fotografías en calidad total, y mostrará
+al fotógrafo el progreso:
 
 .. image:: images-border/session-photo-selection-request-18-photographer-uploading.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+Al finalizar la subida de las fotografías en calidad total, se habilitará
+el botón "Cerrar":
 
 .. image:: images-border/session-photo-selection-request-19-photographer-upload-done.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+El sistema mostrará un mensaje, informando que las fotografías
+fueron subidas exitosamente.
 
 .. image:: images-border/session-photo-selection-request-20-photographer-upload-done-success.png
    :scale: 90%
