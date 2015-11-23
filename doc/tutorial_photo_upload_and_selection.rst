@@ -1,12 +1,20 @@
 Selección y entrega de fotografías
 ==================================
 
+xxxxxxxx xxxx xxxxxxxxxxx xxx xxxxxxxx.
+
+
+.. image:: images/workflow-photo-selection-00-complete.png
+   :scale: 50%
+   :align: center
+
+
 Subida de vistas previas
 ------------------------
 
-.. image:: images/rol-photo.png
+.. image:: images/workflow-photo-selection-01.png
    :scale: 50%
-
+   :align: center
 
 Desde la página de visualización de sesiones fotográficas se puede seleccionar
 la opción para la subida de fotografías.
@@ -90,8 +98,9 @@ todas las vistas previas de las fotografías subidas.
 Solicitud de selección de fotos
 -------------------------------
 
-.. image:: images/rol-photo.png
+.. image:: images/workflow-photo-selection-02.png
    :scale: 50%
+   :align: center
 
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
@@ -129,8 +138,9 @@ xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
 Selección de fotos
 ------------------
 
-.. image:: images/rol-customer.png
+.. image:: images/workflow-photo-selection-03.png
    :scale: 50%
+   :align: center
 
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
@@ -175,8 +185,9 @@ xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
 Subida de fotografías en calidad total
 --------------------------------------
 
-.. image:: images/rol-photo.png
+.. image:: images/workflow-photo-selection-04.png
    :scale: 50%
+   :align: center
 
 
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
@@ -271,8 +282,9 @@ xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
 Bajada de fotos en calidad total
 --------------------------------
 
-.. image:: images/rol-customer.png
+.. image:: images/workflow-photo-selection-05.png
    :scale: 50%
+   :align: center
 
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
 xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
