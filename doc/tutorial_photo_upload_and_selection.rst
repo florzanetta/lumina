@@ -102,37 +102,40 @@ todas las vistas previas de las fotografías subidas.
 Solicitud de selección de fotos
 -------------------------------
 
-.. image:: images/workflow-photo-selection-02.png
+El segundo paso también debe realizarlo el fotógrafo, y consiste crear una solicitud, para
+que el cliente pueda seleccionar las fotos que más le gustan, desde las vistas previas
+subidas en el primer paso.
+
+.. image:: images-border/workflow-photo-selection-02.png
    :scale: 50%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+Desde la página de visualización de sesiones fotográficas se listan las solicitudes
+creadas, y también el botón para crear una nuevas solicitudes.
+
+Para crear una nueva solicitud, se debe seleccionar la opción "Solicitar selección de
+imágenes desde presupuesto":
 
 .. image:: images-border/session-photo-selection-request-01-session-details.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+El sistema le mostrará el formulario para crear la solicitud de selección
+de fotografías, con los datos del presupuesto precargados. El fotógrafo sólo
+necesita seleccionar el tamaño máximo de las previsualizaciones, y seleccionar
+"Solicitar":
 
 .. image:: images-border/session-photo-selection-request-02-create-request.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+El sistema creará la solicitud, y le mostrará el mensaje de éxito:
 
 .. image:: images-border/session-photo-selection-request-03-success.png
    :scale: 90%
    :align: center
 
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx
-xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
+y más abajo, en la misma página, se podrá ver la solicitud recién creada:
 
 .. image:: images-border/session-photo-selection-request-04-success-2.png
    :scale: 90%
@@ -142,7 +145,7 @@ xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
 Selección de fotos
 ------------------
 
-.. image:: images/workflow-photo-selection-03.png
+.. image:: images-border/workflow-photo-selection-03.png
    :scale: 50%
    :align: center
 
@@ -189,7 +192,7 @@ xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
 Subida de fotografías en calidad total
 --------------------------------------
 
-.. image:: images/workflow-photo-selection-04.png
+.. image:: images-border/workflow-photo-selection-04.png
    :scale: 50%
    :align: center
 
@@ -286,7 +289,7 @@ xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx xxx.
 Bajada de fotos en calidad total
 --------------------------------
 
-.. image:: images/workflow-photo-selection-05.png
+.. image:: images-border/workflow-photo-selection-05.png
    :scale: 50%
    :align: center
 
