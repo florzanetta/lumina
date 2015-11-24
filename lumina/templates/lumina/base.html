@@ -215,6 +215,8 @@
                     </ul>
                 </li>
 
+                <li><a href="/static/lumina/doc/html/index.html" target="_blank"><i class="fa fa-life-ring"></i></a></li>
+
                 <!-- Items de drop-down  -->
                 {% if user.is_photographer %} <!-- user is photographer -->
                         <!-- <li><a href="javascript:void(0);" title="Usuario: {{ user.username }}"><em>
@@ -236,7 +238,8 @@
 
             {% else	%} <!-- user.is_authenticated == False -->
 
-                  <!-- Items de drop-down  -->
+                  <li><a href="/static/lumina/doc/html/index.html" target="_blank"><i class="fa fa-life-ring"></i></a></li>
+
                   <li><a href="{% url 'login' %}?next=/">Iniciar sesión</a></li>
 
             {% endif %}
