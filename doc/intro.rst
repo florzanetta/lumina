@@ -30,6 +30,13 @@ Las secciones destinadas a los clientes están identificadas de la siguiente man
    :scale: 50%
 
 
+Las secciones destinadas a ambos tipos de usuarios (fotógrafos y clientes) están identificadas de la siguiente manera:
+
+.. image:: images/rol-both.png
+   :scale: 50%
+
+
+
 Página inicial
 --------------
 
