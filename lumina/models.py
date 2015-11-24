@@ -376,6 +376,16 @@ class Session(models.Model):
         self.archived = True
         self.save(force_update=True, update_fields=['archived'])
 
+    def unarchive(self, user):
+        """
+        Un-archive the session
+        """
+        assert user.is_photographer()
+        assert self.studio == user.studio
+        assert self.archived
+        self.archived = False
+        self.save(force_update=True, update_fields=['archived'])
+
     def get_active_quote(self):
         """
         This method returns the quote associated to this session.

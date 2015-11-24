@@ -74,7 +74,11 @@
             <form action="." method="post">
                 {% csrf_token %}
                 <a href="{% url 'session_update' object.pk %}" class="btn btn-primary">Editar sesión</a>
-                <input class="btn btn-primary" type="submit" name="archive_session" value="Archivar">
+                {% if object.archived %}
+                    <input class="btn btn-primary" type="submit" name="unarchive_session" value="Desarchivar">
+                {% else %}
+                    <input class="btn btn-primary" type="submit" name="archive_session" value="Archivar">
+                {% endif %}
             </form>
         {% endif %}
 

@@ -132,6 +132,11 @@ class SessionDetailView(DetailView):
             messages.success(self.request, 'La sesión fue archivada correctamente')
             return HttpResponseRedirect(reverse('session_detail', args=[session.id]))
 
+        if 'unarchive_session' in request.POST:
+            session.unarchive(self.request.user)
+            messages.success(self.request, 'La sesión fue desarchivada correctamente')
+            return HttpResponseRedirect(reverse('session_detail', args=[session.id]))
+
         raise SuspiciousOperation()
 
     def get_queryset(self):
