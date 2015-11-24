@@ -77,7 +77,7 @@ def serve_image_or_thumb(request, image):
 def download_image(request, image):
     """Sends the original uploaded file to the user"""
     full_filename = default_storage.path(image.image.path)
-    filename_to_user = image.original_filename
+    filename_to_user = image.original_filename or image.thumbnail_original_filename
     filesize = os.path.getsize(full_filename)
     # content_type = mimetypes.guess_type(full_filename)[0]
     content_type = image.content_type
@@ -96,8 +96,7 @@ def download_image(request, image):
         file_contents = f.read()
     response = HttpResponse(file_contents, content_type=content_type)
     response['Content-Length'] = filesize
-    response['Content-Disposition'] = 'attachment; filename="{0}"'.format(
-        filename_to_user)
+    response['Content-Disposition'] = 'attachment; filename="{0}"'.format(filename_to_user)
     return response
 
 
