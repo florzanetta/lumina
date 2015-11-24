@@ -81,6 +81,8 @@ class GenericCreateUpdateModelForm(forms.ModelForm,
     CANCEL_URL = None
     FIELDS = []
 
+    HELP_LINK = None
+
     def get_cancel_url(self):
         assert self.CANCEL_URL is not None, "form.CANCEL_URL must be set or `get_cancel_url()` overwritten"
         return self.CANCEL_URL
@@ -99,15 +101,25 @@ class GenericCreateUpdateModelForm(forms.ModelForm,
         fields = [self._get_crispy_form_field(field_name)
                   for field_name in self.FIELDS]
 
+        form_actions = (
+            layout.Submit('submit_button', self.SUBMIT_LABEL, css_id='form-submit-button'),
+            layout.HTML("<a class='btn btn-primary' href='{}'>Cancelar</a>".format(self.get_cancel_url())),
+        )
+
+        if self.HELP_LINK:
+            form_actions += (
+                layout.HTML("""
+                    <span style="padding-left: 1em;"><a href="{0}" target="_blank"><i
+                        class="fa fa-life-ring"></i> Ayuda</a></span>
+                """.format(self.HELP_LINK)),
+            )
+
         self.helper.layout = helper.Layout(
             layout.Fieldset(
                 self.FORM_TITLE,
                 *fields
             ),
-            bootstrap.FormActions(
-                layout.Submit('submit_button', self.SUBMIT_LABEL, css_id='form-submit-button'),
-                layout.HTML("<a class='btn btn-primary' href='{}'>Cancelar</a>".format(self.get_cancel_url())),
-            ),
+            bootstrap.FormActions(*form_actions),
         )
 
 

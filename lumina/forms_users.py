@@ -182,6 +182,7 @@ class StudioUserCreateForRegisteringNewStudioForm(_GenericUserCreateUpdateForm):
     FIELDS = [
         'username', 'first_name', 'last_name', 'email', 'password1', 'password2',
     ]
+    HELP_LINK = "/static/lumina/doc/html/tutorial_studio_creation.html"
 
     # ----- </GenericCreateUpdateModelForm> -----
 
