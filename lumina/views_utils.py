@@ -108,7 +108,7 @@ def download_images_as_zip(request, images):
     """
     # FIXME: this sholdn't be done in-memory
     # FIXME: this should be done asynchronously
-    response = HttpResponse(mimetype='application/zip')
+    response = HttpResponse(content_type='application/zip')
 
     #
     # From https://code.djangoproject.com/wiki/CookBookDynamicZip
@@ -120,7 +120,7 @@ def download_images_as_zip(request, images):
     zip_buffer = BytesIO()
     zip_file = zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED)
     for an_image in images:
-        zip_file.writestr(an_image.original_filename, an_image.image.read())
+        zip_file.writestr(an_image.original_filename or an_image.thumbnail_original_filename, an_image.image.read())
 
     zip_file.close()
     zip_buffer.flush()
