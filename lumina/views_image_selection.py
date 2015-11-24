@@ -63,6 +63,15 @@ class ImageSelectionAwaitingCustomerSelectionListView(ListView):
             return ImageSelection.objects.all_my_imageselections_awaiting_selection_as_photographer(self.request.user)
 
 
+class ImageSelectionAvailableForCustomerListView(ListView):
+    model = ImageSelection
+    template_name = 'lumina/imageselection_available_for_customer_list.html'
+
+    def get_queryset(self):
+        assert self.request.user.is_for_customer()
+        return ImageSelection.objects.all_my_available_imageselections_as_customer(self.request.user)
+
+
 class ImageSelectionWithPendingUploadsListView(ListView):
     model = ImageSelection
     template_name = 'lumina/imageselection_awaiting_full_quality_uploads_list.html'

@@ -133,10 +133,15 @@ urlpatterns = patterns(
                 views_image_selection_creation.ImageSelectionCreateView.as_view())),
         name='image_selection_create'),
 
-    url(
-        r'^session/image-selection/create-from-quote/(?P<pk>\d+)/$',
+    url(r'^session/image-selection/create-from-quote/(?P<pk>\d+)/$',
         views_image_selection_creation.image_selection_create_from_quote,
         name='image_selection_create_from_quote'),
+
+    url(r'^session/image-selection/available-for-customer/list/$',
+        cache_control(private=True)(
+            login_required(
+                views_image_selection.ImageSelectionAvailableForCustomerListView.as_view())),
+        name='imageselection_available_for_customer_list'),
 
     url(r'^session/image-selection/awaiting-customer-selection/list/$',
         cache_control(private=True)(

@@ -480,6 +480,15 @@ class ImageSelectionManager(models.Manager):
         return self.filter(customer=user.user_for_customer,
                            status=ImageSelection.STATUS_WAITING)
 
+    def all_my_available_imageselections_as_customer(self, user):
+        """
+        Returns a queryset filtering the ImageSelections available for customer.
+        """
+        assert user.is_for_customer()
+        return self.filter(customer=user.user_for_customer,
+                           status=ImageSelection.STATUS_IMAGES_SELECTED,
+                           session__archived=False)
+
     def all_my_imageselections_awaiting_selection_as_photographer(self, user):
         """
         Returns a queryset filtering the ImageSelections awaiting for the customer to select the images.

@@ -102,6 +102,9 @@
                                         Selecciones de imágenes esperando subida de fotos en calidad total</a></li>
 
                             {% else %} <!-- user is client -->
+                                    <li><a href="{% url 'imageselection_available_for_customer_list' %}">
+                                        Sesiones fotográficas disponibles</a>
+                                    </li>
                                     <li><a href="{% url 'imageselection_awaiting_customer_selection_list' %}">
                                         Selecciones de imágenes esperando selección de cliente</a>
                                     </li>
