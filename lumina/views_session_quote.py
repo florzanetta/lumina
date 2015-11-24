@@ -200,8 +200,7 @@ class SessionQuoteSearchView(ListView, FormMixin):
         """Returns QuerySet"""
         # Validate form
         if not form.is_valid():
-            messages.error(request,
-                           "Los parámetros de la búsqueda son inválidos")
+            messages.error(request, "Los parámetros de la búsqueda son inválidos")
             return SessionQuote.objects.none()
 
         # -- Common filters
