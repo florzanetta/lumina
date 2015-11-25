@@ -110,3 +110,5 @@
   notify:
     - reload uwsgi
   # FIXME: if uwsgi isn't running, this task doesn't start it
+  tags:
+    - quick
