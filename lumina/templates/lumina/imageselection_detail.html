@@ -19,6 +19,13 @@
 
 	<h4><strong>Sesión:</strong> {{ object.session.name }}</h4>
 
+    {% if object.quote %}
+	    <h4>
+            <strong>Presupuesto:</strong>
+            <a href="{% url 'quote_detail' object.quote.id %}">{{ object.quote.name }}</a>
+        </h4>
+    {% endif %}
+
 	<small><strong>Estado:</strong>
 		{{ object.get_status_display }}</small><br>
 
