@@ -900,6 +900,12 @@ class SessionQuote(models.Model):
 
         self.save()
 
+        # Update ImageSelections associated to this quote
+        for imageselection in self.imageselection_set.all():
+            imageselection.image_quantity = sqa.image_quantity
+            imageselection.status = ImageSelection.STATUS_WAITING
+            imageselection.save()
+
     def reject(self, user):
         """
         The customer accept the quote.

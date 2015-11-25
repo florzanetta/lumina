@@ -25,9 +25,17 @@
                     <input type="checkbox"
                            name="selected_images"
                            value="{{ image.id }}"
-                           id="selected_images_{{ image.id }}">
+                           id="selected_images_{{ image.id }}"
+                           {% if image_selected_by_customer %}
+                           checked
+                           disabled
+                           {% endif %}>
                     {{ image_filename }}
                 </label>
+
+                {% if image_selected_by_customer %}
+                    <input type="hidden" name="selected_images" value="{{ image.id }}">
+                {% endif %}
 
             {% else %}
                 <p>
