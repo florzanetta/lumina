@@ -49,6 +49,7 @@
     - libpq-dev
     - postgresql-server-dev-9.4
     - python-psycopg2
+    - libfreetype6-dev
   tags:
     - apt
     - setup
