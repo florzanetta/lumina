@@ -114,7 +114,7 @@ def download_images_as_zip(request, images):
     # From https://code.djangoproject.com/wiki/CookBookDynamicZip
     #
 
-    response['Content-Disposition'] = 'filename=all.zip'
+    response['Content-Disposition'] = 'filename=sesion_completa.zip'
     # now add them to a zip file
     # note the zip only exist in memory as you add to it
     zip_buffer = BytesIO()
