@@ -18,7 +18,7 @@
     <p><span class="badge badge-info">{{ image_selection_pending_count }}</span>
             Ud. posee {{ image_selection_pending_count }}
             {{ image_selection_pending_count|pluralize:"petición,peticiones" }}
-            de selección de imagenes.
+            de selección de imágenes.
             {% if image_selection_pending_count %}
                 <a href="{% url 'imageselection_awaiting_customer_selection_list' %}">Haga clic aqui</a> para verlas...
             {% endif %}

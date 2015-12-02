@@ -101,7 +101,7 @@
             <form action="." method="post">
                 {% csrf_token %}
                 <a href="{% url 'session_upload_previews' object.id %}" class="btn btn-primary">Agregar vistas previas</a>
-                <a href="{% url 'image_create' object.pk %}" class="btn btn-primary">Agregar imagenes en calidad total</a>
+                <a href="{% url 'image_create' object.pk %}" class="btn btn-primary">Agregar imágenes en calidad total</a>
             </form>
     {% endif %}
 

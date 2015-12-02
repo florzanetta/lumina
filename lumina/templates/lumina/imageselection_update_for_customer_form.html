@@ -25,7 +25,7 @@
 	<small><strong>Compartido con:</strong>
 		{{ object.customer.name }}</small><br>
 
-	<small><strong>Cant. de imagenes permitidas:</strong>
+	<small><strong>Cant. de imágenes permitidas:</strong>
 		{{ object.image_quantity }}</small><br>
 
     <h5>Imágenes la sesión:</h5>
@@ -35,7 +35,7 @@
 		   {% image_selection_item object image %}
 		   <hr>
 	    {% empty %}
-	        <p>La sesión no posee imagenes...</p>
+	        <p>La sesión no posee imágenes...</p>
 		    <hr>
 	    {% endfor %}
         <input type="submit" value="Seleccionar" class="btn btn-primary">
