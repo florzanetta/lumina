@@ -1,43 +1,46 @@
-# -- django & co
+#
+# To update requirements.txt:
+#     $ pip freeze -r requirements.txt >> reqs && mv -f reqs requirements.txt && vim requirements.txt
+#
+# To AUTOUPDATE critical reqs:
+#
+#    $ for req in $(cat requirements.txt | egrep '^# AUTOUPDATE:' | cut -d : -f2) ; do echo "# $req" ; pip install --upgrade "$req" ; done
+#
+# To UPDATE other reqs:
+#
+#    $ for req in $(cat requirements.txt | egrep '^# UPDATE:' | cut -d : -f2) ; do echo "# $req" ; pip install --upgrade "$req" ; done
+#
+
+# AUTOUPDATE:django<1.9:latest version of the 1.8 serie
 Django==1.8.7
+
+# AUTOUPDATE:pytz:latest version
 pytz==2015.7
+
+# UPDATE:psycopg2:latest version
 psycopg2==2.6.1
 
-# -- images
+# UPDATE:Pillow:latest version
 Pillow==2.9.0
 
-# -- dev & testing
+# UPDATE:pep8:latest version
+pep8==1.6.2
+
 #mock==1.0.1
 #coverage==3.7.1
 #selenium==2.45.0
-pep8==1.6.2
 
-# -- uwsgi
+# UPDATE:uwsgi<2.1:latest version
 uWSGI==2.0.11.2
 
-# -- pygal
+# UPDATE:pygal:latest version
 pygal==2.0.11
 
-# -- django-localflavor
+# UPDATE:django-localflavor:latest version
 django-localflavor==1.2
 
-# -- django-autocomplete-light
-#django-autocomplete-light==2.0.9
-#six==1.9.0
-
-# -- django-crispy-forms
+# UPDATE:django-crispy-forms:latest version
 django-crispy-forms==1.5.2
 
-# -- django-mobile
+# UPDATE:django-mobile:latest version
 django-mobile==0.5.1
-
-# -- Sphinx
-#Babel==2.1.1
-#Jinja2==2.8
-#MarkupSafe==0.23
-#Pygments==2.0.2
-#Sphinx==1.3.1
-#alabaster==0.7.6
-#docutils==0.12
-#snowballstemmer==1.2.0
-#sphinx-rtd-theme==0.1.9
