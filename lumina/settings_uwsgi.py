@@ -2,12 +2,6 @@ from lumina.settings import *  # noqa
 
 DEBUG = True
 
-#
-# Dump object with {% dump_objects %}
-#
-LUMINA_DUMP_OBJECTS = False
-
-
 try:
     import uwsgi
     from uwsgidecorators import timer

@@ -1,7 +1,0 @@
-{% if dump_objects %}
-    <p>&nbsp;</p>
-    <hr>
-    <pre style="display: none;" id="debug_dump_of_objects">{{ json }}</pre>
-    <small><a href="javascript:void(0);" onclick="$('#debug_dump_of_objects_to_show').toggle();">Mostrar dump</a></small>
-    <pre style="display: none;" id="debug_dump_of_objects_to_show">{{ json_to_show }}</pre>
-{% endif %}

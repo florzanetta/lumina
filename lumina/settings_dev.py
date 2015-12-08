@@ -9,12 +9,6 @@ To use this settings, add the following line to the top of lumina_local_settings
 
 """
 
-# ===== Lumina =====
-
-# Dump object with {% dump_objects %}
-LUMINA_DUMP_OBJECTS = True
-
-
 # ===== Crispy Forms =====
 
 CRISPY_FAIL_SILENTLY = False

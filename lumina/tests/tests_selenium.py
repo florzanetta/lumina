@@ -58,6 +58,7 @@ class LuminaSeleniumTests(LiveServerTestCase):
         """
         Returns the objects dumped with a {% dump_objects %}
         """
+        # TODO: {% dump_objects %} no longer exists!
         debug_dump_of_objects = self.selenium.execute_script(
             "return $('#debug_dump_of_objects').html();")
         self.assertTrue(
