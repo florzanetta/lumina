@@ -47,7 +47,7 @@ Setup of database
 
 By default, a Sqlite on `lumina.sqlite` will be used. To create it, run:
 
-    $ python manage.py syncdb
+    $ python manage.py migrate
 
 
 Testing
