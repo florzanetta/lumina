@@ -1,47 +1,10 @@
-# django & co
-Django==1.8
-pytz==2015.2
-psycopg2==2.6
-
-# images
-Pillow==2.9.0
-
-# dev & testing
-mock==1.0.1
-coverage==3.7.1
-selenium==2.45.0
-pep8==1.6.2
-
-# uwsgi
-uWSGI==2.0.11.1
-
-# pygal
-pygal==2.0.7
-
-# django-localflavor
-django-localflavor==1.1
-
-# django-autocomplete-light
-django-autocomplete-light==2.0.9
-six==1.9.0
-
-# django-crispy-forms
-django-crispy-forms==1.4.0
-
-# --- django-social-auth (just in case we overwrite this file with contents of freeze)
-# git+https://github.com/omab/django-social-auth.git@699571a3b6d84aa2c25ffce59daa4c7f3559a0e4#egg=django-social-auth
-#git+https://github.com/omab/django-social-auth.git@699571a3b6d84aa2c25ffce59daa4c7f3559a0e4#egg=django-social-auth
-#PyJWT==1.0.1
-#defusedxml==0.4.1
-#oauthlib==0.7.2
-#python3-openid==3.0.5
-#requests==2.6.0
-#requests-oauthlib==0.4.2
-
-# flake8
-#flake8==2.4.0
-#mccabe==0.3
-#pyflakes==0.8.1
-
-# django-mobile
+Django==1.8.7
+django-crispy-forms==1.5.2
+django-localflavor==1.2
 django-mobile==0.5.1
+pep8==1.6.2
+Pillow==2.9.0
+psycopg2==2.6.1
+pygal==2.0.11
+pytz==2015.7
+uWSGI==2.0.11.2
