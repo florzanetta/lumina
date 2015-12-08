@@ -35,7 +35,7 @@ Update pip and to install the dependencies:
 Local config
 ------------
 
-Create a `lumina_local_settings.py` in the root of the proyect, with the following content:
+Create a `lumina_local_settings.py` in the root of the project, with the following content:
 
     from lumina.settings_dev import *
 

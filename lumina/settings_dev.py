@@ -1,9 +1,9 @@
 import os
 
 """
-Default settings for development environmet.
+Default settings for development environment.
 
-To use this settings, add the folowing line to the top of lumina_local_settings.py:
+To use this settings, add the following line to the top of lumina_local_settings.py:
 
     from lumina.settings_dev import *  # noqa
 
