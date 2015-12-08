@@ -27,8 +27,9 @@ To activate the virtualenv:
 
     $ . virtualenv/bin/activate
 
-And to install the dependencies:
+Update pip and to install the dependencies:
 
+    $ pip install -U pip
     $ pip install -r requirements.txt 
 
 Local config
