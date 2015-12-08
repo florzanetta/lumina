@@ -1,5 +1,3 @@
-import autocomplete_light
-
 from django.contrib import admin
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.decorators import login_required
@@ -23,7 +21,6 @@ from lumina import views_shared_session
 from lumina import views_session_quote
 from lumina import views_studio
 
-autocomplete_light.autodiscover()  # BEFORE admin.autodiscover()
 admin.autodiscover()
 
 # TODO: See: http://django-braces.readthedocs.org/en/latest/index.html#loginrequiredmixin
@@ -484,8 +481,4 @@ urlpatterns = patterns(
         {'next_page': '/', },
         name='logout',),
 
-    #
-    # autocomplete_light
-    #
-    url(r'^autocomplete/', include('autocomplete_light.urls')),
 )

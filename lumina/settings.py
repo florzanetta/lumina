@@ -121,7 +121,6 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     # 'localflavor',
     # 'cities_light',
-    'autocomplete_light',
     'crispy_forms',
     'django_mobile',
     'lumina',
