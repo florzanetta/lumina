@@ -54,9 +54,9 @@ ALLOWED_HOSTS = [
 
 DEFAULT_FILE_STORAGE = 'lumina.django_files_storage.TestImagesFallbackStorage'
 
-# Email Test Server: python -m smtpd -n -c DebuggingServer localhost:1025
+# Email Test Server: python -m smtpd -n -c DebuggingServer localhost:8025
 EMAIL_HOST = 'localhost'
-EMAIL_PORT = 1025
+EMAIL_PORT = 8025
 
 SELENIUM_WEBDRIVER_BIN = (
     # Ubuntu 13.04 - Package: 'chromium-chromedriver'
