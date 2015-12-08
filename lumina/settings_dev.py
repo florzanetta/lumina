@@ -36,6 +36,17 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'lumina',
+#         'USER': 'lumina',
+#         'PASSWORD': 'lumina',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+# }
+
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
@@ -46,6 +57,11 @@ DEFAULT_FILE_STORAGE = 'lumina.django_files_storage.TestImagesFallbackStorage'
 # Email Test Server: python -m smtpd -n -c DebuggingServer localhost:1025
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
+
+SELENIUM_WEBDRIVER_BIN = (
+    # Ubuntu 13.04 - Package: 'chromium-chromedriver'
+    '/usr/lib/chromium-browser/chromedriver',
+)
 
 if os.environ.get("LUMINA_TEST_SKIP_MIGRATIONS", "0") == "1":
     NOT_USED = "lumina_migrations_not_used_in_tests"

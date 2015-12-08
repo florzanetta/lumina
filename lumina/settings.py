@@ -165,14 +165,6 @@ LOGGING = {
     }
 }
 
-# ===== Selenium =====
-
-SELENIUM_WEBDRIVER_BIN = (
-    # Ubuntu 13.04 - Package: 'chromium-chromedriver'
-    '/usr/lib/chromium-browser/chromedriver',
-)
-
-
 # ===== Crispy forms =====
 
 CRISPY_TEMPLATE_PACK = "bootstrap3"
