@@ -81,9 +81,9 @@
                         <ul class="dropdown-menu" role="menu">
                             <!-- Items de drop-down  -->
                             {% if user.is_photographer %} <!-- user is photographer -->
-                                    <li><a href="{% url 'session_list' %}">Sesiones activas</a></li>
+                                    <li><a href="{% url 'session_list' %}">Listar activas</a></li>
+                                    <li><a href="{% url 'session_create' %}">Crear</a></li>
                                     <li><a href="{% url 'session_search' %}">Buscar</a></li>
-                                    <li><a href="{% url 'session_create' %}">Agregar sesión</a></li>
                                     <li role="separator" class="divider"></li>
                                     <li><a href="{% url 'imageselection_awaiting_customer_selection_list' %}">
                                         Selecciones de imágenes esperando selección de cliente</a>
@@ -107,17 +107,17 @@
                         <ul class="dropdown-menu" role="menu">
 
                             {% if user.is_photographer %} <!-- user is photographer -->
-                                    <li><a href="{% url 'quote_list' %}">Presupuestos activos</a></li>
-                                    <li><a href="{% url 'quote_create' %}">Crear presupuesto</a></li>
+                                    <li><a href="{% url 'quote_list' %}">Listar activos</a></li>
+                                    <li><a href="{% url 'quote_create' %}">Crear</a></li>
                             {% else %} <!-- user is client -->
                             {% endif %}
+
+                            <li><a href="{% url 'quote_search' %}">Buscar</a></li>
 
                             {% if user.is_photographer %} <!-- user is photographer -->
                             {% else %} <!-- user is client -->
                                 <li><a href="{% url 'quote_list_pending_for_customer' %}">Lista de presupuestos pendientes de aceptar</a></li>
                             {% endif %}
-
-                            <li><a href="{% url 'quote_search' %}">Buscar presupuestos</a></li>
 
                         </ul>
                     </li>
@@ -125,11 +125,12 @@
 
                     {% if user.is_photographer %} <!-- user is photographer -->
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Imagenes <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Imágenes <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
 
                                 <!-- Items de drop-down  -->
-                                <li><a href="{% url 'image_list' %}">Buscar imagenes</a></li>
+                                <li><a href="{% url 'image_list' %}">Buscar</a></li>
 
                             </ul>
                         </li>
@@ -138,8 +139,8 @@
                             <ul class="dropdown-menu" role="menu">
 
                                 <!-- Items de drop-down  -->
-                                <li><a href="{% url 'customer_list' %}">Lista de clientes</a></li>
-                                <li><a href="{% url 'customer_create' %}">Agregar cliente</a></li>
+                                <li><a href="{% url 'customer_list' %}">Listar</a></li>
+                                <li><a href="{% url 'customer_create' %}">Crear</a></li>
 
                             </ul>
                         </li>
@@ -167,18 +168,21 @@
                         </li>
 
                         {% if user.is_photographer %} <!-- user is photographer -->
+                            <!--
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Informes <span class="caret"></span></a>
-                                <ul class="dropdown-menu" role="menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    Informes <span class="caret"></span>
+                                </a>
 
-                                    <!-- Items de drop-down  -->
+                                <ul class="dropdown-menu" role="menu">
+                                    < ! - - Items de drop-down  - - >
                                     <li><a href="{% url 'report_cost_vs_charged_by_customer_type' %}">Costo (hs) vs Monto cobrado ($)</a></li>
                                     <li><a href="{% url 'report_extended_quotes_through_time' %}">Presupuestos expandidos (en el tiempo)</a></li>
                                     <li><a href="{% url 'report_extended_quotes_by_customer' %}">Presupuestos expandidos (por cliente)</a></li>
                                     <li><a href="{% url 'report_income_by_customer_type' %}">Ingresos ($) por tipo de cliente</a></li>
-
                                 </ul>
                             </li>
+                            -->
                         {% endif %}
 
                 {% endif %}
@@ -188,6 +192,9 @@
       <ul class="nav navbar-nav navbar-right">
 
             {% if user.is_authenticated %}
+
+                <li><a href="javascript:void(0);"><em>
+                    <small>{{ user.username }} </small></em></a></li>
 
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"
@@ -210,19 +217,19 @@
 
                 <!-- Items de drop-down  -->
                 {% if user.is_photographer %} <!-- user is photographer -->
-                        <!-- <li><a href="javascript:void(0);" title="Usuario: {{ user.username }}"><em>
-                            <small>{{ user.get_full_name }} &nbsp; (fotografo)</small></em></a></li> -->
+                        <!--
                         <li style="max-height:30px; width:auto; vertical-align:middle;"><a
                                 href="javascript:void(0);"
                                 title="{{ user.get_full_name }} ({{ user.username }}) - fotografo"><img
                                 style="margin-top: -7px;" src="/static/lumina/img/avatar-photographer-32.png"></a></li>
+                        -->
                 {% else %} <!-- user is client -->
-                        <!-- <li><a href="javascript:void(0);" title="Usuario: {{ user.username }}"><em>
-                            <small>{{ user.get_full_name }} &nbsp; (usuario)</small></em></a></li> -->
+                        <!--
                         <li style="max-height:30px; width:auto; vertical-align:middle;"><a
                                 href="javascript:void(0);"
                                 title="{{ user.get_full_name }} ({{ user.username }}) - usuario"><img
                                 style="margin-top: -7px;" src="/static/lumina/img/avatar-customer-32.png"></a></li>
+                        -->
                 {% endif %}
 
                 <li><a href="{% url 'logout' %}">Salir</a></li>
