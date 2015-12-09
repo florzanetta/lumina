@@ -1,9 +1,3 @@
-'''
-Created on Jun 3, 2013
-
-@author: Horacio G. de Oro
-'''
-
 import logging
 import traceback
 import sys
@@ -23,4 +17,4 @@ class LoggingMiddleware(object):
             self._middleware_logger.error("".join(out))
         except:
             self._middleware_logger.exception(
-                "Excepcion detected while trying to report an exception. ")
+                "Exception detected while trying to report an exception. ")
